@@ -1,636 +1,1625 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
-<head>
+ <head><script>window["__codeletBootstrap__"]=JSON.parse('{"A":"A","B":"20260723-05-e9a76f4"}');</script><script src="/_sdk/e358eac22bd01364.telemetry_sdk.js" integrity="sha512-KPxp3rw4K8Nu9ceWJc3gyM7srgaZxiFWOVbyu260EYzzAqdz10mfo5xyXrCx+wEKtGo77JbtmwXvFLbwrGzwvw=="></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PHSUBLIME ERP</title>
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
+  <title>PHSUBLIME - ERP</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <script src="/_sdk/935a53bc2e11fb8d.data_sdk.js" integrity="sha512-qr2oyPnEys1WebcOABaRh6hG77r5PWpqeWW6JTKbRJqly/INsfBi31CVNlTmHqjgeLpkVmmHZJUdxSx/32tOFQ=="></script>
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f4f6f9;
-      color: #202124;
-    }
-
-    .top {
-      background: #111827;
-      color: #fff;
-      padding: 20px;
-    }
-
-    .top h1 {
-      margin: 0;
-    }
-
-    .top p {
-      margin: 5px 0 0;
-      color: #cbd5e1;
-    }
-
-    .menu {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      padding: 15px;
-      background: #fff;
-      border-bottom: 1px solid #ddd;
-    }
-
-    .menu button {
-      border: 0;
-      padding: 12px 18px;
-      border-radius: 8px;
-      cursor: pointer;
-      background: #e5e7eb;
-      font-weight: bold;
-    }
-
-    .menu button:hover {
-      background: #d1d5db;
-    }
-
-    .conteudo {
-      padding: 20px;
-      max-width: 1200px;
-      margin: auto;
-    }
-
-    .tela {
-      display: none;
-    }
-
-    .tela.ativa {
-      display: block;
-    }
-
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 15px;
-    }
-
-    .card {
-      background: #fff;
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px #0001;
-    }
-
-    .card h3 {
-      margin-top: 0;
-    }
-
-    .form {
-      background: #fff;
-      padding: 20px;
-      border-radius: 12px;
-      margin-bottom: 20px;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 12px;
-    }
-
-    .grid input,
-    .grid textarea,
-    .grid select {
-      width: 100%;
-      padding: 11px;
-      border: 1px solid #ddd;
-      border-radius: 7px;
-    }
-
-    .form button {
-      margin-top: 15px;
-      padding: 12px 20px;
-      border: 0;
-      border-radius: 7px;
-      background: #111827;
-      color: #fff;
-      cursor: pointer;
-    }
-
-    .lista {
-      background: #fff;
-      padding: 20px;
-      border-radius: 12px;
-      overflow: auto;
-    }
-
-    .item {
-      padding: 12px;
-      border-bottom: 1px solid #eee;
-    }
-
-    .sucesso {
-      color: green;
-    }
-
-    .erro {
-      color: red;
-    }
+    body { font-family: 'DM Sans', sans-serif; }
+    .gold { color: #FFD700; }
+    .bg-gold { background-color: #FFD700; }
+    .sidebar-btn { display: flex; align-items: center; gap: 10px; padding: 10px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all .2s; width: 100%; text-align: left; border: none; color: #aaa; background: transparent; }
+    .sidebar-btn:hover, .sidebar-btn.active { background: #1a1a1a; color: #FFD700; }
+    .card-kpi { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 12px; padding: 20px; }
+    .card-kpi h4 { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #888; margin-bottom: 6px; }
+    .card-kpi p { font-size: 22px; font-weight: 800; color: #fff; }
+    .table-erp { width: 100%; font-size: 12px; }
+    .table-erp th { text-align: left; padding: 8px 10px; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #666; border-bottom: 1px solid #222; }
+    .table-erp td { padding: 8px 10px; border-bottom: 1px solid #1a1a1a; }
+    .table-erp tbody tr:hover { background: #1a1a1a; }
+    .btn-action { padding: 4px 10px; border-radius: 4px; font-size: 10px; font-weight: 700; text-transform: uppercase; cursor: pointer; border: none; }
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.7); display: flex; align-items: center; justify-content: center; z-index: 100; padding: 16px; }
+    .modal-box { background: #111; border: 1px solid #333; border-radius: 12px; padding: 24px; max-width: 600px; width: 90%; max-height: calc(85 * min(var(--vh, 1vh), 1vh)); overflow-y: auto; }
+    .status-production { background: #FFD700; color: #000; }
+    .status-waiting { background: #555; color: #FFD700; }
+    .status-done { background: #22c55e; color: #fff; }
+    .status-delivered { background: #3b82f6; color: #fff; }
+    .status-cancelled { background: #6b7280; color: #fff; }
+    .input-erp { width: 100%; background: #000; border: 1px solid #333; border-radius: 6px; padding: 8px 12px; font-size: 13px; color: #fff; }
+    .input-erp:focus { border-color: #FFD700; outline: none; }
   </style>
-</head>
-
-<body>
-
-  <header class="top">
-    <h1>PHSUBLIME ERP</h1>
-    <p>Sistema de gestão da PHSUBLIME Gráfica</p>
-  </header>
-
-  <nav class="menu">
-    <button onclick="abrir('dashboard')">Dashboard</button>
-    <button onclick="abrir('clientes')">Clientes</button>
-    <button onclick="abrir('pedidos')">Pedidos</button>
-    <button onclick="abrir('despesas')">Despesas</button>
-    <button onclick="abrir('financeiro')">Financeiro</button>
-    <button onclick="abrir('historico')">Histórico</button>
-  </nav>
-
-  <main class="conteudo">
-
-    <section id="dashboard" class="tela ativa">
-      <h2>Dashboard</h2>
-
-      <div class="cards">
-        <div class="card">
-          <h3>Clientes</h3>
-          <strong id="totalClientes">0</strong>
-        </div>
-
-        <div class="card">
-          <h3>Pedidos</h3>
-          <strong id="totalPedidos">0</strong>
-        </div>
-
-        <div class="card">
-          <h3>Despesas</h3>
-          <strong id="totalDespesas">0</strong>
-        </div>
-
-        <div class="card">
-          <h3>Financeiro</h3>
-          <strong id="totalFinanceiro">R$ 0,00</strong>
-        </div>
+  <script src="/_sdk/6030e540d4419216.resizing_sdk.js" type="text/javascript" integrity="sha512-b5KWzyoXsbWP4smq4sftIi6Kts4YVBpBsz0BwCViwbBJkK64a3/Z6ZMdWA+qnplNcXw4mhZeqvQi3mOosiRJdA=="></script>
+ </head>
+ <body data-template-id="__page-root" class="min-h-screen text-white" style="width:100%">
+  <div id="app-main" class="flex min-h-screen w-full">
+   <!-- SIDEBAR -->
+   <aside class="w-56 bg-[#0a0a0a] border-r border-gray-800 p-4 flex flex-col shrink-0 hidden md:flex">
+    <h2 data-template-id="sidebar-logo" class="canva-text text-xl font-black mb-1"></h2>
+    <p class="text-[9px] uppercase tracking-widest opacity-50 mb-8">Plotagem e Projetos</p>
+    <nav class="flex flex-col gap-1 flex-1">
+     <button class="sidebar-btn active" data-page="dashboard"><i data-lucide="layout-dashboard" style="width:16px;height:16px"></i>Dashboard</button> <button class="sidebar-btn" data-page="clients"><i data-lucide="users" style="width:16px;height:16px"></i>Clientes</button> <button class="sidebar-btn" data-page="orders"><i data-lucide="clipboard-list" style="width:16px;height:16px"></i>Pedidos</button> <button class="sidebar-btn" data-page="expenses"><i data-lucide="shopping-cart" style="width:16px;height:16px"></i>Despesas</button> <button class="sidebar-btn" data-page="finance"><i data-lucide="wallet" style="width:16px;height:16px"></i>Financeiro</button> <button class="sidebar-btn" data-page="history"><i data-lucide="archive" style="width:16px;height:16px"></i>Histórico</button>
+    </nav>
+    <div class="mt-auto pt-4 border-t border-gray-800">
+     <p id="user-display" class="text-xs opacity-60"></p>
+    </div>
+   </aside><!-- MOBILE NAV -->
+   <div class="md:hidden fixed bottom-0 left-0 right-0 bg-[#0a0a0a] border-t border-gray-800 flex z-50">
+    <button class="flex-1 py-3 text-center text-[10px] uppercase font-bold sidebar-btn active" data-page="dashboard"><i data-lucide="layout-dashboard" style="width:16px;height:16px;margin:0 auto"></i>Dash</button> <button class="flex-1 py-3 text-center text-[10px] uppercase font-bold sidebar-btn" data-page="clients"><i data-lucide="users" style="width:16px;height:16px;margin:0 auto"></i>Clientes</button> <button class="flex-1 py-3 text-center text-[10px] uppercase font-bold sidebar-btn" data-page="orders"><i data-lucide="clipboard-list" style="width:16px;height:16px;margin:0 auto"></i>Pedidos</button> <button class="flex-1 py-3 text-center text-[10px] uppercase font-bold sidebar-btn" data-page="expenses"><i data-lucide="shopping-cart" style="width:16px;height:16px;margin:0 auto"></i>Despesas</button> <button class="flex-1 py-3 text-center text-[10px] uppercase font-bold sidebar-btn" data-page="finance"><i data-lucide="wallet" style="width:16px;height:16px;margin:0 auto"></i>Finan.</button> <button class="flex-1 py-3 text-center text-[10px] uppercase font-bold sidebar-btn" data-page="history"><i data-lucide="archive" style="width:16px;height:16px;margin:0 auto"></i>Hist.</button>
+   </div><!-- CONTENT -->
+   <main class="flex-1 p-4 md:p-8 overflow-y-auto pb-20 md:pb-8 w-full">
+    <!-- DASHBOARD -->
+    <section id="page-dashboard">
+     <div class="flex items-center justify-between mb-6 flex-wrap gap-2">
+      <h2 data-template-id="dash-title" class="canva-text text-2xl font-black"></h2>
+      <div class="flex gap-2">
+       <button data-template-id="export-data-btn" class="canva-button px-4 py-2 rounded-lg font-bold text-sm" onclick="exportDataAsCSV()"></button> <button data-template-id="close-month-btn" class="canva-button px-4 py-2 rounded-lg font-bold text-sm" onclick="openCloseMonthModal()"></button>
       </div>
+     </div>
+     <p id="current-month-label" class="text-xs uppercase tracking-wide opacity-50 mb-4"></p>
+     <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
+      <div class="card-kpi">
+       <h4>Faturamento Dia</h4>
+       <p id="kpi-day">R$ 0</p>
+      </div>
+      <div class="card-kpi">
+       <h4>Em Produção</h4>
+       <p id="kpi-prod">0</p>
+      </div>
+      <div class="card-kpi">
+       <h4>Entregues</h4>
+       <p id="kpi-delivered">0</p>
+      </div>
+      <div class="card-kpi">
+       <h4>Clientes</h4>
+       <p id="kpi-clients">0</p>
+      </div>
+      <div class="card-kpi">
+       <h4>Despesas Totais</h4>
+       <p id="kpi-investment">R$ 0</p>
+      </div>
+      <div class="card-kpi">
+       <h4>Lucro</h4>
+       <p id="kpi-profit">R$ 0</p>
+      </div>
+      <div class="card-kpi">
+       <h4>Pedidos Pendentes</h4>
+       <p id="kpi-pending">0</p>
+      </div>
+      <div class="card-kpi">
+       <h4>Pedidos Dia</h4>
+       <p id="kpi-orders-day">0</p>
+      </div>
+     </div>
+     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="bg-[#1a1a1a] border border-gray-800 rounded-xl p-4">
+       <div class="flex justify-between items-center mb-3">
+        <h4 class="text-xs uppercase tracking-wide opacity-60">Vendas — Últimos 31 dias (Clique no dia)</h4><span class="text-[10px] bg-gold text-black font-bold px-1.5 py-0.5 rounded" id="selected-day-indicator">Todos os dias</span>
+       </div>
+       <div class="overflow-x-auto">
+        <canvas id="chart-weekly" height="160" style="min-width: 500px; cursor: pointer;"></canvas>
+       </div>
+      </div>
+      <div class="bg-[#1a1a1a] border border-gray-800 rounded-xl p-4">
+       <h4 class="text-xs uppercase tracking-wide opacity-60 mb-3">Serviços Mais Vendidos</h4>
+       <canvas id="chart-services" height="160"></canvas>
+      </div>
+     </div>
+    </section><!-- CLIENTS -->
+    <section id="page-clients" class="hidden">
+     <div class="flex items-center justify-between mb-6 flex-wrap gap-2">
+      <h2 data-template-id="clients-title" class="canva-text text-2xl font-black"></h2>
+      <div class="flex gap-2">
+       <button data-template-id="clients-add-btn" class="canva-button px-4 py-2 rounded-lg font-bold text-sm" onclick="openClientModal()"></button><button data-template-id="clients-bulk-btn" class="canva-button px-4 py-2 rounded-lg font-bold text-sm" onclick="openBulkClientModal()"></button>
+      </div>
+     </div>
+     <div class="mb-6"><input type="text" id="clients-search" class="input-erp max-w-xs" placeholder="Pesquisar nome, CPF, telefone..." onkeyup="filterTable('clients')">
+     </div>
+     <div class="overflow-x-auto">
+      <table class="table-erp">
+       <thead>
+        <tr>
+         <th>#</th>
+         <th>Nome</th>
+         <th>CPF/CNPJ</th>
+         <th>Telefone</th>
+         <th>E-mail</th>
+         <th>Cidade</th>
+         <th>Ações</th>
+        </tr>
+       </thead>
+       <tbody id="clients-tbody"></tbody>
+      </table>
+      <p id="clients-empty" class="text-center opacity-40 py-8 text-sm hidden">Nenhum cliente cadastrado.</p>
+     </div>
+    </section><!-- ORDERS -->
+    <section id="page-orders" class="hidden">
+     <div class="flex items-center justify-between mb-6 flex-wrap gap-2">
+      <h2 data-template-id="orders-title" class="canva-text text-2xl font-black"></h2>
+      <div class="flex gap-2">
+       <button data-template-id="orders-add-btn" class="canva-button px-4 py-2 rounded-lg font-bold text-sm" onclick="openOrderModal()"></button>
+      </div>
+     </div>
+     <div class="flex gap-3 mb-4 items-center flex-wrap">
+      <button class="px-3 py-1 text-xs font-bold rounded-lg bg-gold text-black" id="order-filter-all" onclick="setOrderFilter('all')">Todos</button> <button class="px-3 py-1 text-xs font-bold rounded-lg bg-gray-700 text-white" id="order-filter-today" onclick="setOrderFilter('day')">Hoje</button> <label class="text-xs opacity-60 ml-2">Data:</label> <input type="date" id="order-date-filter" class="input-erp" style="width:auto" onchange="setOrderFilter('date')">
+     </div>
+     <div class="mb-6"><input type="text" id="orders-search" class="input-erp max-w-xs" placeholder="Pesquisar pedido, cliente, serviço..." onkeyup="filterTable('orders')">
+     </div>
+     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+      <div class="card-kpi">
+       <h4>Pedidos Novos</h4>
+       <p id="ord-new">0</p>
+      </div>
+      <div class="card-kpi">
+       <h4>Em Produção</h4>
+       <p id="ord-prod">0</p>
+      </div>
+      <div class="card-kpi">
+       <h4>Total Pedidos</h4>
+       <p id="ord-total">0</p>
+      </div>
+     </div>
+     <div>
+      <table class="table-erp">
+       <thead>
+        <tr>
+         <th>Pedido</th>
+         <th>Data</th>
+         <th>Cliente</th>
+         <th>Serviço</th>
+         <th>Material</th>
+         <th>Total</th>
+         <th>Investimento</th>
+         <th>Entrega</th>
+         <th>Status</th>
+         <th>Ações</th>
+        </tr>
+       </thead>
+       <tbody id="orders-tbody"></tbody>
+      </table>
+      <p id="orders-empty" class="text-center opacity-40 py-8 text-sm hidden">Nenhum pedido registrado.</p>
+     </div>
+    </section><!-- EXPENSES -->
+    <section id="page-expenses" class="hidden">
+     <div class="flex items-center justify-between mb-6">
+      <h2 data-template-id="expenses-title" class="canva-text text-2xl font-black"></h2><button data-template-id="expenses-add-btn" class="canva-button px-4 py-2 rounded-lg font-bold text-sm" onclick="openExpenseModal()"></button>
+     </div>
+     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+      <div class="card-kpi">
+       <h4>Despesas de Pedidos</h4>
+       <p id="exp-orders-investment" class="text-orange-400">R$ 0</p>
+      </div>
+      <div class="card-kpi">
+       <h4>Despesas Totais</h4>
+       <p id="exp-total-investment" class="text-red-400">R$ 0</p>
+      </div>
+     </div>
+     <div class="grid grid-cols-1 gap-6 mb-6">
+      <div class="bg-[#1a1a1a] border border-gray-800 rounded-xl p-4">
+       <h4 class="text-xs uppercase tracking-wide opacity-60 mb-3">Distribuição das Despesas</h4>
+       <canvas id="chart-expenses" height="160"></canvas>
+      </div>
+     </div>
+     <div class="mb-6"><input type="text" id="expenses-search" class="input-erp max-w-xs" placeholder="Pesquisar produto, loja, tipo..." onkeyup="filterTable('expenses')">
+     </div>
+     <div class="overflow-x-auto">
+      <table class="table-erp">
+       <thead>
+        <tr>
+         <th>Produto</th>
+         <th>Data Compra</th>
+         <th>Valor Unit.</th>
+         <th>Tipo Pagamento</th>
+         <th>Onde Comprou</th>
+         <th>Total Gasto</th>
+         <th>Ações</th>
+        </tr>
+       </thead>
+       <tbody id="expenses-tbody"></tbody>
+      </table>
+      <p id="expenses-empty" class="text-center opacity-40 py-8 text-sm hidden">Nenhuma despesa registrada.</p>
+     </div>
+    </section><!-- FINANCE -->
+    <section id="page-finance" class="hidden">
+     <div class="flex items-center justify-between mb-6">
+      <h2 data-template-id="finance-title" class="canva-text text-2xl font-black"></h2><button data-template-id="finance-add-btn" class="canva-button px-4 py-2 rounded-lg font-bold text-sm" onclick="openFinanceModal()"></button>
+     </div>
+     <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+      <div class="card-kpi">
+       <h4>Receitas</h4>
+       <p id="fin-income" class="text-green-400">R$ 0</p>
+      </div>
+      <div class="card-kpi">
+       <h4>Despesas (Investimento)</h4>
+       <p id="fin-investment" class="text-orange-400">R$ 0</p>
+      </div>
+      <div class="card-kpi">
+       <h4>Despesas Gerais</h4>
+       <p id="fin-expense" class="text-red-400">R$ 0</p>
+      </div>
+      <div class="card-kpi">
+       <h4>Lucro</h4>
+       <p id="fin-profit" class="text-blue-400">R$ 0</p>
+      </div>
+      <div class="card-kpi">
+       <h4>10% Lucro</h4>
+       <p id="fin-ten-percent" class="text-yellow-400">R$ 0</p>
+      </div>
+      <div class="card-kpi">
+       <h4>Lucro Líquido</h4>
+       <p id="fin-net-profit" class="text-emerald-400">R$ 0</p>
+      </div>
+     </div>
+     <div class="mb-6"><input type="text" id="finance-search" class="input-erp max-w-xs" placeholder="Pesquisar categoria, descrição, tipo..." onkeyup="filterTable('finance')">
+     </div>
+     <div class="overflow-x-auto">
+      <table class="table-erp">
+       <thead>
+        <tr>
+         <th>Data</th>
+         <th>Tipo</th>
+         <th>Categoria</th>
+         <th>Descrição</th>
+         <th>Valor</th>
+         <th>Método</th>
+         <th>Ações</th>
+        </tr>
+       </thead>
+       <tbody id="finance-tbody"></tbody>
+      </table>
+      <p id="finance-empty" class="text-center opacity-40 py-8 text-sm hidden">Nenhum lançamento registrado.</p>
+     </div>
+    </section><!-- HISTORY -->
+    <section id="page-history" class="hidden">
+     <div class="flex items-center justify-between mb-6 flex-wrap gap-2">
+      <h2 data-template-id="history-title" class="canva-text text-2xl font-black"></h2>
+      <div class="flex gap-2">
+       <button data-template-id="history-copy-btn" class="canva-button px-4 py-2 rounded-lg font-bold text-sm hidden" onclick="copyHistoryData()"></button> <button data-template-id="history-whatsapp-btn" class="canva-button px-4 py-2 rounded-lg font-bold text-sm hidden" onclick="shareHistoryWhatsApp()"></button> <button data-template-id="history-delete-btn" class="canva-button px-4 py-2 rounded-lg font-bold text-sm hidden" onclick="deleteClosedMonth()"></button>
+      </div>
+     </div>
+     <div class="mb-6">
+      <label class="text-xs uppercase opacity-60 block mb-2" for="history-month-select">Selecione o mês</label> <select id="history-month-select" class="input-erp" style="max-width:220px" onchange="renderHistory()"><option value="">-- Selecione --</option></select>
+     </div>
+     <div id="history-content" class="hidden">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+       <div class="card-kpi">
+        <h4>Receitas</h4>
+        <p id="hist-income" class="text-green-400">R$ 0</p>
+       </div>
+       <div class="card-kpi">
+        <h4>Despesas Totais</h4>
+        <p id="hist-investment" class="text-orange-400">R$ 0</p>
+       </div>
+       <div class="card-kpi">
+        <h4>Despesas Gerais</h4>
+        <p id="hist-expense" class="text-red-400">R$ 0</p>
+       </div>
+       <div class="card-kpi">
+        <h4>Lucro</h4>
+        <p id="hist-profit" class="text-blue-400">R$ 0</p>
+       </div>
+       <div class="card-kpi">
+        <h4>Pedidos</h4>
+        <p id="hist-orders">0</p>
+       </div>
+      </div>
+      <h4 class="text-xs uppercase tracking-wide opacity-60 mb-2">Pedidos</h4>
+      <div class="overflow-x-auto mb-6">
+       <table class="table-erp">
+        <thead>
+         <tr>
+          <th>Pedido</th>
+          <th>Data</th>
+          <th>Cliente</th>
+          <th>Serviço</th>
+          <th>Total</th>
+          <th>Status</th>
+         </tr>
+        </thead>
+        <tbody id="hist-orders-tbody"></tbody>
+       </table>
+      </div>
+      <h4 class="text-xs uppercase tracking-wide opacity-60 mb-2">Financeiro</h4>
+      <div class="overflow-x-auto mb-6">
+       <table class="table-erp">
+        <thead>
+         <tr>
+          <th>Data</th>
+          <th>Tipo</th>
+          <th>Categoria</th>
+          <th>Descrição</th>
+          <th>Valor</th>
+         </tr>
+        </thead>
+        <tbody id="hist-finance-tbody"></tbody>
+       </table>
+      </div>
+      <h4 class="text-xs uppercase tracking-wide opacity-60 mb-2">Despesas</h4>
+      <div class="overflow-x-auto">
+       <table class="table-erp">
+        <thead>
+         <tr>
+          <th>Produto</th>
+          <th>Data</th>
+          <th>Total Gasto</th>
+         </tr>
+        </thead>
+        <tbody id="hist-expenses-tbody"></tbody>
+       </table>
+      </div>
+     </div>
+     <p id="history-empty" class="text-center opacity-40 py-8 text-sm">Selecione um mês fechado para visualizar o histórico.</p>
     </section>
-
-    <section id="clientes" class="tela">
-      <h2>Clientes</h2>
-
-      <div class="form">
-        <div class="grid">
-          <input id="clienteNome" placeholder="Nome *">
-          <input id="clienteTelefone" placeholder="Telefone">
-          <input id="clienteWhatsapp" placeholder="WhatsApp">
-          <input id="clienteEmail" placeholder="E-mail">
-          <input id="clienteCidade" placeholder="Cidade">
-          <input id="clienteEstado" placeholder="Estado">
-        </div>
-
-        <button onclick="salvarCliente()">Salvar cliente</button>
-        <p id="msgCliente"></p>
-      </div>
-
-      <div class="lista">
-        <h3>Clientes cadastrados</h3>
-        <div id="listaClientes"></div>
-      </div>
-    </section>
-
-    <section id="pedidos" class="tela">
-      <h2>Pedidos</h2>
-
-      <div class="form">
-        <div class="grid">
-          <input id="pedidoServico" placeholder="Serviço">
-          <input id="pedidoMaterial" placeholder="Material">
-          <input id="pedidoQuantidade" type="number" placeholder="Quantidade">
-          <input id="pedidoTotal" type="number" step="0.01" placeholder="Total">
-          <input id="pedidoEntrega" type="date">
-
-          <select id="pedidoStatus">
-            <option>AGUARDANDO</option>
-            <option>EM PRODUÇÃO</option>
-            <option>PRONTO</option>
-            <option>ENTREGUE</option>
-          </select>
-        </div>
-
-        <button onclick="salvarPedido()">Salvar pedido</button>
-        <p id="msgPedido"></p>
-      </div>
-
-      <div class="lista">
-        <h3>Pedidos cadastrados</h3>
-        <div id="listaPedidos"></div>
-      </div>
-    </section>
-
-    <section id="despesas" class="tela">
-      <h2>Despesas</h2>
-
-      <div class="form">
-        <div class="grid">
-          <input id="despesaProduto" placeholder="Produto ou material *">
-          <input id="despesaValor" type="number" step="0.01" placeholder="Valor">
-          <input id="despesaData" type="date">
-          <input id="despesaLocal" placeholder="Local da compra">
-        </div>
-
-        <button onclick="salvarDespesa()">Salvar despesa</button>
-        <p id="msgDespesa"></p>
-      </div>
-
-      <div class="lista">
-        <h3>Despesas cadastradas</h3>
-        <div id="listaDespesas"></div>
-      </div>
-    </section>
-
-    <section id="financeiro" class="tela">
-      <h2>Financeiro</h2>
-
-      <div class="form">
-        <div class="grid">
-          <select id="finTipo">
-            <option>ENTRADA</option>
-            <option>SAÍDA</option>
-          </select>
-
-          <input id="finCategoria" placeholder="Categoria">
-          <input id="finValor" type="number" step="0.01" placeholder="Valor">
-          <input id="finData" type="date">
-          <input id="finDescricao" placeholder="Descrição">
-        </div>
-
-        <button onclick="salvarFinanceiro()">Salvar lançamento</button>
-        <p id="msgFinanceiro"></p>
-      </div>
-
-      <div class="lista">
-        <h3>Lançamentos</h3>
-        <div id="listaFinanceiro"></div>
-      </div>
-    </section>
-
-    <section id="historico" class="tela">
-      <h2>Histórico</h2>
-
-      <div class="lista">
-        <p>
-          O histórico mensal será conectado à estrutura de fechamentos do banco de dados.
-        </p>
-      </div>
-    </section>
-
-  </main>
-
+   </main>
+  </div>
+  <div id="modal-container"></div>
+  <script src="/_sdk/c939c145c3c74230.editing_sdk.js" integrity="sha512-jh2pv/gl9Gzzn5dxfzwQO4wkqtnAQIim+LIUDYfVu2cdqPkQV2MqbjsDUW5IYbrSZFjRlOBrIWzlvWDXQYxOjg=="></script>
   <script>
-    const SUPABASE_URL =
-      'https://qkcrimqakjsokdztzqxe.supabase.co';
+    let allData = [];
+    let orderFilter = 'all';
 
-    const SUPABASE_KEY =
-      'sb_publishable_mF--YXTFkjyjbQ7Uw7Qq1w_ODzsJPA1';
+    function $(id){ return document.getElementById(id); }
+    function setText(id,val){ const el=$(id); if(el) el.textContent=val; }
 
-    const db = window.supabase.createClient(
-      SUPABASE_URL,
-      SUPABASE_KEY
-    );
+    function getCurrentMonth() { return new Date().toISOString().slice(0,7); }
+    setText('user-display','Usuário');
+    lucide.createIcons();
 
-    function abrir(id) {
-      document.querySelectorAll('.tela').forEach(function (x) {
-        x.classList.remove('ativa');
+    // Navigation
+    const pages = ['dashboard','clients','orders','expenses','finance','history'];
+    document.querySelectorAll('[data-page]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const page = btn.dataset.page;
+        document.querySelectorAll('[data-page]').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll(`[data-page="${page}"]`).forEach(b => b.classList.add('active'));
+        pages.forEach(p => $('page-'+p).classList.toggle('hidden', p !== page));
+        if(page==='history') populateHistoryMonths();
       });
+    });
 
-      document.getElementById(id).classList.add('ativa');
+    function getClients() { return allData.filter(d => d.tipo_registro === 'cliente'); }
+    function getClosedMonths() { return [...new Set(allData.filter(d=>d.arquivado==='sim' && d.mes && ['pedido','despesa','financeiro'].includes(d.tipo_registro)).map(d=>d.mes))].sort().reverse(); }
+    function isMonthClosed(month) { return getClosedMonths().includes(month); }
+    function getOrders() { return allData.filter(d => d.tipo_registro === 'pedido' && d.mes === getCurrentMonth() && d.arquivado !== 'sim'); }
+    function getExpenses() { return allData.filter(d => d.tipo_registro === 'despesa' && d.mes === getCurrentMonth() && d.arquivado !== 'sim'); }
+    function getFinances() { return allData.filter(d => d.tipo_registro === 'financeiro' && d.mes === getCurrentMonth() && d.arquivado !== 'sim'); }
 
-      if (id === 'dashboard') carregarDashboard();
-      if (id === 'clientes') carregarClientes();
-      if (id === 'pedidos') carregarPedidos();
-      if (id === 'despesas') carregarDespesas();
-      if (id === 'financeiro') carregarFinanceiro();
+    function setOrderFilter(f) {
+      orderFilter = f;
+      $('order-filter-all').className = 'px-3 py-1 text-xs font-bold rounded-lg ' + (f==='all'?'bg-gold text-black':'bg-gray-700 text-white');
+      $('order-filter-today').className = 'px-3 py-1 text-xs font-bold rounded-lg ' + (f==='day'?'bg-gold text-black':'bg-gray-700 text-white');
+      renderOrders();
     }
 
-    async function salvarCliente() {
-      const nome = document.getElementById('clienteNome').value.trim();
+    function fmt(v) { return 'R$ ' + parseFloat(v||0).toLocaleString('pt-BR',{minimumFractionDigits:2}); }
+    function getStatusClass(s) {
+      switch(s) { case 'EM PRODUÇÃO': return 'status-production'; case 'AGUARDANDO': return 'status-waiting'; case 'CONCLUÍDO': return 'status-done'; case 'ENTREGUE': return 'status-delivered'; case 'CANCELADO': return 'status-cancelled'; default: return 'status-waiting'; }
+    }
+    function monthLabel(m) { const [y,mo]=m.split('-'); const names=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez']; return names[parseInt(mo)-1]+'/'+y; }
 
-      if (!nome) {
-        return mensagem(
-          'msgCliente',
-          'Informe o nome do cliente',
-          'erro'
-        );
+    function renderAll() { 
+      renderDashboard(); renderClients(); renderOrders(); renderExpenses(); renderFinance(); 
+    }
+
+    function populateMonthDropdowns() {
+      // This function is now unused but kept for compatibility
+    }
+
+    let lastWeeklyChartData = null; // Store for click coordinates helper
+
+    function renderDashboard() {
+      const cm = getCurrentMonth();
+      setText('current-month-label','Visualizando: ' + monthLabel(cm));
+      const orders = allData.filter(d => d.tipo_registro === 'pedido' && d.mes === cm && d.arquivado !== 'sim');
+      const finances = allData.filter(d => d.tipo_registro === 'financeiro' && d.mes === cm && d.arquivado !== 'sim');
+      const expenses = allData.filter(d => d.tipo_registro === 'despesa' && d.mes === cm && d.arquivado !== 'sim');
+      const clients = getClients();
+      const todayStr = new Date().toISOString().slice(0,10);
+
+      let dayTotal=0, ordersDayCount=0;
+      finances.filter(f=>f.tipo_financeiro==='receita').forEach(f => {
+        if((f.data_financeira||'').slice(0,10)===todayStr) dayTotal+=(parseFloat(f.valor_financeiro)||0);
+      });
+      orders.forEach(o => { if((o.data_pedido||'').slice(0,10)===todayStr) ordersDayCount++; });
+
+      const orderExpenses = orders.reduce((s,o)=>s+(parseFloat(o.despesa)||0),0);
+      const manualExpenses = finances.filter(f=>f.tipo_financeiro==='despesa').reduce((s,f)=>s+(parseFloat(f.valor_financeiro)||0),0);
+      const totalExpenses = orderExpenses + manualExpenses;
+      const financialReceipts = finances.filter(f=>f.tipo_financeiro==='receita').reduce((s,f)=>s+(parseFloat(f.valor_financeiro)||0),0);
+
+      // Lucro = receitas - despesas (sem desconto de 10%)
+      const profit = financialReceipts - totalExpenses;
+
+      setText('kpi-day', fmt(dayTotal));
+      setText('kpi-prod', orders.filter(o=>o.status_pedido==='EM PRODUÇÃO').length);
+      setText('kpi-delivered', orders.filter(o=>o.status_pedido==='ENTREGUE').length);
+      setText('kpi-clients', clients.length);
+      setText('kpi-pending', orders.filter(o=>['AGUARDANDO','EM PRODUÇÃO'].includes(o.status_pedido)).length);
+      setText('kpi-orders-day', ordersDayCount);
+      setText('kpi-investment', fmt(totalExpenses));
+      setText('kpi-profit', fmt(profit));
+      drawCharts(cm);
+    }
+
+    function viewDayHistory(dateStr, value) {
+      const orders = allData.filter(d => d.tipo_registro === 'pedido' && (d.data_pedido || '').slice(0,10) === dateStr);
+      const finances = allData.filter(d => d.tipo_registro === 'financeiro' && (d.data_financeira || '').slice(0,10) === dateStr);
+      
+      let html = `<div class="modal-overlay" onclick="if(event.target===this)closeModal()"><div class="modal-box"><h3 class="text-lg font-bold gold mb-3">Movimentação do Dia: ${dateStr.split('-').reverse().join('/')}</h3><p class="text-xs opacity-60 mb-4">Total faturado no dia: <strong class="text-green-400 font-bold">${fmt(value)}</strong></p>`;
+      
+      html += `<h4 class="text-xs uppercase tracking-wide opacity-50 mb-2">Pedidos do Dia</h4>`;
+      if(orders.length === 0) {
+        html += `<p class="text-xs opacity-40 mb-4">Nenhum pedido cadastrado neste dia.</p>`;
+      } else {
+        html += `<div class="max-h-40 overflow-y-auto mb-4 border border-gray-800 rounded p-2"><table class="table-erp"><thead><tr><th>Pedido</th><th>Cliente</th><th>Serviço</th><th>Valor</th></tr></thead><tbody>`;
+        orders.forEach(o => {
+          html += `<tr><td class="font-bold gold">${o.numero_pedido}</td><td>${o.cliente_id}</td><td>${o.servico}</td><td>${fmt(parseFloat(o.total_pedido||0))}</td></tr>`;
+        });
+        html += `</tbody></table></div>`;
       }
 
-      const { error } = await db
-        .from('clientes')
-        .insert({
-          nome: nome,
-          telefone: document.getElementById('clienteTelefone').value,
-          whatsapp: document.getElementById('clienteWhatsapp').value,
-          email: document.getElementById('clienteEmail').value,
-          cidade: document.getElementById('clienteCidade').value,
-          estado: document.getElementById('clienteEstado').value
+      html += `<h4 class="text-xs uppercase tracking-wide opacity-50 mb-2">Lançamentos Financeiros</h4>`;
+      if(finances.length === 0) {
+        html += `<p class="text-xs opacity-40 mb-4">Nenhum lançamento neste dia.</p>`;
+      } else {
+        html += `<div class="max-h-40 overflow-y-auto mb-4 border border-gray-800 rounded p-2"><table class="table-erp"><thead><tr><th>Tipo</th><th>Categoria</th><th>Descrição</th><th>Valor</th></tr></thead><tbody>`;
+        finances.forEach(f => {
+          html += `<tr><td class="${f.tipo_financeiro==='receita'?'text-green-400':'text-red-400'} font-bold uppercase">${f.tipo_financeiro}</td><td>${f.categoria_financeira}</td><td>${f.descricao_financeira}</td><td>${fmt(parseFloat(f.valor_financeiro||0))}</td></tr>`;
         });
-
-      if (error) {
-        return mensagem('msgCliente', error.message, 'erro');
+        html += `</tbody></table></div>`;
       }
 
-      mensagem(
-        'msgCliente',
-        'Cliente salvo com sucesso!',
-        'sucesso'
-      );
-
-      document
-        .querySelectorAll('#clientes input')
-        .forEach(function (x) {
-          x.value = '';
-        });
-
-      carregarClientes();
+      html += `<div class="flex mt-4"><button class="bg-gold text-black font-bold px-6 py-2 rounded-lg text-sm w-full" onclick="closeModal()">Fechar</button></div></div></div>`;
+      $('modal-container').innerHTML = html;
     }
 
-    async function carregarClientes() {
-      const { data, error } = await db
-        .from('clientes')
-        .select('*')
-        .order('criado_em', {
-          ascending: false
-        });
-
-      if (error) return;
-
-      document.getElementById('listaClientes').innerHTML =
-        (data || [])
-          .map(function (x) {
-            return `
-              <div class="item">
-                <b>${x.nome}</b><br>
-                ${x.telefone || ''}
-                ${x.email || ''}
-              </div>
-            `;
-          })
-          .join('') ||
-        'Nenhum cliente cadastrado.';
+    function setupChartWeeklyClickHandler() {
+      const canvas = $('chart-weekly');
+      if (!canvas) return;
+      
+      canvas.onclick = function(evt) {
+        if (!lastWeeklyChartData) return;
+        const rect = canvas.getBoundingClientRect();
+        const scaleX = canvas.width / rect.width;
+        const x = (evt.clientX - rect.left) * scaleX;
+        
+        const { barW, days, values, chartH } = lastWeeklyChartData;
+        
+        // Find which bar was clicked
+        for (let i = 0; i < 31; i++) {
+          const barX = 40 + i * barW + barW * 0.1;
+          const barWidth = barW * 0.8;
+          if (x >= barX && x <= barX + barWidth) {
+            viewDayHistory(days[i], values[i]);
+            break;
+          }
+        }
+      };
     }
 
-    async function salvarPedido() {
-      const { error } = await db
-        .from('pedidos')
-        .insert({
-          servico: document.getElementById('pedidoServico').value,
-          material: document.getElementById('pedidoMaterial').value,
-          quantidade:
-            Number(
-              document.getElementById('pedidoQuantidade').value
-            ) || 1,
-          total:
-            Number(
-              document.getElementById('pedidoTotal').value
-            ) || 0,
-          data_entrega:
-            document.getElementById('pedidoEntrega').value || null,
-          status:
-            document.getElementById('pedidoStatus').value
-        });
+    function drawCharts(cm) {
+      const canvas = $('chart-weekly');
+      if(!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const w = canvas.width = canvas.offsetWidth * 2;
+      const h = canvas.height = 320;
+      ctx.clearRect(0,0,w,h);
+      
+      // Calculate last 31 days
+      const now = new Date();
+      const days = [];
+      for(let i=30;i>=0;i--) days.push(new Date(now - i*86400000).toISOString().slice(0,10));
+      const finances = allData.filter(f => f.tipo_registro === 'financeiro' && f.tipo_financeiro === 'receita' && f.arquivado !== 'sim');
+      const values = days.map(day => finances.filter(f=>(f.data_financeira||'').slice(0,10)===day).reduce((s,f)=>s+parseFloat(f.valor_financeiro||0),0));
+      const max = Math.max(...values,1);
+      const barW = (w-60)/31;
+      const chartH = h-70;
+      
+      // Save data for click identification
+      lastWeeklyChartData = { barW, days, values, chartH };
+      
+      values.forEach((v,i) => {
+        const bh = (v/max)*chartH;
+        const x = 40+i*barW+barW*0.1;
+        const bw = barW*0.8;
+        ctx.fillStyle = '#FFD700';
+        ctx.fillRect(x, chartH-bh+30, bw, bh);
+        
+        // Highlight active positive sales days
+        if(v > 0) {
+          ctx.strokeStyle = '#fff';
+          ctx.strokeRect(x, chartH-bh+30, bw, bh);
+        }
+        
+        // Render simple vertical dates or every 5th label for 31 days clean display
+        if(i % 5 === 0 || i === 30) {
+          ctx.fillStyle = '#888';
+          ctx.font = '14px DM Sans';
+          ctx.textAlign = 'center';
+          ctx.fillText(days[i].slice(8) + '/' + days[i].slice(5, 7), x+bw/2, h-10);
+        }
+      });
+      setupChartWeeklyClickHandler();
 
-      if (error) {
-        return mensagem('msgPedido', error.message, 'erro');
-      }
-
-      mensagem(
-        'msgPedido',
-        'Pedido salvo com sucesso!',
-        'sucesso'
-      );
-
-      carregarPedidos();
+      const canvas2 = $('chart-services');
+      if(!canvas2) return;
+      const ctx2 = canvas2.getContext('2d');
+      const w2 = canvas2.width = canvas2.offsetWidth*2;
+      const h2 = canvas2.height = 320;
+      ctx2.clearRect(0,0,w2,h2);
+      const orders = allData.filter(d => d.tipo_registro === 'pedido' && d.mes === cm && d.arquivado !== 'sim');
+      const svcMap = {};
+      orders.forEach(o => { const s = o.servico||'Outros'; svcMap[s]=(svcMap[s]||0)+1; });
+      const sorted = Object.entries(svcMap).sort((a,b)=>b[1]-a[1]).slice(0,5);
+      const maxS = sorted.length ? sorted[0][1] : 1;
+      const barH2 = (h2-40)/(sorted.length||1);
+      const colors = ['#FFD700','#fbbf24','#f59e0b','#d97706','#b45309'];
+      sorted.forEach(([name,count],i) => {
+        const bw = (count/maxS)*(w2-160);
+        ctx2.fillStyle = colors[i]||'#FFD700';
+        ctx2.fillRect(10, 20+i*barH2+barH2*0.2, bw, barH2*0.6);
+        ctx2.fillStyle = '#ccc';
+        ctx2.font = '18px DM Sans';
+        ctx2.textAlign = 'left';
+        ctx2.fillText(`${name} (${count})`, bw+20, 20+i*barH2+barH2*0.6);
+      });
     }
 
-    async function carregarPedidos() {
-      const { data, error } = await db
-        .from('pedidos')
-        .select('*')
-        .order('criado_em', {
-          ascending: false
-        });
-
-      if (error) return;
-
-      document.getElementById('listaPedidos').innerHTML =
-        (data || [])
-          .map(function (x) {
-            return `
-              <div class="item">
-                <b>
-                  #${x.numero || ''}
-                  ${x.servico || ''}
-                </b>
-                — ${x.status}
-                <br>
-                R$ ${Number(x.total || 0).toFixed(2)}
-              </div>
-            `;
-          })
-          .join('') ||
-        'Nenhum pedido cadastrado.';
+    function renderClients() {
+      let items = getClients();
+      // Sort clients alphabetically by name (A-Z)
+      items.sort((a, b) => (a.nome_cliente || '').localeCompare(b.nome_cliente || '', 'pt-BR', { sensitivity: 'base' }));
+      
+      const tbody = $('clients-tbody');
+      if(!tbody) return;
+      tbody.innerHTML = '';
+      const emptyEl = $('clients-empty'); if(emptyEl) emptyEl.classList.toggle('hidden', items.length>0);
+      items.forEach((c,i) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${i+1}</td><td class="font-semibold cursor-pointer hover:text-gold" onclick="viewClientHistory('${c.__backendId}')">${c.nome_cliente||''}</td><td>${c.documento||'-'}</td><td>${c.telefone||'-'}</td><td>${c.email||'-'}</td><td>${c.cidade||'-'}</td><td><button class="btn-action bg-blue-700 text-white" onclick="openClientEditModal('${c.__backendId}')">Editar</button><button class="btn-action bg-red-900 text-white" onclick="deleteRecord('${c.__backendId}')">Excluir</button></td>`;
+        tbody.appendChild(tr);
+      });
     }
 
-    async function salvarDespesa() {
-      const produto =
-        document.getElementById('despesaProduto').value.trim();
-
-      if (!produto) {
-        return mensagem(
-          'msgDespesa',
-          'Informe o produto',
-          'erro'
-        );
-      }
-
-      const { error } = await db
-        .from('despesas')
-        .insert({
-          produto: produto,
-          valor_unitario:
-            Number(
-              document.getElementById('despesaValor').value
-            ) || 0,
-          data_compra:
-            document.getElementById('despesaData').value ||
-            null,
-          local_compra:
-            document.getElementById('despesaLocal').value
-        });
-
-      if (error) {
-        return mensagem(
-          'msgDespesa',
-          error.message,
-          'erro'
-        );
-      }
-
-      mensagem(
-        'msgDespesa',
-        'Despesa salva com sucesso!',
-        'sucesso'
-      );
-
-      carregarDespesas();
-    }
-
-    async function carregarDespesas() {
-      const { data, error } = await db
-        .from('despesas')
-        .select('*')
-        .order('criado_em', {
-          ascending: false
-        });
-
-      if (error) return;
-
-      document.getElementById('listaDespesas').innerHTML =
-        (data || [])
-          .map(function (x) {
-            return `
-              <div class="item">
-                <b>${x.produto}</b>
-                —
-                R$ ${Number(
-                  x.valor_unitario || 0
-                ).toFixed(2)}
-              </div>
-            `;
-          })
-          .join('') ||
-        'Nenhuma despesa cadastrada.';
-    }
-
-    async function salvarFinanceiro() {
-      const { error } = await db
-        .from('financeiro')
-        .insert({
-          tipo: document.getElementById('finTipo').value,
-          categoria:
-            document.getElementById('finCategoria').value,
-          valor:
-            Number(
-              document.getElementById('finValor').value
-            ) || 0,
-          data:
-            document.getElementById('finData').value ||
-            null,
-          descricao:
-            document.getElementById('finDescricao').value
-        });
-
-      if (error) {
-        return mensagem(
-          'msgFinanceiro',
-          error.message,
-          'erro'
-        );
-      }
-
-      mensagem(
-        'msgFinanceiro',
-        'Lançamento salvo com sucesso!',
-        'sucesso'
-      );
-
-      carregarFinanceiro();
-    }
-
-    async function carregarFinanceiro() {
-      const { data, error } = await db
-        .from('financeiro')
-        .select('*')
-        .order('criado_em', {
-          ascending: false
-        });
-
-      if (error) return;
-
-      document.getElementById('listaFinanceiro').innerHTML =
-        (data || [])
-          .map(function (x) {
-            return `
-              <div class="item">
-                <b>${x.tipo}</b>
-                —
-                ${x.categoria || ''}
-                —
-                R$ ${Number(
-                  x.valor || 0
-                ).toFixed(2)}
-                <br>
-                ${x.descricao || ''}
-              </div>
-            `;
-          })
-          .join('') ||
-        'Nenhum lançamento cadastrado.';
-    }
-
-    async function carregarDashboard() {
-      const tabelas = [
-        'clientes',
-        'pedidos',
-        'despesas',
-        'financeiro'
-      ];
-
-      for (const tabela of tabelas) {
-        const { count } = await db
-          .from(tabela)
-          .select('*', {
-            count: 'exact',
-            head: true
-          });
-
-        const id =
-          'total' +
-          tabela.charAt(0).toUpperCase() +
-          tabela.slice(1);
-
-        const elemento =
-          document.getElementById(id);
-
-        if (elemento) {
-          elemento.textContent = count || 0;
+    function viewClientHistory(clientId) {
+      const client = getClients().find(c=>c.__backendId===clientId);
+      if(!client) return;
+      
+      // Load permanent purchase history from snapshot_data field
+      let allOrders = [];
+      if(client.snapshot_data) {
+        try {
+          allOrders = JSON.parse(client.snapshot_data);
+        } catch(e) {
+          allOrders = [];
         }
       }
+      
+      let historyHTML = '<h4 class="text-xs uppercase tracking-wide opacity-60 mb-3">Histórico de Compras (Todos os Períodos)</h4>';
+      
+      if(allOrders.length === 0) {
+        historyHTML += '<p class="text-xs opacity-40">Nenhuma compra registrada.</p>';
+      } else {
+        // Sort by date descending
+        allOrders.sort((a,b) => (b.data_pedido||'').localeCompare(a.data_pedido||''));
+        
+        let totalSpent = 0;
+        let firstOrder = null;
+        let lastOrder = null;
+        
+        allOrders.forEach((o, idx) => {
+          const amount = parseFloat(o.total_pedido||0);
+          totalSpent += amount;
+          if(idx === 0) firstOrder = o;
+          if(idx === allOrders.length - 1) lastOrder = o;
+        });
+        
+        // Show first and last purchase summary
+        historyHTML += '<div class="bg-gray-900 p-3 rounded mb-3 border border-gray-700">';
+        historyHTML += '<div class="text-[10px] uppercase opacity-60 mb-2">📊 Resumo</div>';
+        if(firstOrder) {
+          historyHTML += `<div class="text-xs mb-1"><span class="opacity-60">Primeira compra:</span> <span class="text-gold font-bold">${firstOrder.data_pedido || 'N/A'}</span> - ${fmt(parseFloat(firstOrder.total_pedido||0))}</div>`;
+        }
+        if(lastOrder && lastOrder !== firstOrder) {
+          historyHTML += `<div class="text-xs"><span class="opacity-60">Última compra:</span> <span class="text-gold font-bold">${lastOrder.data_pedido || 'N/A'}</span> - ${fmt(parseFloat(lastOrder.total_pedido||0))}</div>`;
+        }
+        historyHTML += '</div>';
+        
+        // Show all orders
+        historyHTML += '<div class="text-xs opacity-70 mb-3 max-h-64 overflow-y-auto">';
+        allOrders.forEach((o, idx) => {
+          const amount = parseFloat(o.total_pedido||0);
+          const date = o.data_pedido || 'N/A';
+          const service = o.servico || 'Sem descrição';
+          const status = o.status_pedido || '';
+          const isFirst = idx === 0 ? ' (Primeira)' : '';
+          const isLast = idx === allOrders.length - 1 ? ' (Última)' : '';
+          historyHTML += `<div class="mb-2 pb-2 border-b border-gray-700"><div class="font-semibold">${date}${isFirst}${isLast}</div><div>Pedido ${o.numero_pedido||'-'} — ${service}</div><div class="text-[10px] opacity-50">Valor: ${fmt(amount)} | ${status}</div></div>`;
+        });
+        historyHTML += '</div>';
+        
+        // Show totals
+        historyHTML += `<div class="bg-gray-800 p-3 rounded text-center"><p class="text-xs opacity-60">${allOrders.length} compra(s) no total</p><p class="text-sm font-bold gold">Total: ${fmt(totalSpent)}</p></div>`;
+      }
+      
+      $('modal-container').innerHTML = `<div class="modal-overlay" onclick="if(event.target===this)closeModal()"><div class="modal-box"><h3 class="text-lg font-bold gold mb-4">${client.nome_cliente||'Cliente'}</h3><div class="grid grid-cols-2 gap-3 text-sm mb-4"><div><label class="text-[10px] uppercase opacity-60 block mb-1">CPF/CNPJ</label><p class="opacity-80">${client.documento||'-'}</p></div><div><label class="text-[10px] uppercase opacity-60 block mb-1">Telefone</label><p class="opacity-80">${client.telefone||'-'}</p></div><div><label class="text-[10px] uppercase opacity-60 block mb-1">WhatsApp</label><p class="opacity-80">${client.whatsapp||'-'}</p></div><div><label class="text-[10px] uppercase opacity-60 block mb-1">E-mail</label><p class="opacity-80">${client.email||'-'}</p></div><div><label class="text-[10px] uppercase opacity-60 block mb-1">Cidade</label><p class="opacity-80">${client.cidade||'-'}</p></div><div><label class="text-[10px] uppercase opacity-60 block mb-1">Estado</label><p class="opacity-80">${client.estado||'-'}</p></div><div><label class="text-[10px] uppercase opacity-60 block mb-1">Endereço</label><p class="opacity-80">${client.endereco||'-'}</p></div><div><label class="text-[10px] uppercase opacity-60 block mb-1">Observações</label><p class="opacity-80">${client.observacoes||'-'}</p></div></div><div class="border-t border-gray-700 pt-4">${historyHTML}</div><div class="flex gap-3 mt-6"><button class="bg-blue-700 text-white font-bold px-6 py-2 rounded-lg text-sm" onclick="openClientEditModal('${clientId}')">Editar</button><button class="bg-gold text-black font-bold px-6 py-2 rounded-lg text-sm" onclick="closeModal()">Fechar</button></div></div></div>`;
     }
 
-    function mensagem(id, texto, tipo) {
-      const elemento =
-        document.getElementById(id);
-
-      elemento.textContent = texto;
-      elemento.className = tipo;
-
-      setTimeout(function () {
-        elemento.textContent = '';
-      }, 4000);
+    function viewOrderDetails(id) {
+      const order = allData.find(r=>r.__backendId===id);
+      if(!order) return;
+      const total = (parseFloat(order.total_pedido)||0);
+      $('modal-container').innerHTML = `<div class="modal-overlay" onclick="if(event.target===this)closeModal()"><div class="modal-box"><h3 class="text-lg font-bold gold mb-4">Detalhes do Pedido #${order.numero_pedido||''}</h3><div class="grid grid-cols-2 gap-3 text-sm mb-6"><div><label class="text-[10px] uppercase opacity-60 block mb-1">Cliente</label><p class="opacity-80">${order.cliente_id||'-'}</p></div><div><label class="text-[10px] uppercase opacity-60 block mb-1">Data</label><p class="opacity-80">${order.data_pedido||'-'}</p></div><div><label class="text-[10px] uppercase opacity-60 block mb-1">Serviço</label><p class="opacity-80">${order.servico||'-'}</p></div><div><label class="text-[10px] uppercase opacity-60 block mb-1">Material</label><p class="opacity-80">${order.material||'-'}</p></div><div><label class="text-[10px] uppercase opacity-60 block mb-1">Quantidade</label><p class="opacity-80">${order.quantidade||'-'}</p></div><div><label class="text-[10px] uppercase opacity-60 block mb-1">Total</label><p class="opacity-80 font-bold gold">${fmt(total)}</p></div><div><label class="text-[10px] uppercase opacity-60 block mb-1">Investimento</label><p class="opacity-80">${fmt(parseFloat(order.investimento||0))}</p></div><div><label class="text-[10px] uppercase opacity-60 block mb-1">Data Entrega</label><p class="opacity-80">${order.data_entrega||'-'}</p></div><div><label class="text-[10px] uppercase opacity-60 block mb-1">Status</label><p class="opacity-80"><span class="px-2 py-1 rounded text-[10px] font-bold ${getStatusClass(order.status_pedido)}">${order.status_pedido||'-'}</span></p></div><div class="col-span-2"><label class="text-[10px] uppercase opacity-60 block mb-1">Observações</label><p class="opacity-80 text-xs whitespace-pre-wrap">${order.notas_pedido||'(Sem observações)'}</p></div></div><div class="flex gap-3"><button class="bg-gold text-black font-bold px-6 py-2 rounded-lg text-sm" onclick="closeModal()">Fechar</button></div></div></div>`;
     }
 
-    carregarDashboard();
+    function renderOrders() {
+      const todayStr = new Date().toISOString().slice(0,10);
+      const allOrders = getOrders();
+      let filteredItems = allOrders;
+      
+      if(orderFilter==='day') {
+        filteredItems = allOrders.filter(o=>(o.data_pedido||'').slice(0,10)===todayStr);
+      } else if(orderFilter==='date') {
+        const d = $('order-date-filter').value;
+        if(d) filteredItems = allOrders.filter(o=>(o.data_pedido||'').slice(0,10)===d);
+      }
+      
+      const tbody = $('orders-tbody');
+      if(!tbody) return;
+      tbody.innerHTML = '';
+      const emptyEl = $('orders-empty'); if(emptyEl) emptyEl.classList.toggle('hidden', filteredItems.length>0);
+      let newCount=0, prodCount=0, totalCount=0;
+      filteredItems.forEach(o => {
+        totalCount++;
+        if(o.status_pedido==='AGUARDANDO') newCount++;
+        if(o.status_pedido==='EM PRODUÇÃO') prodCount++;
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td class="font-bold gold">${o.numero_pedido||'-'}</td><td>${o.data_pedido||'-'}</td><td>${o.cliente_id||'-'}</td><td>${o.servico||'-'}</td><td>${o.material||'-'}</td><td>${fmt(parseFloat(o.total_pedido||0))}</td><td>${fmt(parseFloat(o.investimento||0))}</td><td>${o.data_entrega||'-'}</td><td><span class="px-2 py-1 rounded text-[10px] font-bold ${getStatusClass(o.status_pedido)}">${o.status_pedido||'-'}</span></td><td><div class="flex gap-1"><button class="btn-action bg-gray-600 text-white" onclick="viewOrderDetails('${o.__backendId}')">Ver</button><button class="btn-action bg-blue-700 text-white" onclick="openOrderEditModal('${o.__backendId}')">Editar</button><button class="btn-action bg-green-700 text-white" onclick="advanceOrder('${o.__backendId}')">Avançar</button><button class="btn-action bg-red-900 text-white" onclick="deleteRecord('${o.__backendId}')">Excluir</button></div></td>`;
+        tbody.appendChild(tr);
+      });
+      setText('ord-new', newCount);
+      setText('ord-prod', prodCount);
+      setText('ord-total', totalCount);
+    }
+
+    function renderExpenses() {
+      const items = getExpenses();
+      const orders = getOrders();
+      const tbody = $('expenses-tbody');
+      if(!tbody) return;
+      tbody.innerHTML = '';
+      const emptyEl = $('expenses-empty'); if(emptyEl) emptyEl.classList.toggle('hidden', items.length>0);
+      let totalExpense = 0;
+      items.forEach(e => {
+        const spent = parseFloat(e.total_gasto||0);
+        totalExpense += spent;
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td class="font-semibold">${e.nome_produto||'-'}</td><td>${e.data_compra||'-'}</td><td>${fmt(parseFloat(e.valor_unitario||0))}</td><td>${e.tipo_pagamento||'-'}</td><td>${e.local_compra||'-'}</td><td class="font-bold">${fmt(spent)}</td><td><div class="flex gap-1"><button class="btn-action bg-blue-700 text-white" onclick="openExpenseEditModal('${e.__backendId}')">Editar</button><button class="btn-action bg-red-900 text-white" onclick="deleteRecord('${e.__backendId}')">Excluir</button></div></td>`;
+        tbody.appendChild(tr);
+      });
+      const ordersExpenses = orders.reduce((s,o)=>s+(parseFloat(o.despesa)||0),0);
+      setText('exp-total', fmt(totalExpense));
+      setText('exp-orders-investment', fmt(ordersExpenses));
+      setText('exp-total-investment', fmt(totalExpense + ordersExpenses));
+      
+      drawExpensesChart(items);
+    }
+
+    function drawExpensesChart(items) {
+      const canvas = $('chart-expenses');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const w = canvas.width = canvas.offsetWidth * 2;
+      const h = canvas.height = 320;
+      ctx.clearRect(0,0,w,h);
+      
+      // Group expenses by category
+      const expMap = {};
+      items.forEach(e => {
+        const cat = e.categoria_financeira || 'Outros';
+        const val = parseFloat(e.total_gasto || 0);
+        expMap[cat] = (expMap[cat] || 0) + val;
+      });
+      
+      const sorted = Object.entries(expMap).sort((a,b)=>b[1]-a[1]);
+      const maxVal = sorted.length ? sorted[0][1] : 1;
+      const barH = (h-40)/(sorted.length||1);
+      const colors = ['#f87171', '#fca5a5', '#fcd34d', '#34d399', '#60a5fa', '#a78bfa', '#cbd5e1'];
+      
+      sorted.forEach(([name, val], i) => {
+        const bw = (val/maxVal) * (w-280);
+        ctx.fillStyle = colors[i] || '#f87171';
+        ctx.fillRect(10, 20+i*barH+barH*0.2, bw, barH*0.6);
+        ctx.fillStyle = '#ccc';
+        ctx.font = '16px DM Sans';
+        ctx.textAlign = 'left';
+        ctx.fillText(`${name} (${fmt(val)})`, bw+20, 20+i*barH+barH*0.6);
+      });
+      
+      if (sorted.length === 0) {
+        ctx.fillStyle = '#888';
+        ctx.font = '18px DM Sans';
+        ctx.textAlign = 'center';
+        ctx.fillText('Nenhuma despesa para exibir no gráfico', w/2, h/2);
+      }
+    }
+
+    function renderFinance() {
+      const items = getFinances();
+      const orders = getOrders();
+      const tbody = $('finance-tbody');
+      if(!tbody) return;
+      tbody.innerHTML = '';
+      const emptyEl = $('finance-empty'); if(emptyEl) emptyEl.classList.toggle('hidden', items.length>0);
+      let income=0, expense=0;
+      items.forEach(f => {
+        const amt = (parseFloat(f.valor_financeiro)||0);
+        if(f.tipo_financeiro==='receita') income+=amt;
+        else expense+=amt;
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${f.data_financeira||'-'}</td><td class="${f.tipo_financeiro==='receita'?'text-green-400':'text-red-400'} font-bold uppercase text-[11px]">${f.tipo_financeiro||'-'}</td><td>${f.categoria_financeira||'-'}</td><td>${f.descricao_financeira||'-'}</td><td class="font-bold">${fmt(amt)}</td><td>${f.metodo_pagamento||'-'}</td><td><div class="flex gap-1"><button class="btn-action bg-blue-700 text-white" onclick="openFinanceEditModal('${f.__backendId}')">Editar</button><button class="btn-action bg-red-900 text-white" onclick="deleteRecord('${f.__backendId}')">Excluir</button></div></td>`;
+        tbody.appendChild(tr);
+      });
+      const ordersExpenses = orders.reduce((s,o)=>s+(parseFloat(o.despesa)||0),0);
+      const totalExpenses = expense + ordersExpenses;
+      const profit = income - totalExpenses;
+      setText('fin-income', fmt(income));
+      setText('fin-investment', fmt(totalExpenses));
+      setText('fin-expense', fmt(totalExpenses));
+      setText('fin-profit', fmt(profit));
+      setText('fin-ten-percent', fmt(profit * 0.1));
+      setText('fin-net-profit', fmt(profit * 0.9));
+    }
+
+    function filterTable(page) {
+      const searchInput = $(page + '-search');
+      if (!searchInput) return;
+      const filter = searchInput.value.toLowerCase();
+      const tbody = $(page + '-tbody');
+      if (!tbody) return;
+      [...tbody.getElementsByTagName('tr')].forEach(row => {
+        row.style.display = row.textContent.toLowerCase().includes(filter) ? '' : 'none';
+      });
+    }
+
+    // HISTORY
+    function populateHistoryMonths() {
+      const closed = getClosedMonths();
+      let monthsToShow = closed.length > 0 ? closed : [...new Set(allData.filter(d=>d.mes && d.mes!==getCurrentMonth() && ['pedido','financeiro','despesa'].includes(d.tipo_registro)).map(d=>d.mes))].sort().reverse();
+      const select = $('history-month-select');
+      const current = select.value;
+      select.innerHTML = '<option value="">-- Selecione --</option>';
+      monthsToShow.forEach(m => {
+        const opt = document.createElement('option');
+        opt.value = m; opt.textContent = monthLabel(m);
+        select.appendChild(opt);
+      });
+      if(current && select.querySelector(`option[value="${current}"]`)) select.value = current;
+    }
+
+    function renderHistory() {
+      const month = $('history-month-select').value;
+      const content = $('history-content');
+      const empty = $('history-empty');
+      const copyBtn = document.querySelector('[data-template-id="history-copy-btn"]');
+      const whatsappBtn = document.querySelector('[data-template-id="history-whatsapp-btn"]');
+      const deleteBtn = document.querySelector('[data-template-id="history-delete-btn"]');
+      if(!month) {
+        content.classList.add('hidden'); empty.classList.remove('hidden');
+        if(copyBtn) copyBtn.classList.add('hidden');
+        if(whatsappBtn) whatsappBtn.classList.add('hidden');
+        if(deleteBtn) deleteBtn.classList.add('hidden');
+        return;
+      }
+      content.classList.remove('hidden'); empty.classList.add('hidden');
+      if(copyBtn) copyBtn.classList.remove('hidden');
+      if(whatsappBtn) whatsappBtn.classList.remove('hidden');
+      if(deleteBtn) deleteBtn.classList.remove('hidden');
+
+      // Get archived data directly from allData (records with mes=month and arquivado='sim')
+      let orders = allData.filter(d => d.tipo_registro === 'pedido' && d.mes === month && d.arquivado === 'sim');
+      let finances = allData.filter(d => d.tipo_registro === 'financeiro' && d.mes === month && d.arquivado === 'sim');
+      let expenses = allData.filter(d => d.tipo_registro === 'despesa' && d.mes === month && d.arquivado === 'sim');
+
+      let income=0, exp=0;
+      finances.forEach(f=>{
+        const a=(parseFloat(f.valor_financeiro)||0);
+        if(f.tipo_financeiro==='receita')income+=a;
+        else exp+=a;
+      });
+      const ordExp = orders.reduce((s,o)=>s+(parseFloat(o.despesa||0)),0);
+      const expProd = expenses.reduce((s,e)=>s+(parseFloat(e.total_gasto||0)),0);
+      const totalExp = ordExp+expProd+exp;
+      const profit = income-totalExp;
+
+      setText('hist-income', fmt(income));
+      setText('hist-investment', fmt(totalExp));
+      setText('hist-expense', fmt(totalExp));
+      setText('hist-profit', fmt(profit * 0.9));
+      setText('hist-orders', orders.length);
+
+      const otb = $('hist-orders-tbody'); otb.innerHTML = '';
+      orders.forEach(o=>{
+        const tr=document.createElement('tr');
+        tr.innerHTML=`<td class="font-bold gold">${o.numero_pedido||'-'}</td><td>${o.data_pedido||'-'}</td><td>${o.cliente_id||'-'}</td><td>${o.servico||'-'}</td><td>${fmt(parseFloat(o.total_pedido||0))}</td><td><span class="px-2 py-1 rounded text-[10px] font-bold ${getStatusClass(o.status_pedido)}">${o.status_pedido||'-'}</span></td>`;
+        otb.appendChild(tr);
+      });
+      const ftb = $('hist-finance-tbody'); ftb.innerHTML = '';
+      finances.forEach(f=>{
+        const tr=document.createElement('tr');
+        tr.innerHTML=`<td>${f.data_financeira||'-'}</td><td class="${f.tipo_financeiro==='receita'?'text-green-400':'text-red-400'} font-bold uppercase text-[11px]">${f.tipo_financeiro||'-'}</td><td>${f.categoria_financeira||'-'}</td><td>${f.descricao_financeira||'-'}</td><td class="font-bold">${fmt(parseFloat(f.valor_financeiro||0))}</td>`;
+        ftb.appendChild(tr);
+      });
+      const etb = $('hist-expenses-tbody'); etb.innerHTML = '';
+      expenses.forEach(e=>{
+        const tr=document.createElement('tr');
+        tr.innerHTML=`<td>${e.nome_produto||'-'}</td><td>${e.data_compra||'-'}</td><td class="font-bold">${fmt(parseFloat(e.total_gasto||0))}</td>`;
+        etb.appendChild(tr);
+      });
+    }
+
+    function generateHistoryCSV(month) {
+      // Get archived data directly from allData
+      let orders = allData.filter(d => d.tipo_registro === 'pedido' && d.mes === month && d.arquivado === 'sim');
+      let finances = allData.filter(d => d.tipo_registro === 'financeiro' && d.mes === month && d.arquivado === 'sim');
+      let expenses = allData.filter(d => d.tipo_registro === 'despesa' && d.mes === month && d.arquivado === 'sim');
+      
+      let income=0, exp=0;
+      finances.forEach(f=>{
+        const a=(parseFloat(f.valor_financeiro)||0);
+        if(f.tipo_financeiro==='receita')income+=a;
+        else exp+=a;
+      });
+      const ordExp = orders.reduce((s,o)=>s+(parseFloat(o.despesa||0)),0);
+      const expProd = expenses.reduce((s,e)=>s+(parseFloat(e.total_gasto||0)),0);
+      const totalExp = ordExp+expProd;
+      const profit = income-totalExp-exp;
+      let csv = `PHSUBLIME ERP - Histórico ${monthLabel(month)}\n`;
+      csv += `Gerado em: ${new Date().toLocaleString('pt-BR')}\n\n`;
+      csv += `RESUMO\nReceitas,${fmt(income)}\nDespesas,${fmt(totalExp+exp)}\nLucro,${fmt(profit)}\n\n`;
+      if(orders.length){csv+=`=== PEDIDOS ===\n`+['Número','Data','Cliente','Serviço','Material','Quantidade','Total','Despesa','Entrega','Status','Notas'].map(h=>`"${h}"`).join(',')+'\n';orders.forEach(o=>{csv+=[o.numero_pedido||'',o.data_pedido||'',o.cliente_id||'',o.servico||'',o.material||'',o.quantidade||'',o.total_pedido||'',o.despesa||'',o.data_entrega||'',o.status_pedido||'',o.notas_pedido||''].map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')+'\n';});csv+='\n';}
+      if(finances.length){csv+=`=== FINANCEIRO ===\n`+['Data','Tipo','Categoria','Descrição','Valor','Método'].map(h=>`"${h}"`).join(',')+'\n';finances.forEach(f=>{csv+=[f.data_financeira||'',f.tipo_financeiro||'',f.categoria_financeira||'',f.descricao_financeira||'',f.valor_financeiro||'',f.metodo_pagamento||''].map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')+'\n';});csv+='\n';}
+      if(expenses.length){csv+=`=== DESPESAS ===\n`+['Produto','Data Compra','Valor Unitário','Tipo Pagamento','Onde Comprou','Total Gasto'].map(h=>`"${h}"`).join(',')+'\n';expenses.forEach(e=>{csv+=[e.nome_produto||'',e.data_compra||'',e.valor_unitario||'',e.tipo_pagamento||'',e.local_compra||'',e.total_gasto||''].map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')+'\n';});csv+='\n';}
+      return csv;
+    }
+
+    function copyHistoryData() {
+      const month = $('history-month-select').value;
+      if(!month) { showToast('Selecione um mês.'); return; }
+      const csv = generateHistoryCSV(month);
+      navigator.clipboard.writeText(csv).then(() => showToast('Histórico copiado!')).catch(() => {
+        $('modal-container').innerHTML = `<div class="modal-overlay" onclick="if(event.target===this)closeModal()"><div class="modal-box"><h3 class="text-lg font-bold gold mb-4">Exportar Histórico - ${monthLabel(month)}</h3><textarea class="input-erp w-full h-64 text-[11px] font-mono p-3" readonly>${csv}</textarea><div class="flex gap-3 mt-4"><button class="bg-gold text-black font-bold px-6 py-2 rounded-lg text-sm" onclick="document.querySelector('textarea').select();document.execCommand('copy');showToast('Copiado!');closeModal();">Copiar Texto</button><button class="bg-gray-700 text-white px-6 py-2 rounded-lg text-sm" onclick="closeModal()">Fechar</button></div></div></div>`;
+      });
+    }
+
+    function shareHistoryWhatsApp() {
+      const month = $('history-month-select').value;
+      if(!month) { showToast('Selecione um mês.'); return; }
+      window.open(`https://wa.me/?text=${encodeURIComponent(generateHistoryCSV(month))}`, '_blank', 'noopener,noreferrer');
+    }
+
+    async function reopenMonth() {
+      // This function is no longer used but kept for compatibility
+    }
+
+    async function confirmReopenMonth(monthCloseId) {
+      // This function is no longer used but kept for compatibility
+    }
+
+    // CLOSE MONTH
+    function openCloseMonthModal() {
+      const cm = getCurrentMonth();
+      const alreadyClosed = getClosedMonths().includes(cm);
+      const action = alreadyClosed ? 'Reabrir' : 'Fechar';
+      $('modal-container').innerHTML = `<div class="modal-overlay" onclick="if(event.target===this)closeModal()"><div class="modal-box"><h3 class="text-lg font-bold gold mb-4">${action} Mês</h3><p class="text-sm opacity-80 mb-4">Ao ${action.toLowerCase()} o mês <strong>${monthLabel(cm)}</strong>, os dados ${alreadyClosed?'voltarão a aparecer no dashboard':'ficarão disponíveis no Histórico e o dashboard será zerado'}.</p><p class="text-xs opacity-50 mb-6">Os dados permanecem salvos na sua Canva Sheet.</p><div class="flex gap-3"><button class="bg-gold text-black font-bold px-6 py-2 rounded-lg text-sm" onclick="confirmCloseMonth(${alreadyClosed})">Confirmar ${action}</button><button class="bg-gray-700 text-white px-6 py-2 rounded-lg text-sm" onclick="closeModal()">Cancelar</button></div></div></div>`;
+    }
+
+    async function confirmCloseMonth(isReopen) {
+      const cm = getCurrentMonth();
+      if(isReopen) {
+        // Reabrir: desmarcar como arquivados
+        const archivedRecords = allData.filter(r => r.mes === cm && r.arquivado === 'sim' && ['pedido','despesa','financeiro'].includes(r.tipo_registro));
+        if(archivedRecords.length === 0) { showToast('Nenhum registro arquivado para reabrir.'); return; }
+        let reopenCount = 0;
+        for(const record of archivedRecords) {
+          const updated = {...record, arquivado: ''};
+          const r = await window.dataSdk.update(updated);
+          if(r.isOk) reopenCount++;
+        }
+        closeModal();
+        showToast(`Mês reaberto! ${reopenCount} registro(s) restaurado(s).`);
+        renderAll();
+      } else {
+        // Fechar: marcar todos os registros do mês como arquivados
+        const toArchive = allData.filter(d => d.mes === cm && ['pedido','despesa','financeiro'].includes(d.tipo_registro) && d.arquivado !== 'sim');
+        
+        if(toArchive.length === 0) {
+          showToast('Nenhum registro para fechar neste mês.');
+          closeModal();
+          return;
+        }
+        
+        // Mark all records as archived
+        let archiveCount = 0;
+        for(const record of toArchive) {
+          const updated = {...record, arquivado: 'sim'};
+          const r = await window.dataSdk.update(updated);
+          if(r.isOk) archiveCount++;
+        }
+        
+        closeModal();
+        showToast(`Mês fechado! ${archiveCount} registro(s) arquivado(s).`);
+        renderAll();
+      }
+    }
+
+    // MODALS
+    function closeModal() { $('modal-container').innerHTML = ''; }
+    function buildObj(fd, base) {
+      const obj = {...base};
+      for(const [k,v] of fd) obj[k]=v;
+      Object.keys(getSchema()).forEach(k=>{if(!(k in obj))obj[k]='';});
+      return obj;
+    }
+
+    function openClientModal() {
+      $('modal-container').innerHTML = `<div class="modal-overlay" onclick="if(event.target===this)closeModal()"><div class="modal-box"><h3 class="text-lg font-bold gold mb-4">Novo Cliente</h3><form id="client-form" class="grid grid-cols-1 md:grid-cols-2 gap-3"><div><label class="text-[10px] uppercase opacity-60 block mb-1">Nome</label><input name="nome_cliente" class="input-erp" required></div><div><label class="text-[10px] uppercase opacity-60 block mb-1">CPF/CNPJ</label><input name="documento" class="input-erp"></div><div><label class="text-[10px] uppercase opacity-60 block mb-1">Telefone</label><input name="telefone" class="input-erp"></div><div><label class="text-[10px] uppercase opacity-60 block mb-1">WhatsApp</label><input name="whatsapp" class="input-erp"></div><div><label class="text-[10px] uppercase opacity-60 block mb-1">E-mail</label><input name="email" class="input-erp"></div><div><label class="text-[10px] uppercase opacity-60 block mb-1">Cidade</label><input name="cidade" class="input-erp"></div><div><label class="text-[10px] uppercase opacity-60 block mb-1">Estado</label><input name="estado" class="input-erp"></div><div><label class="text-[10px] uppercase opacity-60 block mb-1">Endereço</label><input name="endereco" class="input-erp"></div><div class="md:col-span-2"><label class="text-[10px] uppercase opacity-60 block mb-1">Observações</label><input name="observacoes" class="input-erp"></div><div class="md:col-span-2 flex gap-3 mt-2"><button type="submit" class="bg-gold text-black font-bold px-6 py-2 rounded-lg text-sm" id="client-save-btn">Salvar</button><button type="button" class="bg-gray-700 text-white px-6 py-2 rounded-lg text-sm" onclick="closeModal()">Cancelar</button></div></form></div></div>`;
+      $('client-form').addEventListener('submit', async e => {
+        e.preventDefault();
+        if(allData.length>=999){showToast('Limite atingido');return;}
+        const btn=$('client-save-btn'); btn.disabled=true; btn.textContent='Salvando...';
+        const obj = buildObj(new FormData(e.target), {tipo_registro:'cliente', mes:''});
+        const r = await window.dataSdk.create(obj);
+        if(r.isOk) { closeModal(); showToast('Cliente criado com sucesso!'); }
+        else { btn.disabled=false; btn.textContent='Salvar'; showToast('Erro ao salvar cliente.'); }
+      });
+    }
+
+    function openBulkClientModal() {
+      $('modal-container').innerHTML = `<div class="modal-overlay" onclick="if(event.target===this)closeModal()"><div class="modal-box"><h3 class="text-lg font-bold gold mb-4">Importar Clientes em Massa</h3><p class="text-xs opacity-60 mb-3">Cole os dados com rótulos (Nome, CPF/CNPJ, etc.) ou em formato CSV. O sistema reconhecerá automaticamente.</p><textarea id="bulk-client-input" class="input-erp w-full h-40 text-xs font-mono p-2 mb-3" placeholder="Nome&#10;João Silva&#10;CPF/CNPJ&#10;12345678901&#10;..."></textarea><p class="text-[10px] opacity-40 mb-3">Suporta: rótulos (Nome, CPF/CNPJ, Telefone, WhatsApp, E-mail, Cidade, Estado, Endereço, Observações), CSV, tab ou pipe separado.</p><div class="flex gap-3"><button class="bg-gold text-black font-bold px-6 py-2 rounded-lg text-sm" onclick="processBulkClients()">Importar</button><button class="bg-gray-700 text-white px-6 py-2 rounded-lg text-sm" onclick="closeModal()">Cancelar</button></div></div></div>`;
+    }
+
+    async function processBulkClients() {
+      const input = $('bulk-client-input').value.trim();
+      if(!input) { showToast('Cole os dados dos clientes.'); return; }
+      
+      let clients = [];
+      const labeledClients = parseLabeledClientData(input);
+      if(labeledClients.length > 0) {
+        clients = labeledClients;
+      } else {
+        clients = parseCSVClientData(input);
+      }
+      
+      if(clients.length === 0) { showToast('Não foi possível analisar os dados.'); return; }
+      
+      let created = 0, skipped = 0;
+      for(const clientData of clients) {
+        if(allData.length + created >= 999) break;
+        
+        const obj = {tipo_registro:'cliente', mes:''};
+        for(const [k,v] of Object.entries(clientData)) {
+          obj[k] = v;
+        }
+        Object.keys(getSchema()).forEach(k=>{if(!(k in obj))obj[k]='';});
+        
+        const r = await window.dataSdk.create(obj);
+        if(r.isOk) created++; else skipped++;
+      }
+      closeModal();
+      showToast(`${created} cliente(s) importado(s), ${skipped} pulado(s).`);
+    }
+    
+    function parseLabeledClientData(input) {
+      const lines = input.split('\n').map(l => l.trim()).filter(l => l);
+      const clients = [];
+      let currentClient = {};
+      
+      const labelMap = {
+        'nome': 'nome_cliente',
+        'cpf': 'documento',
+        'cnpj': 'documento',
+        'cpf/cnpj': 'documento',
+        'documento': 'documento',
+        'telefone': 'telefone',
+        'whatsapp': 'whatsapp',
+        'e-mail': 'email',
+        'email': 'email',
+        'cidade': 'cidade',
+        'estado': 'estado',
+        'endereço': 'endereco',
+        'endereco': 'endereco',
+        'observações': 'observacoes',
+        'observacoes': 'observacoes',
+        'obs': 'observacoes'
+      };
+      
+      function getFieldFromLabel(label) {
+        const lower = label.toLowerCase();
+        for(const [lbl, field] of Object.entries(labelMap)) {
+          if(lower === lbl || (lower.length > 2 && lbl.includes(lower)) || (lower.length > 2 && lower.includes(lbl))) {
+            return field;
+          }
+        }
+        return null;
+      }
+      
+      // Inline comma-separated mapping like "Nome Rosangela, CPF/CNPJ 82232342700, Telefone -, ..."
+      if (input.includes(',') && (input.toLowerCase().includes('nome') || input.toLowerCase().includes('cpf') || input.toLowerCase().includes('telefone'))) {
+        const parts = input.split(',').map(p => p.trim()).filter(p => p);
+        let inlineClient = {};
+        for(const part of parts) {
+          // Find first word or prefix as a potential label, then grab everything else
+          const match = part.match(/^([A-Za-záéíóúàèìòùâêôãõñäëïöüç\s/\-]+?)\s+(.+)$/i);
+          if (match) {
+            const potentialLabel = match[1].trim();
+            const val = match[2].trim();
+            const field = getFieldFromLabel(potentialLabel);
+            if (field) {
+              inlineClient[field] = (val === '-' || val === '--') ? '' : val;
+            }
+          }
+        }
+        if (inlineClient.nome_cliente) {
+          return [inlineClient];
+        }
+      }
+      
+      // Line-by-line labeled format or colon separated
+      for(let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        
+        if(line.includes(':')) {
+          const parts = line.split(':');
+          const labelPart = parts[0].trim();
+          const valuePart = parts.slice(1).join(':').trim();
+          const field = getFieldFromLabel(labelPart);
+          if(field) {
+            currentClient[field] = (valuePart === '-' || valuePart === '--') ? '' : valuePart;
+          }
+          continue;
+        }
+        
+        const fieldName = getFieldFromLabel(line);
+        if(fieldName) {
+          if(i + 1 < lines.length) {
+            const value = lines[i + 1];
+            // Check if next line is not another label
+            if(!getFieldFromLabel(value)) {
+              currentClient[fieldName] = (value === '-' || value === '--') ? '' : value;
+              i++;
+            }
+          }
+        } else if(Object.keys(currentClient).length > 0) {
+          if(currentClient.nome_cliente) {
+            clients.push(currentClient);
+            currentClient = {};
+          }
+        }
+      }
+      
+      if(Object.keys(currentClient).length > 0 && currentClient.nome_cliente) {
+        clients.push(currentClient);
+      }
+      
+      return clients;
+    }
+    
+    function parseCSVClientData(input) {
+      const lines = input.split('\n').filter(l => l.trim());
+      const fields = ['nome_cliente','documento','telefone','whatsapp','email','cidade','estado','endereco','observacoes'];
+      const clients = [];
+      
+      for(const line of lines) {
+        const parts = line.split(/\s*[\t|]\s*/).map(p => p.trim()).filter(p => p);
+        if(parts.length === 0) continue;
+        
+        const obj = {};
+        for(let i = 0; i < Math.min(parts.length, fields.length); i++) {
+          obj[fields[i]] = (parts[i] === '-' || parts[i] === '--') ? '' : parts[i];
+        }
+        
+        if(obj.nome_cliente) {
+          clients.push(obj);
+        }
+      }
+      
+      return clients;
+    }
+
+    function openBulkClientModal() {
+      $('modal-container').innerHTML = `<div class="modal-overlay" onclick="if(event.target===this)closeModal()"><div class="modal-box"><h3 class="text-lg font-bold gold mb-4">Importar Clientes em Massa</h3><p class="text-xs opacity-60 mb-3">Cole os dados com rótulos (Nome, CPF/CNPJ, etc.) ou em formato CSV. O sistema reconhecerá automaticamente.</p><textarea id="bulk-client-input" class="input-erp w-full h-40 text-xs font-mono p-2 mb-3" placeholder="Nome&#10;João Silva&#10;CPF/CNPJ&#10;12345678901&#10;..."></textarea><p class="text-[10px] opacity-40 mb-3">Suporta: rótulos (Nome, CPF/CNPJ, Telefone, WhatsApp, E-mail, Cidade, Estado, Endereço, Observações), CSV, tab ou pipe separado.</p><div class="flex gap-3"><button class="bg-gold text-black font-bold px-6 py-2 rounded-lg text-sm" onclick="processBulkClients()">Importar</button><button class="bg-gray-700 text-white px-6 py-2 rounded-lg text-sm" onclick="closeModal()">Cancelar</button></div></div></div>`;
+    }
+
+    async function processBulkClients() {
+      const input = $('bulk-client-input').value.trim();
+      if(!input) { showToast('Cole os dados dos clientes.'); return; }
+      
+      // Try to parse as labeled format first
+      let clients = [];
+      const labeledClients = parseLabeledClientData(input);
+      if(labeledClients.length > 0) {
+        clients = labeledClients;
+      } else {
+        // Fallback to CSV/tab-separated format
+        clients = parseCSVClientData(input);
+      }
+      
+      if(clients.length === 0) { showToast('Não foi possível analisar os dados.'); return; }
+      
+      let created = 0, skipped = 0;
+      for(const clientData of clients) {
+        if(allData.length + created >= 999) break;
+        
+        // Build full object with all schema fields
+        const obj = {tipo_registro:'cliente', mes:''};
+        for(const [k,v] of Object.entries(clientData)) {
+          obj[k] = v;
+        }
+        Object.keys(getSchema()).forEach(k=>{if(!(k in obj))obj[k]='';});
+        
+        const r = await window.dataSdk.create(obj);
+        if(r.isOk) created++; else skipped++;
+      }
+      closeModal();
+      showToast(`${created} cliente(s) importado(s), ${skipped} pulado(s).`);
+    }
+    
+    function parseLabeledClientData(input) {
+      // Parse format like "Nome\nJoão\nCPF/CNPJ\n123..." or "Nome: João\nCPF/CNPJ: 123..." or inline like "Nome Rosangela, CPF/CNPJ 82232342700, ..."
+      const lines = input.split('\n').map(l => l.trim()).filter(l => l);
+      const clients = [];
+      let currentClient = {};
+      
+      // Map of possible label variations to field names
+      const labelMap = {
+        'nome': 'nome_cliente',
+        'cpf': 'documento',
+        'cnpj': 'documento',
+        'cpf/cnpj': 'documento',
+        'documento': 'documento',
+        'telefone': 'telefone',
+        'whatsapp': 'whatsapp',
+        'e-mail': 'email',
+        'email': 'email',
+        'cidade': 'cidade',
+        'estado': 'estado',
+        'endereço': 'endereco',
+        'endereco': 'endereco',
+        'observações': 'observacoes',
+        'observacoes': 'observacoes',
+        'obs': 'observacoes'
+      };
+      
+      function isValidLabel(text) {
+        const lower = text.toLowerCase();
+        for(const label of Object.keys(labelMap)) {
+          if(lower === label || (lower.length > 2 && label.includes(lower)) || (lower.length > 2 && lower.includes(label))) {
+            return true;
+          }
+        }
+        return false;
+      }
+      
+      function getFieldFromLabel(label) {
+        const lower = label.toLowerCase();
+        for(const [lbl, field] of Object.entries(labelMap)) {
+          if(lower === lbl || (lower.length > 2 && lbl.includes(lower)) || (lower.length > 2 && lower.includes(lbl))) {
+            return field;
+          }
+        }
+        return null;
+      }
+      
+      // First, try to detect if this is an inline format (label value, label value, ...)
+      const inlineMatch = input.match(/([A-Za-záéíóúàèìòùâêôãõñäëïöüç\s]+)\s+([^,]+)(,|$)/gi);
+      if(inlineMatch && inlineMatch.length > 3) {
+        // Try inline parsing
+        const parts = input.split(',').map(p => p.trim()).filter(p => p);
+        let inlineClient = {};
+        for(const part of parts) {
+          // Try to find label in this part
+          let found = false;
+          for(const [label, field] of Object.entries(labelMap)) {
+            if(part.toLowerCase().includes(label)) {
+              // Extract value after label
+              const regex = new RegExp(label + '\\s+(.+)', 'i');
+              const match = part.match(regex);
+              if(match && match[1]) {
+                inlineClient[field] = match[1].trim();
+                found = true;
+                break;
+              }
+            }
+          }
+        }
+        if(Object.keys(inlineClient).length > 0 && inlineClient.nome_cliente) {
+          return [inlineClient]; // Found inline format
+        }
+      }
+      
+      // Fallback to line-by-line parsing
+      for(let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        const lowerLine = line.toLowerCase();
+        
+        // Check if line contains "label: value" format
+        if(line.includes(':')) {
+          const [labelPart, valuePart] = line.split(':').map(s => s.trim());
+          const field = getFieldFromLabel(labelPart);
+          if(field && valuePart && valuePart !== '-') {
+            currentClient[field] = valuePart;
+          }
+          continue;
+        }
+        
+        // Check if this line is a label
+        const fieldName = getFieldFromLabel(line);
+        
+        if(fieldName) {
+          // Next line is the value
+          if(i + 1 < lines.length) {
+            const value = lines[i + 1];
+            if(!isValidLabel(value) && value !== '-' && value) {
+              currentClient[fieldName] = value;
+              i++; // Skip the value line
+            }
+          }
+        } else if(!line.includes(':') && Object.keys(currentClient).length > 0) {
+          // If we have accumulated data and hit a non-label, non-value, might be start of new client
+          if(currentClient.nome_cliente) {
+            clients.push(currentClient);
+            currentClient = {};
+          }
+        }
+      }
+      
+      if(Object.keys(currentClient).length > 0 && currentClient.nome_cliente) {
+        clients.push(currentClient);
+      }
+      
+      return clients;
+    }
+    
+    function parseCSVClientData(input) {
+      // Parse CSV/tab/pipe-separated format: Nome | CPF/CNPJ | Telefone | ...
+      const lines = input.split('\n').filter(l => l.trim());
+      const fields = ['nome_cliente','documento','telefone','whatsapp','email','cidade','estado','endereco','observacoes'];
+      const clients = [];
+      
+      for(const line of lines) {
+        const parts = line.split(/\s*[\t|]\s*/).map(p => p.trim()).filter(p => p);
+        if(parts.length === 0) continue;
+        
+        const obj = {};
+        for(let i = 0; i < Math.min(parts.length, fields.length); i++) {
+          obj[fields[i]] = parts[i];
+        }
+        
+        if(obj.nome_cliente) {
+          clients.push(obj);
+        }
+      }
+      
+      return clients;
+    }
+
+    function openClientEditModal(id) {
+      const client = getClients().find(c=>c.__backendId===id);
+      if(!client) return;
+      $('modal-container').innerHTML = `<div class="modal-overlay" onclick="if(event.target===this)closeModal()"><div class="modal-box"><h3 class="text-lg font-bold gold mb-4">Editar Cliente</h3><form id="client-edit-form" class="grid grid-cols-1 md:grid-cols-2 gap-3"><div><label class="text-[10px] uppercase opacity-60 block mb-1">Nome</label><input name="nome_cliente" class="input-erp" value="${client.nome_cliente||''}" required></div><div><label class="text-[10px] uppercase opacity-60 block mb-1">CPF/CNPJ</label><input name="documento" class="input-erp" value="${client.documento||''}"></div><div><label class="text-[10px] uppercase opacity-60 block mb-1">Telefone</label><input name="telefone" class="input-erp" value="${client.telefone||''}"></div><div><label class="text-[10px] uppercase opacity-60 block mb-1">WhatsApp</label><input name="whatsapp" class="input-erp" value="${client.whatsapp||''}"></div><div><label class="text-[10px] uppercase opacity-60 block mb-1">E-mail</label><input name="email" class="input-erp" value="${client.email||''}"></div><div><label class="text-[10px] uppercase opacity-60 block mb-1">Cidade</label><input name="cidade" class="input-erp" value="${client.cidade||''}"></div><div><label class="text-[10px] uppercase opacity-60 block mb-1">Estado</label><input name="estado" class="input-erp" value="${client.estado||''}"></div><div><label class="text-[10px] uppercase opacity-60 block mb-1">Endereço</label><input name="endereco" class="input-erp" value="${client.endereco||''}"></div><div class="md:col-span-2"><label class="text-[10px] uppercase opacity-60 block mb-1">Observações</label><input name="observacoes" class="input-erp" value="${client.observacoes||''}"></div><div class="md:col-span-2 flex gap-3 mt-2"><button type="submit" class="bg-gold text-black font-bold px-6 py-2 rounded-lg text-sm" id="client-update-btn">Atualizar</button><button type="button" class="bg-gray-700 text-white px-6 py-2 rounded-lg text-sm" onclick="closeModal()">Cancelar</button></div></form></div></div>`;
+      $('client-edit-form').addEventListener('submit', async e => {
+        e.preventDefault();
+        const btn=$('client-update-btn'); btn.disabled=true; btn.textContent='Salvando...';
+        const obj = {...client};
+        for(const [k,v] of new FormData(e.target)) obj[k]=v;
+        const r = await window.dataSdk.update(obj);
+        if(r.isOk) { closeModal(); showToast('Cliente atualizado com sucesso!'); }
+        else { btn.disabled=false; btn.textContent='Atualizar'; showToast('Erro ao atualizar cliente.'); }
+      });
+    }
+
+    function openOrderModal() {
+      const opts = getClients().map(c=>`<option value="${c.nome_cliente||''}">${c.nome_cliente||''}</option>`).join('');
+      const today = new Date().toISOString().slice(0,10);
+      $('modal-container').innerHTML = `<div class="modal-overlay" onclick="if(event.target===this)closeModal()"><div class="modal-box"><h3 class="text-lg font-bold gold mb-4">Novo Pedido</h3><form id="order-form" class="grid grid-cols-1 md:grid-cols-3 gap-3"><div><label class="text-[10px] uppercase opacity-60 block mb-1">Cliente</label><select name="cliente_id" class="input-erp"><option value="">Selecione</option>${opts}</select></div><div><label class="text-[10px] uppercase opacity-60 block mb-1">Serviço</label><input name="servico" class="input-erp" required></div><div><label class="text-[10px] uppercase opacity-60 block mb-1">Material</label><input name="material" class="input-erp"></div><div><label class="text-[10px] uppercase opacity-60 block mb-1">Quantidade</label><input name="quantidade" class="input-erp" type="number" value="1"></div><div><label class="text-[10px] uppercase opacity-60 block mb-1">Largura (m)</label><input name="largura" class="input-erp"></div><div><label class="text-[10px] uppercase opacity-60 block mb-1">Altura (m)</label><input name="altura" class="input-erp"></div><div><label class="text-[10px] uppercase opacity-60 block mb-1">Acabamento</label><input name="acabamento" class="input-erp"></div><div><label class="text-[10px] uppercase opacity-60 block mb-1">Total</label><input name="total_pedido" class="input-erp" type="number" step="0.01" required></div><div><label class="text-[10px] uppercase opacity-60 block mb-1">Despesa</label><input name="despesa" class="input-erp" type="number" step="0.01"></div><div><label class="text-[10px] uppercase opacity-60 block mb-1">Data Entrega</label><input name="data_entrega" type="date" class="input-erp"></div><div><label class="text-[10px] uppercase opacity-60 block mb-1">Responsável</label><input name="responsavel" class="input-erp"></div><div><label class="text-[10px] uppercase opacity-60 block mb-1">Forma Pagamento</label><select name="forma_pagamento" class="input-erp"><option>Dinheiro</option><option>PIX</option><option>Cartão Débito</option><option>Cartão Crédito</option><option>Link de Pagamento</option></select></div><div><label class="text-[10px] uppercase opacity-60 block mb-1">Status</label><select name="status_pedido" class="input-erp"><option>AGUARDANDO</option><option>EM PRODUÇÃO</option><option>CONCLUÍDO</option><option>ENTREGUE</option><option>CANCELADO</option></select></div><div class="md:col-span-3"><label class="text-[10px] uppercase opacity-60 block mb-1">Observações</label><input name="notas_pedido" class="input-erp"></div><div class="md:col-span-3 flex gap-3 mt-2"><button type="submit" class="bg-gold text-black font-bold px-6 py-2 rounded-lg text-sm" id="order-save-btn">Salvar</button><button type="button" class="bg-gray-700 text-white px-6 py-2 rounded-lg text-sm" onclick="closeModal()">Cancelar</button></div></form></div></div>`;
+      $('order-form').addEventListener('submit', async e => {
+        e.preventDefault();
+        if(allData.length>=999){showToast('Limite atingido');return;}
+        const btn=$('order-save-btn'); btn.disabled=true; btn.textContent='Salvando...';
+        const fd = new FormData(e.target);
+        const cm = getCurrentMonth();
+        const totalVal = parseFloat(fd.get('total_pedido'))||0;
+        const serviceVal = fd.get('servico')||'Venda';
+        const obj = buildObj(fd, {tipo_registro:'pedido', mes:cm, numero_pedido: String(getOrders().length+1).padStart(4,'0'), data_pedido: today});
+        const r = await window.dataSdk.create(obj);
+        if(r.isOk) {
+          const finObj = {tipo_registro:'financeiro', mes:cm, tipo_financeiro:'receita', categoria_financeira:'Venda - '+serviceVal, valor_financeiro:String(totalVal), data_financeira:today, metodo_pagamento:'PIX', descricao_financeira:'Entrada pedido '+obj.numero_pedido};
+          Object.keys(getSchema()).forEach(k=>{if(!(k in finObj))finObj[k]='';});
+          await window.dataSdk.create(finObj);
+          
+          // Capture order in client snapshot (sanitized)
+          const clientName = fd.get('cliente_id');
+          if(clientName) {
+            const client = getClients().find(c => c.nome_cliente === clientName);
+            if(client) {
+              let snapshot = [];
+              if(client.snapshot_data) {
+                try {
+                  snapshot = JSON.parse(client.snapshot_data);
+                } catch(e) { snapshot = []; }
+              }
+              // Keep only essential fields for purchase history
+              const sanitized = {numero_pedido: obj.numero_pedido, data_pedido: obj.data_pedido, servico: obj.servico, total_pedido: obj.total_pedido, status_pedido: obj.status_pedido};
+              snapshot.push(sanitized);
+              const updatedClient = {...client, snapshot_data: JSON.stringify(snapshot)};
+              await window.dataSdk.update(updatedClient);
+            }
+          }
+          
+          closeModal(); showToast('Pedido criado com sucesso!');
+        } else { btn.disabled=false; btn.textContent='Salvar'; showToast('Erro ao salvar pedido.'); }
+      });
+    }
+
+    function openBulkOrderModal() {
+      $('modal-container').innerHTML = `<div class="modal-overlay" onclick="if(event.target===this)closeModal()"><div class="modal-box"><h3 class="text-lg font-bold gold mb-4">Importar Pedidos em Massa</h3><p class="text-xs opacity-60 mb-3">Cole os dados no formato CSV ou tab-separated. Esperado: Cliente | Serviço | Material | Quantidade | Total | Despesa | Data Entrega | Status</p><textarea id="bulk-order-input" class="input-erp w-full h-40 text-xs font-mono p-2 mb-3" placeholder="Cliente&#10;Serviço&#10;..."></textarea><p class="text-[10px] opacity-40 mb-3">Uma linha por pedido. Use separador: espaço, tab ou pipe (|). Status: AGUARDANDO, EM PRODUÇÃO, CONCLUÍDO, ENTREGUE, CANCELADO.</p><div class="flex gap-3"><button class="bg-gold text-black font-bold px-6 py-2 rounded-lg text-sm" onclick="processBulkOrders()">Importar</button><button class="bg-gray-700 text-white px-6 py-2 rounded-lg text-sm" onclick="closeModal()">Cancelar</button></div></div></div>`;
+    }
+
+    async function processBulkOrders() {
+      const input = $('bulk-order-input').value.trim();
+      if(!input) { showToast('Cole os dados dos pedidos.'); return; }
+      const lines = input.split('\n').filter(l => l.trim());
+      const today = new Date().toISOString().slice(0,10);
+      const cm = getCurrentMonth();
+      const fields = ['cliente_id','servico','material','quantidade','total_pedido','despesa','data_entrega','status_pedido'];
+      let created = 0, skipped = 0;
+      for(const line of lines) {
+        if(allData.length + created >= 999) break;
+        const parts = line.split(/\s*[\t|]\s*/).map(p => p.trim()).filter(p => p);
+        if(parts.length === 0) { skipped++; continue; }
+        const obj = {tipo_registro:'pedido', mes:cm, numero_pedido: String(getOrders().length+1+created).padStart(4,'0'), data_pedido: today};
+        for(let i = 0; i < Math.min(parts.length, fields.length); i++) {
+          obj[fields[i]] = parts[i];
+        }
+        Object.keys(getSchema()).forEach(k=>{if(!(k in obj))obj[k]='';});
+        const r = await window.dataSdk.create(obj);
+        if(r.isOk) {
+          // Auto-add finance entry
+          const totalVal = parseFloat(obj.total_pedido)||0;
+          const finObj = {tipo_registro:'financeiro', mes:cm, tipo_financeiro:'receita', categoria_financeira:'Venda - '+obj.servico, valor_financeiro:String(totalVal), data_financeira:today, metodo_pagamento:'PIX', descricao_financeira:'Entrada pedido '+obj.numero_pedido};
+          Object.keys(getSchema()).forEach(k=>{if(!(k in finObj))finObj[k]='';});
+          await window.dataSdk.create(finObj);
+          
+          // Add to client snapshot
+          const clientName = obj.cliente_id;
+          if(clientName) {
+            const client = getClients().find(c => c.nome_cliente === clientName);
+            if(client) {
+              let snapshot = [];
+              if(client.snapshot_data) {
+                try {
+                  snapshot = JSON.parse(client.snapshot_data);
+                } catch(e) { snapshot = []; }
+              }
+              const sanitized = {numero_pedido: obj.numero_pedido, data_pedido: obj.data_pedido, servico: obj.servico, total_pedido: obj.total_pedido, status_pedido: obj.status_pedido};
+              snapshot.push(sanitized);
+              const updatedClient = {...client, snapshot_data: JSON.stringify(snapshot)};
+              await window.dataSdk.update(updatedClient);
+            }
+          }
+          created++;
+        } else skipped++;
+      }
+      closeModal();
+      showToast(`${created} pedido(s) importado(s), ${skipped} pulado(s).`);
+    }
+
+    function openOrderEditModal(id) {
+      const order = getOrders().find(o=>o.__backendId===id);
+      if(!order) return;
+      const opts = getClients().map(c=>`<option value="${c.nome_cliente||''}" ${order.cliente_id===c.nome_cliente?'selected':''}>${c.nome_cliente||''}</option>`).join('');
+      $('modal-container').innerHTML = `<div class="modal-overlay" onclick="if(event.target===this)closeModal()"><div class="modal-box"><h3 class="text-lg font-bold gold mb-4">Editar Pedido</h3><form id="order-edit-form" class="grid grid-cols-1 md:grid-cols-3 gap-3"><div><label class="text-[10px] uppercase opacity-60 block mb-1">Cliente</label><select name="cliente_id" class="input-erp"><option value="">Selecione</option>${opts}</select></div><div><label class="text-[10px] uppercase opacity-60 block mb-1">Serviço</label><input name="servico" class="input-erp" value="${order.servico||''}" required></div><div><label class="text-[10px] uppercase opacity-60 block mb-1">Material</label><input name="material" class="input-erp" value="${order.material||''}"></div><div><label class="text-[10px] uppercase opacity-60 block mb-1">Quantidade</label><input name="quantidade" class="input-erp" type="number" value="${order.quantidade||1}"></div><div><label class="text-[10px] uppercase opacity-60 block mb-1">Largura (m)</label><input name="largura" class="input-erp" value="${order.largura||''}"></div><div><label class="text-[10px] uppercase opacity-60 block mb-1">Altura (m)</label><input name="altura" class="input-erp" value="${order.altura||''}"></div><div><label class="text-[10px] uppercase opacity-60 block mb-1">Acabamento</label><input name="acabamento" class="input-erp" value="${order.acabamento||''}"></div><div><label class="text-[10px] uppercase opacity-60 block mb-1">Total</label><input name="total_pedido" class="input-erp" type="number" step="0.01" value="${order.total_pedido||''}" required></div><div><label class="text-[10px] uppercase opacity-60 block mb-1">Despesa</label><input name="despesa" class="input-erp" type="number" step="0.01" value="${order.despesa||''}"></div><div><label class="text-[10px] uppercase opacity-60 block mb-1">Data Entrega</label><input name="data_entrega" type="date" class="input-erp" value="${order.data_entrega||''}"></div><div><label class="text-[10px] uppercase opacity-60 block mb-1">Responsável</label><input name="responsavel" class="input-erp" value="${order.responsavel||''}"></div><div><label class="text-[10px] uppercase opacity-60 block mb-1">Forma Pagamento</label><select name="forma_pagamento" class="input-erp"><option ${order.forma_pagamento==='Dinheiro'?'selected':''}>Dinheiro</option><option ${order.forma_pagamento==='PIX'?'selected':''}>PIX</option><option ${order.forma_pagamento==='Cartão Débito'?'selected':''}>Cartão Débito</option><option ${order.forma_pagamento==='Cartão Crédito'?'selected':''}>Cartão Crédito</option><option ${order.forma_pagamento==='Link de Pagamento'?'selected':''}>Link de Pagamento</option></select></div><div><label class="text-[10px] uppercase opacity-60 block mb-1">Status</label><select name="status_pedido" class="input-erp"><option ${order.status_pedido==='AGUARDANDO'?'selected':''}>AGUARDANDO</option><option ${order.status_pedido==='EM PRODUÇÃO'?'selected':''}>EM PRODUÇÃO</option><option ${order.status_pedido==='CONCLUÍDO'?'selected':''}>CONCLUÍDO</option><option ${order.status_pedido==='ENTREGUE'?'selected':''}>ENTREGUE</option><option ${order.status_pedido==='CANCELADO'?'selected':''}>CANCELADO</option></select></div><div class="md:col-span-3"><label class="text-[10px] uppercase opacity-60 block mb-1">Observações</label><input name="notas_pedido" class="input-erp" value="${order.notas_pedido||''}"></div><div class="md:col-span-3 flex gap-3 mt-2"><button type="submit" class="bg-gold text-black font-bold px-6 py-2 rounded-lg text-sm" id="order-update-btn">Atualizar</button><button type="button" class="bg-gray-700 text-white px-6 py-2 rounded-lg text-sm" onclick="closeModal()">Cancelar</button></div></form></div></div>`;
+      $('order-edit-form').addEventListener('submit', async e => {
+        e.preventDefault();
+        const btn=$('order-update-btn'); btn.disabled=true; btn.textContent='Salvando...';
+        const obj = {...order};
+        const oldClientName = obj.cliente_id;
+        for(const [k,v] of new FormData(e.target)) obj[k]=v;
+        const r = await window.dataSdk.update(obj);
+        if(r.isOk) { 
+          // Update snapshot in client record
+          const clientName = obj.cliente_id;
+          if(clientName) {
+            const client = getClients().find(c => c.nome_cliente === clientName);
+            if(client) {
+              let snapshot = [];
+              if(client.snapshot_data) {
+                try {
+                  snapshot = JSON.parse(client.snapshot_data);
+                } catch(e) { snapshot = []; }
+              }
+              // Find and update the order in snapshot by comparing original field
+              const existingIdx = snapshot.findIndex(o => o.numero_pedido === obj.numero_pedido);
+              if(existingIdx >= 0) {
+                // Keep only essential fields
+                snapshot[existingIdx] = {numero_pedido: obj.numero_pedido, data_pedido: obj.data_pedido, servico: obj.servico, total_pedido: obj.total_pedido, status_pedido: obj.status_pedido};
+              } else {
+                // New entry - sanitized
+                snapshot.push({numero_pedido: obj.numero_pedido, data_pedido: obj.data_pedido, servico: obj.servico, total_pedido: obj.total_pedido, status_pedido: obj.status_pedido});
+              }
+              const updatedClient = {...client, snapshot_data: JSON.stringify(snapshot)};
+              await window.dataSdk.update(updatedClient);
+            }
+          }
+          closeModal(); showToast('Pedido atualizado com sucesso!'); 
+        } else { btn.disabled=false; btn.textContent='Atualizar'; showToast('Erro ao atualizar pedido.'); }
+      });
+    }
+
+    function openExpenseModal() {
+      const today = new Date().toISOString().slice(0,10);
+      $('modal-container').innerHTML = `<div class="modal-overlay" onclick="if(event.target===this)closeModal()"><div class="modal-box"><h3 class="text-lg font-bold gold mb-4">Nova Despesa</h3><form id="expense-form" class="grid grid-cols-1 md:grid-cols-2 gap-3"><div><label class="text-[10px] uppercase opacity-60 block mb-1">Nome do Produto / Descrição</label><input name="nome_produto" class="input-erp" required></div><div><label class="text-[10px] uppercase opacity-60 block mb-1">Categoria de Despesa</label><select name="categoria_financeira" class="input-erp" required><option value="Material">Material de Produção</option><option value="Equipamento">Equipamentos / Ferramentas</option><option value="Manutenção">Manutenção de Máquinas</option><option value="Infraestrutura">Água / Luz / Aluguel</option><option value="Pessoal">Pró-labore / Colaboradores</option><option value="Marketing">Marketing / Divulgação</option><option value="Outros">Outras Despesas</option></select></div><div><label class="text-[10px] uppercase opacity-60 block mb-1">Valor Unitário</label><input name="valor_unitario" class="input-erp" type="number" step="0.01"></div><div><label class="text-[10px] uppercase opacity-60 block mb-1">Data Compra</label><input name="data_compra" type="date" class="input-erp" value="${today}" required></div><div><label class="text-[10px] uppercase opacity-60 block mb-1">Tipo Pagamento</label><select name="tipo_pagamento" class="input-erp"><option>Débito</option><option>Crédito</option><option>PIX</option><option>Dinheiro</option></select></div><div><label class="text-[10px] uppercase opacity-60 block mb-1">Onde Comprou</label><input name="local_compra" class="input-erp"></div><div><label class="text-[10px] uppercase opacity-60 block mb-1">Total Gasto</label><input name="total_gasto" class="input-erp" type="number" step="0.01" required></div><div class="md:col-span-2 flex gap-3 mt-2"><button type="submit" class="bg-gold text-black font-bold px-6 py-2 rounded-lg text-sm" id="expense-save-btn">Salvar</button><button type="button" class="bg-gray-700 text-white px-6 py-2 rounded-lg text-sm" onclick="closeModal()">Cancelar</button></div></form></div></div>`;
+      $('expense-form').addEventListener('submit', async e => {
+        e.preventDefault();
+        if(allData.length>=999){showToast('Limite atingido');return;}
+        const btn=$('expense-save-btn'); btn.disabled=true; btn.textContent='Salvando...';
+        const cm = getCurrentMonth();
+        const obj = buildObj(new FormData(e.target), {tipo_registro:'despesa', mes:cm});
+        const r = await window.dataSdk.create(obj);
+        if(r.isOk) {
+          const finObj = {tipo_registro:'financeiro', mes:cm, tipo_financeiro:'despesa', categoria_financeira:obj.categoria_financeira || 'Outros', valor_financeiro:String(obj.total_gasto||0), data_financeira:obj.data_compra, metodo_pagamento:obj.tipo_pagamento, descricao_financeira:'Despesa: '+obj.nome_produto+(obj.local_compra?(' em '+obj.local_compra):'')};
+          Object.keys(getSchema()).forEach(k=>{if(!(k in finObj))finObj[k]='';});
+          await window.dataSdk.create(finObj);
+          closeModal(); showToast('Despesa criada com sucesso!');
+        } else { btn.disabled=false; btn.textContent='Salvar'; showToast('Erro ao salvar despesa.'); }
+      });
+    }
+
+    function openExpenseEditModal(id) {
+      const expense = getExpenses().find(e=>e.__backendId===id);
+      if(!expense) return;
+      $('modal-container').innerHTML = `<div class="modal-overlay" onclick="if(event.target===this)closeModal()"><div class="modal-box"><h3 class="text-lg font-bold gold mb-4">Editar Despesa</h3><form id="expense-edit-form" class="grid grid-cols-1 md:grid-cols-2 gap-3"><div><label class="text-[10px] uppercase opacity-60 block mb-1">Nome do Produto / Descrição</label><input name="nome_produto" class="input-erp" value="${expense.nome_produto||''}" required></div><div><label class="text-[10px] uppercase opacity-60 block mb-1">Categoria de Despesa</label><select name="categoria_financeira" id="expense-edit-category" class="input-erp" required><option value="Material">Material de Produção</option><option value="Equipamento">Equipamentos / Ferramentas</option><option value="Manutenção">Manutenção de Máquinas</option><option value="Infraestrutura">Água / Luz / Aluguel</option><option value="Pessoal">Pró-labore / Colaboradores</option><option value="Marketing">Marketing / Divulgação</option><option value="Outros">Outras Despesas</option></select></div><div><label class="text-[10px] uppercase opacity-60 block mb-1">Valor Unitário</label><input name="valor_unitario" class="input-erp" type="number" step="0.01" value="${expense.valor_unitario||''}"></div><div><label class="text-[10px] uppercase opacity-60 block mb-1">Data Compra</label><input name="data_compra" type="date" class="input-erp" value="${expense.data_compra||''}" required></div><div><label class="text-[10px] uppercase opacity-60 block mb-1">Tipo Pagamento</label><select name="tipo_pagamento" class="input-erp"><option ${expense.tipo_pagamento==='Débito'?'selected':''}>Débito</option><option ${expense.tipo_pagamento==='Crédito'?'selected':''}>Crédito</option><option ${expense.tipo_pagamento==='PIX'?'selected':''}>PIX</option><option ${expense.tipo_pagamento==='Dinheiro'?'selected':''}>Dinheiro</option></select></div><div><label class="text-[10px] uppercase opacity-60 block mb-1">Onde Comprou</label><input name="local_compra" class="input-erp" value="${expense.local_compra||''}"></div><div><label class="text-[10px] uppercase opacity-60 block mb-1">Total Gasto</label><input name="total_gasto" class="input-erp" type="number" step="0.01" value="${expense.total_gasto||''}" required></div><div class="md:col-span-2 flex gap-3 mt-2"><button type="submit" class="bg-gold text-black font-bold px-6 py-2 rounded-lg text-sm" id="expense-update-btn">Atualizar</button><button type="button" class="bg-gray-700 text-white px-6 py-2 rounded-lg text-sm" onclick="closeModal()">Cancelar</button></div></form></div></div>`;
+      if ($('expense-edit-category')) {
+        $('expense-edit-category').value = expense.categoria_financeira || 'Outros';
+      }
+      $('expense-edit-form').addEventListener('submit', async e => {
+        e.preventDefault();
+        const btn=$('expense-update-btn'); btn.disabled=true; btn.textContent='Salvando...';
+        const obj = {...expense};
+        for(const [k,v] of new FormData(e.target)) obj[k]=v;
+        const r = await window.dataSdk.update(obj);
+        if(r.isOk) { closeModal(); showToast('Despesa atualizada com sucesso!'); }
+        else { btn.disabled=false; btn.textContent='Atualizar'; showToast('Erro ao atualizar despesa.'); }
+      });
+    }
+
+    function openFinanceModal() {
+      const today = new Date().toISOString().slice(0,10);
+      $('modal-container').innerHTML = `<div class="modal-overlay" onclick="if(event.target===this)closeModal()"><div class="modal-box"><h3 class="text-lg font-bold gold mb-4">Novo Lançamento</h3><form id="finance-form" class="grid grid-cols-1 md:grid-cols-2 gap-3"><div><label class="text-[10px] uppercase opacity-60 block mb-1">Tipo</label><select name="tipo_financeiro" class="input-erp"><option value="receita">Receita</option><option value="investimento">Investimento</option><option value="despesa">Despesa</option></select></div><div><label class="text-[10px] uppercase opacity-60 block mb-1">Categoria</label><input name="categoria_financeira" class="input-erp"></div><div><label class="text-[10px] uppercase opacity-60 block mb-1">Valor</label><input name="valor_financeiro" class="input-erp" type="number" step="0.01" required></div><div><label class="text-[10px] uppercase opacity-60 block mb-1">Data</label><input name="data_financeira" type="date" class="input-erp" value="${today}" required></div><div><label class="text-[10px] uppercase opacity-60 block mb-1">Método</label><select name="metodo_pagamento" class="input-erp"><option>PIX</option><option>Cartão</option><option>Dinheiro</option><option>Transferência</option><option>Boleto</option></select></div><div><label class="text-[10px] uppercase opacity-60 block mb-1">Descrição</label><input name="descricao_financeira" class="input-erp"></div><div class="md:col-span-2 flex gap-3 mt-2"><button type="submit" class="bg-gold text-black font-bold px-6 py-2 rounded-lg text-sm" id="finance-save-btn">Salvar</button><button type="button" class="bg-gray-700 text-white px-6 py-2 rounded-lg text-sm" onclick="closeModal()">Cancelar</button></div></form></div></div>`;
+      $('finance-form').addEventListener('submit', async e => {
+        e.preventDefault();
+        if(allData.length>=999){showToast('Limite atingido');return;}
+        const btn=$('finance-save-btn'); btn.disabled=true; btn.textContent='Salvando...';
+        const obj = buildObj(new FormData(e.target), {tipo_registro:'financeiro', mes:getCurrentMonth()});
+        const r = await window.dataSdk.create(obj);
+        if(r.isOk) { closeModal(); showToast('Lançamento criado com sucesso!'); }
+        else { btn.disabled=false; btn.textContent='Salvar'; showToast('Erro ao salvar lançamento.'); }
+      });
+    }
+
+    function openFinanceEditModal(id) {
+      const finance = getFinances().find(f=>f.__backendId===id);
+      if(!finance) return;
+      $('modal-container').innerHTML = `<div class="modal-overlay" onclick="if(event.target===this)closeModal()"><div class="modal-box"><h3 class="text-lg font-bold gold mb-4">Editar Lançamento</h3><form id="finance-edit-form" class="grid grid-cols-1 md:grid-cols-2 gap-3"><div><label class="text-[10px] uppercase opacity-60 block mb-1">Tipo</label><select name="tipo_financeiro" class="input-erp"><option value="receita" ${finance.tipo_financeiro==='receita'?'selected':''}>Receita</option><option value="investimento" ${finance.tipo_financeiro==='investimento'?'selected':''}>Investimento</option><option value="despesa" ${finance.tipo_financeiro==='despesa'?'selected':''}>Despesa</option></select></div><div><label class="text-[10px] uppercase opacity-60 block mb-1">Categoria</label><input name="categoria_financeira" class="input-erp" value="${finance.categoria_financeira||''}"></div><div><label class="text-[10px] uppercase opacity-60 block mb-1">Valor</label><input name="valor_financeiro" class="input-erp" type="number" step="0.01" value="${finance.valor_financeiro||''}" required></div><div><label class="text-[10px] uppercase opacity-60 block mb-1">Data</label><input name="data_financeira" type="date" class="input-erp" value="${finance.data_financeira||''}" required></div><div><label class="text-[10px] uppercase opacity-60 block mb-1">Método</label><select name="metodo_pagamento" class="input-erp"><option ${finance.metodo_pagamento==='PIX'?'selected':''}>PIX</option><option ${finance.metodo_pagamento==='Cartão'?'selected':''}>Cartão</option><option ${finance.metodo_pagamento==='Dinheiro'?'selected':''}>Dinheiro</option><option ${finance.metodo_pagamento==='Transferência'?'selected':''}>Transferência</option><option ${finance.metodo_pagamento==='Boleto'?'selected':''}>Boleto</option></select></div><div><label class="text-[10px] uppercase opacity-60 block mb-1">Descrição</label><input name="descricao_financeira" class="input-erp" value="${finance.descricao_financeira||''}"></div><div class="md:col-span-2 flex gap-3 mt-2"><button type="submit" class="bg-gold text-black font-bold px-6 py-2 rounded-lg text-sm" id="finance-update-btn">Atualizar</button><button type="button" class="bg-gray-700 text-white px-6 py-2 rounded-lg text-sm" onclick="closeModal()">Cancelar</button></div></form></div></div>`;
+      $('finance-edit-form').addEventListener('submit', async e => {
+        e.preventDefault();
+        const btn=$('finance-update-btn'); btn.disabled=true; btn.textContent='Salvando...';
+        const obj = {...finance};
+        for(const [k,v] of new FormData(e.target)) obj[k]=v;
+        const r = await window.dataSdk.update(obj);
+        if(r.isOk) { closeModal(); showToast('Lançamento atualizado com sucesso!'); }
+        else { btn.disabled=false; btn.textContent='Atualizar'; showToast('Erro ao atualizar lançamento.'); }
+      });
+    }
+
+    async function deleteRecord(id) {
+      const item = allData.find(r=>r.__backendId===id);
+      if(!item) return;
+      $('modal-container').innerHTML = `<div class="modal-overlay" onclick="if(event.target===this)closeModal()"><div class="modal-box"><h3 class="text-lg font-bold gold mb-4">Confirmar Exclusão</h3><p class="text-sm opacity-80 mb-4">Digite o código para confirmar a exclusão:</p><input type="password" id="deletion-code" class="input-erp mb-4" placeholder="Código de segurança"><div class="flex gap-3"><button class="bg-red-700 text-white font-bold px-6 py-2 rounded-lg text-sm" onclick="confirmDeletion('${id}')">Confirmar</button><button class="bg-gray-700 text-white px-6 py-2 rounded-lg text-sm" onclick="closeModal()">Cancelar</button></div></div></div>`;
+      $('deletion-code').focus();
+    }
+
+    async function deleteClosedMonth() {
+      const month = $('history-month-select').value;
+      if(!month) { showToast('Selecione um mês.'); return; }
+      $('modal-container').innerHTML = `<div class="modal-overlay" onclick="if(event.target===this)closeModal()"><div class="modal-box"><h3 class="text-lg font-bold gold mb-4">Excluir Fechamento</h3><p class="text-sm opacity-80 mb-4">Digite o código para confirmar a exclusão permanente de todos os registros de <strong>${monthLabel(month)}</strong>:</p><input type="password" id="deletion-code" class="input-erp mb-4" placeholder="Código de segurança"><div class="flex gap-3"><button class="bg-red-700 text-white font-bold px-6 py-2 rounded-lg text-sm" onclick="confirmDeleteMonth('${month}')">Confirmar Exclusão</button><button class="bg-gray-700 text-white px-6 py-2 rounded-lg text-sm" onclick="closeModal()">Cancelar</button></div></div></div>`;
+      $('deletion-code').focus();
+    }
+
+    async function confirmDeleteMonth(month) {
+      if($('deletion-code').value !== '5149') { showToast('Código incorreto!'); return; }
+      // Excluir permanentemente apenas pedidos, despesas e financeiros do mês fechado
+      // NÃO excluir clientes - eles são permanentes e seu histórico de compras deve ser preservado
+      const toDelete = allData.filter(r => r.mes === month && r.arquivado === 'sim' && ['pedido','despesa','financeiro'].includes(r.tipo_registro));
+      if(toDelete.length === 0) { showToast('Nenhum registro para excluir.'); closeModal(); return; }
+      let deleteCount = 0;
+      for(const record of toDelete) {
+        const r = await window.dataSdk.delete(record);
+        if(r.isOk) deleteCount++;
+      }
+      closeModal();
+      showToast(`Fechamento excluído! ${deleteCount} registro(s) removido(s). Histórico de clientes preservado.`);
+      populateHistoryMonths();
+      renderHistory();
+      renderAll();
+    }
+
+    async function confirmDeletion(id) {
+      if($('deletion-code').value !== '5149') { showToast('Código incorreto!'); return; }
+      const item = allData.find(r=>r.__backendId===id);
+      if(!item) return;
+      // Check if it's a closed-month record (arquivado='sim')
+      if(item.arquivado === 'sim') {
+        // Delete the record permanently
+        const r = await window.dataSdk.delete(item);
+        if(r.isOk) { closeModal(); showToast('Histórico excluído com sucesso.'); } else showToast('Erro ao excluir histórico.');
+      } else {
+        // Delete normally
+        const r = await window.dataSdk.delete(item);
+        if(r.isOk) { closeModal(); showToast('Registro excluído com sucesso.'); } else showToast('Erro ao excluir registro.');
+      }
+    }
+
+    async function advanceOrder(id) {
+      const item = allData.find(r=>r.__backendId===id);
+      if(!item) return;
+      const flow = ['AGUARDANDO','EM PRODUÇÃO','CONCLUÍDO','ENTREGUE'];
+      const idx = flow.indexOf(item.status_pedido);
+      if(idx<0||idx>=flow.length-1) return;
+      const r = await window.dataSdk.update({...item, status_pedido: flow[idx+1]});
+      if(r.isOk) showToast('Pedido avançado para '+flow[idx+1]); else showToast('Erro ao atualizar pedido.');
+    }
+
+    function getSchema() {
+      return {tipo_registro:'',mes:'',nome_cliente:'',documento:'',telefone:'',whatsapp:'',email:'',endereco:'',cidade:'',estado:'',observacoes:'',numero_pedido:'',data_pedido:'',servico:'',material:'',quantidade:'',largura:'',altura:'',acabamento:'',notas_pedido:'',total_pedido:'',despesa:'',data_entrega:'',responsavel:'',status_pedido:'',cliente_id:'',forma_pagamento:'',tipo_financeiro:'',categoria_financeira:'',valor_financeiro:'',data_financeira:'',metodo_pagamento:'',descricao_financeira:'',nome_produto:'',valor_unitario:'',data_compra:'',tipo_pagamento:'',local_compra:'',total_gasto:'',arquivado:'',snapshot_data:''};
+    }
+
+    function showToast(msg) {
+      const t = document.createElement('div');
+      t.className = 'fixed bottom-4 right-4 bg-gold text-black px-4 py-2 rounded shadow-lg text-sm z-[200] font-bold';
+      t.textContent = msg;
+      document.body.appendChild(t);
+      setTimeout(()=>t.remove(),3000);
+    }
+
+    function exportDataAsCSV() {
+      if(allData.length === 0) { showToast('Sem dados para exportar.'); return; }
+      let csv = 'PHSUBLIME ERP - Exportação de Dados\n';
+      csv += `Data de Exportação: ${new Date().toLocaleString('pt-BR')}\n\n`;
+      const clients = getClients();
+      if(clients.length){csv+='=== CLIENTES ===\n'+['Nome','CPF/CNPJ','Telefone','WhatsApp','E-mail','Cidade'].map(h=>`"${h}"`).join(',')+'\n';clients.forEach(c=>{csv+=[c.nome_cliente||'',c.documento||'',c.telefone||'',c.whatsapp||'',c.email||'',c.cidade||''].map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')+'\n';});csv+='\n';}
+      csv += generateHistoryCSV(getCurrentMonth());
+      navigator.clipboard.writeText(csv).then(() => showToast('Dados copiados!')).catch(() => {
+        $('modal-container').innerHTML = `<div class="modal-overlay" onclick="if(event.target===this)closeModal()"><div class="modal-box"><h3 class="text-lg font-bold gold mb-4">Exportar Dados</h3><textarea class="input-erp w-full h-64 text-[11px] font-mono p-3" readonly>${csv}</textarea><div class="flex gap-3 mt-4"><button class="bg-gold text-black font-bold px-6 py-2 rounded-lg text-sm" onclick="document.querySelector('textarea').select();document.execCommand('copy');showToast('Copiado!');closeModal();">Copiar Texto</button><button class="bg-gray-700 text-white px-6 py-2 rounded-lg text-sm" onclick="closeModal()">Fechar</button></div></div></div>`;
+      });
+    }
+
+    const handler = {
+      onDataChanged(data) {
+        allData = data;
+        renderAll();
+        if(!$('page-history').classList.contains('hidden')) { populateHistoryMonths(); renderHistory(); }
+      }
+    };
+
+    (async () => {
+      await window.dataSdk.init(handler);
+      lucide.createIcons();
+    })();
   </script>
-
-</body>
+ </body>
 </html>
