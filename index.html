@@ -1,259 +1,636 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PHSUBLIME ERP</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<style>
-*{box-sizing:border-box}
-body{margin:0;font-family:Arial,sans-serif;background:#f4f6f9;color:#202124}
-.top{background:#111827;color:#fff;padding:20px}
-.top h1{margin:0}
-.top p{margin:5px 0 0;color:#cbd5e1}
-.menu{display:flex;gap:10px;flex-wrap:wrap;padding:15px;background:#fff;border-bottom:1px solid #ddd}
-.menu button{border:0;padding:12px 18px;border-radius:8px;cursor:pointer;background:#e5e7eb;font-weight:bold}
-.menu button:hover{background:#d1d5db}
-.conteudo{padding:20px;max-width:1200px;margin:auto}
-.tela{display:none}
-.tela.ativa{display:block}
-.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:15px}
-.card{background:#fff;padding:20px;border-radius:12px;box-shadow:0 2px 8px #0001}
-.card h3{margin-top:0}
-.form{background:#fff;padding:20px;border-radius:12px;margin-bottom:20px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
-.grid input,.grid textarea,.grid select{width:100%;padding:11px;border:1px solid #ddd;border-radius:7px}
-.form button{margin-top:15px;padding:12px 20px;border:0;border-radius:7px;background:#111827;color:#fff;cursor:pointer}
-.lista{background:#fff;padding:20px;border-radius:12px;overflow:auto}
-.item{padding:12px;border-bottom:1px solid #eee}
-.sucesso{color:green}
-.erro{color:red}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PHSUBLIME ERP</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f6f9;
+      color: #202124;
+    }
+
+    .top {
+      background: #111827;
+      color: #fff;
+      padding: 20px;
+    }
+
+    .top h1 {
+      margin: 0;
+    }
+
+    .top p {
+      margin: 5px 0 0;
+      color: #cbd5e1;
+    }
+
+    .menu {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      padding: 15px;
+      background: #fff;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .menu button {
+      border: 0;
+      padding: 12px 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      background: #e5e7eb;
+      font-weight: bold;
+    }
+
+    .menu button:hover {
+      background: #d1d5db;
+    }
+
+    .conteudo {
+      padding: 20px;
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    .tela {
+      display: none;
+    }
+
+    .tela.ativa {
+      display: block;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 15px;
+    }
+
+    .card {
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px #0001;
+    }
+
+    .card h3 {
+      margin-top: 0;
+    }
+
+    .form {
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+    }
+
+    .grid input,
+    .grid textarea,
+    .grid select {
+      width: 100%;
+      padding: 11px;
+      border: 1px solid #ddd;
+      border-radius: 7px;
+    }
+
+    .form button {
+      margin-top: 15px;
+      padding: 12px 20px;
+      border: 0;
+      border-radius: 7px;
+      background: #111827;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    .lista {
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      overflow: auto;
+    }
+
+    .item {
+      padding: 12px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .sucesso {
+      color: green;
+    }
+
+    .erro {
+      color: red;
+    }
+  </style>
 </head>
+
 <body>
 
-<header class="top">
-<h1>PHSUBLIME ERP</h1>
-<p>Sistema de gestão da PHSUBLIME Gráfica</p>
-</header>
+  <header class="top">
+    <h1>PHSUBLIME ERP</h1>
+    <p>Sistema de gestão da PHSUBLIME Gráfica</p>
+  </header>
 
-<nav class="menu">
-<button onclick="abrir('dashboard')">Dashboard</button>
-<button onclick="abrir('clientes')">Clientes</button>
-<button onclick="abrir('pedidos')">Pedidos</button>
-<button onclick="abrir('despesas')">Despesas</button>
-<button onclick="abrir('financeiro')">Financeiro</button>
-<button onclick="abrir('historico')">Histórico</button>
-</nav>
+  <nav class="menu">
+    <button onclick="abrir('dashboard')">Dashboard</button>
+    <button onclick="abrir('clientes')">Clientes</button>
+    <button onclick="abrir('pedidos')">Pedidos</button>
+    <button onclick="abrir('despesas')">Despesas</button>
+    <button onclick="abrir('financeiro')">Financeiro</button>
+    <button onclick="abrir('historico')">Histórico</button>
+  </nav>
 
-<main class="conteudo">
+  <main class="conteudo">
 
-<section id="dashboard" class="tela ativa">
-<h2>Dashboard</h2>
-<div class="cards">
-<div class="card"><h3>Clientes</h3><strong id="totalClientes">0</strong></div>
-<div class="card"><h3>Pedidos</h3><strong id="totalPedidos">0</strong></div>
-<div class="card"><h3>Despesas</h3><strong id="totalDespesas">0</strong></div>
-<div class="card"><h3>Financeiro</h3><strong id="totalFinanceiro">R$ 0,00</strong></div>
-</div>
-</section>
+    <section id="dashboard" class="tela ativa">
+      <h2>Dashboard</h2>
 
-<section id="clientes" class="tela">
-<h2>Clientes</h2>
-<div class="form">
-<div class="grid">
-<input id="clienteNome" placeholder="Nome *">
-<input id="clienteTelefone" placeholder="Telefone">
-<input id="clienteWhatsapp" placeholder="WhatsApp">
-<input id="clienteEmail" placeholder="E-mail">
-<input id="clienteCidade" placeholder="Cidade">
-<input id="clienteEstado" placeholder="Estado">
-</div>
-<button onclick="salvarCliente()">Salvar cliente</button>
-<p id="msgCliente"></p>
-</div>
-<div class="lista"><h3>Clientes cadastrados</h3><div id="listaClientes"></div></div>
-</section>
+      <div class="cards">
+        <div class="card">
+          <h3>Clientes</h3>
+          <strong id="totalClientes">0</strong>
+        </div>
 
-<section id="pedidos" class="tela">
-<h2>Pedidos</h2>
-<div class="form">
-<div class="grid">
-<input id="pedidoServico" placeholder="Serviço">
-<input id="pedidoMaterial" placeholder="Material">
-<input id="pedidoQuantidade" type="number" placeholder="Quantidade">
-<input id="pedidoTotal" type="number" step="0.01" placeholder="Total">
-<input id="pedidoEntrega" type="date">
-<select id="pedidoStatus">
-<option>AGUARDANDO</option>
-<option>EM PRODUÇÃO</option>
-<option>PRONTO</option>
-<option>ENTREGUE</option>
-</select>
-</div>
-<button onclick="salvarPedido()">Salvar pedido</button>
-<p id="msgPedido"></p>
-</div>
-<div class="lista"><h3>Pedidos cadastrados</h3><div id="listaPedidos"></div></div>
-</section>
+        <div class="card">
+          <h3>Pedidos</h3>
+          <strong id="totalPedidos">0</strong>
+        </div>
 
-<section id="despesas" class="tela">
-<h2>Despesas</h2>
-<div class="form">
-<div class="grid">
-<input id="despesaProduto" placeholder="Produto ou material *">
-<input id="despesaValor" type="number" step="0.01" placeholder="Valor">
-<input id="despesaData" type="date">
-<input id="despesaLocal" placeholder="Local da compra">
-</div>
-<button onclick="salvarDespesa()">Salvar despesa</button>
-<p id="msgDespesa"></p>
-</div>
-<div class="lista"><h3>Despesas cadastradas</h3><div id="listaDespesas"></div></div>
-</section>
+        <div class="card">
+          <h3>Despesas</h3>
+          <strong id="totalDespesas">0</strong>
+        </div>
 
-<section id="financeiro" class="tela">
-<h2>Financeiro</h2>
-<div class="form">
-<div class="grid">
-<select id="finTipo">
-<option>ENTRADA</option>
-<option>SAÍDA</option>
-</select>
-<input id="finCategoria" placeholder="Categoria">
-<input id="finValor" type="number" step="0.01" placeholder="Valor">
-<input id="finData" type="date">
-<input id="finDescricao" placeholder="Descrição">
-</div>
-<button onclick="salvarFinanceiro()">Salvar lançamento</button>
-<p id="msgFinanceiro"></p>
-</div>
-<div class="lista"><h3>Lançamentos</h3><div id="listaFinanceiro"></div></div>
-</section>
+        <div class="card">
+          <h3>Financeiro</h3>
+          <strong id="totalFinanceiro">R$ 0,00</strong>
+        </div>
+      </div>
+    </section>
 
-<section id="historico" class="tela">
-<h2>Histórico</h2>
-<div class="lista">
-<p>O histórico mensal será conectado à estrutura de fechamentos do banco de dados.</p>
-</div>
-</section>
+    <section id="clientes" class="tela">
+      <h2>Clientes</h2>
 
-</main>
+      <div class="form">
+        <div class="grid">
+          <input id="clienteNome" placeholder="Nome *">
+          <input id="clienteTelefone" placeholder="Telefone">
+          <input id="clienteWhatsapp" placeholder="WhatsApp">
+          <input id="clienteEmail" placeholder="E-mail">
+          <input id="clienteCidade" placeholder="Cidade">
+          <input id="clienteEstado" placeholder="Estado">
+        </div>
 
-<script>
-const SUPABASE_URL='https://qkcrimqakjsokdztzqxe.supabase.co';
-const SUPABASE_KEY='sb_publishable_mF--YXTFkjyjbQ7Uw7Qq1w_ODzsJPA1';
-const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+        <button onclick="salvarCliente()">Salvar cliente</button>
+        <p id="msgCliente"></p>
+      </div>
 
-function abrir(id){
-document.querySelectorAll('.tela').forEach(x=>x.classList.remove('ativa'));
-document.getElementById(id).classList.add('ativa');
-if(id==='dashboard')carregarDashboard();
-if(id==='clientes')carregarClientes();
-if(id==='pedidos')carregarPedidos();
-if(id==='despesas')carregarDespesas();
-if(id==='financeiro')carregarFinanceiro();
-}
+      <div class="lista">
+        <h3>Clientes cadastrados</h3>
+        <div id="listaClientes"></div>
+      </div>
+    </section>
 
-async function salvarCliente(){
-const nome=document.getElementById('clienteNome').value.trim();
-if(!nome)return mensagem('msgCliente','Informe o nome do cliente','erro');
-const{error}=await db.from('clientes').insert({
-nome,
-telefone:document.getElementById('clienteTelefone').value,
-whatsapp:document.getElementById('clienteWhatsapp').value,
-email:document.getElementById('clienteEmail').value,
-cidade:document.getElementById('clienteCidade').value,
-estado:document.getElementById('clienteEstado').value
-});
-if(error)return mensagem('msgCliente',error.message,'erro');
-mensagem('msgCliente','Cliente salvo com sucesso!','sucesso');
-document.querySelectorAll('#clientes input').forEach(x=>x.value='');
-carregarClientes();
-}
+    <section id="pedidos" class="tela">
+      <h2>Pedidos</h2>
 
-async function carregarClientes(){
-const{data,error}=await db.from('clientes').select('*').order('criado_em',{ascending:false});
-if(error)return;
-document.getElementById('listaClientes').innerHTML=(data||[]).map(x=>`<div class="item"><b>${x.nome}</b><br>${x.telefone||''} ${x.email||''}</div>`).join('')||'Nenhum cliente cadastrado.';
-}
+      <div class="form">
+        <div class="grid">
+          <input id="pedidoServico" placeholder="Serviço">
+          <input id="pedidoMaterial" placeholder="Material">
+          <input id="pedidoQuantidade" type="number" placeholder="Quantidade">
+          <input id="pedidoTotal" type="number" step="0.01" placeholder="Total">
+          <input id="pedidoEntrega" type="date">
 
-async function salvarPedido(){
-const{error}=await db.from('pedidos').insert({
-servico:document.getElementById('pedidoServico').value,
-material:document.getElementById('pedidoMaterial').value,
-quantidade:Number(document.getElementById('pedidoQuantidade').value)||1,
-total:Number(document.getElementById('pedidoTotal').value)||0,
-data_entrega:document.getElementById('pedidoEntrega').value||null,
-status:document.getElementById('pedidoStatus').value
-});
-if(error)return mensagem('msgPedido',error.message,'erro');
-mensagem('msgPedido','Pedido salvo com sucesso!','sucesso');
-carregarPedidos();
-}
+          <select id="pedidoStatus">
+            <option>AGUARDANDO</option>
+            <option>EM PRODUÇÃO</option>
+            <option>PRONTO</option>
+            <option>ENTREGUE</option>
+          </select>
+        </div>
 
-async function carregarPedidos(){
-const{data,error}=await db.from('pedidos').select('*').order('criado_em',{ascending:false});
-if(error)return;
-document.getElementById('listaPedidos').innerHTML=(data||[]).map(x=>`<div class="item"><b>#${x.numero||''} ${x.servico||''}</b> — ${x.status}<br>R$ ${Number(x.total||0).toFixed(2)}</div>`).join('')||'Nenhum pedido cadastrado.';
-}
+        <button onclick="salvarPedido()">Salvar pedido</button>
+        <p id="msgPedido"></p>
+      </div>
 
-async function salvarDespesa(){
-const produto=document.getElementById('despesaProduto').value.trim();
-if(!produto)return mensagem('msgDespesa','Informe o produto','erro');
-const{error}=await db.from('despesas').insert({
-produto,
-valor_unitario:Number(document.getElementById('despesaValor').value)||0,
-data_compra:document.getElementById('despesaData').value||null,
-local_compra:document.getElementById('despesaLocal').value
-});
-if(error)return mensagem('msgDespesa',error.message,'erro');
-mensagem('msgDespesa','Despesa salva com sucesso!','sucesso');
-carregarDespesas();
-}
+      <div class="lista">
+        <h3>Pedidos cadastrados</h3>
+        <div id="listaPedidos"></div>
+      </div>
+    </section>
 
-async function carregarDespesas(){
-const{data,error}=await db.from('despesas').select('*').order('criado_em',{ascending:false});
-if(error)return;
-document.getElementById('listaDespesas').innerHTML=(data||[]).map(x=>`<div class="item"><b>${x.produto}</b> — R$ ${Number(x.valor_unitario||0).toFixed(2)}</div>`).join('')||'Nenhuma despesa cadastrada.';
-}
+    <section id="despesas" class="tela">
+      <h2>Despesas</h2>
 
-async function salvarFinanceiro(){
-const{error}=await db.from('financeiro').insert({
-tipo:document.getElementById('finTipo').value,
-categoria:document.getElementById('finCategoria').value,
-valor:Number(document.getElementById('finValor').value)||0,
-data:document.getElementById('finData').value||null,
-descricao:document.getElementById('finDescricao').value
-});
-if(error)return mensagem('msgFinanceiro',error.message,'erro');
-mensagem('msgFinanceiro','Lançamento salvo com sucesso!','sucesso');
-carregarFinanceiro();
-}
+      <div class="form">
+        <div class="grid">
+          <input id="despesaProduto" placeholder="Produto ou material *">
+          <input id="despesaValor" type="number" step="0.01" placeholder="Valor">
+          <input id="despesaData" type="date">
+          <input id="despesaLocal" placeholder="Local da compra">
+        </div>
 
-async function carregarFinanceiro(){
-const{data,error}=await db.from('financeiro').select('*').order('criado_em',{ascending:false});
-if(error)return;
-document.getElementById('listaFinanceiro').innerHTML=(data||[]).map(x=>`<div class="item"><b>${x.tipo}</b> — ${x.categoria||''} — R$ ${Number(x.valor||0).toFixed(2)}<br>${x.descricao||''}</div>`).join('')||'Nenhum lançamento cadastrado.';
-}
+        <button onclick="salvarDespesa()">Salvar despesa</button>
+        <p id="msgDespesa"></p>
+      </div>
 
-async function carregarDashboard(){
-const tabelas=['clientes','pedidos','despesas','financeiro'];
-for(const t of tabelas){
-const{count}=await db.from(t).select('*',{count:'exact',head:true});
-const el=document.getElementById('total'+t.charAt(0).toUpperCase()+t.slice(1));
-if(el)el.textContent=count||0;
-}
-}
+      <div class="lista">
+        <h3>Despesas cadastradas</h3>
+        <div id="listaDespesas"></div>
+      </div>
+    </section>
 
-function mensagem(id,text,tipo){
-const el=document.getElementById(id);
-el.textContent=text;
-el.className=tipo;
-setTimeout(()=>el.textContent='',4000);
-}
+    <section id="financeiro" class="tela">
+      <h2>Financeiro</h2>
 
-carregarDashboard();
-</script>
+      <div class="form">
+        <div class="grid">
+          <select id="finTipo">
+            <option>ENTRADA</option>
+            <option>SAÍDA</option>
+          </select>
+
+          <input id="finCategoria" placeholder="Categoria">
+          <input id="finValor" type="number" step="0.01" placeholder="Valor">
+          <input id="finData" type="date">
+          <input id="finDescricao" placeholder="Descrição">
+        </div>
+
+        <button onclick="salvarFinanceiro()">Salvar lançamento</button>
+        <p id="msgFinanceiro"></p>
+      </div>
+
+      <div class="lista">
+        <h3>Lançamentos</h3>
+        <div id="listaFinanceiro"></div>
+      </div>
+    </section>
+
+    <section id="historico" class="tela">
+      <h2>Histórico</h2>
+
+      <div class="lista">
+        <p>
+          O histórico mensal será conectado à estrutura de fechamentos do banco de dados.
+        </p>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    const SUPABASE_URL =
+      'https://qkcrimqakjsokdztzqxe.supabase.co';
+
+    const SUPABASE_KEY =
+      'sb_publishable_mF--YXTFkjyjbQ7Uw7Qq1w_ODzsJPA1';
+
+    const db = window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_KEY
+    );
+
+    function abrir(id) {
+      document.querySelectorAll('.tela').forEach(function (x) {
+        x.classList.remove('ativa');
+      });
+
+      document.getElementById(id).classList.add('ativa');
+
+      if (id === 'dashboard') carregarDashboard();
+      if (id === 'clientes') carregarClientes();
+      if (id === 'pedidos') carregarPedidos();
+      if (id === 'despesas') carregarDespesas();
+      if (id === 'financeiro') carregarFinanceiro();
+    }
+
+    async function salvarCliente() {
+      const nome = document.getElementById('clienteNome').value.trim();
+
+      if (!nome) {
+        return mensagem(
+          'msgCliente',
+          'Informe o nome do cliente',
+          'erro'
+        );
+      }
+
+      const { error } = await db
+        .from('clientes')
+        .insert({
+          nome: nome,
+          telefone: document.getElementById('clienteTelefone').value,
+          whatsapp: document.getElementById('clienteWhatsapp').value,
+          email: document.getElementById('clienteEmail').value,
+          cidade: document.getElementById('clienteCidade').value,
+          estado: document.getElementById('clienteEstado').value
+        });
+
+      if (error) {
+        return mensagem('msgCliente', error.message, 'erro');
+      }
+
+      mensagem(
+        'msgCliente',
+        'Cliente salvo com sucesso!',
+        'sucesso'
+      );
+
+      document
+        .querySelectorAll('#clientes input')
+        .forEach(function (x) {
+          x.value = '';
+        });
+
+      carregarClientes();
+    }
+
+    async function carregarClientes() {
+      const { data, error } = await db
+        .from('clientes')
+        .select('*')
+        .order('criado_em', {
+          ascending: false
+        });
+
+      if (error) return;
+
+      document.getElementById('listaClientes').innerHTML =
+        (data || [])
+          .map(function (x) {
+            return `
+              <div class="item">
+                <b>${x.nome}</b><br>
+                ${x.telefone || ''}
+                ${x.email || ''}
+              </div>
+            `;
+          })
+          .join('') ||
+        'Nenhum cliente cadastrado.';
+    }
+
+    async function salvarPedido() {
+      const { error } = await db
+        .from('pedidos')
+        .insert({
+          servico: document.getElementById('pedidoServico').value,
+          material: document.getElementById('pedidoMaterial').value,
+          quantidade:
+            Number(
+              document.getElementById('pedidoQuantidade').value
+            ) || 1,
+          total:
+            Number(
+              document.getElementById('pedidoTotal').value
+            ) || 0,
+          data_entrega:
+            document.getElementById('pedidoEntrega').value || null,
+          status:
+            document.getElementById('pedidoStatus').value
+        });
+
+      if (error) {
+        return mensagem('msgPedido', error.message, 'erro');
+      }
+
+      mensagem(
+        'msgPedido',
+        'Pedido salvo com sucesso!',
+        'sucesso'
+      );
+
+      carregarPedidos();
+    }
+
+    async function carregarPedidos() {
+      const { data, error } = await db
+        .from('pedidos')
+        .select('*')
+        .order('criado_em', {
+          ascending: false
+        });
+
+      if (error) return;
+
+      document.getElementById('listaPedidos').innerHTML =
+        (data || [])
+          .map(function (x) {
+            return `
+              <div class="item">
+                <b>
+                  #${x.numero || ''}
+                  ${x.servico || ''}
+                </b>
+                — ${x.status}
+                <br>
+                R$ ${Number(x.total || 0).toFixed(2)}
+              </div>
+            `;
+          })
+          .join('') ||
+        'Nenhum pedido cadastrado.';
+    }
+
+    async function salvarDespesa() {
+      const produto =
+        document.getElementById('despesaProduto').value.trim();
+
+      if (!produto) {
+        return mensagem(
+          'msgDespesa',
+          'Informe o produto',
+          'erro'
+        );
+      }
+
+      const { error } = await db
+        .from('despesas')
+        .insert({
+          produto: produto,
+          valor_unitario:
+            Number(
+              document.getElementById('despesaValor').value
+            ) || 0,
+          data_compra:
+            document.getElementById('despesaData').value ||
+            null,
+          local_compra:
+            document.getElementById('despesaLocal').value
+        });
+
+      if (error) {
+        return mensagem(
+          'msgDespesa',
+          error.message,
+          'erro'
+        );
+      }
+
+      mensagem(
+        'msgDespesa',
+        'Despesa salva com sucesso!',
+        'sucesso'
+      );
+
+      carregarDespesas();
+    }
+
+    async function carregarDespesas() {
+      const { data, error } = await db
+        .from('despesas')
+        .select('*')
+        .order('criado_em', {
+          ascending: false
+        });
+
+      if (error) return;
+
+      document.getElementById('listaDespesas').innerHTML =
+        (data || [])
+          .map(function (x) {
+            return `
+              <div class="item">
+                <b>${x.produto}</b>
+                —
+                R$ ${Number(
+                  x.valor_unitario || 0
+                ).toFixed(2)}
+              </div>
+            `;
+          })
+          .join('') ||
+        'Nenhuma despesa cadastrada.';
+    }
+
+    async function salvarFinanceiro() {
+      const { error } = await db
+        .from('financeiro')
+        .insert({
+          tipo: document.getElementById('finTipo').value,
+          categoria:
+            document.getElementById('finCategoria').value,
+          valor:
+            Number(
+              document.getElementById('finValor').value
+            ) || 0,
+          data:
+            document.getElementById('finData').value ||
+            null,
+          descricao:
+            document.getElementById('finDescricao').value
+        });
+
+      if (error) {
+        return mensagem(
+          'msgFinanceiro',
+          error.message,
+          'erro'
+        );
+      }
+
+      mensagem(
+        'msgFinanceiro',
+        'Lançamento salvo com sucesso!',
+        'sucesso'
+      );
+
+      carregarFinanceiro();
+    }
+
+    async function carregarFinanceiro() {
+      const { data, error } = await db
+        .from('financeiro')
+        .select('*')
+        .order('criado_em', {
+          ascending: false
+        });
+
+      if (error) return;
+
+      document.getElementById('listaFinanceiro').innerHTML =
+        (data || [])
+          .map(function (x) {
+            return `
+              <div class="item">
+                <b>${x.tipo}</b>
+                —
+                ${x.categoria || ''}
+                —
+                R$ ${Number(
+                  x.valor || 0
+                ).toFixed(2)}
+                <br>
+                ${x.descricao || ''}
+              </div>
+            `;
+          })
+          .join('') ||
+        'Nenhum lançamento cadastrado.';
+    }
+
+    async function carregarDashboard() {
+      const tabelas = [
+        'clientes',
+        'pedidos',
+        'despesas',
+        'financeiro'
+      ];
+
+      for (const tabela of tabelas) {
+        const { count } = await db
+          .from(tabela)
+          .select('*', {
+            count: 'exact',
+            head: true
+          });
+
+        const id =
+          'total' +
+          tabela.charAt(0).toUpperCase() +
+          tabela.slice(1);
+
+        const elemento =
+          document.getElementById(id);
+
+        if (elemento) {
+          elemento.textContent = count || 0;
+        }
+      }
+    }
+
+    function mensagem(id, texto, tipo) {
+      const elemento =
+        document.getElementById(id);
+
+      elemento.textContent = texto;
+      elemento.className = tipo;
+
+      setTimeout(function () {
+        elemento.textContent = '';
+      }, 4000);
+    }
+
+    carregarDashboard();
+  </script>
+
 </body>
 </html>
