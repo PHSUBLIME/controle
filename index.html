@@ -141,7 +141,7 @@
                 </div>
 
                 <div class="flex bg-darkCard p-4 rounded-xl border border-darkBorder">
-                    <input type="text" id="clientes-search" placeholder="Buscar cliente..." class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full text-sm focus:outline-none" oninput="renderClientes()">
+                    <input type="text" id="clientes-search" placeholder="Buscar cliente por nome ou documento..." class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full text-sm focus:outline-none" oninput="renderClientes()">
                 </div>
 
                 <!-- Tabela Clientes -->
@@ -175,7 +175,7 @@
                     </button>
                 </div>
 
-                <div class="flex bg-darkCard p-4 rounded-xl border border-darkBorder">
+                <div class="flex bg-darkCard p-4 rounded-xl border border-darkBorder font-sans">
                     <input type="text" id="pedidos-search" placeholder="Buscar pedido por descrição ou cliente..." class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full text-sm focus:outline-none" oninput="renderPedidos()">
                 </div>
 
@@ -331,7 +331,7 @@
         </div>
     </main>
 
-    <!-- ================================= MODAIS ================================= -->
+    <!-- ================================= MODAIS INTEGRAIS ================================= -->
 
     <!-- MODAL CLIENTE -->
     <div id="modal-cliente" class="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50 hidden">
@@ -561,7 +561,7 @@
         </div>
     </div>
 
-    <!-- MODAL NOVO LANÇAMENTO -->
+    <!-- MODAL NOVO LANÇAMENTO (FINANCEIRO AVULSO) -->
     <div id="modal-financeiro" class="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50 hidden">
         <div class="bg-neutral-900 border border-darkBorder rounded-xl max-w-md w-full p-6 space-y-4 max-h-[90vh] overflow-y-auto">
             <h3 class="text-lg font-bold text-gold border-b border-darkBorder pb-2">Novo Lançamento</h3>
@@ -571,7 +571,7 @@
                         <label class="block text-xs text-neutral-400 mb-1">Tipo</label>
                         <select id="f-tipo" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full focus:outline-none focus:border-gold">
                             <option value="Entrada">Entrada (Receita)</option>
-                            <option value="Saída">Saída (Despesa)</option>
+                            <option value="Saída">Saída (Despesa/Investimento)</option>
                         </select>
                     </div>
                     <div>
@@ -685,23 +685,23 @@
 
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            document.getElementById('tab-' + tabId).classList.remove('hidden');
+            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
             
             document.querySelectorAll('.tab-link').forEach(el => {
                 el.classList.remove('bg-neutral-800', 'text-gold');
                 el.classList.add('text-neutral-400');
             });
-            const activeBtns = document.querySelectorAll('[data-tab="' + tabId + '"]');
-            activeBtns.forEach(btn => {
+            const activeBtn = document.querySelectorAll(`[data-tab="${tabId}"]`);
+            activeBtn.forEach(btn => {
                 btn.classList.add('bg-neutral-800', 'text-gold');
                 btn.classList.remove('text-neutral-400');
             });
             
             if (tabId === 'dashboard') renderDashboard();
-            if (tabId === 'clientes') renderClientes();
             if (tabId === 'pedidos') renderPedidos();
-            if (tabId === 'despesas') renderDespesas();
             if (tabId === 'financeiro') renderFinanceiro();
+            if (tabId === 'despesas') renderDespesas();
+            if (tabId === 'clientes') renderClientes();
             if (tabId === 'historico') renderHistorico();
             
             document.getElementById('mobile-menu').classList.add('hidden');
@@ -768,7 +768,7 @@
                         <span class="truncate max-w-[60%] font-semibold text-neutral-300">${item.nome}</span>
                         <div class="flex items-center gap-2">
                             <span class="font-bold text-[#ffd700]">${formatCurrency(item.valor)}</span>
-                            <button type="button" onclick="removeItemFromCurrentOrder('${item.id}')" class="text-neutral-500 hover:text-red-400 transition text-sm"><i class="fa-solid fa-trash-can"></i></button>
+                            <button type="button" onclick="removeItemFromCurrentOrder('${item.id}')" class="text-neutral-400 hover:text-red-500 transition text-sm"><i class="fa-solid fa-trash-can"></i></button>
                         </div>
                     </div>`;
             });
@@ -996,6 +996,7 @@
             w.document.close();
         }
 
+        // Envio direto para o WhatsApp cadastrado
         function sendReportWhatsApp() {
             const receitas = appState.financeiro.filter(f => f.tipo === 'Entrada').reduce((sum, item) => sum + item.valor, 0);
             const investimentos = appState.financeiro.filter(f => f.tipo === 'Saída' && f.categoria === 'Investimento').reduce((sum, item) => sum + item.valor, 0);
@@ -1006,65 +1007,4 @@
 
             const text = `*PHSUBLIME - RELATÓRIO FINANCEIRO CONSOLIDADO*\n\n` +
                          `📊 *Receitas:* ${formatCurrency(receitas)}\n` +
-                         `💼 *Investimentos:* ${formatCurrency(investimentos)}\n` +
-                         `📉 *Despesas:* ${formatCurrency(despesas)}\n\n` +
-                         `📈 *Lucro Bruto:* ${formatCurrency(lucro)}\n` +
-                         `💰 *10% Lucro (Reserva):* ${formatCurrency(reserva)}\n` +
-                         `🏆 *Lucro Líquido:* ${formatCurrency(liq)}\n\n` +
-                         `_Gerado em: ${new Date().toLocaleString('pt-BR')}_`;
-            
-            window.open(`https://api.whatsapp.com/send?phone=5521986147221&text=${encodeURIComponent(text)}`, '_blank');
-            showToast("Mensagem de relatório enviada!");
-        }
-
-        // ================================= COMPLEMENTOS HISTÓRICO E INICIAIS =================================
-
-        function selectHistoryRow(id, element) {
-            selectedHistoryId = id;
-            document.querySelectorAll('.history-row').forEach(row => { row.classList.remove('bg-neutral-800', 'border-l-4', 'border-gold'); });
-            element.classList.add('bg-neutral-800', 'border-l-4', 'border-gold');
-            document.getElementById('history-copy-btn').classList.remove('opacity-50', 'cursor-not-allowed');
-            document.getElementById('history-whatsapp-btn').classList.remove('opacity-50', 'cursor-not-allowed');
-            document.getElementById('history-delete-btn').classList.remove('opacity-50', 'cursor-not-allowed');
-        }
-
-        function triggerCloseMonth() {
-            const mesYear = prompt("Qual período de fechamento deseja arquivar?", new Date().toLocaleString('pt-BR', { month: 'long', year: 'numeric' }));
-            if (!mesYear) return;
-            const entradas = appState.financeiro.filter(f => f.tipo === 'Entrada').reduce((sum, item) => sum + item.valor, 0);
-            const saidas = appState.financeiro.filter(f => f.tipo === 'Saída').reduce((sum, item) => sum + item.valor, 0);
-            appState.historico.push({ id: 'h' + Date.now(), mesYear, receitas: entradas, despesas: saidas, saldo: entradas - saidas, totalPedidos: appState.pedidos.length });
-            if (confirm("Fechar mês concluído! Deseja zerar os pedidos, despesas e lançamentos do mês ativo para o novo ciclo?")) { appState.financeiro = []; appState.pedidos = []; appState.despesas = []; }
-            saveState(); renderDashboard();
-        }
-
-        function toggleDespesaPago(id) {
-            const d = appState.despesas.find(item => item.id === id); if (!d) return;
-            d.pago = d.pago === 'Sim' ? 'Não' : 'Sim'; saveState(); renderDespesas(); renderDashboard();
-        }
-
-        function deleteHistoryItem() {
-            if (!selectedHistoryId) return;
-            if (confirm("Apagar registro do histórico?")) { appState.historico = appState.historico.filter(item => item.id !== selectedHistoryId); saveState(); renderHistorico(); }
-        }
-
-        function copyHistoryData() {
-            if (!selectedHistoryId) return;
-            const h = appState.historico.find(item => item.id === selectedHistoryId);
-            const text = `EXTRATO - PHSUBLIME\n\nPeríodo: ${h.mesYear}\nReceitas: ${formatCurrency(h.receitas)}\nDespesas: ${formatCurrency(h.despesas)}\nSaldo Líquido: ${formatCurrency(h.saldo)}\nPedidos Totais: ${h.totalPedidos}`;
-            navigator.clipboard.writeText(text).then(() => { showToast("Copiado!"); });
-        }
-
-        function shareWhatsapp() {
-            if (!selectedHistoryId) return;
-            const h = appState.historico.find(item => item.id === selectedHistoryId);
-            const text = `*EXTRATO - PHSUBLIME*\n\n*Período:* ${h.mesYear}\n*Receitas:* ${formatCurrency(h.receitas)}\n*Despesas:* ${formatCurrency(h.despesas)}\n*Saldo Líquido:* ${formatCurrency(h.saldo)}\n*Pedidos Feitos:* ${h.totalPedidos}`;
-            window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
-        }
-
-        window.addEventListener('DOMContentLoaded', () => {
-            buildMenus(); loadState(); switchTab('dashboard');
-        });
-    </script>
-</body>
-</html>
+                         `💼 *Investimentos:* ${formatCurr
