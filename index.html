@@ -1,1010 +1,533 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PHSUBLIME - Gestão de Caixa e Pedidos</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        gold: {
-                            DEFAULT: '#ffd700',
-                            hover: '#e6c200',
-                            light: '#fff5cc'
-                        },
-                        darkBg: '#0a0a0a',
-                        darkCard: '#111111',
-                        darkBorder: '#222222'
-                    }
-                }
-            }
+ <head><script>window["__codeletBootstrap__"]=JSON.parse('{"A":"A","B":"20260727-05-609cca1"}');</script><script src="/_sdk/728f18890c0241e5.telemetry_sdk.js" integrity="sha512-cMy0xd29wRWs8nyV19fws/+pwQ0u98A3fewCalZ/OWXQXUwzmcx7jKUuZ511uTJlUe1gP0Undii48zuekOylMw=="></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PHSUBLIME ERP</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <script src="/_sdk/935a53bc2e11fb8d.data_sdk.js" integrity="sha512-qr2oyPnEys1WebcOABaRh6hG77r5PWpqeWW6JTKbRJqly/INsfBi31CVNlTmHqjgeLpkVmmHZJUdxSx/32tOFQ=="></script>
+  <script src="/_sdk/0a2c59aba90bafcf.editing_sdk.js" integrity="sha512-oJ0eVi6NgEzXGPCIPXJiGxB6ZRyIzQ1VF+WywtAc5NXBkRu8KT/0qsMQvecuVbkhSpdfToUqXoPwRVBZaa+Xxw=="></script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet">
+  <style>
+    :root{--gold:#ffd700;--ink:#090909;--panel:#151515;--line:#2b2b2b}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:"DM Sans",sans-serif;background:var(--ink)}
+    button{transition:.18s ease}
+    button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid rgba(255,215,0,.35);outline-offset:2px}
+    .erp-shell{width:100%;min-height:calc(100 * min(var(--vh,1vh),1vh));background:radial-gradient(circle at 86% 0%,rgba(143,104,0,.24),transparent 29%),#090909}
+    .nav-button{display:flex;align-items:center;gap:.7rem;width:100%;padding:.75rem .85rem;color:#999;border-radius:.65rem;font-size:.8rem;font-weight:700;text-align:left;transition:.18s}
+    .nav-button:hover,.nav-button.active{color:var(--gold);background:#1d1d1d}.nav-button svg{width:17px;height:17px}
+    .erp-card{background:rgba(21,21,21,.96);border:1px solid var(--line);border-radius:1rem}
+    .metric-card{min-height:104px;padding:1rem;background:rgba(21,21,21,.96);border:1px solid var(--line);border-radius:.85rem}
+    .metric-label{color:#8b8b8b;font-size:.62rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase}
+    .metric-value{margin-top:.45rem;color:#fff;font-size:1.25rem;font-weight:900}
+    .erp-input{width:100%;border:1px solid #3a3a3a;border-radius:.55rem;background:#090909;padding:.68rem .78rem;color:#fff;font-size:.83rem}
+    .erp-input:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(255,215,0,.11)}
+    .erp-label{display:block;margin-bottom:.32rem;color:#a2a2a2;font-size:.63rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+    .erp-table{width:100%;font-size:.78rem}.erp-table th{padding:.82rem;color:#888;font-size:.61rem;letter-spacing:.09em;text-align:left;text-transform:uppercase;white-space:nowrap}
+    .erp-table td{padding:.82rem;border-top:1px solid #282828;vertical-align:middle}.erp-table tbody tr:hover{background:#1b1b1b}
+    .status{display:inline-flex;border-radius:.35rem;padding:.26rem .48rem;font-size:.61rem;font-weight:900;white-space:nowrap}
+    .toast{position:fixed;right:1rem;bottom:1rem;z-index:200;max-width:360px;border:1px solid #806b00;border-radius:.7rem;background:#ffd700;padding:.8rem 1rem;color:#111;font-size:.8rem;font-weight:800;box-shadow:0 15px 35px rgba(0,0,0,.5)}
+    .modal-cover{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;padding:1rem;background:rgba(0,0,0,.78);backdrop-filter:blur(5px)}
+    .modal-panel{width:min(900px,100%);max-height:calc(88 * min(var(--vh,1vh),1vh));overflow:auto;border:1px solid #3a3a3a;border-radius:1rem;background:#121212;padding:1.35rem;box-shadow:0 30px 80px rgba(0,0,0,.72)}
+    .bar{border-radius:.35rem .35rem 0 0;background:linear-gradient(#ffe978,#c59b00);min-width:9px;flex:1}
+    .action{border-radius:.4rem;padding:.38rem .52rem;font-size:.66rem;font-weight:800}
+    .action:hover{filter:brightness(1.16)}
+    @media(max-width:767px){.main-content{padding-bottom:5.5rem}.mobile-nav .nav-button{justify-content:center;padding:.8rem .25rem}}
+  </style>
+  <script src="/_sdk/6030e540d4419216.resizing_sdk.js" type="text/javascript" integrity="sha512-b5KWzyoXsbWP4smq4sftIi6Kts4YVBpBsz0BwCViwbBJkK64a3/Z6ZMdWA+qnplNcXw4mhZeqvQi3mOosiRJdA=="></script>
+ </head>
+ <body data-template-id="__page-root" class="text-white">
+  <div class="erp-shell flex">
+   <aside class="hidden w-60 shrink-0 flex-col border-r border-zinc-800 bg-[#0a0a0a] p-5 md:flex">
+    <header>
+     <h1 data-template-id="sidebar-logo" class="canva-text text-2xl font-black tracking-wide"></h1>
+     <p data-template-id="sidebar-subtitle" class="canva-text mt-1 text-[10px] uppercase tracking-[.22em]"></p>
+    </header>
+    <nav aria-label="Navegação principal" class="mt-10 flex flex-1 flex-col gap-1">
+     <button type="button" class="nav-button active" data-page="dashboard"><i data-lucide="layout-dashboard"></i>Dashboard</button> <button type="button" class="nav-button" data-page="clients"><i data-lucide="users"></i>Clientes</button> <button type="button" class="nav-button" data-page="orders"><i data-lucide="clipboard-list"></i>Pedidos</button> <button type="button" class="nav-button" data-page="expenses"><i data-lucide="shopping-cart"></i>Despesas</button> <button type="button" class="nav-button" data-page="finance"><i data-lucide="wallet"></i>Financeiro</button> <button type="button" class="nav-button" data-page="history"><i data-lucide="archive"></i>Histórico</button>
+    </nav>
+    <p data-template-id="sidebar-footer" class="canva-text border-t border-zinc-800 pt-4 text-xs"></p>
+   </aside>
+   <main class="main-content w-full flex-1 p-4 md:p-8">
+    <section id="page-dashboard">
+     <div class="mb-6 flex flex-wrap items-start justify-between gap-4">
+      <div>
+       <h2 data-template-id="dash-title" class="canva-text font-black"></h2>
+       <p data-template-id="dash-helper" class="canva-text mt-1 text-xs text-zinc-500"></p>
+      </div>
+      <div class="flex flex-wrap items-center gap-2">
+       <div class="rounded-lg border border-zinc-700 bg-[#151515] px-3 py-2">
+        <label for="dashboard-date" class="mr-2 text-[10px] font-bold uppercase tracking-wider text-zinc-500">Análise diária</label> <input id="dashboard-date" type="date" class="bg-transparent text-xs text-white outline-none" onchange="renderDashboard()">
+       </div><button data-template-id="export-data-btn" type="button" class="canva-button rounded-lg px-4 py-2 text-sm font-bold" onclick="exportCsv()"></button> <button data-template-id="close-month-btn" type="button" class="canva-button rounded-lg px-4 py-2 text-sm font-bold" onclick="openCloseMonth()"></button>
+      </div>
+     </div>
+     <div class="grid grid-cols-2 gap-3 md:grid-cols-4">
+      <article class="metric-card">
+       <p class="metric-label">Faturamento do dia</p>
+       <p id="kpi-day" class="metric-value text-emerald-400">R$ 0,00</p>
+      </article>
+      <article class="metric-card">
+       <p class="metric-label">Em produção</p>
+       <p id="kpi-production" class="metric-value text-sky-400">0</p>
+      </article>
+      <article class="metric-card">
+       <p class="metric-label">Entregues</p>
+       <p id="kpi-delivered" class="metric-value text-teal-400">0</p>
+      </article>
+      <article class="metric-card">
+       <p class="metric-label">Clientes</p>
+       <p id="kpi-clients" class="metric-value text-indigo-400">0</p>
+      </article>
+      <article class="metric-card">
+       <p class="metric-label">Pedidos pendentes</p>
+       <p id="kpi-pending" class="metric-value text-amber-400">0</p>
+      </article>
+      <article class="metric-card">
+       <p class="metric-label">Pedidos da data</p>
+       <p id="kpi-orders-day" class="metric-value text-rose-400">0</p>
+      </article>
+      <article class="metric-card">
+       <p class="metric-label">Custos e despesas</p>
+       <p id="kpi-expenses" class="metric-value text-orange-400">R$ 0,00</p>
+      </article>
+      <article class="metric-card">
+       <p class="metric-label">Lucro estimado</p>
+       <p id="kpi-profit" class="metric-value text-[#ffd700]">R$ 0,00</p>
+      </article>
+     </div>
+     <div class="mt-6 grid gap-5 xl:grid-cols-2">
+      <article class="erp-card p-5">
+       <div class="mb-4 flex justify-between gap-3">
+        <h3 class="text-xs font-bold uppercase tracking-widest text-zinc-400">Receitas dos últimos 7 dias</h3><span class="text-[10px] text-zinc-600">Canva Sheet</span>
+       </div>
+       <div id="sales-chart" class="flex h-48 items-end gap-2 border-b border-zinc-700 pb-1"></div>
+       <div id="sales-labels" class="mt-2 flex justify-between text-[10px] text-zinc-600"></div>
+      </article>
+      <article class="erp-card p-5">
+       <h3 class="mb-5 text-xs font-bold uppercase tracking-widest text-zinc-400">Serviços mais vendidos</h3>
+       <div id="service-chart" class="space-y-4"></div>
+      </article>
+     </div>
+    </section>
+    <section id="page-clients" class="hidden">
+     <div class="mb-6 flex flex-wrap items-center justify-between gap-3">
+      <div>
+       <h2 data-template-id="clients-title" class="canva-text font-black"></h2>
+       <p data-template-id="clients-helper" class="canva-text mt-1 text-xs text-zinc-500"></p>
+      </div><button data-template-id="clients-add-btn" type="button" class="canva-button rounded-lg px-4 py-2 text-sm font-bold" onclick="openClientForm()"></button>
+     </div><label class="sr-only" for="clients-search">Buscar clientes</label><input id="clients-search" class="erp-input mb-5 max-w-md" placeholder="Buscar nome, documento ou cidade..." oninput="renderClients()">
+     <div class="erp-card overflow-x-auto">
+      <table class="erp-table">
+       <thead>
+        <tr>
+         <th>Nome</th>
+         <th>Documento</th>
+         <th>Contato</th>
+         <th>Cidade</th>
+         <th>Ações</th>
+        </tr>
+       </thead>
+       <tbody id="clients-body"></tbody>
+      </table>
+      <p id="clients-empty" class="hidden p-8 text-center text-sm text-zinc-500">Nenhum cliente cadastrado.</p>
+     </div>
+    </section>
+    <section id="page-orders" class="hidden">
+     <div class="mb-6 flex flex-wrap items-center justify-between gap-3">
+      <div>
+       <h2 data-template-id="orders-title" class="canva-text font-black"></h2>
+       <p data-template-id="orders-helper" class="canva-text mt-1 text-xs text-zinc-500"></p>
+      </div><button data-template-id="orders-add-btn" type="button" class="canva-button rounded-lg px-4 py-2 text-sm font-bold" onclick="openOrderForm()"></button>
+     </div>
+     <div class="mb-4 flex flex-wrap gap-2">
+      <button id="filter-all" class="action bg-[#ffd700] text-black" onclick="setOrderFilter('all')">Todos</button> <button id="filter-today" class="action bg-zinc-700 text-white" onclick="setOrderFilter('today')">Hoje</button> <label for="orders-date-filter" class="sr-only">Filtrar pedidos por data</label><input id="orders-date-filter" type="date" class="erp-input w-auto" onchange="setOrderFilter('date')">
+     </div><label class="sr-only" for="orders-search">Buscar pedidos</label><input id="orders-search" class="erp-input mb-5 max-w-md" placeholder="Buscar pedido, cliente ou produto..." oninput="renderOrders()">
+     <div class="grid grid-cols-3 gap-3 mb-5">
+      <article class="metric-card">
+       <p class="metric-label">Novos</p>
+       <p id="ord-new" class="metric-value">0</p>
+      </article>
+      <article class="metric-card">
+       <p class="metric-label">Em produção</p>
+       <p id="ord-production" class="metric-value text-sky-400">0</p>
+      </article>
+      <article class="metric-card">
+       <p class="metric-label">Total filtrado</p>
+       <p id="ord-total" class="metric-value text-[#ffd700]">0</p>
+      </article>
+     </div>
+     <div class="erp-card overflow-x-auto">
+      <table class="erp-table">
+       <thead>
+        <tr>
+         <th>Pedido</th>
+         <th>Cliente</th>
+         <th>Produtos</th>
+         <th>Financeiro</th>
+         <th>Entrega</th>
+         <th>Status</th>
+         <th>Ações</th>
+        </tr>
+       </thead>
+       <tbody id="orders-body"></tbody>
+      </table>
+      <p id="orders-empty" class="hidden p-8 text-center text-sm text-zinc-500">Nenhum pedido registrado.</p>
+     </div>
+    </section>
+    <section id="page-expenses" class="hidden">
+     <div class="mb-6 flex flex-wrap items-center justify-between gap-3">
+      <div>
+       <h2 data-template-id="expenses-title" class="canva-text font-black"></h2>
+       <p data-template-id="expenses-helper" class="canva-text mt-1 text-xs text-zinc-500"></p>
+      </div><button data-template-id="expenses-add-btn" type="button" class="canva-button rounded-lg px-4 py-2 text-sm font-bold" onclick="openExpenseForm()"></button>
+     </div>
+     <div class="mb-6 grid grid-cols-1 gap-3 sm:grid-cols-3">
+      <article class="metric-card">
+       <p class="metric-label">Total Despesas</p>
+       <p id="exp-total-despesas" class="metric-value text-red-400">R$ 0,00</p>
+      </article>
+      <article class="metric-card">
+       <p class="metric-label">Investimento Pedidos</p>
+       <p id="exp-invest-pedidos" class="metric-value text-sky-400">R$ 0,00</p>
+      </article>
+      <article class="metric-card">
+       <p class="metric-label">Investimento Total</p>
+       <p id="exp-invest-total" class="metric-value text-[#ffd700]">R$ 0,00</p>
+      </article>
+     </div><label class="sr-only" for="expense-search">Buscar despesas</label><input id="expense-search" class="erp-input mb-5 max-w-md" placeholder="Buscar produto ou local..." oninput="renderExpenses()">
+     <div class="erp-card overflow-x-auto">
+      <table class="erp-table">
+       <thead>
+        <tr>
+         <th>Produto</th>
+         <th>Valor unitário</th>
+         <th>Quantidade</th>
+         <th>Data</th>
+         <th>Pagamento</th>
+         <th>Local</th>
+         <th>Situação</th>
+         <th>Total</th>
+         <th>Ações</th>
+        </tr>
+       </thead>
+       <tbody id="expenses-body"></tbody>
+      </table>
+      <p id="expenses-empty" class="hidden p-8 text-center text-sm text-zinc-500">Nenhuma despesa registrada.</p>
+     </div>
+    </section>
+    <section id="page-finance" class="hidden">
+     <div class="mb-6 flex flex-wrap items-center justify-between gap-3">
+      <div>
+       <h2 data-template-id="finance-title" class="canva-text font-black"></h2>
+       <p data-template-id="finance-helper" class="canva-text mt-1 text-xs text-zinc-500"></p>
+      </div>
+      <div class="flex flex-wrap gap-2"><button data-template-id="finance-print-btn" type="button" class="canva-button rounded-lg px-4 py-2 text-sm font-bold" onclick="printReport()"></button><button data-template-id="finance-whatsapp-btn" type="button" class="canva-button rounded-lg px-4 py-2 text-sm font-bold" onclick="shareFinance()"></button><button data-template-id="finance-add-btn" type="button" class="canva-button rounded-lg px-4 py-2 text-sm font-bold" onclick="openFinanceForm()"></button>
+      </div>
+     </div>
+     <div class="mb-6 grid grid-cols-2 gap-3 md:grid-cols-3">
+      <article class="metric-card">
+       <p class="metric-label">Receitas</p>
+       <p id="fin-income" class="metric-value text-emerald-400">R$ 0,00</p>
+      </article>
+      <article class="metric-card">
+       <p class="metric-label">Despesas</p>
+       <p id="fin-expense" class="metric-value text-red-400">R$ 0,00</p>
+      </article>
+      <article class="metric-card">
+       <p class="metric-label">Investimentos</p>
+       <p id="fin-investment" class="metric-value text-orange-400">R$ 0,00</p>
+      </article>
+      <article class="metric-card">
+       <p class="metric-label">Lucro</p>
+       <p id="fin-profit" class="metric-value text-[#ffd700]">R$ 0,00</p>
+      </article>
+      <article class="metric-card">
+       <p class="metric-label">Reserva de 10%</p>
+       <p id="fin-ten" class="metric-value text-amber-400">R$ 0,00</p>
+      </article>
+      <article class="metric-card">
+       <p class="metric-label">Lucro líquido</p>
+       <p id="fin-net" class="metric-value text-teal-400">R$ 0,00</p>
+      </article>
+     </div><label class="sr-only" for="finance-search">Buscar lançamentos</label><input id="finance-search" class="erp-input mb-5 max-w-md" placeholder="Buscar lançamento..." oninput="renderFinance()">
+     <div class="erp-card overflow-x-auto">
+      <table class="erp-table">
+       <thead>
+        <tr>
+         <th>Data</th>
+         <th>Tipo</th>
+         <th>Categoria</th>
+         <th>Descrição</th>
+         <th>Valor</th>
+         <th>Ações</th>
+        </tr>
+       </thead>
+       <tbody id="finance-body"></tbody>
+      </table>
+      <p id="finance-empty" class="hidden p-8 text-center text-sm text-zinc-500">Nenhum lançamento registrado.</p>
+     </div>
+    </section>
+    <section id="page-history" class="hidden">
+     <div class="mb-6 flex flex-wrap items-center justify-between gap-3">
+      <div>
+       <h2 data-template-id="history-title" class="canva-text font-black"></h2>
+       <p data-template-id="history-helper" class="canva-text mt-1 text-xs text-zinc-500"></p>
+      </div><button data-template-id="history-close-btn" type="button" class="canva-button rounded-lg px-4 py-2 text-sm font-bold" onclick="openCloseMonth()"></button>
+     </div>
+     <div id="history-actions" class="mb-4 hidden flex flex-wrap gap-2"><button data-template-id="history-export-btn" type="button" class="canva-button rounded-lg px-4 py-2 text-sm font-bold" onclick="exportHistory()"></button><button data-template-id="history-whatsapp-btn" type="button" class="canva-button rounded-lg px-4 py-2 text-sm font-bold" onclick="shareHistory()"></button><button data-template-id="history-reopen-btn" type="button" class="canva-button rounded-lg px-4 py-2 text-sm font-bold" onclick="reopenMonth()"></button><button data-template-id="history-delete-btn" type="button" class="canva-button rounded-lg px-4 py-2 text-sm font-bold" onclick="askDeleteMonth()"></button>
+     </div><label for="history-select" class="erp-label">Mês fechado</label><select id="history-select" class="erp-input mb-6 max-w-sm" onchange="renderHistory()"><option value="">Selecione um período</option></select>
+     <div id="history-view" class="hidden">
+      <div class="grid grid-cols-2 gap-3 md:grid-cols-4">
+       <article class="metric-card">
+        <p class="metric-label">Receitas</p>
+        <p id="hist-income" class="metric-value">R$ 0,00</p>
+       </article>
+       <article class="metric-card">
+        <p class="metric-label">Custos</p>
+        <p id="hist-cost" class="metric-value">R$ 0,00</p>
+       </article>
+       <article class="metric-card">
+        <p class="metric-label">Lucro líquido</p>
+        <p id="hist-profit" class="metric-value">R$ 0,00</p>
+       </article>
+       <article class="metric-card">
+        <p class="metric-label">Pedidos</p>
+        <p id="hist-orders" class="metric-value">0</p>
+       </article>
+      </div>
+      <div class="mt-6 grid gap-5 xl:grid-cols-2">
+       <article class="erp-card overflow-x-auto">
+        <h3 class="border-b border-zinc-800 p-4 text-xs font-bold uppercase tracking-widest text-zinc-400">Pedidos</h3>
+        <table class="erp-table">
+         <thead>
+          <tr>
+           <th>Número</th>
+           <th>Cliente</th>
+           <th>Produtos</th>
+           <th>Total</th>
+           <th>Status</th>
+          </tr>
+         </thead>
+         <tbody id="hist-orders-body"></tbody>
+        </table>
+       </article>
+       <article class="erp-card overflow-x-auto">
+        <h3 class="border-b border-zinc-800 p-4 text-xs font-bold uppercase tracking-widest text-zinc-400">Financeiro</h3>
+        <table class="erp-table">
+         <thead>
+          <tr>
+           <th>Data</th>
+           <th>Tipo</th>
+           <th>Categoria</th>
+           <th>Valor</th>
+          </tr>
+         </thead>
+         <tbody id="hist-finance-body"></tbody>
+        </table>
+       </article>
+      </div>
+      <article class="erp-card mt-5 overflow-x-auto">
+       <h3 class="border-b border-zinc-800 p-4 text-xs font-bold uppercase tracking-widest text-zinc-400">Despesas</h3>
+       <table class="erp-table">
+        <thead>
+         <tr>
+          <th>Produto</th>
+          <th>Data</th>
+          <th>Local</th>
+          <th>Total</th>
+         </tr>
+        </thead>
+        <tbody id="hist-expenses-body"></tbody>
+       </table>
+      </article>
+     </div>
+     <p id="history-empty" class="text-sm text-zinc-500">Selecione um mês fechado para visualizar o resumo.</p>
+    </section>
+   </main>
+   <nav aria-label="Navegação mobile" class="mobile-nav fixed bottom-0 left-0 z-40 flex w-full border-t border-zinc-800 bg-[#090909] md:hidden">
+    <button type="button" class="nav-button active" data-page="dashboard" aria-label="Dashboard"><i data-lucide="layout-dashboard"></i></button> <button type="button" class="nav-button" data-page="clients" aria-label="Clientes"><i data-lucide="users"></i></button> <button type="button" class="nav-button" data-page="orders" aria-label="Pedidos"><i data-lucide="clipboard-list"></i></button> <button type="button" class="nav-button" data-page="expenses" aria-label="Despesas"><i data-lucide="shopping-cart"></i></button> <button type="button" class="nav-button" data-page="finance" aria-label="Financeiro"><i data-lucide="wallet"></i></button> <button type="button" class="nav-button" data-page="history" aria-label="Histórico"><i data-lucide="archive"></i></button>
+   </nav>
+  </div>
+  <div id="modal-root"></div>
+  <div id="toast-root" aria-live="polite"></div>
+  <script>
+    const schema=["tipo_registro","mes","nome_cliente","documento","telefone","whatsapp","email","endereco","cidade","estado","observacoes","numero_pedido","data_pedido","servico","material","quantidade","largura","altura","acabamento","notas_pedido","total_pedido","despesa","data_entrega","responsavel","status_pedido","cliente_id","forma_pagamento","tipo_financeiro","categoria_financeira","valor_financeiro","data_financeira","metodo_pagamento","descricao_financeira","nome_produto","valor_unitario","data_compra","tipo_pagamento","local_compra","total_gasto","arquivado","compra_cliente","snapshot_data","pago","categoria_despesa","pedido_vinculado"];
+    let records=[],cartItems=[],orderFilter="all";
+    const $=id=>document.getElementById(id);
+    const today=()=>new Date().toISOString().slice(0,10);
+    const currentMonth=()=>new Date().toISOString().slice(0,7);
+    const money=value=>Number(value||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+    const safe=value=>String(value??"").replace(/[&<>"']/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]));
+    const complete=data=>Object.fromEntries(schema.map(key=>[key,data[key]??""]));
+    const active=type=>records.filter(item=>item.tipo_registro===type&&item.arquivado!=="sim");
+    const clients=()=>records.filter(item=>item.tipo_registro==="cliente").sort((a,b)=>(a.nome_cliente||"").localeCompare(b.nome_cliente||""));
+    const orderItems=item=>{try{return JSON.parse(item.snapshot_data||"[]")}catch{return[]}};
+    const setText=(id,val)=>{const el=$(id);if(el)el.textContent=val};
+
+    function toast(message){const item=document.createElement("div");item.className="toast";item.textContent=message;$("toast-root").appendChild(item);setTimeout(()=>item.remove(),3200)}
+    function modal(content){$("modal-root").innerHTML=`<div class="modal-cover" onclick="if(event.target===this)closeModal()"><div class="modal-panel">${content}</div></div>`;lucide.createIcons()}
+    function closeModal(){$("modal-root").innerHTML=""}
+    function input(label,key,value="",type="text",required=false){return `<div><label for="field-${key}" class="erp-label">${label}</label><input id="field-${key}" name="${key}" type="${type}" value="${safe(value)}" class="erp-input" ${required?"required":""}></div>`}
+    function page(name){["dashboard","clients","orders","expenses","finance","history"].forEach(key=>$("page-"+key).classList.toggle("hidden",key!==name));document.querySelectorAll("[data-page]").forEach(button=>button.classList.toggle("active",button.dataset.page===name));if(name==="history"){populateHistory();renderHistory()}}
+    document.querySelectorAll("[data-page]").forEach(button=>button.addEventListener("click",()=>page(button.dataset.page)));
+
+    function renderAll(){renderDashboard();renderClients();renderOrders();renderExpenses();renderFinance();if(!$("page-history").classList.contains("hidden")){populateHistory();renderHistory()}}
+    function financialTotals(data=active("financeiro"), expensesData=null){
+      const income=data.filter(x=>x.tipo_financeiro==="receita").reduce((s,x)=>s+Number(x.valor_financeiro||0),0),
+            expense=data.filter(x=>x.tipo_financeiro==="despesa").reduce((s,x)=>s+Number(x.valor_financeiro||0),0),
+            investment=data.filter(x=>x.tipo_financeiro==="investimento").reduce((s,x)=>s+Number(x.valor_financeiro||0),0);
+      
+      const targetExpenses = expensesData || active("despesa");
+      const extraInvestments = targetExpenses.filter(x => x.categoria_despesa === "Produtos de venda" || x.pedido_vinculado).reduce((s, x) => s + Number(x.total_gasto || 0), 0);
+      const extraExpenses = targetExpenses.filter(x => x.categoria_despesa === "Despesas diversas" && !x.pedido_vinculado).reduce((s, x) => s + Number(x.total_gasto || 0), 0);
+      
+      return {
+        income,
+        expense: expense + extraExpenses,
+        investment: investment + extraInvestments,
+        profit: income - (expense + extraExpenses) - (investment + extraInvestments)
+      };
+    }
+
+    function renderDashboard(){
+      const selected=$("dashboard-date").value||today(),orders=active("pedido"),finance=active("financeiro"),expenses=active("despesa");
+      const totals=financialTotals(finance, expenses);
+      const dayIncome=finance.filter(x=>x.tipo_financeiro==="receita"&&x.data_financeira===selected).reduce((s,x)=>s+Number(x.valor_financeiro||0),0);
+      setText("kpi-day",money(dayIncome));setText("kpi-production",orders.filter(x=>x.status_pedido==="EM PRODUÇÃO").length);setText("kpi-delivered",orders.filter(x=>x.status_pedido==="ENTREGUE").length);setText("kpi-clients",clients().length);setText("kpi-pending",orders.filter(x=>["AGUARDANDO","EM PRODUÇÃO"].includes(x.status_pedido)).length);setText("kpi-orders-day",orders.filter(x=>x.data_pedido===selected||x.data_entrega===selected).length);
+      
+      setText("kpi-expenses",money(totals.expense+totals.investment));
+      setText("kpi-profit",money(totals.profit));
+      const dates=[];for(let i=6;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);dates.push(d.toISOString().slice(0,10))}
+      const values=dates.map(date=>finance.filter(x=>x.tipo_financeiro==="receita"&&x.data_financeira===date).reduce((s,x)=>s+Number(x.valor_financeiro||0),0)),max=Math.max(...values,1);
+      $("sales-chart").innerHTML=values.map(value=>`<div class="bar" style="height:${Math.max(3,value/max*100)}%" title="${money(value)}"></div>`).join("");
+      $("sales-labels").innerHTML=dates.map(date=>`<span>${date.slice(8,10)}/${date.slice(5,7)}</span>`).join("");
+      const services={};orders.forEach(order=>{const list=orderItems(order);if(list.length)list.forEach(i=>services[i.nome]=(services[i.nome]||0)+Number(i.valor||0));else services[order.servico||"Sem produto"]=(services[order.servico||"Sem produto"]||0)+Number(order.total_pedido||0)});
+      const entries=Object.entries(services).sort((a,b)=>b[1]-a[1]).slice(0,5),serviceMax=Math.max(...entries.map(x=>x[1]),1);
+      $("service-chart").innerHTML=entries.length?entries.map(([name,value])=>`<div><div class="mb-1 flex justify-between gap-4 text-xs"><span class="truncate text-zinc-200">${safe(name)}</span><strong class="text-[#ffd700]">${money(value)}</strong></div><div class="h-2 overflow-hidden rounded bg-zinc-800"><div class="h-full rounded bg-[#ffd700]" style="width:${value/serviceMax*100}%"></div></div></div>`).join(""):`<p class="py-10 text-center text-sm text-zinc-500">Cadastre pedidos para acompanhar os serviços mais vendidos.</p>`;
+    }
+
+    function renderClients(){const q=($("clients-search").value||"").toLowerCase(),data=clients().filter(x=>`${x.nome_cliente} ${x.documento} ${x.cidade}`.toLowerCase().includes(q));$("clients-body").innerHTML=data.map(x=>`<tr><td class="font-bold text-white">${safe(x.nome_cliente)}</td><td>${safe(x.documento)||"—"}</td><td>${safe(x.whatsapp||x.telefone)||"—"}</td><td>${safe(x.cidade)||"—"}</td><td class="whitespace-nowrap"><button class="action bg-zinc-700" onclick="viewClient('${x.__backendId}')">Ver</button> <button class="action bg-blue-700" onclick="openClientForm('${x.__backendId}')">Editar</button> <button class="action bg-red-900" onclick="askDelete('${x.__backendId}')">Excluir</button></td></tr>`).join("");$("clients-empty").classList.toggle("hidden",data.length>0)}
+    function statusStyle(status){return status==="ENTREGUE"?"bg-teal-500/20 text-teal-300":status==="CONCLUÍDO"?"bg-emerald-500/20 text-emerald-300":status==="EM PRODUÇÃO"?"bg-sky-500/20 text-sky-300":status==="CANCELADO"?"bg-zinc-500/20 text-zinc-300":"bg-amber-500/20 text-amber-300"}
+    function setOrderFilter(filter){orderFilter=filter;$("filter-all").className="action "+(filter==="all"?"bg-[#ffd700] text-black":"bg-zinc-700 text-white");$("filter-today").className="action "+(filter==="today"?"bg-[#ffd700] text-black":"bg-zinc-700 text-white");renderOrders()}
+    function renderOrders(){
+      const q=($("orders-search").value||"").toLowerCase();let data=active("pedido").filter(x=>`${x.numero_pedido} ${x.cliente_id} ${x.servico} ${x.snapshot_data}`.toLowerCase().includes(q));
+      if(orderFilter==="today")data=data.filter(x=>x.data_pedido===today());if(orderFilter==="date"&&$("orders-date-filter").value)data=data.filter(x=>x.data_pedido===$("orders-date-filter").value);
+      $("orders-body").innerHTML=data.map(x=>{const items=orderItems(x),itemsText=items.length?items.map(i=>safe(i.nome)).join(", "):safe(x.servico||"—");return `<tr><td><strong class="text-[#ffd700]">#${safe(x.numero_pedido)}</strong><br><span class="text-zinc-500">${safe(x.data_pedido)}</span></td><td class="font-semibold">${safe(x.cliente_id)||"—"}</td><td class="max-w-[190px]">${itemsText}</td><td class="font-bold">${money(x.total_pedido)}<br><span class="text-xs text-red-300">Custo: ${money(x.despesa)}</span></td><td>${safe(x.data_entrega)||"—"}</td><td><button class="status ${statusStyle(x.status_pedido)}" onclick="advanceOrder('${x.__backendId}')">${safe(x.status_pedido)}</button></td><td class="whitespace-nowrap"><button class="action bg-zinc-700" onclick="viewOrder('${x.__backendId}')">Ver</button> <button class="action bg-blue-700" onclick="openOrderForm('${x.__backendId}')">Editar</button> <button class="action bg-red-900" onclick="askDelete('${x.__backendId}')">Excluir</button></td></tr>`}).join("");
+      $("orders-empty").classList.toggle("hidden",data.length>0);setText("ord-new",data.filter(x=>x.status_pedido==="AGUARDANDO").length);setText("ord-production",data.filter(x=>x.status_pedido==="EM PRODUÇÃO").length);setText("ord-total",data.length)
+    }
+    function renderExpenses(){
+      const q=($("expense-search").value||"").toLowerCase(),data=active("despesa").filter(x=>`${x.nome_produto} ${x.local_compra}`.toLowerCase().includes(q));
+      
+      const totalDespesas = data.reduce((s, x) => s + Number(x.total_gasto || 0), 0);
+      const investPedidos = data.filter(x => x.pedido_vinculado).reduce((s, x) => s + Number(x.total_gasto || 0), 0);
+      const investTotal = totalDespesas;
+      
+      setText("exp-total-despesas", money(totalDespesas));
+      setText("exp-invest-pedidos", money(investPedidos));
+      setText("exp-invest-total", money(investTotal));
+      
+      $("expenses-body").innerHTML=data.map(x=>`<tr><td class="font-bold">${safe(x.nome_produto)}</td><td>${money(x.valor_unitario)}</td><td>${safe(x.quantidade)||1}</td><td>${safe(x.data_compra)}</td><td>${safe(x.tipo_pagamento)||"—"}</td><td>${safe(x.local_compra)||"—"}</td><td><button onclick="toggleExpensePaid('${x.__backendId}')" class="status ${x.pago==="Sim"?"bg-emerald-500/20 text-emerald-300":"bg-red-500/20 text-red-300"}">${x.pago==="Sim"?"PAGO":"PENDENTE"}</button></td><td class="font-bold text-red-300">${money(x.total_gasto)}</td><td class="whitespace-nowrap"><button class="action bg-blue-700" onclick="openExpenseForm('${x.__backendId}')">Editar</button> <button class="action bg-red-900" onclick="askDelete('${x.__backendId}')">Excluir</button></td></tr>`).join("");$("expenses-empty").classList.toggle("hidden",data.length>0)
+    }
+    function renderFinance(){const q=($("finance-search").value||"").toLowerCase(),data=active("financeiro").filter(x=>`${x.descricao_financeira} ${x.categoria_financeira}`.toLowerCase().includes(q)).sort((a,b)=>(b.data_financeira||"").localeCompare(a.data_financeira||"")),t=financialTotals(data);setText("fin-income",money(t.income));setText("fin-expense",money(t.expense));setText("fin-investment",money(t.investment));setText("fin-profit",money(t.profit));setText("fin-ten",money(Math.max(0,t.profit*.1)));setText("fin-net",money(t.profit-Math.max(0,t.profit*.1)));$("finance-body").innerHTML=data.map(x=>`<tr><td>${safe(x.data_financeira)}</td><td class="font-bold uppercase ${x.tipo_financeiro==="receita"?"text-emerald-400":x.tipo_financeiro==="investimento"?"text-orange-400":"text-red-400"}">${safe(x.tipo_financeiro)}</td><td>${safe(x.categoria_financeira)}</td><td>${safe(x.descricao_financeira)}</td><td class="font-bold">${money(x.valor_financeiro)}</td><td class="whitespace-nowrap"><button class="action bg-blue-700" onclick="openFinanceForm('${x.__backendId}')">Editar</button> <button class="action bg-red-900" onclick="askDelete('${x.__backendId}')">Excluir</button></td></tr>`).join("");$("finance-empty").classList.toggle("hidden",data.length>0)}
+
+    function openClientForm(id=""){const r=records.find(x=>x.__backendId===id)||{};modal(`<h3 class="mb-5 text-lg font-black text-[#ffd700]">${id?"Editar":"Novo"} cliente</h3><form id="client-form" class="grid gap-3 md:grid-cols-2">${input("Nome","nome_cliente",r.nome_cliente,"text",false)}${input("CPF/CNPJ","documento",r.documento)}${input("Telefone","telefone",r.telefone)}${input("WhatsApp","whatsapp",r.whatsapp)}${input("E-mail","email",r.email,"email")}${input("Cidade","cidade",r.cidade)}${input("Estado","estado",r.estado)}${input("Endereço","endereco",r.endereco)}<div class="md:col-span-2"><label for="field-observacoes" class="erp-label">Observações</label><textarea id="field-observacoes" name="observacoes" class="erp-input">${safe(r.observacoes)}</textarea></div><div class="md:col-span-2 flex gap-2 pt-2"><button class="rounded-lg bg-[#ffd700] px-5 py-2 text-sm font-bold text-black">Salvar</button><button type="button" class="rounded-lg bg-zinc-700 px-5 py-2 text-sm font-bold" onclick="closeModal()">Cancelar</button></div></form>`);$("client-form").addEventListener("submit",e=>{e.preventDefault();const f=Object.fromEntries(new FormData(e.target));if(!f.nome_cliente){f.nome_cliente="Cliente Sem Nome"}saveForm(e,id,{...r,...f,tipo_registro:"cliente"},"Cliente salvo com sucesso.")})}
+    function viewClient(id){const c=clients().find(x=>x.__backendId===id);if(!c)return;const orders=records.filter(x=>x.tipo_registro==="pedido"&&(x.compra_cliente===id||x.cliente_id===c.nome_cliente));modal(`<div class="flex items-start justify-between gap-4 border-b border-zinc-800 pb-4"><div><h3 class="text-lg font-black text-[#ffd700]">Ficha detalhada do cliente</h3><p class="mt-1 text-sm text-zinc-400">${safe(c.nome_cliente)}</p></div><button class="text-zinc-400 hover:text-white" onclick="closeModal()" aria-label="Fechar"><i data-lucide="x"></i></button></div><div class="mt-5 grid gap-3 text-sm md:grid-cols-2"><p><strong>Documento:</strong> ${safe(c.documento)||"—"}</p><p><strong>WhatsApp:</strong> ${safe(c.whatsapp)||"—"}</p><p><strong>E-mail:</strong> ${safe(c.email)||"—"}</p><p><strong>Cidade:</strong> ${safe(c.cidade)||"—"}</p><p class="md:col-span-2"><strong>Endereço:</strong> ${safe(c.endereco)||"—"}</p></div><h4 class="mt-7 border-t border-zinc-800 pt-5 text-xs font-bold uppercase tracking-widest text-zinc-400">Histórico de compras</h4><div class="mt-3 overflow-x-auto"><table class="erp-table"><thead><tr><th>Data</th><th>Produtos</th><th>Total</th><th>Status</th></tr></thead><tbody>${orders.length?orders.map(x=>`<tr><td>${safe(x.data_pedido)}</td><td>${orderItems(x).map(i=>safe(i.nome)).join(", ")||safe(x.servico)}</td><td class="font-bold text-[#ffd700]">${money(x.total_pedido)}</td><td>${safe(x.status_pedido)}</td></tr>`).join(""):`<tr><td colspan="4" class="text-center text-zinc-500">Nenhum pedido realizado.</td></tr>`}</tbody></table></div>`)}
+    function viewOrder(id){const r=records.find(x=>x.__backendId===id);if(!r)return;const items=orderItems(r);modal(`<h3 class="mb-2 text-lg font-black text-[#ffd700]">Detalhes do pedido #${safe(r.numero_pedido)}</h3><p class="mb-5 text-sm text-zinc-400">${safe(r.cliente_id)}</p><div class="grid gap-3 text-sm md:grid-cols-2"><p><strong>Data:</strong> ${safe(r.data_pedido)}</p><p><strong>Entrega:</strong> ${safe(r.data_entrega)||"—"}</p><p><strong>Responsável:</strong> ${safe(r.responsavel)||"—"}</p><p><strong>Status:</strong> ${safe(r.status_pedido)}</p><p><strong>Total:</strong> <span class="text-[#ffd700]">${money(r.total_pedido)}</span></p><p><strong>Custo:</strong> ${money(r.despesa)}</p></div><h4 class="mt-6 text-xs font-bold uppercase tracking-widest text-zinc-400">Itens do pedido</h4><div class="mt-3 space-y-2">${items.length?items.map(i=>`<div class="rounded-lg border border-zinc-800 bg-zinc-900 p-3 text-sm"><strong>${safe(i.nome)}</strong><div class="mt-1 text-xs text-zinc-400">Material: ${safe(i.material)||"—"} · Qtd: ${safe(i.quantidade)} · ${safe(i.largura)} × ${safe(i.altura)} m · ${safe(i.acabamento)||"Sem acabamento"}</div><div class="mt-1 text-xs text-[#ffd700]">Total: ${money(i.valor)} · Custo: ${money(i.custo)}</div></div>`).join(""):`<p class="text-sm text-zinc-500">Sem itens detalhados.</p>`}</div><p class="mt-5 whitespace-pre-wrap text-sm text-zinc-400">${safe(r.notas_pedido)||"Sem observações."}</p><button class="mt-6 rounded-lg bg-zinc-700 px-5 py-2 text-sm font-bold" onclick="closeModal()">Fechar</button>`)}
+    function nextOrderNumber(){return String(Math.max(0,...records.filter(x=>x.tipo_registro==="pedido").map(x=>Number(x.numero_pedido)||0))+1).padStart(4,"0")}
+    function renderCart(){const list=$("cart-list"),total=cartItems.reduce((s,x)=>s+Number(x.valor||0),0),cost=cartItems.reduce((s,x)=>s+Number(x.custo||0),0);list.innerHTML=cartItems.map((x,i)=>`<div class="flex flex-col gap-1 rounded bg-zinc-900 px-3 py-2 text-xs"><div class="flex items-center justify-between font-bold"><span>${safe(x.nome)} (${x.quantidade||1}x)</span><span class="flex items-center gap-3 text-[#ffd700]">${money(x.valor)} <button type="button" class="text-red-400 font-black text-sm" onclick="removeCartItem(${i})">×</button></span></div><div class="text-[10px] text-zinc-400">Mat: ${safe(x.material)||"—"} · ${safe(x.largura)} × ${safe(x.altura)}m · ${safe(x.acabamento)||"—"} · Custo: ${money(x.custo)}</div></div>`).join("")||`<p class="text-xs text-zinc-600">Nenhum produto adicionado.</p>`;$("field-total_pedido").value=total.toFixed(2);$("field-despesa").value=cost.toFixed(2)}
+    function addCartItem(){const name=$("cart-name").value.trim(),valor=Number($("cart-value").value)||0,custo=Number($("cart-cost").value)||0;if(!name){toast("Informe o nome do produto ou serviço.");return}cartItems.push({nome:name,material:$("cart-material").value.trim(),quantidade:Number($("cart-qty").value)||1,largura:$("cart-w").value||"—",altura:$("cart-h").value||"—",acabamento:$("cart-finish").value.trim(),valor,custo});["cart-name","cart-material","cart-finish","cart-value","cart-cost"].forEach(id=>$(id).value="");$("cart-qty").value="1";$("cart-w").value="";$("cart-h").value="";renderCart()}
+    window.addCartItem = addCartItem;
+    function removeCartItem(i){cartItems.splice(i,1);renderCart()}
+    window.removeCartItem = removeCartItem;
+    function openOrderForm(id=""){
+      const r=records.find(x=>x.__backendId===id)||{};cartItems=orderItems(r);const sortedClients = [...clients()].sort((a,b)=>(a.nome_cliente||"").localeCompare(b.nome_cliente||""));const options=sortedClients.map(c=>`<option value="${c.__backendId}" ${r.compra_cliente===c.__backendId?"selected":""}>${safe(c.nome_cliente)}</option>`).join("");
+      modal(`<h3 class="mb-5 text-lg font-black text-[#ffd700]">${id?"Editar":"Novo"} pedido</h3><form id="order-form" class="grid gap-3 md:grid-cols-2"><div class="md:col-span-2"><label for="field-compra_cliente" class="erp-label">Cliente</label><select id="field-compra_cliente" name="compra_cliente" class="erp-input"><option value="">Selecione</option>${options}</select></div><div class="rounded-xl border border-zinc-700 bg-[#0b0b0b] p-3 md:col-span-2"><p class="mb-3 text-xs font-bold uppercase tracking-widest text-zinc-400">Carrinho de produtos e serviços</p><div class="mb-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-4"><input id="cart-name" class="erp-input lg:col-span-2" placeholder="Produto ou serviço"><input id="cart-material" class="erp-input" placeholder="Material"><input id="cart-qty" type="number" value="1" min="1" class="erp-input" placeholder="Qtd."><input id="cart-w" type="number" step="0.01" class="erp-input" placeholder="Largura (m)"><input id="cart-h" type="number" step="0.01" class="erp-input" placeholder="Altura (m)"><input id="cart-finish" class="erp-input" placeholder="Acabamento"><input id="cart-value" type="number" step="0.01" class="erp-input" placeholder="Total R$"><input id="cart-cost" type="number" step="0.01" class="erp-input" placeholder="Custo R$"></div><div class="flex justify-end"><button type="button" class="rounded-lg bg-[#ffd700] px-5 py-2 text-xs font-bold text-black" onclick="addCartItem()">Incluir item</button></div><div id="cart-list" class="mt-3 space-y-2"></div></div>${input("Total geral","total_pedido",r.total_pedido,"number",false)}${input("Custo estimado","despesa",r.despesa,"number")}${input("Data de entrega","data_entrega",r.data_entrega||today(),"date")}${input("Responsável","responsavel",r.responsavel)}<div><label for="field-forma_pagamento" class="erp-label">Forma de pagamento</label><select id="field-forma_pagamento" name="forma_pagamento" class="erp-input"><option>PIX</option><option>Dinheiro</option><option>Crédito</option><option>Débito</option><option>Link de Pagamento</option></select></div><div><label for="field-status_pedido" class="erp-label">Status</label><select id="field-status_pedido" name="status_pedido" class="erp-input">${["AGUARDANDO","EM PRODUÇÃO","CONCLUÍDO","ENTREGUE","CANCELADO"].map(s=>`<option ${r.status_pedido===s||(!r.status_pedido&&s==="AGUARDANDO")?"selected":""}>${s}</option>`).join("")}</select></div><div class="md:col-span-2"><label for="field-notas_pedido" class="erp-label">Observações</label><textarea id="field-notas_pedido" name="notas_pedido" class="erp-input">${safe(r.notas_pedido)}</textarea></div>${!id?`<label class="md:col-span-2 flex items-center gap-2 text-xs text-zinc-400"><input id="auto-finance" type="checkbox" checked> Criar entrada automática no Financeiro</label>`:""}<div class="md:col-span-2 flex gap-2 pt-2"><button class="rounded-lg bg-[#ffd700] px-5 py-2 text-sm font-bold text-black">Salvar</button><button type="button" class="rounded-lg bg-zinc-700 px-5 py-2 text-sm font-bold" onclick="closeModal()">Cancelar</button></div></form>`);
+      renderCart();
+      $("order-form").addEventListener("submit",async e=>{e.preventDefault();const f=Object.fromEntries(new FormData(e.target)),c=clients().find(x=>x.__backendId===f.compra_cliente),first=cartItems.length?cartItems[0]:{nome:"Serviço Sublimado",material:"Geral",quantidade:"1",largura:"1.0",altura:"1.0",acabamento:"N/D"},data=complete({...r,...f,tipo_registro:"pedido",mes:r.mes||currentMonth(),data_pedido:r.data_pedido||today(),numero_pedido:r.numero_pedido||nextOrderNumber(),cliente_id:c?.nome_cliente||"Sem Cliente",servico:first.nome,material:first.material,quantidade:String(first.quantidade),largura:String(first.largura),altura:String(first.altura),acabamento:first.acabamento,snapshot_data:JSON.stringify(cartItems)}),res=id?await window.dataSdk.update({...data,__backendId:id}):await window.dataSdk.create(data);if(!res.isOk){toast("Não foi possível salvar o pedido.");return}if(!id&&$("auto-finance").checked){const fr=await window.dataSdk.create(complete({tipo_registro:"financeiro",mes:data.mes,tipo_financeiro:"receita",categoria_financeira:"Venda",valor_financeiro:data.total_pedido,data_financeira:data.data_pedido,metodo_pagamento:data.forma_pagamento,descricao_financeira:`Pedido #${data.numero_pedido} · ${first.nome}`}));if(!fr.isOk)toast("Pedido salvo, mas a receita automática falhou.")}closeModal();toast("Pedido salvo com sucesso.")})
+    }
+
+    function openExpenseForm(id=""){
+      const r=records.find(x=>x.__backendId===id)||{};
+      const linkedOrders = active("pedido").map(o => `<option value="${o.__backendId}" ${r.pedido_vinculado===o.__backendId?"selected":""}>Pedido #${o.numero_pedido} - ${safe(o.cliente_id)}</option>`).join("");
+      
+      modal(`<h3 class="mb-5 text-lg font-black text-[#ffd700]">${id?"Editar":"Nova"} despesa</h3>
+<form id="expense-form" class="grid gap-3 md:grid-cols-2">
+  <div class="md:col-span-2">
+    <label for="field-categoria_despesa" class="erp-label">Categoria de Despesa</label>
+    <select id="field-categoria_despesa" name="categoria_despesa" class="erp-input">
+      <option value="Produtos de venda" ${r.categoria_despesa==="Produtos de venda"?"selected":""}>Produtos de venda (Insumos para pedidos)</option>
+      <option value="Despesas diversas" ${r.categoria_despesa==="Despesas diversas"||!r.categoria_despesa?"selected":""}>Despesas diversas</option>
+    </select>
+  </div>
+  <div class="md:col-span-2">
+    <label for="field-pedido_vinculado" class="erp-label">Vincular a Pedido (Opcional - para calcular custo real)</label>
+    <select id="field-pedido_vinculado" name="pedido_vinculado" class="erp-input">
+      <option value="">Não vincular</option>
+      ${linkedOrders}
+    </select>
+  </div>
+  ${input("Produto/Insumo","nome_produto",r.nome_produto,"text",false)}
+  ${input("Valor unitário","valor_unitario",r.valor_unitario,"number")}
+  ${input("Quantidade","quantidade",r.quantidade||"1","number",false)}
+  ${input("Total gasto","total_gasto",r.total_gasto,"number",false)}
+  ${input("Data","data_compra",r.data_compra||today(),"date",false)}
+  ${input("Forma de pagamento","tipo_pagamento",r.tipo_pagamento)}
+  ${input("Local da compra","local_compra",r.local_compra)}
+  ${!id?`<label class="flex items-center gap-2 text-xs text-zinc-400 md:col-span-2"><input id="auto-expense-finance" type="checkbox"> Criar saída automática no Financeiro</label>`:""}
+  <div class="md:col-span-2 flex gap-2 pt-2">
+    <button type="submit" class="rounded-lg bg-[#ffd700] px-5 py-2 text-sm font-bold text-black">Salvar</button>
+    <button type="button" class="rounded-lg bg-zinc-700 px-5 py-2 text-sm font-bold" onclick="closeModal()">Cancelar</button>
+  </div>
+</form>`);
+      const u=$("field-valor_unitario"),q=$("field-quantidade"),t=$("field-total_gasto"),calc=()=>t.value=((Number(u.value)||0)*(Number(q.value)||1)).toFixed(2);
+      u.addEventListener("input",calc);
+      q.addEventListener("input",calc);
+      $("expense-form").addEventListener("submit",async e=>{
+        e.preventDefault();
+        const f=Object.fromEntries(new FormData(e.target)),data=complete({...r,...f,tipo_registro:"despesa",mes:r.mes||currentMonth(),pago:r.pago||"Sim"}),res=id?await window.dataSdk.update({...data,__backendId:id}):await window.dataSdk.create(data);
+        if(!res.isOk){toast("Não foi possível salvar a despesa.");return}
+        
+        if(f.pedido_vinculado) {
+          const ped=records.find(o=>o.__backendId===f.pedido_vinculado);
+          if(ped) {
+            const currentCusto = Number(ped.despesa || 0);
+            const addedCusto = Number(data.total_gasto || 0);
+            const oldCusto = Number(r.total_gasto || 0);
+            const newCustoTotal = Math.max(0, currentCusto - oldCusto + addedCusto);
+            await window.dataSdk.update({...ped, despesa: String(newCustoTotal)});
+          }
         }
-    </script>
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;700&family=DM+Sans:wght@400;700;900&display=swap" rel="stylesheet">
-    <!-- Ícones FontAwesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Chart.js para Relatórios -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        body {
-            font-family: 'DM Sans', 'Arimo', sans-serif;
-            background-color: #0a0a0a;
-        }
-        ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #0a0a0a;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #222;
-            border-radius: 3px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #333;
-        }
-    </style>
-</head>
-<body class="text-gray-100 flex flex-col md:flex-row h-screen overflow-hidden">
-
-    <!-- Toast Notification (Mensagens de Feedback) -->
-    <div id="toast" style="opacity: 0; transform: translateY(10px); transition: all 0.3s ease;" class="hidden fixed bottom-5 right-5 z-50 flex items-center px-4 py-3 rounded-xl shadow-lg border">
-        <i id="toast-icon" class="mr-2 text-lg"></i>
-        <span id="toast-message" class="text-sm font-semibold"></span>
-    </div>
-
-    <!-- Mobile Header Bar -->
-    <div class="md:hidden bg-neutral-900 border-b border-darkBorder p-4 flex items-center justify-between z-10 w-full">
-        <div class="text-gold font-black text-xl tracking-wider">PHSUBLIME</div>
-        <button id="mobile-menu-btn" class="text-neutral-400 hover:text-white focus:outline-none">
-            <i class="fa-solid fa-bars text-2xl"></i>
-        </button>
-    </div>
-
-    <!-- Mobile Sidebar Drawer -->
-    <div id="mobile-menu" class="fixed inset-0 z-40 hidden md:hidden flex">
-        <div class="fixed inset-0 bg-black/60 backdrop-blur-sm" id="mobile-menu-overlay"></div>
-        <div class="relative w-64 bg-neutral-900 h-full flex flex-col p-4 z-10 border-r border-darkBorder">
-            <div class="text-[#ffd700] font-black text-2xl mb-8 tracking-wider">PHSUBLIME</div>
-            <nav class="space-y-2 flex-1" id="nav-mobile-list"></nav>
-        </div>
-    </div>
-
-    <!-- Desktop Sidebar -->
-    <aside class="w-64 bg-neutral-900 border-r border-darkBorder flex flex-col justify-between hidden md:flex p-6">
-        <div>
-            <div class="text-[#ffd700] font-black text-2xl mb-10 tracking-wider text-center md:text-left">PHSUBLIME</div>
-            <nav class="space-y-2" id="nav-desktop-list"></nav>
-        </div>
-        <div class="text-xs text-neutral-500 text-center border-t border-darkBorder pt-4">
-            PHSUBLIME &copy; 2026
-        </div>
-    </aside>
-
-    <!-- Main Content Area -->
-    <main class="flex-1 flex flex-col overflow-y-auto w-full">
-        <div class="p-4 md:p-8 max-w-7xl mx-auto w-full space-y-6">
-
-            <!-- TAB: DASHBOARD -->
-            <div id="tab-dashboard" class="tab-content space-y-6 hidden">
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                    <h2 class="text-2xl font-black text-white">Dashboard</h2>
-                    <div class="flex items-center gap-2 bg-neutral-900 border border-darkBorder p-1.5 px-3 rounded-xl">
-                        <label class="text-xs text-neutral-400 font-medium whitespace-nowrap">Análise Diária:</label>
-                        <input type="date" id="dash-date-filter" class="bg-neutral-800 border border-neutral-700 text-white rounded p-1.5 text-xs focus:outline-none" onchange="renderDashboard()">
-                    </div>
-                </div>
-
-                <!-- KPI Cards Grid -->
-                <div class="grid grid-cols-2 lg:grid-cols-4 gap-4" id="dashboard-kpis"></div>
-
-                <!-- Graficos -->
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <div class="bg-darkCard p-5 rounded-xl border border-darkBorder">
-                        <h4 class="text-md font-bold mb-4 text-neutral-300 flex items-center gap-2">
-                            <i class="fa-solid fa-chart-line text-gold"></i> Vendas — Últimos 7 dias
-                        </h4>
-                        <div class="relative h-[250px] w-full">
-                            <canvas id="vendasSeteDiasChart"></canvas>
-                        </div>
-                    </div>
-                    <div class="bg-darkCard p-5 rounded-xl border border-darkBorder flex flex-col justify-between">
-                        <div>
-                            <h4 class="text-md font-bold mb-4 text-neutral-300 flex items-center gap-2">
-                                <i class="fa-solid fa-crown text-gold"></i> Serviços Mais Vendidos
-                            </h4>
-                            <div id="servicos-mais-vendidos-list" class="space-y-4"></div>
-                        </div>
-                        <div class="text-[10px] text-neutral-500 mt-4 italic">
-                            * Atualizado em tempo real analisando os itens cadastrados na tela de Pedidos.
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- TAB: CLIENTES -->
-            <div id="tab-clientes" class="tab-content space-y-6 hidden">
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                    <div>
-                        <h2 class="text-2xl font-black">Clientes</h2>
-                        <p class="text-sm text-neutral-400">Cadastro de contatos e histórico de compras</p>
-                    </div>
-                    <button onclick="openAddClienteModal()" class="bg-[#ffd700] hover:bg-yellow-400 text-black font-bold text-sm px-4 py-2.5 rounded transition shadow-lg flex items-center gap-2">
-                        <i class="fa-solid fa-plus"></i> + Novo Cliente
-                    </button>
-                </div>
-
-                <div class="flex bg-darkCard p-4 rounded-xl border border-darkBorder">
-                    <input type="text" id="clientes-search" placeholder="Buscar cliente por nome ou documento..." class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full text-sm focus:outline-none" oninput="renderClientes()">
-                </div>
-
-                <!-- Tabela Clientes -->
-                <div class="bg-darkCard rounded-xl border border-darkBorder overflow-hidden">
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left border-collapse">
-                            <thead>
-                                <tr class="bg-neutral-900 border-b border-darkBorder">
-                                    <th class="p-4 text-xs font-semibold text-neutral-400 uppercase tracking-wider">Nome</th>
-                                    <th class="p-4 text-xs font-semibold text-neutral-400 uppercase tracking-wider">CPF/CNPJ</th>
-                                    <th class="p-4 text-xs font-semibold text-neutral-400 uppercase tracking-wider">Contato / WhatsApp</th>
-                                    <th class="p-4 text-xs font-semibold text-neutral-400 uppercase tracking-wider">Cidade / Endereço</th>
-                                    <th class="p-4 text-xs font-semibold text-neutral-400 uppercase tracking-wider text-right">Ações</th>
-                                </tr>
-                            </thead>
-                            <tbody id="clientes-tbody" class="divide-y divide-darkBorder"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <!-- TAB: PEDIDOS -->
-            <div id="tab-pedidos" class="tab-content space-y-6 hidden">
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                    <div>
-                        <h2 class="text-2xl font-black">Pedidos</h2>
-                        <p class="text-sm text-neutral-400">Controle e produção de encomendas com carrinho de multi-produtos</p>
-                    </div>
-                    <button onclick="openAddPedidoModal()" class="bg-[#ffd700] hover:bg-yellow-400 text-black font-bold text-sm px-4 py-2.5 rounded transition shadow-lg flex items-center gap-2">
-                        <i class="fa-solid fa-plus"></i> + Novo Pedido
-                    </button>
-                </div>
-
-                <div class="flex bg-darkCard p-4 rounded-xl border border-darkBorder font-sans">
-                    <input type="text" id="pedidos-search" placeholder="Buscar pedido por descrição ou cliente..." class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full text-sm focus:outline-none" oninput="renderPedidos()">
-                </div>
-
-                <!-- Tabela de Pedidos -->
-                <div class="bg-darkCard rounded-xl border border-darkBorder overflow-hidden">
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left border-collapse">
-                            <thead>
-                                <tr class="bg-neutral-900 border-b border-darkBorder">
-                                    <th class="p-4 text-xs font-semibold text-neutral-400 uppercase tracking-wider">Cliente</th>
-                                    <th class="p-4 text-xs font-semibold text-neutral-400 uppercase tracking-wider">Produtos Adicionados</th>
-                                    <th class="p-4 text-xs font-semibold text-neutral-400 uppercase tracking-wider">Dimensões / Qtd</th>
-                                    <th class="p-4 text-xs font-semibold text-neutral-400 uppercase tracking-wider">Financeiro</th>
-                                    <th class="p-4 text-xs font-semibold text-neutral-400 uppercase tracking-wider">Etapa</th>
-                                    <th class="p-4 text-xs font-semibold text-neutral-400 uppercase tracking-wider">Responsável</th>
-                                    <th class="p-4 text-xs font-semibold text-neutral-400 uppercase tracking-wider text-right">Ações</th>
-                                </tr>
-                            </thead>
-                            <tbody id="pedidos-tbody" class="divide-y divide-darkBorder"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <!-- TAB: DESPESAS -->
-            <div id="tab-despesas" class="tab-content space-y-6 hidden">
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                    <div>
-                        <h2 class="text-2xl font-black">Despesas</h2>
-                        <p class="text-sm text-neutral-400">Controle de saídas e compras operacionais</p>
-                    </div>
-                    <button onclick="openModal('modal-despesa')" class="bg-[#ffd700] hover:bg-yellow-400 text-black font-bold text-sm px-4 py-2.5 rounded transition shadow-lg flex items-center gap-2">
-                        <i class="fa-solid fa-plus"></i> + Nova Despesa
-                    </button>
-                </div>
-
-                <div class="flex bg-darkCard p-4 rounded-xl border border-darkBorder">
-                    <input type="text" id="despesas-search" placeholder="Buscar despesa..." class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full text-sm focus:outline-none" oninput="renderDespesas()">
-                </div>
-
-                <!-- Tabela Despesas -->
-                <div class="bg-darkCard rounded-xl border border-darkBorder overflow-hidden">
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left border-collapse">
-                            <thead>
-                                <tr class="bg-neutral-900 border-b border-darkBorder">
-                                    <th class="p-4 text-xs font-semibold text-neutral-400 uppercase tracking-wider">Nome do Produto</th>
-                                    <th class="p-4 text-xs font-semibold text-neutral-400 uppercase tracking-wider">Valor Unitário</th>
-                                    <th class="p-4 text-xs font-semibold text-neutral-400 uppercase tracking-wider">Quantidade</th>
-                                    <th class="p-4 text-xs font-semibold text-neutral-400 uppercase tracking-wider">Data Compra</th>
-                                    <th class="p-4 text-xs font-semibold text-neutral-400 uppercase tracking-wider">Forma Pgto</th>
-                                    <th class="p-4 text-xs font-semibold text-neutral-400 uppercase tracking-wider">Local da Compra</th>
-                                    <th class="p-4 text-xs font-semibold text-neutral-400 uppercase tracking-wider">Situação</th>
-                                    <th class="p-4 text-xs font-semibold text-neutral-400 uppercase tracking-wider text-right">Total Gasto</th>
-                                    <th class="p-4 text-xs font-semibold text-neutral-400 uppercase tracking-wider text-right">Ações</th>
-                                </tr>
-                            </thead>
-                            <tbody id="despesas-tbody" class="divide-y divide-darkBorder"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <!-- TAB: FINANCEIRO -->
-            <div id="tab-financeiro" class="tab-content space-y-6 hidden">
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                    <div>
-                        <h2 class="text-2xl font-black">Financeiro</h2>
-                        <p class="text-sm text-neutral-400">Controle integrado de lucratividade e faturamento</p>
-                    </div>
-                    <div class="flex flex-wrap gap-2">
-                        <button onclick="sendReportWhatsApp()" class="bg-[#25d366] hover:bg-emerald-600 text-white font-bold text-sm px-4 py-2.5 rounded transition shadow-lg flex items-center gap-2">
-                            <i class="fa-brands fa-whatsapp"></i> WhatsApp Relatório
-                        </button>
-                        <button onclick="downloadPDF()" class="bg-red-700 hover:bg-red-800 text-white font-bold text-sm px-4 py-2.5 rounded transition shadow-lg flex items-center gap-2">
-                            <i class="fa-solid fa-file-pdf"></i> Baixa em PDF
-                        </button>
-                        <button onclick="openModal('modal-financeiro')" class="bg-[#ffd700] hover:bg-yellow-400 text-black font-bold text-sm px-4 py-2.5 rounded transition shadow-lg flex items-center gap-2">
-                            <i class="fa-solid fa-plus"></i> + Novo Lançamento
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Financeiro KPI Cards Grid -->
-                <div class="grid grid-cols-2 lg:grid-cols-6 gap-3" id="financeiro-kpis"></div>
-
-                <div class="flex bg-darkCard p-4 rounded-xl border border-darkBorder">
-                    <input type="text" id="financeiro-search" placeholder="Buscar lançamento..." class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full text-sm focus:outline-none" oninput="renderFinanceiro()">
-                </div>
-
-                <div class="bg-darkCard rounded-xl border border-darkBorder overflow-hidden">
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left border-collapse">
-                            <thead>
-                                <tr class="bg-neutral-900 border-b border-darkBorder">
-                                    <th class="p-4 text-xs font-semibold text-neutral-400 uppercase tracking-wider">Tipo</th>
-                                    <th class="p-4 text-xs font-semibold text-neutral-400 uppercase tracking-wider">Descrição</th>
-                                    <th class="p-4 text-xs font-semibold text-neutral-400 uppercase tracking-wider">Valor</th>
-                                    <th class="p-4 text-xs font-semibold text-neutral-400 uppercase tracking-wider">Data</th>
-                                    <th class="p-4 text-xs font-semibold text-neutral-400 uppercase tracking-wider">Categoria</th>
-                                    <th class="p-4 text-xs font-semibold text-neutral-400 uppercase tracking-wider text-right">Ações</th>
-                                </tr>
-                            </thead>
-                            <tbody id="financeiro-tbody" class="divide-y divide-darkBorder"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <!-- TAB: HISTÓRICO MENSAL -->
-            <div id="tab-historico" class="tab-content space-y-6 hidden">
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                    <div>
-                        <h2 class="text-2xl font-black">Histórico</h2>
-                        <p class="text-sm text-neutral-400">Fechamentos consolidados de períodos arquivados</p>
-                    </div>
-                    <button onclick="triggerCloseMonth()" class="bg-[#b45309] hover:bg-amber-800 text-white font-bold text-sm px-4 py-2.5 rounded transition shadow-lg flex items-center gap-2">
-                        <i class="fa-solid fa-lock"></i> Fechar Mês
-                    </button>
-                </div>
-
-                <div class="flex flex-wrap gap-2 bg-darkCard p-4 rounded-xl border border-darkBorder">
-                    <button id="history-copy-btn" onclick="copyHistoryData()" class="opacity-50 cursor-not-allowed bg-[#3b82f6] hover:bg-blue-600 text-white font-bold text-sm px-4 py-2.5 rounded transition shadow-lg flex items-center gap-2">
-                        <i class="fa-solid fa-copy"></i> Copiar Dados
-                    </button>
-                    <button id="history-whatsapp-btn" onclick="shareWhatsapp()" class="opacity-50 cursor-not-allowed bg-[#25d366] hover:bg-emerald-600 text-white font-bold text-sm px-4 py-2.5 rounded transition shadow-lg flex items-center gap-2">
-                        <i class="fa-brands fa-whatsapp"></i> Compartilhar WhatsApp
-                    </button>
-                    <button id="history-delete-btn" onclick="deleteHistoryItem()" class="opacity-50 cursor-not-allowed bg-[#dc2626] hover:bg-red-700 text-white font-bold text-sm px-4 py-2.5 rounded transition shadow-lg flex items-center gap-2">
-                        <i class="fa-solid fa-trash-can"></i> Excluir Fechamento
-                    </button>
-                    <span class="text-xs text-neutral-400 self-center ml-auto italic">Selecione uma linha abaixo para usar os botões</span>
-                </div>
-
-                <div class="bg-darkCard rounded-xl border border-darkBorder overflow-hidden">
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left border-collapse">
-                            <thead>
-                                <tr class="bg-neutral-900 border-b border-darkBorder">
-                                    <th class="p-4 text-xs font-semibold text-neutral-400 uppercase tracking-wider">Período</th>
-                                    <th class="p-4 text-xs font-semibold text-neutral-400 uppercase tracking-wider">Receitas Totais</th>
-                                    <th class="p-4 text-xs font-semibold text-neutral-400 uppercase tracking-wider">Despesas Totais</th>
-                                    <th class="p-4 text-xs font-semibold text-neutral-400 uppercase tracking-wider">Saldo Líquido</th>
-                                    <th class="p-4 text-xs font-semibold text-neutral-400 uppercase tracking-wider">Total de Pedidos</th>
-                                </tr>
-                            </thead>
-                            <tbody id="historico-tbody" class="divide-y divide-darkBorder"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </main>
-
-    <!-- ================================= MODAIS INTEGRAIS ================================= -->
-
-    <!-- MODAL CLIENTE -->
-    <div id="modal-cliente" class="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50 hidden">
-        <div class="bg-neutral-900 border border-darkBorder rounded-xl max-w-lg w-full p-6 space-y-4 max-h-[90vh] overflow-y-auto">
-            <h3 class="text-lg font-bold text-gold border-b border-darkBorder pb-2">Novo Cliente</h3>
-            <form id="form-cliente" class="grid grid-cols-2 gap-3 text-sm">
-                <div class="col-span-2">
-                    <label class="block text-xs text-neutral-400 mb-1">Nome do Cliente</label>
-                    <input type="text" id="c-nome" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full focus:outline-none focus:border-gold">
-                </div>
-                <div>
-                    <label class="block text-xs text-neutral-400 mb-1">CPF/CNPJ</label>
-                    <input type="text" id="c-cpf-cnpj" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full focus:outline-none focus:border-gold">
-                </div>
-                <div>
-                    <label class="block text-xs text-neutral-400 mb-1">Telefone</label>
-                    <input type="text" id="c-telefone" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full focus:outline-none focus:border-gold">
-                </div>
-                <div>
-                    <label class="block text-xs text-neutral-400 mb-1">WhatsApp</label>
-                    <input type="text" id="c-whatsapp" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full focus:outline-none focus:border-gold">
-                </div>
-                <div>
-                    <label class="block text-xs text-neutral-400 mb-1">E-mail</label>
-                    <input type="email" id="c-email" placeholder="cliente@email.com" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full focus:outline-none focus:border-gold">
-                </div>
-                <div>
-                    <label class="block text-xs text-neutral-400 mb-1">Cidade</label>
-                    <input type="text" id="c-cidade" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full focus:outline-none focus:border-gold">
-                </div>
-                <div>
-                    <label class="block text-xs text-neutral-400 mb-1">Estado</label>
-                    <input type="text" id="c-estado" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full focus:outline-none focus:border-gold">
-                </div>
-                <div class="col-span-2">
-                    <label class="block text-xs text-neutral-400 mb-1">Endereço</label>
-                    <input type="text" id="c-endereco" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full focus:outline-none focus:border-gold">
-                </div>
-                <div class="col-span-2">
-                    <label class="block text-xs text-neutral-400 mb-1">Observações</label>
-                    <textarea id="c-observacoes" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full h-16 focus:outline-none focus:border-gold"></textarea>
-                </div>
-                <div class="col-span-2 flex justify-end gap-2 pt-2 border-t border-darkBorder">
-                    <button type="button" onclick="closeModal('modal-cliente')" class="px-4 py-2 bg-neutral-800 text-neutral-300 hover:bg-neutral-700 text-sm font-semibold rounded">Cancelar</button>
-                    <button type="submit" class="px-4 py-2 bg-[#ffd700] hover:bg-yellow-400 text-black text-sm font-bold rounded">Salvar</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- MODAL VISUALIZAR CLIENTE (HISTÓRICO COMPLETO) -->
-    <div id="modal-view-cliente" class="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50 hidden">
-        <div class="bg-neutral-900 border border-darkBorder rounded-xl max-w-2xl w-full p-6 space-y-4 max-h-[90vh] overflow-y-auto">
-            <h3 class="text-lg font-bold text-gold border-b border-darkBorder pb-2 flex justify-between">
-                <span>Ficha Detalhada do Cliente</span>
-                <button onclick="closeModal('modal-view-cliente')" class="text-neutral-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
-            </h3>
-            <div class="grid grid-cols-2 gap-3 text-sm" id="client-view-details"></div>
-            <div class="border-t border-darkBorder pt-4 space-y-2">
-                <h4 class="text-xs font-bold text-neutral-400 uppercase tracking-wider">Histórico Real de Compras</h4>
-                <div class="overflow-x-auto max-h-48 border border-darkBorder rounded-lg">
-                    <table class="w-full text-left text-xs border-collapse">
-                        <thead>
-                            <tr class="bg-neutral-850 text-neutral-300">
-                                <th class="p-3 border-b border-darkBorder">Data Entrega</th>
-                                <th class="p-3 border-b border-darkBorder">Produtos</th>
-                                <th class="p-3 border-b border-darkBorder">Total Pago</th>
-                                <th class="p-3 border-b border-darkBorder">Status</th>
-                            </tr>
-                        </thead>
-                        <tbody id="client-view-orders-tbody" class="divide-y divide-darkBorder"></tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- MODAL PEDIDO -->
-    <div id="modal-pedido" class="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50 hidden">
-        <div class="bg-neutral-900 border border-darkBorder rounded-xl max-w-xl w-full p-6 space-y-4 max-h-[90vh] overflow-y-auto">
-            <h3 class="text-lg font-bold text-gold border-b border-darkBorder pb-2">Novo Pedido</h3>
-            <form id="form-pedido" class="space-y-4 text-sm">
-                <div>
-                    <label class="block text-xs text-neutral-400 mb-1">Cliente</label>
-                    <select id="p-cliente" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full focus:outline-none focus:border-gold"></select>
-                </div>
-
-                <!-- Bloco de Carrinho de Multi-Produtos -->
-                <div class="border border-darkBorder p-3 rounded-xl space-y-3 bg-neutral-950">
-                    <span class="text-xs text-neutral-400 font-bold block uppercase"><i class="fa-solid fa-cart-plus text-gold mr-1"></i> Adicionar Produtos</span>
-                    <div class="flex flex-col sm:flex-row gap-2">
-                        <input type="text" id="p-item-nome" placeholder="Nome do produto" class="flex-1 bg-neutral-800 border border-neutral-700 text-white rounded p-2 text-xs focus:outline-none">
-                        <input type="number" step="0.01" id="p-item-valor" placeholder="Valor (R$)" class="sm:w-28 bg-neutral-800 border border-neutral-700 text-white rounded p-2 text-xs focus:outline-none">
-                        <button type="button" onclick="addItemToCurrentOrder()" class="bg-[#ffd700] hover:bg-yellow-400 text-black font-black text-xs px-4 py-2 rounded transition whitespace-nowrap">+ Incluir</button>
-                    </div>
-                    <div id="p-current-items-list" class="space-y-1.5 max-h-32 overflow-y-auto pt-1"></div>
-                </div>
-
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs text-neutral-400 mb-1">Serviço Principal / Nome do Item</label>
-                        <input type="text" id="p-servico" placeholder="Ex: Banner ou Camiseta" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full focus:outline-none focus:border-gold">
-                    </div>
-                    <div>
-                        <label class="block text-xs text-neutral-400 mb-1">Material</label>
-                        <input type="text" id="p-material" placeholder="Ex: Lona 440g" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full focus:outline-none focus:border-gold">
-                    </div>
-                    <div>
-                        <label class="block text-xs text-neutral-400 mb-1">Largura (m)</label>
-                        <input type="number" step="0.01" id="p-largura" value="1.00" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full focus:outline-none focus:border-gold">
-                    </div>
-                    <div>
-                        <label class="block text-xs text-neutral-400 mb-1">Altura (m)</label>
-                        <input type="number" step="0.01" id="p-altura" value="1.00" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full focus:outline-none focus:border-gold">
-                    </div>
-                    <div>
-                        <label class="block text-xs text-neutral-400 mb-1">Quantidade de Cópias</label>
-                        <input type="number" id="p-quantidade" value="1" min="1" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full focus:outline-none focus:border-gold">
-                    </div>
-                    <div>
-                        <label class="block text-xs text-neutral-400 mb-1">Acabamento</label>
-                        <input type="text" id="p-acabamento" placeholder="Ex: Bainha e Ilhós" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full focus:outline-none focus:border-gold">
-                    </div>
-                    <div>
-                        <label class="block text-xs text-neutral-400 mb-1">Total Geral (R$)</label>
-                        <input type="number" step="0.01" id="p-total" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full focus:outline-none focus:border-gold">
-                    </div>
-                    <div>
-                        <label class="block text-xs text-neutral-400 mb-1">Despesa (R$)</label>
-                        <input type="number" step="0.01" id="p-despesa" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full focus:outline-none focus:border-gold">
-                    </div>
-                    <div>
-                        <label class="block text-xs text-neutral-400 mb-1">Data Entrega</label>
-                        <input type="date" id="p-data-entrega" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full focus:outline-none focus:border-gold">
-                    </div>
-                    <div>
-                        <label class="block text-xs text-neutral-400 mb-1">Responsável</label>
-                        <input type="text" id="p-responsavel" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full focus:outline-none focus:border-gold">
-                    </div>
-                    <div>
-                        <label class="block text-xs text-neutral-400 mb-1">Forma Pagamento</label>
-                        <select id="p-forma-pagamento" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full focus:outline-none focus:border-gold">
-                            <option value="Dinheiro">Dinheiro</option>
-                            <option value="Pix">Pix</option>
-                            <option value="Crédito">Crédito</option>
-                            <option value="Débito">Débito</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs text-neutral-400 mb-1">Status</label>
-                        <select id="p-status" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full focus:outline-none focus:border-gold">
-                            <option value="AGUARDANDO">AGUARDANDO</option>
-                            <option value="Em Produção">Em Produção</option>
-                            <option value="Finalizado">Finalizado</option>
-                        </select>
-                    </div>
-                    <div class="col-span-2">
-                        <label class="block text-xs text-neutral-400 mb-1">Observações</label>
-                        <textarea id="p-observacoes" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full h-16 focus:outline-none focus:border-gold"></textarea>
-                    </div>
-                </div>
-                <div id="p-finance-auto-box" class="hidden">
-                    <label class="flex items-center gap-2 cursor-pointer">
-                        <input type="checkbox" id="p-finance-auto" class="rounded bg-neutral-800 border-neutral-700 text-gold focus:ring-0">
-                        <span class="text-xs text-neutral-400 font-medium">Lançar entrada automaticamente no fluxo Financeiro</span>
-                    </label>
-                </div>
-                <div class="flex justify-end gap-2 pt-2 border-t border-darkBorder">
-                    <button type="button" onclick="closeModal('modal-pedido')" class="px-4 py-2 bg-neutral-800 text-neutral-300 hover:bg-neutral-700 text-sm font-semibold rounded">Cancelar</button>
-                    <button type="submit" class="px-4 py-2 bg-[#ffd700] hover:bg-yellow-400 text-black text-sm font-bold rounded">Salvar</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- MODAL NOVA DESPESA -->
-    <div id="modal-despesa" class="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50 hidden">
-        <div class="bg-neutral-900 border border-darkBorder rounded-xl max-w-md w-full p-6 space-y-4 max-h-[90vh] overflow-y-auto">
-            <h3 class="text-lg font-bold text-gold border-b border-darkBorder pb-2">Nova Despesa</h3>
-            <form id="form-despesa" class="space-y-4 text-sm">
-                <div>
-                    <label class="block text-xs text-neutral-400 mb-1">Nome do Produto</label>
-                    <input type="text" id="d-nome-produto" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full focus:outline-none focus:border-gold">
-                </div>
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs text-neutral-400 mb-1">Valor Unitário (R$)</label>
-                        <input type="number" step="0.01" id="d-valor-unitario" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full focus:outline-none focus:border-gold" oninput="calcTotalGasto()">
-                    </div>
-                    <div>
-                        <label class="block text-xs text-neutral-400 mb-1">Quantidade</label>
-                        <input type="number" id="d-quantidade" value="1" min="1" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full focus:outline-none focus:border-gold" oninput="calcTotalGasto()">
-                    </div>
-                    <div>
-                        <label class="block text-xs text-neutral-400 mb-1">Data Compra</label>
-                        <input type="date" id="d-data-compra" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full focus:outline-none focus:border-gold">
-                    </div>
-                    <div>
-                        <label class="block text-xs text-neutral-400 mb-1">Tipo Pagamento</label>
-                        <select id="d-tipo-pagamento" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full focus:outline-none focus:border-gold">
-                            <option value="Débito">Débito</option>
-                            <option value="Crédito">Crédito</option>
-                            <option value="Dinheiro">Dinheiro</option>
-                            <option value="Pix">Pix</option>
-                        </select>
-                    </div>
-                </div>
-                <div>
-                    <label class="block text-xs text-neutral-400 mb-1">Onde Comprou</label>
-                    <input type="text" id="d-onde-comprou" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full focus:outline-none focus:border-gold">
-                </div>
-                <div>
-                    <label class="block text-xs text-neutral-400 mb-1">Total Gasto (R$)</label>
-                    <input type="number" step="0.01" id="d-total-gasto" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full focus:outline-none focus:border-gold">
-                </div>
-                <div id="d-finance-auto-box" class="hidden">
-                    <label class="flex items-center gap-2 cursor-pointer">
-                        <input type="checkbox" id="d-finance-auto" class="rounded bg-neutral-800 border-neutral-700 text-gold focus:ring-0">
-                        <span class="text-xs text-neutral-400 font-medium">Lançar saída automaticamente no fluxo Financeiro</span>
-                    </label>
-                </div>
-                <div class="flex justify-end gap-2 pt-2 border-t border-darkBorder">
-                    <button type="button" onclick="closeModal('modal-despesa')" class="px-4 py-2 bg-neutral-800 text-neutral-300 hover:bg-neutral-700 text-sm font-semibold rounded">Cancelar</button>
-                    <button type="submit" class="px-4 py-2 bg-[#ffd700] hover:bg-yellow-400 text-black text-sm font-bold rounded">Salvar</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- MODAL NOVO LANÇAMENTO (FINANCEIRO AVULSO) -->
-    <div id="modal-financeiro" class="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50 hidden">
-        <div class="bg-neutral-900 border border-darkBorder rounded-xl max-w-md w-full p-6 space-y-4 max-h-[90vh] overflow-y-auto">
-            <h3 class="text-lg font-bold text-gold border-b border-darkBorder pb-2">Novo Lançamento</h3>
-            <form id="form-financeiro" class="space-y-4 text-sm">
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs text-neutral-400 mb-1">Tipo</label>
-                        <select id="f-tipo" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full focus:outline-none focus:border-gold">
-                            <option value="Entrada">Entrada (Receita)</option>
-                            <option value="Saída">Saída (Despesa/Investimento)</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs text-neutral-400 mb-1">Categoria</label>
-                        <select id="f-categoria" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full focus:outline-none focus:border-gold">
-                            <option value="Venda">Venda</option>
-                            <option value="Insumos">Insumos</option>
-                            <option value="Aluguel/Utilidades">Aluguel/Utilidades</option>
-                            <option value="Salários">Salários</option>
-                            <option value="Marketing">Marketing</option>
-                            <option value="Investimento">Investimento</option>
-                            <option value="Outros">Outros</option>
-                        </select>
-                    </div>
-                </div>
-                <div>
-                    <label class="block text-xs text-neutral-400 mb-1">Descrição</label>
-                    <input type="text" id="f-descricao" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full focus:outline-none focus:border-gold">
-                </div>
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs text-neutral-400 mb-1">Valor (R$)</label>
-                        <input type="number" step="0.01" id="f-valor" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full focus:outline-none focus:border-gold">
-                    </div>
-                    <div>
-                        <label class="block text-xs text-neutral-400 mb-1">Data</label>
-                        <input type="date" id="f-data" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full focus:outline-none focus:border-gold">
-                    </div>
-                </div>
-                <div class="flex justify-end gap-2 pt-2 border-t border-darkBorder">
-                    <button type="button" onclick="closeModal('modal-financeiro')" class="px-4 py-2 bg-neutral-800 text-neutral-300 hover:bg-neutral-700 text-sm font-semibold rounded">Cancelar</button>
-                    <button type="submit" class="px-4 py-2 bg-[#ffd700] hover:bg-yellow-400 text-black text-sm font-bold rounded">Salvar</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- ================================= SCRIPT JAVASCRIPT ================================= -->
-    <script>
-        const todayStr = '2026-07-27';
-        const yesterdayStr = '2026-07-26';
-        let appState = {};
-        let vendasChartInstance = null;
-        let selectedHistoryId = null;
-        let editClienteId = null;
-        let editPedidoId = null;
-        let currentOrderItems = [];
-
-        // Abas organizadas estruturalmente
-        const tabs = [
-            { id: 'dashboard', label: 'Dashboard', icon: 'fa-chart-simple' },
-            { id: 'clientes', label: 'Clientes', icon: 'fa-users' },
-            { id: 'pedidos', label: 'Pedidos', icon: 'fa-cart-shopping' },
-            { id: 'despesas', label: 'Despesas', icon: 'fa-receipt' },
-            { id: 'financeiro', label: 'Financeiro', icon: 'fa-wallet' },
-            { id: 'historico', label: 'Histórico', icon: 'fa-calendar-check' }
-        ];
-
-        function buildMenus() {
-            const deskList = document.getElementById('nav-desktop-list');
-            const mobList = document.getElementById('nav-mobile-list');
-            deskList.innerHTML = '';
-            mobList.innerHTML = '';
-            tabs.forEach(t => {
-                const baseClass = "tab-link w-full text-left flex items-center gap-3 px-4 py-2.5 rounded-lg text-xs font-bold transition ";
-                deskList.innerHTML += '<button onclick="switchTab(\'' + t.id + '\')" class="' + baseClass + ' text-neutral-400" data-tab="' + t.id + '"><i class="fa-solid ' + t.icon + ' w-4"></i> ' + t.label + '</button>';
-                mobList.innerHTML += '<button onclick="switchTab(\'' + t.id + '\')" class="' + baseClass + ' text-neutral-400" data-tab="' + t.id + '"><i class="fa-solid ' + t.icon + ' w-4"></i> ' + t.label + '</button>';
-            });
-        }
-
-        function loadState() {
-            const saved = localStorage.getItem('phsublime_state');
-            if (saved) {
-                try { appState = JSON.parse(saved); } catch (e) { appState = getSampleData(); }
-            } else {
-                appState = getSampleData();
-                saveState();
-            }
-            document.getElementById('dash-date-filter').value = todayStr;
-        }
-
-        function saveState() { localStorage.setItem('phsublime_state', JSON.stringify(appState)); }
-
-        // Auto cálculo de gastos para o modal despesa
-        function calcTotalGasto() {
-            const unit = parseFloat(document.getElementById('d-valor-unitario').value) || 0;
-            const qty = parseInt(document.getElementById('d-quantidade').value) || 1;
-            document.getElementById('d-total-gasto').value = (unit * qty).toFixed(2);
-        }
-
-        function showToast(message, type = 'success') {
-            const toast = document.getElementById('toast');
-            const toastMsg = document.getElementById('toast-message');
-            const toastIcon = document.getElementById('toast-icon');
-            toastMsg.textContent = message;
-            
-            if (type === 'success') {
-                toast.className = "fixed bottom-5 right-5 flex items-center bg-emerald-950 border border-emerald-500 text-emerald-300 px-4 py-3 rounded-xl shadow-lg z-50 transition-all duration-300";
-                toastIcon.className = "fa-solid fa-circle-check text-emerald-400 mr-2";
-            } else {
-                toast.className = "fixed bottom-5 right-5 flex items-center bg-red-950 border border-red-500 text-red-300 px-4 py-3 rounded-xl shadow-lg z-50 transition-all duration-300";
-                toastIcon.className = "fa-solid fa-triangle-exclamation text-red-400 mr-2";
-            }
-            toast.style.opacity = '1';
-            toast.style.transform = 'translateY(0)';
-            setTimeout(() => {
-                toast.style.opacity = '0';
-                toast.style.transform = 'translateY(10px)';
-            }, 3000);
-        }
-
-        function switchTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
-            
-            document.querySelectorAll('.tab-link').forEach(el => {
-                el.classList.remove('bg-neutral-800', 'text-gold');
-                el.classList.add('text-neutral-400');
-            });
-            const activeBtn = document.querySelectorAll(`[data-tab="${tabId}"]`);
-            activeBtn.forEach(btn => {
-                btn.classList.add('bg-neutral-800', 'text-gold');
-                btn.classList.remove('text-neutral-400');
-            });
-            
-            if (tabId === 'dashboard') renderDashboard();
-            if (tabId === 'pedidos') renderPedidos();
-            if (tabId === 'financeiro') renderFinanceiro();
-            if (tabId === 'despesas') renderDespesas();
-            if (tabId === 'clientes') renderClientes();
-            if (tabId === 'historico') renderHistorico();
-            
-            document.getElementById('mobile-menu').classList.add('hidden');
-        }
-
-        function formatCurrency(value) {
-            return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
-        }
-
-        function formatDate(dateStr) {
-            if (!dateStr) return '';
-            const parts = dateStr.split('-');
-            return parts.length === 3 ? `${parts[2]}/${parts[1]}/${parts[0]}` : dateStr;
-        }
-
-        function openModal(id) {
-            document.getElementById(id).classList.remove('hidden');
-            if (id === 'modal-pedido') populateClientesDropdown();
-        }
-
-        function closeModal(id) {
-            document.getElementById(id).classList.add('hidden');
-        }
-
-        // Preenchimento de Dropdown de Clientes 100% livre de erros de aspas/crases
-        function populateClientesDropdown() {
-            const select = document.getElementById('p-cliente');
-            select.innerHTML = '<option value="">Selecione...</option>';
-            // Clientes em ordem alfabética no dropdown de seleção de pedidos
-            const sortedClientes = [...appState.clientes].sort((a, b) => a.nome.localeCompare(b.nome));
-            sortedClientes.forEach(c => {
-                select.innerHTML += '<option value="' + c.id + '">' + c.nome + '</option>';
-            });
-        }
-
-        // ================================= LÓGICA DE MULTI-PRODUTOS NO PEDIDO =================================
-
-        function addItemToCurrentOrder() {
-            const nome = document.getElementById('p-item-nome').value.trim();
-            const valor = parseFloat(document.getElementById('p-item-valor').value);
-            if (!nome || isNaN(valor)) {
-                showToast("Preencha o nome do produto e o valor!", "error");
-                return;
-            }
-            currentOrderItems.push({ id: 'item_' + Date.now(), nome, valor });
-            document.getElementById('p-item-nome').value = '';
-            document.getElementById('p-item-valor').value = '';
-            renderCurrentOrderItemsList();
-        }
-
-        function removeItemFromCurrentOrder(itemId) {
-            currentOrderItems = currentOrderItems.filter(item => item.id !== itemId);
-            renderCurrentOrderItemsList();
-        }
-
-        function renderCurrentOrderItemsList() {
-            const list = document.getElementById('p-current-items-list');
-            list.innerHTML = '';
-            let total = 0;
-            currentOrderItems.forEach(item => {
-                total += item.valor;
-                list.innerHTML += `
-                    <div class="flex justify-between items-center bg-neutral-800 p-2 rounded text-xs border border-darkBorder">
-                        <span class="truncate max-w-[60%] font-semibold text-neutral-300">${item.nome}</span>
-                        <div class="flex items-center gap-2">
-                            <span class="font-bold text-[#ffd700]">${formatCurrency(item.valor)}</span>
-                            <button type="button" onclick="removeItemFromCurrentOrder('${item.id}')" class="text-neutral-400 hover:text-red-500 transition text-sm"><i class="fa-solid fa-trash-can"></i></button>
-                        </div>
-                    </div>`;
-            });
-            document.getElementById('p-total').value = total.toFixed(2);
-        }
-
-        // ================================= SUBMISSÕES E GERENCIAMENTO =================================
-
-        function openAddClienteModal() {
-            editClienteId = null;
-            document.getElementById('form-cliente').reset();
-            document.querySelector('#modal-cliente h3').textContent = 'Cadastrar Novo Cliente';
-            openModal('modal-cliente');
-        }
-
-        function editCliente(id) {
-            const c = appState.clientes.find(item => item.id === id);
-            if (!c) return;
-
-            editClienteId = id;
-            document.querySelector('#modal-cliente h3').textContent = 'Editar Cliente';
-            
-            document.getElementById('c-nome').value = c.nome || '';
-            document.getElementById('c-cpf-cnpj').value = c.cpf_cnpj || '';
-            document.getElementById('c-telefone').value = c.telefone || '';
-            document.getElementById('c-whatsapp').value = c.whatsapp || '';
-            document.getElementById('c-email').value = c.email || '';
-            document.getElementById('c-cidade').value = c.cidade || '';
-            document.getElementById('c-estado').value = c.estado || '';
-            document.getElementById('c-endereco').value = c.endereco || '';
-            document.getElementById('c-observacoes').value = c.observacoes || '';
-
-            openModal('modal-cliente');
-        }
-
-        function viewCliente(id) {
-            const c = appState.clientes.find(item => item.id === id); if (!c) return;
-            document.getElementById('client-view-details').innerHTML = `
-                <div><strong>Nome:</strong> <span class="text-neutral-300">${c.nome}</span></div>
-                <div><strong>CPF/CNPJ:</strong> <span class="text-neutral-300">${c.cpf_cnpj || 'N/D'}</span></div>
-                <div><strong>WhatsApp:</strong> <span class="text-[#25d366]">${c.whatsapp || 'N/D'}</span></div>
-                <div><strong>E-mail:</strong> <span class="text-neutral-300">${c.email || 'N/D'}</span></div>
-                <div class="col-span-2"><strong>Endereço:</strong> <span class="text-neutral-300">${c.endereco || 'N/D'} (${c.cidade || 'N/D'}/${c.estado || 'N/D'})</span></div>
-                <div class="col-span-2"><strong>Obs:</strong> <p class="text-neutral-400 italic text-xs bg-neutral-800 p-2 rounded mt-1">${c.observacoes || 'Sem registros.'}</p></div>`;
-
-            const filteredPedidos = appState.pedidos.filter(p => p.clienteId === id);
-            const tbody = document.getElementById('client-view-orders-tbody'); tbody.innerHTML = '';
-            if (filteredPedidos.length === 0) { tbody.innerHTML = `<tr><td colspan="4" class="p-3 text-center text-neutral-500">Nenhum pedido realizado.</td></tr>`; }
-            else {
-                filteredPedidos.forEach(p => {
-                    const itemsStr = p.items && p.items.length > 0 ? p.items.map(item => `${item.nome} (${formatCurrency(item.valor)})`).join('<br>') : p.servico;
-                    tbody.innerHTML += `
-                        <tr class="hover:bg-neutral-800/20 text-xs">
-                            <td class="p-2.5">${formatDate(p.data_entrega)}</td>
-                            <td class="p-2.5 text-neutral-300">${itemsStr}</td>
-                            <td class="p-2.5 font-bold text-[#ffd700]">${formatCurrency(p.valor)}</td>
-                            <td class="p-2.5 text-neutral-450">${p.entrega}</td>
-                        </tr>`;
-                });
-            }
-            openModal('modal-view-cliente');
-        }
-
-        function openAddPedidoModal() {
-            editPedidoId = null;
-            currentOrderItems = [];
-            document.getElementById('form-pedido').reset();
-            document.getElementById('p-current-items-list').innerHTML = '';
-            document.querySelector('#modal-pedido h3').textContent = 'Novo Pedido';
-            openModal('modal-pedido');
-        }
-
-        function editPedido(id) {
-            const p = appState.pedidos.find(item => item.id === id); if (!p) return;
-            editPedidoId = id;
-            document.querySelector('#modal-pedido h3').textContent = 'Editar Pedido';
-            populateClientesDropdown();
-            document.getElementById('p-cliente').value = p.clienteId || '';
-            document.getElementById('p-servico').value = p.servico || '';
-            document.getElementById('p-material').value = p.material || '';
-            document.getElementById('p-largura').value = p.largura || 1.0;
-            document.getElementById('p-altura').value = p.altura || 1.0;
-            document.getElementById('p-quantidade').value = p.quantidade || 1;
-            document.getElementById('p-acabamento').value = p.acabamento || '';
-            document.getElementById('p-total').value = p.valor || 0.0;
-            document.getElementById('p-despesa').value = p.despesa || 0.0;
-            document.getElementById('p-data-entrega').value = p.data_entrega || todayStr;
-            document.getElementById('p-responsavel').value = p.responsavel || '';
-            document.getElementById('p-forma-pagamento').value = p.forma_pagamento || 'Dinheiro';
-            document.getElementById('p-status').value = p.entrega || 'AGUARDANDO';
-            document.getElementById('p-observacoes').value = p.observacoes || '';
-            currentOrderItems = p.items ? [...p.items] : [];
-            renderCurrentOrderItemsList();
-            openModal('modal-pedido');
-        }
-
-        // ================================= FORMULÁRIOS SAVE E EXCLUSÕES =================================
-
-        document.getElementById('form-cliente').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const d = {
-                nome: document.getElementById('c-nome').value.trim() || "Cliente Sem Nome",
-                cpf_cnpj: document.getElementById('c-cpf-cnpj').value,
-                telefone: document.getElementById('c-telefone').value,
-                whatsapp: document.getElementById('c-whatsapp').value,
-                email: document.getElementById('c-email').value,
-                cidade: document.getElementById('c-cidade').value,
-                estado: document.getElementById('c-estado').value,
-                endereco: document.getElementById('c-endereco').value,
-                observacoes: document.getElementById('c-observacoes').value
-            };
-            if (editClienteId) {
-                const i = appState.clientes.findIndex(c => c.id === editClienteId);
-                if (i !== -1) appState.clientes[i] = { ...appState.clientes[i], ...d };
-                showToast("Cliente atualizado!");
-            } else {
-                appState.clientes.push({ id: 'c' + Date.now(), ...d, status: 'Ativo' });
-                showToast("Cliente cadastrado!");
-            }
-            editClienteId = null; saveState(); renderClientes(); renderDashboard(); closeModal('modal-cliente');
-        });
-
-        document.getElementById('form-pedido').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const clienteId = document.getElementById('p-cliente').value || '';
-            const qty = parseInt(document.getElementById('p-quantidade').value) || 1;
-            const totalVal = parseFloat(document.getElementById('p-total').value) || 0;
-            const disp = parseFloat(document.getElementById('p-despesa').value) || 0;
-            const dt = document.getElementById('p-data-entrega').value || todayStr;
-            const resp = document.getElementById('p-responsavel').value || 'N/A';
-            const formPg = document.getElementById('p-forma-pagamento').value;
-            const status = document.getElementById('p-status').value;
-            const obs = document.getElementById('p-observacoes').value;
-            const autoFin = document.getElementById('p-finance-auto').checked;
-
-            const items = [...currentOrderItems];
-            // Se nenhum item foi adicionado ao carrinho, define a descrição padrão baseada no Serviço digitado
-            const servicoPrincipal = document.getElementById('p-servico').value.trim() || (items.length > 0 ? items[0].nome : 'Serviço Sublimado');
-            const materialPrincipal = document.getElementById('p-material').value.trim() || 'Geral';
-
-            const pData = {
-                clienteId, servico: servicoPrincipal, material: materialPrincipal,
-                quantidade: qty, largura: parseFloat(document.getElementById('p-largura').value) || 1.0, altura: parseFloat(document.getElementById('p-altura').value) || 1.0,
-                acabamento: document.getElementById('p-acabamento').value, valor: totalVal, despesa: disp, data_entrega: dt,
-                responsavel: resp, forma_pagamento: formPg, entrega: status, observacoes: obs, items
-            };
-
-            if (editPedidoId) {
-                const i = appState.pedidos.findIndex(p => p.id === editPedidoId);
-                if (i !== -1) appState.pedidos[i] = { ...appState.pedidos[i], ...pData };
-                showToast("Pedido atualizado!");
-            } else {
-                appState.pedidos.push({ id: 'p' + Date.now(), ...pData, pago: (formPg === 'Dinheiro' ? 'Pago' : 'Pendente') });
-                if (autoFin) {
-                    const cliName = (appState.clientes.find(c => c.id === clienteId) || {nome: 'Cliente'}).nome;
-                    appState.financeiro.push({ id: 'f' + Date.now(), tipo: 'Entrada', descricao: `Pedido: ${pData.servico} (${cliName})`, valor: totalVal, data: dt, categoria: 'Venda' });
-                }
-                showToast("Pedido cadastrado!");
-            }
-            editPedidoId = null; currentOrderItems = []; saveState(); renderPedidos(); renderDashboard(); closeModal('modal-pedido');
-        });
-
-        document.getElementById('form-despesa').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const dData = {
-                nome_produto: document.getElementById('d-nome-produto').value.trim() || "Produto Sem Nome",
-                valor_unitario: parseFloat(document.getElementById('d-valor-unitario').value) || 0,
-                quantidade: parseInt(document.getElementById('d-quantidade').value) || 1,
-                data_compra: document.getElementById('d-data-compra').value || todayStr,
-                tipo_pagamento: document.getElementById('d-tipo-pagamento').value,
-                onde_comprou: document.getElementById('d-onde-comprou').value || 'N/A',
-                total_gasto: parseFloat(document.getElementById('d-total-gasto').value) || 0,
-                pago: 'Sim'
-            };
-            appState.despesas.push({ id: 'd' + Date.now(), ...dData });
-            if (document.getElementById('d-finance-auto').checked) {
-                appState.financeiro.push({ id: 'f' + Date.now(), tipo: 'Saída', descricao: `Despesa: ${dData.nome_produto}`, valor: dData.total_gasto, data: dData.data_compra, categoria: 'Insumos' });
-            }
-            saveState(); renderDespesas(); renderDashboard(); closeModal('modal-despesa'); document.getElementById('form-despesa').reset(); showToast("Despesa cadastrada!");
-        });
-
-        document.getElementById('form-financeiro').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const fData = {
-                tipo: document.getElementById('f-tipo').value, categoria: document.getElementById('f-categoria').value,
-                descricao: document.getElementById('f-descricao').value.trim() || "Lançamento Sem Nome",
-                valor: parseFloat(document.getElementById('f-valor').value) || 0,
-                data: document.getElementById('f-data').value || todayStr
-            };
-            appState.financeiro.push({ id: 'f' + Date.now(), ...fData });
-            saveState(); renderFinanceiro(); renderDashboard(); closeModal('modal-financeiro'); document.getElementById('form-financeiro').reset(); showToast("Lançamento registrado!");
-        });
-
-        function deleteFinanceiro(id) { if (confirm("Apagar lançamento?")) { appState.financeiro = appState.financeiro.filter(f => f.id !== id); saveState(); renderFinanceiro(); renderDashboard(); } }
-        function deletePedido(id) { if (confirm("Apagar pedido?")) { appState.pedidos = appState.pedidos.filter(p => p.id !== id); saveState(); renderPedidos(); renderDashboard(); } }
-        function togglePedidoStatus(id) {
-            const p = appState.pedidos.find(item => item.id === id); if (!p) return;
-            const etapas = ['AGUARDANDO', 'Em Produção', 'Finalizado'];
-            p.entrega = etapas[(etapas.indexOf(p.entrega) + 1) % etapas.length];
-            saveState(); renderPedidos(); renderDashboard(); showToast("Status atualizado!");
-        }
-
-        // ================================= EXPORTAÇÃO PDF E WHATSAPP =================================
-
-        function downloadPDF() {
-            const receitas = appState.financeiro.filter(f => f.tipo === 'Entrada').reduce((sum, item) => sum + item.valor, 0);
-            const investimentos = appState.financeiro.filter(f => f.tipo === 'Saída' && f.categoria === 'Investimento').reduce((sum, item) => sum + item.valor, 0);
-            const despesas = appState.financeiro.filter(f => f.tipo === 'Saída' && f.categoria !== 'Investimento').reduce((sum, item) => sum + item.valor, 0);
-            const lucro = receitas - despesas - investimentos;
-            const reserva = lucro > 0 ? lucro * 0.10 : 0;
-            const liq = lucro - reserva;
-
-            const w = window.open('', '_blank');
-            w.document.write('<html><head><title>PHSUBLIME</title><style>body{font-family:sans-serif;padding:30px;}table{width:100%;border-collapse:collapse;}th,td{border:1px solid #ddd;padding:10px;}</style></head><body>');
-            w.document.write('<h2>PHSUBLIME - Relatório Financeiro</h2><p>Gerado em: ' + new Date().toLocaleString('pt-BR') + '</p>');
-            w.document.write('<table><thead><tr><th>Indicador</th><th>Valor</th></tr></thead><tbody>');
-            w.document.write('<tr><td>Receitas</td><td>' + formatCurrency(receitas) + '</td></tr>');
-            w.document.write('<tr><td>Investimentos</td><td>' + formatCurrency(investimentos) + '</td></tr>');
-            w.document.write('<tr><td>Despesas</td><td>' + formatCurrency(despesas) + '</td></tr>');
-            w.document.write('<tr><td>Lucro Bruto</td><td>' + formatCurrency(lucro) + '</td></tr>');
-            w.document.write('<tr><td>10% Lucro (Reserva)</td><td>' + formatCurrency(reserva) + '</td></tr>');
-            w.document.write('<tr style="font-weight:bold;background:#ecfdf5"><td>Lucro Líquido</td><td>' + formatCurrency(liq) + '</td></tr>');
-            w.document.write('</tbody></table>');
-            w.document.write('<script>window.onload=function(){window.print();window.close();};</' + 'script></body></html>');
-            w.document.close();
-        }
-
-        // Envio direto para o WhatsApp cadastrado
-        function sendReportWhatsApp() {
-            const receitas = appState.financeiro.filter(f => f.tipo === 'Entrada').reduce((sum, item) => sum + item.valor, 0);
-            const investimentos = appState.financeiro.filter(f => f.tipo === 'Saída' && f.categoria === 'Investimento').reduce((sum, item) => sum + item.valor, 0);
-            const despesas = appState.financeiro.filter(f => f.tipo === 'Saída' && f.categoria !== 'Investimento').reduce((sum, item) => sum + item.valor, 0);
-            const lucro = receitas - despesas - investimentos;
-            const reserva = lucro > 0 ? lucro * 0.10 : 0;
-            const liq = lucro - reserva;
-
-            const text = `*PHSUBLIME - RELATÓRIO FINANCEIRO CONSOLIDADO*\n\n` +
-                         `📊 *Receitas:* ${formatCurrency(receitas)}\n` +
-                         `💼 *Investimentos:* ${formatCurr
+        
+        if(!id&&$("auto-expense-finance").checked)await window.dataSdk.create(complete({tipo_registro:"financeiro",mes:data.mes,tipo_financeiro:"despesa",categoria_financeira:data.categoria_despesa==="Produtos de venda"?"Insumos":"Despesas diversas",valor_financeiro:data.total_gasto,data_financeira:data.data_compra,metodo_pagamento:data.tipo_pagamento,descricao_financeira:"Despesa: "+data.nome_produto}));
+        closeModal();
+        toast("Despesa salva com sucesso.");
+      })}
+    function openFinanceForm(id=""){const r=records.find(x=>x.__backendId===id)||{};modal(`<h3 class="mb-5 text-lg font-black text-[#ffd700]">${id?"Editar":"Novo"} lançamento</h3><form id="finance-form" class="grid gap-3 md:grid-cols-2"><div><label for="field-tipo_financeiro" class="erp-label">Tipo</label><select id="field-tipo_financeiro" name="tipo_financeiro" class="erp-input">${["receita","despesa","investimento"].map(x=>`<option ${r.tipo_financeiro===x?"selected":""}>${x}</option>`).join("")}</select></div>${input("Categoria","categoria_financeira",r.categoria_financeira)}${input("Valor","valor_financeiro",r.valor_financeiro,"number",false)}${input("Data","data_financeira",r.data_financeira||today(),"date",false)}${input("Pagamento","metodo_pagamento",r.metodo_pagamento||"PIX")}${input("Descrição","descricao_financeira",r.descricao_financeira,"text",false)}<div class="md:col-span-2 flex gap-2 pt-2"><button class="rounded-lg bg-[#ffd700] px-5 py-2 text-sm font-bold text-black">Salvar</button><button type="button" class="rounded-lg bg-zinc-700 px-5 py-2 text-sm font-bold" onclick="closeModal()">Cancelar</button></div></form>`);$("finance-form").addEventListener("submit",e=>saveForm(e,id,{...r,tipo_registro:"financeiro",mes:r.mes||currentMonth()},"Lançamento salvo com sucesso."))}
+    async function saveForm(e,id,base,message){e.preventDefault();if(!id&&records.length>=999){toast("Limite de 999 registros atingido.");return}const b=e.target.querySelector("button[type='submit'],button:not([type])");if(b)b.disabled=true;const data=complete({...base,...Object.fromEntries(new FormData(e.target))}),res=id?await window.dataSdk.update({...data,__backendId:id}):await window.dataSdk.create(data);if(!res.isOk){if(b)b.disabled=false;toast("Não foi possível salvar. Tente novamente.");return}closeModal();toast(message)}
+    async function advanceOrder(id){const r=records.find(x=>x.__backendId===id),flow=["AGUARDANDO","EM PRODUÇÃO","CONCLUÍDO","ENTREGUE"],next=flow[flow.indexOf(r?.status_pedido)+1];if(!r||!next){toast("Este pedido já está na etapa final.");return}const res=await window.dataSdk.update({...r,status_pedido:next});if(!res.isOk)toast("Não foi possível atualizar o pedido.")}
+    async function toggleExpensePaid(id){const r=records.find(x=>x.__backendId===id);if(!r)return;const res=await window.dataSdk.update({...r,pago:r.pago==="Sim"?"Não":"Sim"});if(!res.isOk)toast("Não foi possível atualizar a situação.")}
+    function askDelete(id){modal(`<h3 class="mb-3 text-lg font-black text-red-400">Excluir registro?</h3><p class="mb-5 text-sm text-zinc-300">Esta ação remove o item da sua Canva Sheet e não pode ser desfeita.</p><div class="flex gap-2"><button class="rounded-lg bg-red-700 px-5 py-2 text-sm font-bold" onclick="deleteRecord('${id}')">Confirmar exclusão</button><button class="rounded-lg bg-zinc-700 px-5 py-2 text-sm font-bold" onclick="closeModal()">Cancelar</button></div>`)}
+    async function deleteRecord(id){const r=records.find(x=>x.__backendId===id);if(!r)return;const res=await window.dataSdk.delete(r);if(!res.isOk){toast("Não foi possível excluir o registro.");return}closeModal();toast("Registro excluído.")}
+
+    function openCloseMonth(){const list=records.filter(x=>x.arquivado!=="sim"&&["pedido","despesa","financeiro"].includes(x.tipo_registro));modal(`<h3 class="mb-3 text-lg font-black text-[#ffd700]">Fechar mês</h3><p class="mb-2 text-sm text-zinc-300">${list.length} registro(s) ativos serão enviados ao Histórico. Clientes continuarão no cadastro atual.</p><p class="mb-5 text-xs text-zinc-500">Os dados continuam salvos na sua Canva Sheet.</p><div class="flex gap-2"><button class="rounded-lg bg-[#ffd700] px-5 py-2 text-sm font-bold text-black" onclick="closeMonth()">Confirmar fechamento</button><button class="rounded-lg bg-zinc-700 px-5 py-2 text-sm font-bold" onclick="closeModal()">Cancelar</button></div>`)}
+    async function closeMonth(){const list=records.filter(x=>x.arquivado!=="sim"&&["pedido","despesa","financeiro"].includes(x.tipo_registro));for(const x of list){const res=await window.dataSdk.update({...x,arquivado:"sim",mes:x.mes||currentMonth()});if(!res.isOk){toast("O fechamento encontrou um erro.");return}}closeModal();toast("Mês fechado com sucesso.")}
+    function populateHistory(){const months=[...new Set(records.filter(x=>x.arquivado==="sim"&&x.mes).map(x=>x.mes))].sort().reverse(),s=$("history-select"),prev=s.value;s.innerHTML=`<option value="">Selecione um período</option>`+months.map(m=>`<option value="${m}">${new Date(m+"-02T12:00:00").toLocaleDateString("pt-BR",{month:"long",year:"numeric"})}</option>`).join("");if(months.includes(prev))s.value=prev}
+    function renderHistory(){const month=$("history-select").value,visible=!!month;$("history-view").classList.toggle("hidden",!visible);$("history-empty").classList.toggle("hidden",visible);$("history-actions").classList.toggle("hidden",!visible);if(!visible)return;const d=records.filter(x=>x.mes===month&&x.arquivado==="sim"),f=d.filter(x=>x.tipo_registro==="financeiro"),e=d.filter(x=>x.tipo_registro==="despesa"),o=d.filter(x=>x.tipo_registro==="pedido"),t=financialTotals(f, e),cost=t.expense+t.investment+e.reduce((s,x)=>s+Number(x.total_gasto||0),0)+o.reduce((s,x)=>s+Number(x.despesa||0),0),profit=t.income-cost;setText("hist-income",money(t.income));setText("hist-cost",money(cost));setText("hist-profit",money(profit-Math.max(0,profit*.1)));setText("hist-orders",o.length);$("hist-orders-body").innerHTML=o.map(x=>`<tr><td class="text-[#ffd700] font-bold">#${safe(x.numero_pedido)}</td><td>${safe(x.cliente_id)}</td><td>${orderItems(x).map(i=>safe(i.nome)).join(", ")||safe(x.servico)}</td><td>${money(x.total_pedido)}</td><td>${safe(x.status_pedido)}</td></tr>`).join("")||`<tr><td colspan="5" class="text-center text-zinc-500">Sem pedidos.</td></tr>`;$("hist-finance-body").innerHTML=f.map(x=>`<tr><td>${safe(x.data_financeira)}</td><td>${safe(x.tipo_financeiro)}</td><td>${safe(x.categoria_financeira)}</td><td>${money(x.valor_financeiro)}</td></tr>`).join("")||`<tr><td colspan="4" class="text-center text-zinc-500">Sem lançamentos.</td></tr>`;$("hist-expenses-body").innerHTML=e.map(x=>`<tr><td>${safe(x.nome_produto)}</td><td>${safe(x.data_compra)}</td><td>${safe(x.local_compra)}</td><td>${money(x.total_gasto)}</td></tr>`).join("")||`<tr><td colspan="4" class="text-center text-zinc-500">Sem despesas.</td></tr>`}
+    function csv(data){return data.map(row=>row.map(v=>`"${String(v??"").replace(/"/g,'""')}"`).join(",")).join("\n")}
+    function download(name,text){const a=document.createElement("a");const url=URL.createObjectURL(new Blob([text],{type:"text/csv;charset=utf-8"}));a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),500)}
+    function exportCsv(){const rows=[["Tipo","Mês","Cliente","Pedido","Produtos","Total","Produto despesa","Total gasto","Financeiro","Valor"]];records.forEach(x=>rows.push([x.tipo_registro,x.mes,x.nome_cliente||x.cliente_id,x.numero_pedido,orderItems(x).map(i=>i.nome).join(" | ")||x.servico,x.total_pedido,x.nome_produto,x.total_gasto,x.tipo_financeiro,x.valor_financeiro]));download("phsublime-erp.csv",csv(rows));toast("Arquivo CSV preparado para download.")}
+    function exportHistory(){const m=$("history-select").value;if(!m)return;const rows=[["Tipo","Pedido","Cliente","Produtos","Total","Produto despesa","Total gasto","Financeiro","Valor"]];records.filter(x=>x.mes===m&&x.arquivado==="sim").forEach(x=>rows.push([x.tipo_registro,x.numero_pedido,x.cliente_id,orderItems(x).map(i=>i.nome).join(" | ")||x.servico,x.total_pedido,x.nome_produto,x.total_gasto,x.tipo_financeiro,x.valor_financeiro]));download("phsublime-historico-"+m+".csv",csv(rows));toast("Histórico exportado.")}
+    function shareFinance(){const t=financialTotals();window.open("https://wa.me/5521986147221?text="+encodeURIComponent(`*PHSUBLIME — RELATÓRIO FINANCEIRO*\n\nReceitas: ${money(t.income)}\nDespesas: ${money(t.expense)}\nInvestimentos: ${money(t.investment)}\nLucro: ${money(t.profit)}\nReserva 10%: ${money(Math.max(0,t.profit*.1))}\nLucro líquido: ${money(t.profit-Math.max(0,t.profit*.1))}`),"_blank","noopener,noreferrer")}
+    function shareHistory(){const m=$("history-select").value;if(!m)return;const d=records.filter(x=>x.mes===m&&x.arquivado==="sim"),f=d.filter(x=>x.tipo_registro==="financeiro"),t=financialTotals(f, d.filter(x=>x.tipo_registro==="despesa")),orders=d.filter(x=>x.tipo_registro==="pedido").length;window.open("https://wa.me/5521986147221?text="+encodeURIComponent(`PHSUBLIME ERP\nHistórico: ${m}\nPedidos: ${orders}\nReceitas: ${money(t.income)}\nLucro: ${money(t.profit)}`),"_blank","noopener,noreferrer")}
+    function printReport(){const t=financialTotals(),w=window.open("","_blank");if(!w){toast("Não foi possível abrir o relatório.");return}w.document.write(`<html><head><title>Relatório PHSUBLIME</title><style>body{font-family:Arial;padding:36px}table{border-collapse:collapse;width:100%;max-width:600px}td,th{border:1px solid #ddd;padding:12px;text-align:left}th{background:#ffd700}</style></head><body><h1>PHSUBLIME</h1><p>Relatório financeiro consolidado</p><table><tr><th>Indicador</th><th>Valor</th></tr><tr><td>Receitas</td><td>${money(t.income)}</td></tr><tr><td>Despesas</td><td>${money(t.expense)}</td></tr><tr><td>Investimentos</td><td>${money(t.investment)}</td></tr><tr><td><strong>Lucro</strong></td><td><strong>${money(t.profit)}</strong></td></tr></table></body></html>`);w.document.close();w.focus();setTimeout(()=>w.print(),400)}
+    async function reopenMonth(){const m=$("history-select").value,data=records.filter(x=>x.mes===m&&x.arquivado==="sim");for(const x of data){const r=await window.dataSdk.update({...x,arquivado:""});if(!r.isOk){toast("Não foi possível reabrir todos os registros.");return}}toast("Mês reaberto com sucesso.");$("history-select").value="";renderAll()}
+    function askDeleteMonth(){const m=$("history-select").value;if(!m)return;modal(`<h3 class="mb-3 text-lg font-black text-red-400">Excluir histórico de ${safe(m)}?</h3><p class="mb-5 text-sm text-zinc-300">Todos os pedidos, despesas e lançamentos arquivados deste mês serão removidos permanentemente.</p><div class="flex gap-2"><button class="rounded-lg bg-red-700 px-5 py-2 text-sm font-bold" onclick="deleteMonth('${m}')">Excluir mês</button><button class="rounded-lg bg-zinc-700 px-5 py-2 text-sm font-bold" onclick="closeModal()">Cancelar</button></div>`)}
+    async function deleteMonth(month){const data=records.filter(x=>x.mes===month&&x.arquivado==="sim");for(const item of data){const res=await window.dataSdk.delete(item);if(!res.isOk){toast("Não foi possível excluir todos os registros.");return}}closeModal();toast("Histórico mensal excluído.");}
+
+    const handler={onDataChanged(data){records=data;renderAll()}};
+    (async()=>{$("dashboard-date").value=today();const result=await window.dataSdk.init(handler);if(!result.isOk)toast("Não foi possível conectar à Canva Sheet.");lucide.createIcons()})();
+  </script>
+ </body>
+</html>
