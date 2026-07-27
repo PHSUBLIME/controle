@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestão de caixa e pedidos - PHSUBLIME</title>
-    <!-- Tailwind CSS para Estilização Moderna -->
+    <title>PHSUBLIME - Gestão de Caixa e Pedidos</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -24,18 +24,17 @@
             }
         }
     </script>
-    <!-- Fontes do Google -->
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;700&family=DM+Sans:wght@400;700;900&display=swap" rel="stylesheet">
     <!-- Ícones FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Biblioteca de Gráficos -->
+    <!-- Chart.js para Relatórios -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body {
             font-family: 'DM Sans', 'Arimo', sans-serif;
             background-color: #0a0a0a;
         }
-        /* Barra de rolagem personalizada */
         ::-webkit-scrollbar {
             width: 6px;
             height: 6px;
@@ -54,7 +53,7 @@
 </head>
 <body class="text-gray-100 flex flex-col md:flex-row h-screen overflow-hidden">
 
-    <!-- Toast Notification (Mensagens de Sucesso/Alerta) -->
+    <!-- Toast Notification -->
     <div id="toast" style="opacity: 0; transform: translateY(10px); transition: all 0.3s ease;" class="hidden fixed bottom-5 right-5 z-50 flex items-center px-4 py-3 rounded-xl shadow-lg border">
         <i id="toast-icon" class="mr-2 text-lg"></i>
         <span id="toast-message" class="text-sm font-semibold"></span>
@@ -68,7 +67,7 @@
         </button>
     </div>
 
-    <!-- Mobile Sidebar Drawer (Gaveta Mobile) -->
+    <!-- Mobile Sidebar Drawer -->
     <div id="mobile-menu" class="fixed inset-0 z-40 hidden md:hidden flex">
         <div class="fixed inset-0 bg-black/60 backdrop-blur-sm" id="mobile-menu-overlay"></div>
         <div class="relative w-64 bg-neutral-900 h-full flex flex-col p-4 z-10 border-r border-darkBorder">
@@ -96,11 +95,10 @@
         </div>
     </div>
 
-    <!-- Desktop Sidebar (Esquerda) -->
+    <!-- Desktop Sidebar -->
     <aside class="w-64 bg-neutral-900 border-r border-darkBorder flex flex-col justify-between hidden md:flex p-6">
         <div>
-            <!-- Sidebar Logo -->
-            <div class="text-[#ffd700] font-black text-2xl mb-10 tracking-wider">PHSUBLIME</div>
+            <div class="text-[#ffd700] font-black text-2xl mb-10 tracking-wider text-center md:text-left">PHSUBLIME</div>
             <nav class="space-y-2">
                 <button onclick="switchTab('dashboard')" class="tab-link w-full text-left flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition" data-tab="dashboard">
                     <i class="fa-solid fa-chart-simple w-5"></i> Dashboard
@@ -127,7 +125,7 @@
         </div>
     </aside>
 
-    <!-- Main Content Area (Direita) -->
+    <!-- Main Content Area -->
     <main class="flex-1 flex flex-col overflow-y-auto w-full">
         <div class="p-4 md:p-8 max-w-7xl mx-auto w-full space-y-6">
 
@@ -135,61 +133,107 @@
             <div id="tab-dashboard" class="tab-content space-y-6 hidden">
                 <div class="flex justify-between items-center">
                     <h2 class="text-2xl font-black text-white">Dashboard</h2>
-                    <span class="text-xs px-3 py-1 bg-neutral-800 rounded-full border border-darkBorder text-neutral-400">Tempo Real</span>
+                    <span class="text-xs px-3 py-1 bg-neutral-800 rounded-full border border-darkBorder text-neutral-400">Dados Diários e Métricas</span>
                 </div>
 
-                <!-- KPI Cards -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <!-- Receitas -->
-                    <div class="bg-darkCard p-5 rounded-xl border border-darkBorder flex items-center justify-between">
-                        <div>
-                            <p class="text-sm text-neutral-400">Total Receitas</p>
-                            <h3 class="text-2xl font-black text-emerald-400 mt-1" id="kpi-receitas">R$ 0,00</h3>
+                <!-- KPI Cards Grid (8 Caixas Solicitadas) -->
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                    <!-- Faturamento Dia -->
+                    <div class="bg-darkCard p-4 rounded-xl border border-darkBorder flex flex-col justify-between h-28">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs text-neutral-400 font-medium">Faturamento Dia</span>
+                            <div class="p-1.5 bg-emerald-500/10 text-emerald-400 rounded-lg"><i class="fa-solid fa-money-bill-wave text-xs"></i></div>
                         </div>
-                        <div class="p-3 bg-emerald-500/10 text-emerald-400 rounded-lg"><i class="fa-solid fa-arrow-trend-up text-xl"></i></div>
+                        <h3 class="text-lg md:text-xl font-black text-emerald-400 mt-2" id="kpi-faturamento-dia">R$ 0,00</h3>
                     </div>
-                    <!-- Despesas -->
-                    <div class="bg-darkCard p-5 rounded-xl border border-darkBorder flex items-center justify-between">
-                        <div>
-                            <p class="text-sm text-neutral-400">Total Despesas</p>
-                            <h3 class="text-2xl font-black text-red-400 mt-1" id="kpi-despesas">R$ 0,00</h3>
+
+                    <!-- Em Produção -->
+                    <div class="bg-darkCard p-4 rounded-xl border border-darkBorder flex flex-col justify-between h-28">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs text-neutral-400 font-medium">Em Produção</span>
+                            <div class="p-1.5 bg-blue-500/10 text-blue-400 rounded-lg"><i class="fa-solid fa-screwdriver-wrench text-xs"></i></div>
                         </div>
-                        <div class="p-3 bg-red-500/10 text-red-400 rounded-lg"><i class="fa-solid fa-arrow-trend-down text-xl"></i></div>
+                        <h3 class="text-lg md:text-xl font-black text-blue-400 mt-2" id="kpi-em-producao">0</h3>
                     </div>
-                    <!-- Saldo -->
-                    <div class="bg-darkCard p-5 rounded-xl border border-darkBorder flex items-center justify-between">
-                        <div>
-                            <p class="text-sm text-neutral-400">Saldo de Caixa</p>
-                            <h3 class="text-2xl font-black text-gold mt-1" id="kpi-saldo">R$ 0,00</h3>
+
+                    <!-- Entregues -->
+                    <div class="bg-darkCard p-4 rounded-xl border border-darkBorder flex flex-col justify-between h-28">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs text-neutral-400 font-medium">Entregues</span>
+                            <div class="p-1.5 bg-teal-500/10 text-teal-400 rounded-lg"><i class="fa-solid fa-circle-check text-xs"></i></div>
                         </div>
-                        <div class="p-3 bg-yellow-500/10 text-gold rounded-lg"><i class="fa-solid fa-scale-balanced text-xl"></i></div>
+                        <h3 class="text-lg md:text-xl font-black text-teal-400 mt-2" id="kpi-entregues">0</h3>
                     </div>
-                    <!-- Pedidos Ativos -->
-                    <div class="bg-darkCard p-5 rounded-xl border border-darkBorder flex items-center justify-between">
-                        <div>
-                            <p class="text-sm text-neutral-400">Pedidos Ativos</p>
-                            <h3 class="text-2xl font-black text-blue-400 mt-1" id="kpi-pedidos">0</h3>
+
+                    <!-- Clientes -->
+                    <div class="bg-darkCard p-4 rounded-xl border border-darkBorder flex flex-col justify-between h-28">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs text-neutral-400 font-medium">Clientes</span>
+                            <div class="p-1.5 bg-indigo-500/10 text-indigo-400 rounded-lg"><i class="fa-solid fa-users text-xs"></i></div>
                         </div>
-                        <div class="p-3 bg-blue-500/10 text-blue-400 rounded-lg"><i class="fa-solid fa-spinner text-xl"></i></div>
+                        <h3 class="text-lg md:text-xl font-black text-indigo-400 mt-2" id="kpi-clientes">0</h3>
+                    </div>
+
+                    <!-- Investimento Total -->
+                    <div class="bg-darkCard p-4 rounded-xl border border-darkBorder flex flex-col justify-between h-28">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs text-neutral-400 font-medium">Investimento Total</span>
+                            <div class="p-1.5 bg-purple-500/10 text-purple-400 rounded-lg"><i class="fa-solid fa-chart-line text-xs"></i></div>
+                        </div>
+                        <h3 class="text-lg md:text-xl font-black text-purple-400 mt-2" id="kpi-investimento-total">R$ 0,00</h3>
+                    </div>
+
+                    <!-- Lucro -->
+                    <div class="bg-darkCard p-4 rounded-xl border border-darkBorder flex flex-col justify-between h-28">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs text-neutral-400 font-medium">Lucro</span>
+                            <div class="p-1.5 bg-yellow-500/10 text-gold rounded-lg"><i class="fa-solid fa-sack-dollar text-xs"></i></div>
+                        </div>
+                        <h3 class="text-lg md:text-xl font-black text-gold mt-2" id="kpi-lucro">R$ 0,00</h3>
+                    </div>
+
+                    <!-- Pedidos Pendentes -->
+                    <div class="bg-darkCard p-4 rounded-xl border border-darkBorder flex flex-col justify-between h-28">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs text-neutral-400 font-medium">Pedidos Pendentes</span>
+                            <div class="p-1.5 bg-amber-500/10 text-amber-400 rounded-lg"><i class="fa-solid fa-clock text-xs"></i></div>
+                        </div>
+                        <h3 class="text-lg md:text-xl font-black text-amber-400 mt-2" id="kpi-pedidos-pendentes">0</h3>
+                    </div>
+
+                    <!-- Pedidos Dia -->
+                    <div class="bg-darkCard p-4 rounded-xl border border-darkBorder flex flex-col justify-between h-28">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs text-neutral-400 font-medium">Pedidos Dia</span>
+                            <div class="p-1.5 bg-rose-500/10 text-rose-400 rounded-lg"><i class="fa-solid fa-basket-shopping text-xs"></i></div>
+                        </div>
+                        <h3 class="text-lg md:text-xl font-black text-rose-400 mt-2" id="kpi-pedidos-dia">0</h3>
                     </div>
                 </div>
 
-                <!-- Graficos -->
+                <!-- Graficos / Box de análises adicionais -->
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Vendas - Últimos 7 dias -->
                     <div class="bg-darkCard p-5 rounded-xl border border-darkBorder">
                         <h4 class="text-md font-bold mb-4 text-neutral-300 flex items-center gap-2">
-                            <i class="fa-solid fa-chart-line text-gold"></i> Últimas Transações
+                            <i class="fa-solid fa-chart-line text-gold"></i> Vendas — Últimos 7 dias
                         </h4>
                         <div class="relative h-[250px] w-full">
-                            <canvas id="cashFlowChart"></canvas>
+                            <canvas id="vendasSeteDiasChart"></canvas>
                         </div>
                     </div>
-                    <div class="bg-darkCard p-5 rounded-xl border border-darkBorder">
-                        <h4 class="text-md font-bold mb-4 text-neutral-300 flex items-center gap-2">
-                            <i class="fa-solid fa-chart-pie text-gold"></i> Produção de Pedidos
-                        </h4>
-                        <div class="relative h-[250px] w-full flex justify-center">
-                            <canvas id="orderStatusChart"></canvas>
+                    <!-- Serviços Mais Vendidos -->
+                    <div class="bg-darkCard p-5 rounded-xl border border-darkBorder flex flex-col justify-between">
+                        <div>
+                            <h4 class="text-md font-bold mb-4 text-neutral-300 flex items-center gap-2">
+                                <i class="fa-solid fa-crown text-gold"></i> Serviços Mais Vendidos
+                            </h4>
+                            <div id="servicos-mais-vendidos-list" class="space-y-4">
+                                <!-- Preenchido dinamicamente via Javascript -->
+                            </div>
+                        </div>
+                        <div class="text-[10px] text-neutral-500 mt-4 italic">
+                            * Atualizado em tempo real analisando os itens cadastrados na tela de Pedidos.
                         </div>
                     </div>
                 </div>
@@ -207,11 +251,8 @@
                     </button>
                 </div>
 
-                <!-- Filtros e Busca -->
-                <div class="flex bg-darkCard p-4 rounded-xl border border-darkBorder gap-4">
-                    <div class="flex-1">
-                        <input type="text" id="pedidos-search" placeholder="Buscar pedido por descrição ou cliente..." class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full text-sm focus:outline-none focus:border-gold">
-                    </div>
+                <div class="flex bg-darkCard p-4 rounded-xl border border-darkBorder">
+                    <input type="text" id="pedidos-search" placeholder="Buscar pedido por descrição ou cliente..." class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full text-sm focus:outline-none focus:border-gold">
                 </div>
 
                 <!-- Tabela de Pedidos -->
@@ -229,9 +270,7 @@
                                     <th class="p-4 text-xs font-semibold text-neutral-400 uppercase tracking-wider text-right">Ações</th>
                                 </tr>
                             </thead>
-                            <tbody id="pedidos-tbody" class="divide-y divide-darkBorder">
-                                <!-- Renderizado Dinamicamente -->
-                            </tbody>
+                            <tbody id="pedidos-tbody" class="divide-y divide-darkBorder"></tbody>
                         </table>
                     </div>
                 </div>
@@ -258,7 +297,6 @@
                     <input type="text" id="financeiro-search" placeholder="Buscar lançamento..." class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full text-sm focus:outline-none focus:border-gold">
                 </div>
 
-                <!-- Tabela Caixa -->
                 <div class="bg-darkCard rounded-xl border border-darkBorder overflow-hidden">
                     <div class="overflow-x-auto">
                         <table class="w-full text-left border-collapse">
@@ -272,9 +310,7 @@
                                     <th class="p-4 text-xs font-semibold text-neutral-400 uppercase tracking-wider text-right">Ações</th>
                                 </tr>
                             </thead>
-                            <tbody id="financeiro-tbody" class="divide-y divide-darkBorder">
-                                <!-- Renderizado Dinamicamente -->
-                            </tbody>
+                            <tbody id="financeiro-tbody" class="divide-y divide-darkBorder"></tbody>
                         </table>
                     </div>
                 </div>
@@ -296,7 +332,6 @@
                     <input type="text" id="despesas-search" placeholder="Buscar despesa..." class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full text-sm focus:outline-none focus:border-gold">
                 </div>
 
-                <!-- Tabela Despesas -->
                 <div class="bg-darkCard rounded-xl border border-darkBorder overflow-hidden">
                     <div class="overflow-x-auto">
                         <table class="w-full text-left border-collapse">
@@ -310,9 +345,7 @@
                                     <th class="p-4 text-xs font-semibold text-neutral-400 uppercase tracking-wider text-right">Ações</th>
                                 </tr>
                             </thead>
-                            <tbody id="despesas-tbody" class="divide-y divide-darkBorder">
-                                <!-- Renderizado Dinamicamente -->
-                            </tbody>
+                            <tbody id="despesas-tbody" class="divide-y divide-darkBorder"></tbody>
                         </table>
                     </div>
                 </div>
@@ -331,10 +364,9 @@
                 </div>
 
                 <div class="flex bg-darkCard p-4 rounded-xl border border-darkBorder">
-                    <input type="text" id="clientes-search" placeholder="Buscar cliente por nome ou contato..." class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full text-sm focus:outline-none focus:border-gold">
+                    <input type="text" id="clientes-search" placeholder="Buscar cliente..." class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full text-sm focus:outline-none focus:border-gold">
                 </div>
 
-                <!-- Tabela Clientes -->
                 <div class="bg-darkCard rounded-xl border border-darkBorder overflow-hidden">
                     <div class="overflow-x-auto">
                         <table class="w-full text-left border-collapse">
@@ -347,9 +379,7 @@
                                     <th class="p-4 text-xs font-semibold text-neutral-400 uppercase tracking-wider text-right">Ações</th>
                                 </tr>
                             </thead>
-                            <tbody id="clientes-tbody" class="divide-y divide-darkBorder">
-                                <!-- Renderizado Dinamicamente -->
-                            </tbody>
+                            <tbody id="clientes-tbody" class="divide-y divide-darkBorder"></tbody>
                         </table>
                     </div>
                 </div>
@@ -360,14 +390,13 @@
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                     <div>
                         <h2 class="text-2xl font-black">Histórico Mensal</h2>
-                        <p class="text-sm text-neutral-400">Consolidação e fechamentos de períodos passados</p>
+                        <p class="text-sm text-neutral-400">Fechamento consolidado de caixa anterior</p>
                     </div>
                     <button onclick="triggerCloseMonth()" class="bg-[#b45309] hover:bg-amber-800 text-white font-bold text-sm px-4 py-2.5 rounded transition shadow-lg flex items-center gap-2">
                         <i class="fa-solid fa-lock"></i> Fechar Mês
                     </button>
                 </div>
 
-                <!-- Botões de Ação do Histórico (Habilitados apenas quando um item é selecionado) -->
                 <div class="flex flex-wrap gap-2 bg-darkCard p-4 rounded-xl border border-darkBorder">
                     <button id="history-copy-btn" onclick="copyHistoryData()" class="opacity-50 cursor-not-allowed bg-[#3b82f6] hover:bg-blue-600 text-white font-bold text-sm px-4 py-2.5 rounded transition shadow-lg flex items-center gap-2">
                         <i class="fa-solid fa-copy"></i> 📋 Copiar Dados
@@ -378,10 +407,9 @@
                     <button id="history-delete-btn" onclick="deleteHistoryItem()" class="opacity-50 cursor-not-allowed bg-[#dc2626] hover:bg-red-700 text-white font-bold text-sm px-4 py-2.5 rounded transition shadow-lg flex items-center gap-2">
                         <i class="fa-solid fa-trash-can"></i> 🗑️ Excluir Fechamento
                     </button>
-                    <span class="text-xs text-neutral-400 self-center ml-auto italic">Selecione uma linha abaixo para usar os botões</span>
+                    <span class="text-xs text-neutral-400 self-center ml-auto italic">Selecione uma linha abaixo para usar as ações acima</span>
                 </div>
 
-                <!-- Tabela Histórico -->
                 <div class="bg-darkCard rounded-xl border border-darkBorder overflow-hidden">
                     <div class="overflow-x-auto">
                         <table class="w-full text-left border-collapse">
@@ -394,9 +422,7 @@
                                     <th class="p-4 text-xs font-semibold text-neutral-400 uppercase tracking-wider">Total de Pedidos</th>
                                 </tr>
                             </thead>
-                            <tbody id="historico-tbody" class="divide-y divide-darkBorder">
-                                <!-- Renderizado Dinamicamente -->
-                            </tbody>
+                            <tbody id="historico-tbody" class="divide-y divide-darkBorder"></tbody>
                         </table>
                     </div>
                 </div>
@@ -447,16 +473,15 @@
                 <div>
                     <label class="block text-xs text-neutral-400 mb-1">Cliente</label>
                     <select id="p-cliente" required class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full text-sm focus:outline-none focus:border-gold">
-                        <!-- Clientes povoados por JS -->
                     </select>
                 </div>
                 <div>
-                    <label class="block text-xs text-neutral-400 mb-1">Descrição / Itens Encomendados</label>
-                    <textarea id="p-descricao" required placeholder="Ex: 5x Canecas Resinadas Sublimadas" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full text-sm h-20 focus:outline-none focus:border-gold"></textarea>
+                    <label class="block text-xs text-neutral-400 mb-1">Descrição / Nome do Serviço ou Item</label>
+                    <input type="text" id="p-descricao" required placeholder="Ex: Caneca Resinada Sublimada" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full text-sm focus:outline-none focus:border-gold">
                 </div>
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-xs text-neutral-400 mb-1">Valor Unitário/Total (R$)</label>
+                        <label class="block text-xs text-neutral-400 mb-1">Valor do Pedido (R$)</label>
                         <input type="number" step="0.01" id="p-valor" required class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full text-sm focus:outline-none focus:border-gold">
                     </div>
                     <div>
@@ -481,11 +506,10 @@
                         </select>
                     </div>
                 </div>
-                <!-- Opção para lançar de forma automática no fluxo financeiro -->
                 <div id="p-finance-auto-box" class="hidden">
                     <label class="flex items-center gap-2 cursor-pointer">
                         <input type="checkbox" id="p-finance-auto" class="rounded bg-neutral-800 border-neutral-700 text-gold focus:ring-0">
-                        <span class="text-xs text-neutral-400">Lançar valor diretamente como entrada no Financeiro</span>
+                        <span class="text-xs text-neutral-400 font-medium">Registrar pagamento automaticamente no fluxo Financeiro</span>
                     </label>
                 </div>
                 <div class="flex justify-end gap-2 pt-2">
@@ -496,7 +520,7 @@
         </div>
     </div>
 
-    <!-- MODAL NOVO LANÇAMENTO (FINANCEIRO) -->
+    <!-- MODAL NOVO LANÇAMENTO -->
     <div id="modal-financeiro" class="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50 hidden">
         <div class="bg-neutral-900 border border-darkBorder rounded-xl max-w-md w-full p-6 space-y-4">
             <h3 class="text-lg font-bold text-gold">Novo Lançamento</h3>
@@ -506,7 +530,7 @@
                         <label class="block text-xs text-neutral-400 mb-1">Tipo</label>
                         <select id="f-tipo" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full text-sm focus:outline-none focus:border-gold">
                             <option value="Entrada">Entrada (Receita)</option>
-                            <option value="Saída">Saída (Despesa)</option>
+                            <option value="Saída">Saída (Despesa/Investimento)</option>
                         </select>
                     </div>
                     <div>
@@ -524,7 +548,7 @@
                 </div>
                 <div>
                     <label class="block text-xs text-neutral-400 mb-1">Descrição</label>
-                    <input type="text" id="f-descricao" required placeholder="Ex: Recebimento do Cliente..." class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full text-sm focus:outline-none focus:border-gold">
+                    <input type="text" id="f-descricao" required placeholder="Ex: Entrada do pedido..." class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full text-sm focus:outline-none focus:border-gold">
                 </div>
                 <div class="grid grid-cols-2 gap-4">
                     <div>
@@ -561,11 +585,12 @@
                             <option value="Aluguel/Utilidades">Aluguel/Utilidades</option>
                             <option value="Salários">Salários</option>
                             <option value="Marketing">Marketing</option>
+                            <option value="Investimento">Investimento</option>
                             <option value="Outros">Outros</option>
                         </select>
                     </div>
                     <div>
-                        <label class="block text-xs text-neutral-400 mb-1">Situação de Pagamento</label>
+                        <label class="block text-xs text-neutral-400 mb-1">Pago</label>
                         <select id="d-pago" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full text-sm focus:outline-none focus:border-gold">
                             <option value="Sim">Já Pago</option>
                             <option value="Não">Pendente</option>
@@ -578,14 +603,14 @@
                         <input type="number" step="0.01" id="d-valor" required class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full text-sm focus:outline-none focus:border-gold">
                     </div>
                     <div>
-                        <label class="block text-xs text-neutral-400 mb-1">Data de Vencimento/Pago</label>
+                        <label class="block text-xs text-neutral-400 mb-1">Data</label>
                         <input type="date" id="d-data" required class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full text-sm focus:outline-none focus:border-gold">
                     </div>
                 </div>
                 <div id="d-finance-auto-box" class="hidden">
                     <label class="flex items-center gap-2 cursor-pointer">
                         <input type="checkbox" id="d-finance-auto" class="rounded bg-neutral-800 border-neutral-700 text-gold focus:ring-0">
-                        <span class="text-xs text-neutral-400">Lançar valor diretamente como saída no Financeiro</span>
+                        <span class="text-xs text-neutral-400 font-medium">Registrar saída automaticamente no fluxo Financeiro</span>
                     </label>
                 </div>
                 <div class="flex justify-end gap-2 pt-2">
@@ -596,10 +621,15 @@
         </div>
     </div>
 
-    <!-- ================================= LOGICA JAVASCRIPT ================================= -->
+    <!-- ================================= LOGICA SCRIPT JAVASCRIPT ================================= -->
     <script>
-        // Estrutura de dados inicial/padrão caso o LocalStorage esteja vazio
+        // Carrega dados iniciais com datas dinâmicas para coincidir com o dia atual nas métricas
         function getSampleData() {
+            const todayStr = new Date().toLocaleDateString('sv-SE');
+            const yesterday = new Date();
+            yesterday.setDate(yesterday.getDate() - 1);
+            const yesterdayStr = yesterday.toLocaleDateString('sv-SE');
+
             return {
                 clientes: [
                     { id: "c1", nome: "João Silva", telefone: "(11) 99999-9999", email: "joao@email.com", status: "Ativo" },
@@ -607,17 +637,20 @@
                     { id: "c3", nome: "Pedro Souza", telefone: "(31) 97777-7777", email: "pedro@email.com", status: "Inativo" }
                 ],
                 pedidos: [
-                    { id: "p1", clienteId: "c1", descricao: "Caneca Personalizada x2", valor: 80.00, data: "2026-07-15", pago: "Pago", entrega: "Entregue" },
-                    { id: "p2", clienteId: "c2", descricao: "Camiseta Sublimada", valor: 55.00, data: "2026-07-20", pago: "Pendente", entrega: "Em Produção" }
+                    { id: "p1", clienteId: "c1", descricao: "Caneca Resinada", valor: 80.00, data: todayStr, pago: "Pago", entrega: "Entregue" },
+                    { id: "p2", clienteId: "c2", descricao: "Camiseta Sublimada", valor: 55.00, data: todayStr, pago: "Pendente", entrega: "Em Produção" },
+                    { id: "p3", clienteId: "c3", descricao: "Almofada Estampada", valor: 45.00, data: yesterdayStr, pago: "Pago", entrega: "Pendente" },
+                    { id: "p4", clienteId: "c1", descricao: "Caneca Resinada", valor: 40.00, data: yesterdayStr, pago: "Pago", entrega: "Entregue" }
                 ],
                 financeiro: [
-                    { id: "f1", tipo: "Entrada", descricao: "Venda Canecas João", valor: 80.00, data: "2026-07-15", categoria: "Venda" },
-                    { id: "f2", tipo: "Entrada", descricao: "Sinal Camiseta Maria", valor: 27.50, data: "2026-07-20", categoria: "Venda" },
-                    { id: "f3", tipo: "Saída", descricao: "Compra de Tintas", valor: 120.00, data: "2026-07-12", categoria: "Insumos" }
+                    { id: "f1", tipo: "Entrada", descricao: "Venda Caneca João", valor: 80.00, data: todayStr, categoria: "Venda" },
+                    { id: "f2", tipo: "Entrada", descricao: "Venda Camiseta Maria", valor: 55.00, data: todayStr, categoria: "Venda" },
+                    { id: "f3", tipo: "Saída", descricao: "Compra de Tintas", valor: 120.00, data: yesterdayStr, categoria: "Insumos" },
+                    { id: "f4", tipo: "Saída", descricao: "Equipamento Prensa Plana", valor: 450.00, data: yesterdayStr, categoria: "Investimento" }
                 ],
                 despesas: [
-                    { id: "d1", descricao: "Compra de Tintas", valor: 120.00, data: "2026-07-12", categoria: "Insumos", pago: "Sim" },
-                    { id: "d2", descricao: "Conta de Energia", valor: 210.00, data: "2026-07-05", categoria: "Aluguel/Utilidades", pago: "Sim" }
+                    { id: "d1", descricao: "Compra de Tintas", valor: 120.00, data: yesterdayStr, categoria: "Insumos", pago: "Sim" },
+                    { id: "d2", descricao: "Equipamento Prensa Plana", valor: 450.00, data: yesterdayStr, categoria: "Investimento", pago: "Sim" }
                 ],
                 historico: [
                     { id: "h1", mesYear: "Junho/2026", receitas: 1250.00, despesas: 450.00, saldo: 800.00, totalPedidos: 15 }
@@ -626,11 +659,9 @@
         }
 
         let appState = {};
-        let cashFlowChartInstance = null;
-        let orderStatusChartInstance = null;
+        let vendasChartInstance = null;
         let selectedHistoryId = null;
 
-        // Persistência
         function loadState() {
             const saved = localStorage.getItem('phsublime_state');
             if (saved) {
@@ -649,12 +680,10 @@
             localStorage.setItem('phsublime_state', JSON.stringify(appState));
         }
 
-        // Toasts Personalizados
         function showToast(message, type = 'success') {
             const toast = document.getElementById('toast');
             const toastMsg = document.getElementById('toast-message');
             const toastIcon = document.getElementById('toast-icon');
-            
             toastMsg.textContent = message;
             
             if (type === 'success') {
@@ -664,17 +693,14 @@
                 toast.className = "fixed bottom-5 right-5 flex items-center bg-red-950 border border-red-500 text-red-300 px-4 py-3 rounded-xl shadow-lg z-50 transition-all duration-300";
                 toastIcon.className = "fa-solid fa-triangle-exclamation text-red-400 mr-2";
             }
-            
             toast.style.opacity = '1';
             toast.style.transform = 'translateY(0)';
-            
             setTimeout(() => {
                 toast.style.opacity = '0';
                 toast.style.transform = 'translateY(10px)';
             }, 3000);
         }
 
-        // Navegação de Abas
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
             document.getElementById(`tab-${tabId}`).classList.remove('hidden');
@@ -689,7 +715,6 @@
                 btn.classList.remove('text-neutral-400');
             });
             
-            // Lógicas adicionais de renderização
             if (tabId === 'dashboard') renderDashboard();
             if (tabId === 'pedidos') renderPedidos();
             if (tabId === 'financeiro') renderFinanceiro();
@@ -697,11 +722,9 @@
             if (tabId === 'clientes') renderClientes();
             if (tabId === 'historico') renderHistorico();
             
-            // Fecha menu mobile após clique
             document.getElementById('mobile-menu').classList.add('hidden');
         }
 
-        // Formatadores
         function formatCurrency(value) {
             return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
         }
@@ -712,7 +735,6 @@
             return parts.length === 3 ? `${parts[2]}/${parts[1]}/${parts[0]}` : dateStr;
         }
 
-        // Modais controle
         function openModal(id) {
             document.getElementById(id).classList.remove('hidden');
             if (id === 'modal-pedido') populateClientesDropdown();
@@ -730,7 +752,6 @@
             });
         }
 
-        // Controle para exibição dos inputs de autolançamentos
         document.getElementById('p-pagamento').addEventListener('change', (e) => {
             const box = document.getElementById('p-finance-auto-box');
             if (e.target.value === 'Pago') box.classList.remove('hidden');
@@ -743,7 +764,6 @@
             else box.classList.add('hidden');
         });
 
-        // Eventos Menu Mobile
         document.getElementById('mobile-menu-btn').addEventListener('click', () => {
             document.getElementById('mobile-menu').classList.remove('hidden');
         });
@@ -751,9 +771,8 @@
             document.getElementById('mobile-menu').classList.add('hidden');
         });
 
-        // ================================= SUBMISSÕES DE FORMULÁRIOS =================================
+        // ================================= SUBMISSÕES =================================
 
-        // Cliente
         document.getElementById('form-cliente').addEventListener('submit', (e) => {
             e.preventDefault();
             const nome = document.getElementById('c-nome').value;
@@ -769,7 +788,6 @@
             showToast("Cliente adicionado!");
         });
 
-        // Pedido
         document.getElementById('form-pedido').addEventListener('submit', (e) => {
             e.preventDefault();
             const clienteId = document.getElementById('p-cliente').value;
@@ -807,7 +825,6 @@
             showToast("Pedido salvo!");
         });
 
-        // Lançamento Financeiro
         document.getElementById('form-financeiro').addEventListener('submit', (e) => {
             e.preventDefault();
             const tipo = document.getElementById('f-tipo').value;
@@ -821,10 +838,9 @@
             renderFinanceiro();
             closeModal('modal-financeiro');
             document.getElementById('form-financeiro').reset();
-            showToast("Lançamento financeiro realizado!");
+            showToast("Lançamento registrado!");
         });
 
-        // Despesa
         document.getElementById('form-despesa').addEventListener('submit', (e) => {
             e.preventDefault();
             const descricao = document.getElementById('d-descricao').value;
@@ -852,45 +868,103 @@
             closeModal('modal-despesa');
             document.getElementById('form-despesa').reset();
             document.getElementById('d-finance-auto-box').classList.add('hidden');
-            showToast("Despesa cadastrada!");
+            showToast("Despesa salva!");
         });
 
+        // ================================= RENDEREZAÇÃO DASHBOARD E WIDGETS =================================
 
-        // ================================= ROTINAS DE RENDEREZAÇÃO (DADOS DINÂMICOS) =================================
-
-        // Dashboard
         function renderDashboard() {
-            // Calcular KPIs
-            const entradas = appState.financeiro.filter(f => f.tipo === 'Entrada').reduce((sum, item) => sum + item.valor, 0);
-            const saidas = appState.financeiro.filter(f => f.tipo === 'Saída').reduce((sum, item) => sum + item.valor, 0);
-            const saldo = entradas - saidas;
-            const ativos = appState.pedidos.filter(p => p.entrega !== 'Entregue').length;
+            // Obter data local em formato YYYY-MM-DD
+            const now = new Date();
+            const offset = now.getTimezoneOffset();
+            const todayStr = new Date(now.getTime() - (offset * 60 * 1000)).toISOString().split('T')[0];
 
-            document.getElementById('kpi-receitas').textContent = formatCurrency(entradas);
-            document.getElementById('kpi-despesas').textContent = formatCurrency(saidas);
-            document.getElementById('kpi-saldo').textContent = formatCurrency(saldo);
-            document.getElementById('kpi-pedidos').textContent = ativos;
+            // 1. Faturamento Dia
+            const faturamentoDia = appState.financeiro
+                .filter(f => f.tipo === 'Entrada' && f.data === todayStr)
+                .reduce((sum, item) => sum + item.valor, 0);
+            document.getElementById('kpi-faturamento-dia').textContent = formatCurrency(faturamentoDia);
 
-            // Gráfico 1: Caixa
-            const lastFlow = appState.financeiro.slice(-7);
-            const labelsFlow = lastFlow.map(f => formatDate(f.data).slice(0, 5));
-            const dataEntradas = lastFlow.map(f => f.tipo === 'Entrada' ? f.valor : 0);
-            const dataSaidas = lastFlow.map(f => f.tipo === 'Saída' ? f.valor : 0);
+            // 2. Em Produção
+            const emProducao = appState.pedidos.filter(p => p.entrega === 'Em Produção').length;
+            document.getElementById('kpi-em-producao').textContent = emProducao;
 
-            if (cashFlowChartInstance) cashFlowChartInstance.destroy();
-            cashFlowChartInstance = new Chart(document.getElementById('cashFlowChart'), {
-                type: 'bar',
+            // 3. Entregues
+            const entregues = appState.pedidos.filter(p => p.entrega === 'Entregue').length;
+            document.getElementById('kpi-entregues').textContent = entregues;
+
+            // 4. Clientes
+            const totalClientes = appState.clientes.length;
+            document.getElementById('kpi-clientes').textContent = totalClientes;
+
+            // 5. Investimento Total
+            const investimentoTotal = appState.financeiro
+                .filter(f => f.tipo === 'Saída' && f.categoria === 'Investimento')
+                .reduce((sum, item) => sum + item.valor, 0);
+            document.getElementById('kpi-investimento-total').textContent = formatCurrency(investimentoTotal);
+
+            // 6. Lucro
+            const totalEntradas = appState.financeiro.filter(f => f.tipo === 'Entrada').reduce((sum, item) => sum + item.valor, 0);
+            const totalSaidas = appState.financeiro.filter(f => f.tipo === 'Saída').reduce((sum, item) => sum + item.valor, 0);
+            const lucroTotal = totalEntradas - totalSaidas;
+            const lucroElement = document.getElementById('kpi-lucro');
+            lucroElement.textContent = formatCurrency(lucroTotal);
+            if (lucroTotal >= 0) {
+                lucroElement.className = "text-lg md:text-xl font-black text-emerald-400 mt-2";
+            } else {
+                lucroElement.className = "text-lg md:text-xl font-black text-red-500 mt-2";
+            }
+
+            // 7. Pedidos Pendentes
+            const pedidosPendentes = appState.pedidos.filter(p => p.entrega === 'Pendente').length;
+            document.getElementById('kpi-pedidos-pendentes').textContent = pedidosPendentes;
+
+            // 8. Pedidos Dia
+            const pedidosDia = appState.pedidos.filter(p => p.data === todayStr).length;
+            document.getElementById('kpi-pedidos-dia').textContent = pedidosDia;
+
+            // --- GRÁFICO: VENDAS ÚLTIMOS 7 DIAS ---
+            const last7DaysLabels = [];
+            const last7DaysData = [];
+            for (let i = 6; i >= 0; i--) {
+                const d = new Date();
+                d.setDate(d.getDate() - i);
+                const dateStr = d.toLocaleDateString('sv-SE');
+                const label = d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+                last7DaysLabels.push(label);
+                
+                const dailyTotal = appState.financeiro
+                    .filter(f => f.tipo === 'Entrada' && f.data === dateStr)
+                    .reduce((sum, item) => sum + item.valor, 0);
+                last7DaysData.push(dailyTotal);
+            }
+
+            if (vendasChartInstance) vendasChartInstance.destroy();
+            const ctxVendas = document.getElementById('vendasSeteDiasChart').getContext('2d');
+            const gradient = ctxVendas.createLinearGradient(0, 0, 0, 200);
+            gradient.addColorStop(0, 'rgba(255, 215, 0, 0.3)');
+            gradient.addColorStop(1, 'rgba(255, 215, 0, 0)');
+
+            vendasChartInstance = new Chart(ctxVendas, {
+                type: 'line',
                 data: {
-                    labels: labelsFlow.length > 0 ? labelsFlow : ["Sem dados"],
-                    datasets: [
-                        { label: 'Entradas', data: dataEntradas.length > 0 ? dataEntradas : [0], backgroundColor: '#10b981', borderRadius: 4 },
-                        { label: 'Saídas', data: dataSaidas.length > 0 ? dataSaidas : [0], backgroundColor: '#ef4444', borderRadius: 4 }
-                    ]
+                    labels: last7DaysLabels,
+                    datasets: [{
+                        label: 'Vendas (R$)',
+                        data: last7DaysData,
+                        borderColor: '#ffd700',
+                        borderWidth: 2,
+                        backgroundColor: gradient,
+                        fill: true,
+                        tension: 0.3,
+                        pointBackgroundColor: '#ffd700',
+                        pointRadius: 4
+                    }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: { legend: { labels: { color: '#a3a3a3' } } },
+                    plugins: { legend: { display: false } },
                     scales: {
                         x: { ticks: { color: '#a3a3a3' }, grid: { color: '#222' } },
                         y: { ticks: { color: '#a3a3a3' }, grid: { color: '#222' } }
@@ -898,35 +972,50 @@
                 }
             });
 
-            // Gráfico 2: Pedidos
-            const pStatus = { 'Pendente': 0, 'Em Produção': 0, 'Entregue': 0 };
-            appState.pedidos.forEach(p => { if (pStatus[p.entrega] !== undefined) pStatus[p.entrega]++; });
-
-            if (orderStatusChartInstance) orderStatusChartInstance.destroy();
-            orderStatusChartInstance = new Chart(document.getElementById('orderStatusChart'), {
-                type: 'doughnut',
-                data: {
-                    labels: ['Pendente', 'Em Produção', 'Entregue'],
-                    datasets: [{
-                        data: [pStatus['Pendente'], pStatus['Em Produção'], pStatus['Entregue']],
-                        backgroundColor: ['#f59e0b', '#3b82f6', '#10b981'],
-                        borderWidth: 0
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { position: 'bottom', labels: { color: '#a3a3a3' } } }
-                }
+            // --- WIDGET: SERVIÇOS MAIS VENDIDOS ---
+            const counts = {};
+            appState.pedidos.forEach(p => {
+                const desc = p.descricao || 'Serviço Indefinido';
+                counts[desc] = (counts[desc] || 0) + 1;
             });
+            const sortedServices = Object.keys(counts).map(key => ({
+                name: key,
+                count: counts[key]
+            })).sort((a, b) => b.count - a.count).slice(0, 5);
+
+            const servicesContainer = document.getElementById('servicos-mais-vendidos-list');
+            servicesContainer.innerHTML = '';
+            
+            if (sortedServices.length === 0) {
+                servicesContainer.innerHTML = `<p class="text-sm text-neutral-500 text-center py-8">Nenhum pedido registrado.</p>`;
+            } else {
+                const totalCount = sortedServices.reduce((sum, s) => sum + s.count, 0);
+                sortedServices.forEach((s, idx) => {
+                    const percentage = totalCount > 0 ? ((s.count / totalCount) * 100).toFixed(0) : 0;
+                    const medalColor = idx === 0 ? 'text-[#ffd700]' : idx === 1 ? 'text-gray-300' : idx === 2 ? 'text-amber-600' : 'text-neutral-500';
+                    servicesContainer.innerHTML += `
+                        <div class="space-y-1">
+                            <div class="flex justify-between items-center text-sm">
+                                <span class="flex items-center gap-2 font-semibold text-neutral-200 truncate max-w-[70%]">
+                                    <i class="fa-solid fa-medal ${medalColor}"></i> ${s.name}
+                                </span>
+                                <span class="text-xs text-neutral-400 font-bold whitespace-nowrap">${s.count} ${s.count === 1 ? 'venda' : 'vendas'} (${percentage}%)</span>
+                            </div>
+                            <div class="w-full bg-neutral-800 rounded-full h-2">
+                                <div class="bg-gold h-2 rounded-full" style="width: ${percentage}%"></div>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
         }
 
-        // Pedidos
+        // ================================= OUTRAS ABAS (PEDIDOS, CAIXA, DESPESAS, CLIENTES) =================================
+
         function renderPedidos() {
             const tbody = document.getElementById('pedidos-tbody');
             tbody.innerHTML = '';
             const search = document.getElementById('pedidos-search').value.toLowerCase();
-
             const filtered = appState.pedidos.filter(p => {
                 const cliente = appState.clientes.find(c => c.id === p.clienteId);
                 const cliNome = cliente ? cliente.nome.toLowerCase() : '';
@@ -941,7 +1030,6 @@
             filtered.forEach(p => {
                 const cliente = appState.clientes.find(c => c.id === p.clienteId);
                 const pagClass = p.pago === 'Pago' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-red-500/10 text-red-400 border border-red-500/20';
-                
                 let entClass = 'bg-neutral-800 text-neutral-400 border border-neutral-700';
                 if (p.entrega === 'Entregue') entClass = 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20';
                 else if (p.entrega === 'Em Produção') entClass = 'bg-blue-500/10 text-blue-400 border border-blue-500/20';
@@ -956,7 +1044,7 @@
                         <td class="p-4 text-sm"><span class="px-2.5 py-1 rounded-full text-xs font-semibold ${pagClass}">${p.pago}</span></td>
                         <td class="p-4 text-sm"><span class="px-2.5 py-1 rounded-full text-xs font-semibold ${entClass}">${p.entrega}</span></td>
                         <td class="p-4 text-sm text-right space-x-2">
-                            <button onclick="togglePedidoStatus('${p.id}')" class="text-neutral-400 hover:text-gold transition" title="Alternar Status"><i class="fa-solid fa-arrows-rotate"></i></button>
+                            <button onclick="togglePedidoStatus('${p.id}')" class="text-neutral-400 hover:text-gold transition" title="Mudar Status"><i class="fa-solid fa-arrows-rotate"></i></button>
                             <button onclick="deletePedido('${p.id}')" class="text-neutral-400 hover:text-red-500 transition" title="Excluir"><i class="fa-solid fa-trash-can"></i></button>
                         </td>
                     </tr>
@@ -968,11 +1056,10 @@
             const p = appState.pedidos.find(item => item.id === id);
             if (!p) return;
 
-            // Alterna pagamento
             const novoPg = p.pago === 'Pago' ? 'Pendente' : 'Pago';
-            if (confirm(`Deseja alterar o pagamento do pedido para: ${novoPg}?`)) {
+            if (confirm(`Alterar status de pagamento para: ${novoPg}?`)) {
                 p.pago = novoPg;
-                if (novoPg === 'Pago' && confirm("Deseja criar um lançamento financeiro de entrada correspondente a este pagamento?")) {
+                if (novoPg === 'Pago' && confirm("Registrar este pagamento como ENTRADA no caixa?")) {
                     const cli = appState.clientes.find(c => c.id === p.clienteId);
                     appState.financeiro.push({
                         id: 'f' + Date.now(),
@@ -985,33 +1072,30 @@
                 }
             }
 
-            // Alterna Produção
             const etapas = ['Pendente', 'Em Produção', 'Entregue'];
             const nextIdx = (etapas.indexOf(p.entrega) + 1) % etapas.length;
-            if (confirm(`Avançar status de entrega/produção para: ${etapas[nextIdx]}?`)) {
+            if (confirm(`Avançar etapa de produção do pedido para: ${etapas[nextIdx]}?`)) {
                 p.entrega = etapas[nextIdx];
             }
 
             saveState();
             renderPedidos();
-            showToast("Status atualizado!");
+            showToast("Status atualizados!");
         }
 
         function deletePedido(id) {
-            if (confirm("Tem certeza que deseja excluir este pedido?")) {
+            if (confirm("Confirmar exclusão deste pedido?")) {
                 appState.pedidos = appState.pedidos.filter(p => p.id !== id);
                 saveState();
                 renderPedidos();
-                showToast("Pedido excluído.");
+                showToast("Pedido removido.");
             }
         }
 
-        // Financeiro
         function renderFinanceiro() {
             const tbody = document.getElementById('financeiro-tbody');
             tbody.innerHTML = '';
             const search = document.getElementById('financeiro-search').value.toLowerCase();
-
             const filtered = appState.financeiro.filter(f => f.descricao.toLowerCase().includes(search) || f.categoria.toLowerCase().includes(search));
 
             if (filtered.length === 0) {
@@ -1037,37 +1121,34 @@
         }
 
         function deleteFinanceiro(id) {
-            if (confirm("Excluir este lançamento de caixa permanentemente?")) {
+            if (confirm("Remover este lançamento permanentemente?")) {
                 appState.financeiro = appState.financeiro.filter(f => f.id !== id);
                 saveState();
                 renderFinanceiro();
-                showToast("Lançamento removido.");
+                showToast("Lançamento apagado.");
             }
         }
 
-        // Copiar CSV (export-data-btn)
         function exportDataCSV() {
             let csv = "Tipo,Descricao,Valor,Data,Categoria\n";
             appState.financeiro.forEach(f => {
                 csv += `"${f.tipo}","${f.descricao}",${f.valor},"${f.data}","${f.categoria}"\n`;
             });
             navigator.clipboard.writeText(csv).then(() => {
-                showToast("Dados de caixa copiados como CSV!");
+                showToast("Copiado com sucesso!");
             }).catch(() => {
-                showToast("Falha ao copiar dados.", "error");
+                showToast("Erro ao copiar.", "error");
             });
         }
 
-        // Despesas
         function renderDespesas() {
             const tbody = document.getElementById('despesas-tbody');
             tbody.innerHTML = '';
             const search = document.getElementById('despesas-search').value.toLowerCase();
-
             const filtered = appState.despesas.filter(d => d.descricao.toLowerCase().includes(search) || d.categoria.toLowerCase().includes(search));
 
             if (filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-neutral-500 text-sm">Nenhuma despesa localizada.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-neutral-500 text-sm">Nenhuma despesa encontrada.</td></tr>`;
                 return;
             }
 
@@ -1081,7 +1162,7 @@
                         <td class="p-4 text-sm text-neutral-300">${d.categoria}</td>
                         <td class="p-4 text-sm"><span class="px-2.5 py-1 rounded-full text-xs font-semibold ${pagoClass}">${d.pago === 'Sim' ? 'Pago' : 'Pendente'}</span></td>
                         <td class="p-4 text-sm text-right space-x-2">
-                            <button onclick="toggleDespesaPago('${d.id}')" class="text-neutral-400 hover:text-gold transition" title="Alternar Pagamento"><i class="fa-solid fa-hand-holding-dollar"></i></button>
+                            <button onclick="toggleDespesaPago('${d.id}')" class="text-neutral-400 hover:text-gold transition" title="Marcar Pago"><i class="fa-solid fa-hand-holding-dollar"></i></button>
                             <button onclick="deleteDespesa('${d.id}')" class="text-neutral-400 hover:text-red-500 transition" title="Excluir"><i class="fa-solid fa-trash-can"></i></button>
                         </td>
                     </tr>
@@ -1091,28 +1172,26 @@
 
         function toggleDespesaPago(id) {
             const d = appState.despesas.find(item => item.id === id);
-            if (!p) return;
+            if (!d) return;
             d.pago = d.pago === 'Sim' ? 'Não' : 'Sim';
             saveState();
             renderDespesas();
-            showToast("Situação da despesa alterada!");
+            showToast("Alterado!");
         }
 
         function deleteDespesa(id) {
-            if (confirm("Remover esta despesa?")) {
+            if (confirm("Remover despesa?")) {
                 appState.despesas = appState.despesas.filter(d => d.id !== id);
                 saveState();
                 renderDespesas();
-                showToast("Despesa removida.");
+                showToast("Removido.");
             }
         }
 
-        // Clientes
         function renderClientes() {
             const tbody = document.getElementById('clientes-tbody');
             tbody.innerHTML = '';
             const search = document.getElementById('clientes-search').value.toLowerCase();
-
             const filtered = appState.clientes.filter(c => c.nome.toLowerCase().includes(search) || c.email.toLowerCase().includes(search));
 
             if (filtered.length === 0) {
@@ -1137,7 +1216,7 @@
         }
 
         function deleteCliente(id) {
-            if (confirm("Atenção: Excluir este cliente não apagará os pedidos existentes ligados a ele, mas eles ficarão sem o nome associado. Confirmar exclusão?")) {
+            if (confirm("Remover cliente? Pedidos relacionados podem ficar orfãos de nome.")) {
                 appState.clientes = appState.clientes.filter(c => c.id !== id);
                 saveState();
                 renderClientes();
@@ -1145,25 +1224,24 @@
             }
         }
 
-        // Histórico Mensal
         function renderHistorico() {
             const tbody = document.getElementById('historico-tbody');
             tbody.innerHTML = '';
             disableHistoryButtons();
 
             if (appState.historico.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-neutral-500 text-sm">Sem fechamentos registrados.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-neutral-500 text-sm">Sem fechamentos no histórico.</td></tr>`;
                 return;
             }
 
             appState.historico.forEach(h => {
-                const saldoColor = h.saldo >= 0 ? 'text-emerald-400' : 'text-red-400';
+                const colors = h.saldo >= 0 ? 'text-emerald-400' : 'text-red-400';
                 tbody.innerHTML += `
                     <tr onclick="selectHistoryRow('${h.id}', this)" class="history-row cursor-pointer hover:bg-neutral-800 border-b border-darkBorder transition">
                         <td class="p-4 text-sm font-bold text-neutral-200">${h.mesYear}</td>
                         <td class="p-4 text-sm text-emerald-400">${formatCurrency(h.receitas)}</td>
                         <td class="p-4 text-sm text-red-400">${formatCurrency(h.despesas)}</td>
-                        <td class="p-4 text-sm font-black ${saldoColor}">${formatCurrency(h.saldo)}</td>
+                        <td class="p-4 text-sm font-black ${colors}">${formatCurrency(h.saldo)}</td>
                         <td class="p-4 text-sm text-neutral-400">${h.totalPedidos}</td>
                     </tr>
                 `;
@@ -1177,7 +1255,6 @@
             });
             element.classList.add('bg-neutral-800', 'border-l-4', 'border-gold');
 
-            // Habilita botões
             document.getElementById('history-copy-btn').classList.remove('opacity-50', 'cursor-not-allowed');
             document.getElementById('history-whatsapp-btn').classList.remove('opacity-50', 'cursor-not-allowed');
             document.getElementById('history-delete-btn').classList.remove('opacity-50', 'cursor-not-allowed');
@@ -1190,11 +1267,10 @@
             document.getElementById('history-delete-btn').classList.add('opacity-50', 'cursor-not-allowed');
         }
 
-        // Ações de fechamento mensal
         function triggerCloseMonth() {
             const d = new Date();
             const defaultName = d.toLocaleString('pt-BR', { month: 'long', year: 'numeric' });
-            const mesYear = prompt("Informe o Mês/Ano para o Fechamento de Caixa:", defaultName);
+            const mesYear = prompt("Informe o período de Fechamento (ex: Julho/2026):", defaultName);
             if (!mesYear) return;
 
             const entradas = appState.financeiro.filter(f => f.tipo === 'Entrada').reduce((sum, item) => sum + item.valor, 0);
@@ -1204,7 +1280,7 @@
 
             appState.historico.push({ id: 'h' + Date.now(), mesYear, receitas: entradas, despesas: saidas, saldo, totalPedidos });
 
-            if (confirm(`Fechamento de ${mesYear} Concluído!\n\nReceitas: ${formatCurrency(entradas)}\nDespesas: ${formatCurrency(saidas)}\nSaldo de Caixa: ${formatCurrency(saldo)}\n\nDeseja limpar os lançamentos e pedidos atuais do banco ativo para iniciar o próximo período zerado? (O histórico mensal consolidado continuará salvo)`)) {
+            if (confirm(`Fechamento gravado!\n\nReceitas: ${formatCurrency(entradas)}\nDespesas: ${formatCurrency(saidas)}\nSaldo: ${formatCurrency(saldo)}\n\nDeseja limpar os lançamentos de caixa, despesas e pedidos ativos para iniciar o novo período de caixa?`)) {
                 appState.financeiro = [];
                 appState.pedidos = [];
                 appState.despesas = [];
@@ -1212,46 +1288,42 @@
 
             saveState();
             renderDashboard();
-            showToast("Fechamento do mês gravado com sucesso!");
+            showToast("Período arquivado no histórico!");
         }
 
         function copyHistoryData() {
             if (!selectedHistoryId) return;
             const h = appState.historico.find(item => item.id === selectedHistoryId);
-            const text = `FECHAMENTO CONSOLIDADO - PHSUBLIME\n\nPeríodo: ${h.mesYear}\nReceitas: ${formatCurrency(h.receitas)}\nDespesas: ${formatCurrency(h.despesas)}\nSaldo Líquido: ${formatCurrency(h.saldo)}\nTotal de Pedidos Processados: ${h.totalPedidos}`;
-            
+            const text = `FECHAMENTO - PHSUBLIME\n\nPeríodo: ${h.mesYear}\nReceitas: ${formatCurrency(h.receitas)}\nDespesas: ${formatCurrency(h.despesas)}\nSaldo Líquido: ${formatCurrency(h.saldo)}\nPedidos Feitos: ${h.totalPedidos}`;
             navigator.clipboard.writeText(text).then(() => {
-                showToast("Dados copiados para a área de transferência!");
+                showToast("Dados copiados!");
             });
         }
 
         function shareWhatsapp() {
             if (!selectedHistoryId) return;
             const h = appState.historico.find(item => item.id === selectedHistoryId);
-            const text = `*FECHAMENTO CONSOLIDADO - PHSUBLIME*\n\n*Período:* ${h.mesYear}\n*Receitas:* ${formatCurrency(h.receitas)}\n*Despesas:* ${formatCurrency(h.despesas)}\n*Saldo Líquido:* ${formatCurrency(h.saldo)}\n*Total de Pedidos:* ${h.totalPedidos}`;
-            
+            const text = `*FECHAMENTO - PHSUBLIME*\n\n*Período:* ${h.mesYear}\n*Receitas:* ${formatCurrency(h.receitas)}\n*Despesas:* ${formatCurrency(h.despesas)}\n*Saldo Líquido:* ${formatCurrency(h.saldo)}\n*Total de Pedidos:* ${h.totalPedidos}`;
             window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
         }
 
         function deleteHistoryItem() {
             if (!selectedHistoryId) return;
-            if (confirm("Deseja mesmo apagar este período consolidado do histórico?")) {
+            if (confirm("Remover registro histórico do banco?")) {
                 appState.historico = appState.historico.filter(item => item.id !== selectedHistoryId);
                 saveState();
                 renderHistorico();
-                showToast("Fechamento histórico removido.");
+                showToast("Fechamento deletado.");
             }
         }
 
-
-        // ================================= ESCUTAS EM TEMPO REAL (PESQUISA INSTANTÂNEA) =================================
+        // Eventos de escuta dinâmica para buscas
         document.getElementById('pedidos-search').addEventListener('input', renderPedidos);
         document.getElementById('clientes-search').addEventListener('input', renderClientes);
         document.getElementById('financeiro-search').addEventListener('input', renderFinanceiro);
         document.getElementById('despesas-search').addEventListener('input', renderDespesas);
 
-
-        // Inicialização Inicial
+        // Inicialização
         window.addEventListener('DOMContentLoaded', () => {
             loadState();
             switchTab('dashboard');
