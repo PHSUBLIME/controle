@@ -109,7 +109,15 @@
     </section><!-- CLIENTS -->
     <section id="page-clients" class="hidden">
      <div class="flex items-center justify-between mb-6">
-      <h2 data-template-id="clients-title" class="canva-text text-2xl font-black"></h2><button data-template-id="clients-add-btn" class="canva-button px-4 py-2 rounded-lg font-bold text-sm" onclick="openClientModal()"></button>
+     <h2 class="text-2xl font-black">Clientes</h2>
+
+<button
+  data-template-id="clients-add-btn"
+  class="canva-button px-4 py-2 rounded-lg font-bold text-sm"
+  style="background-color: #FFD700 !important; color: #000000 !important; border: none; cursor: pointer;"
+  onclick="openClientModal()">
+  + Adicionar Cliente
+</button>
      </div>
      <div class="mb-6">
       <input type="text" id="clients-search" class="input-erp max-w-xs" placeholder="Pesquisar nome, CPF, telefone..." onkeyup="filterTable('clients')">
