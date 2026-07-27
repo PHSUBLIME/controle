@@ -153,7 +153,7 @@
         <div class="bg-neutral-900 border border-darkBorder rounded-xl max-w-lg w-full p-6 space-y-4 max-h-[90vh] overflow-y-auto">
             <h3 class="text-lg font-bold text-gold border-b border-darkBorder pb-2">Novo Cliente</h3>
             <form id="form-cliente" class="grid grid-cols-2 gap-3 text-sm">
-                <div class="col-span-2"><label class="block text-xs text-neutral-400">Nome</label><input type="text" id="c-nome" required class="bg-neutral-800 border border-neutral-700 text-white rounded p-2 w-full"></div>
+                <div class="col-span-2"><label class="block text-xs text-neutral-400">Nome</label><input type="text" id="c-nome" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2 w-full"></div>
                 <div><label class="block text-xs text-neutral-400">CPF/CNPJ</label><input type="text" id="c-cpf-cnpj" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2 w-full"></div>
                 <div><label class="block text-xs text-neutral-400">Telefone</label><input type="text" id="c-telefone" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2 w-full"></div>
                 <div><label class="block text-xs text-neutral-400">WhatsApp</label><input type="text" id="c-whatsapp" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2 w-full"></div>
@@ -187,25 +187,25 @@
         <div class="bg-neutral-900 border border-darkBorder rounded-xl max-w-lg w-full p-6 space-y-4 max-h-[90vh] overflow-y-auto">
             <h3 class="text-lg font-bold text-gold border-b border-darkBorder pb-2">Novo Pedido</h3>
             <form id="form-pedido" class="space-y-3 text-sm">
-                <div><label class="block text-xs text-neutral-400 mb-1">Cliente</label><select id="p-cliente" required class="bg-neutral-800 border border-neutral-700 text-white rounded p-2 w-full"></select></div>
+                <div><label class="block text-xs text-neutral-400 mb-1">Cliente</label><select id="p-cliente" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2 w-full"></select></div>
                 <div class="border border-darkBorder p-3 rounded-xl space-y-2 bg-neutral-950">
                     <span class="text-xs text-neutral-400 font-bold block uppercase"><i class="fa-solid fa-cart-plus text-gold mr-1"></i> Incluir Produtos</span>
-                    <div class="flex gap-2">
+                    <div class="flex flex-col sm:flex-row gap-2">
                         <input type="text" id="p-item-nome" placeholder="Produto" class="flex-1 bg-neutral-800 border border-neutral-700 text-white rounded p-2 text-xs focus:outline-none">
-                        <input type="number" step="0.01" id="p-item-valor" placeholder="Valor (R$)" class="w-24 bg-neutral-800 border border-neutral-700 text-white rounded p-2 text-xs focus:outline-none">
-                        <button type="button" onclick="addItemToCurrentOrder()" class="bg-[#ffd700] text-black font-bold text-xs px-3 rounded">+</button>
+                        <input type="number" step="0.01" id="p-item-valor" placeholder="Valor (R$)" class="sm:w-24 bg-neutral-800 border border-neutral-700 text-white rounded p-2 text-xs focus:outline-none">
+                        <button type="button" onclick="addItemToCurrentOrder()" class="bg-[#ffd700] text-black font-bold text-xs px-3 py-2 rounded">+</button>
                     </div>
                     <div id="p-current-items-list" class="space-y-1 max-h-24 overflow-y-auto pt-1"></div>
                 </div>
                 <div class="grid grid-cols-2 gap-3">
-                    <div><label class="block text-xs text-neutral-400">Largura (m)</label><input type="number" step="0.01" id="p-largura" required value="1.00" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2 w-full"></div>
-                    <div><label class="block text-xs text-neutral-400">Altura (m)</label><input type="number" step="0.01" id="p-altura" required value="1.00" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2 w-full"></div>
-                    <div><label class="block text-xs text-neutral-400">Quantidade</label><input type="number" id="p-quantidade" required value="1" min="1" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2 w-full"></div>
+                    <div><label class="block text-xs text-neutral-400">Largura (m)</label><input type="number" step="0.01" id="p-largura" value="1.00" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2 w-full"></div>
+                    <div><label class="block text-xs text-neutral-400">Altura (m)</label><input type="number" step="0.01" id="p-altura" value="1.00" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2 w-full"></div>
+                    <div><label class="block text-xs text-neutral-400">Quantidade</label><input type="number" id="p-quantidade" value="1" min="1" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2 w-full"></div>
                     <div><label class="block text-xs text-neutral-400">Acabamento</label><input type="text" id="p-acabamento" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2 w-full"></div>
-                    <div><label class="block text-xs text-neutral-400">Total Geral (R$)</label><input type="number" step="0.01" id="p-total" readonly required class="bg-neutral-800/50 border border-neutral-700 text-neutral-300 rounded p-2 w-full cursor-not-allowed"></div>
-                    <div><label class="block text-xs text-neutral-400">Despesa (R$)</label><input type="number" step="0.01" id="p-despesa" required class="bg-neutral-800 border border-neutral-700 text-white rounded p-2 w-full"></div>
-                    <div><label class="block text-xs text-neutral-400">Data Entrega</label><input type="date" id="p-data-entrega" required class="bg-neutral-800 border border-neutral-700 text-white rounded p-2 w-full"></div>
-                    <div><label class="block text-xs text-neutral-400">Responsável</label><input type="text" id="p-responsavel" required class="bg-neutral-800 border border-neutral-700 text-white rounded p-2 w-full"></div>
+                    <div><label class="block text-xs text-neutral-400">Total Geral (R$)</label><input type="number" step="0.01" id="p-total" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2 w-full"></div>
+                    <div><label class="block text-xs text-neutral-400">Despesa (R$)</label><input type="number" step="0.01" id="p-despesa" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2 w-full"></div>
+                    <div><label class="block text-xs text-neutral-400">Data Entrega</label><input type="date" id="p-data-entrega" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2 w-full"></div>
+                    <div><label class="block text-xs text-neutral-400">Responsável</label><input type="text" id="p-responsavel" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2 w-full"></div>
                     <div><label class="block text-xs text-neutral-400">Forma Pagamento</label><select id="p-forma-pagamento" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2 w-full"><option value="Dinheiro">Dinheiro</option><option value="Pix">Pix</option><option value="Crédito">Crédito</option><option value="Débito">Débito</option></select></div>
                     <div><label class="block text-xs text-neutral-400">Status</label><select id="p-status" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2 w-full"><option value="AGUARDANDO">AGUARDANDO</option><option value="Em Produção">Em Produção</option><option value="Finalizado">Finalizado</option></select></div>
                     <div class="col-span-2"><label class="block text-xs text-neutral-400">Observações</label><textarea id="p-observacoes" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2 w-full h-12"></textarea></div>
@@ -224,15 +224,15 @@
         <div class="bg-neutral-900 border border-darkBorder rounded-xl max-w-md w-full p-6 space-y-4">
             <h3 class="text-lg font-bold text-gold border-b border-darkBorder pb-2">Nova Despesa</h3>
             <form id="form-despesa" class="space-y-3 text-sm">
-                <div><label class="block text-xs text-neutral-400">Nome do Produto</label><input type="text" id="d-nome-produto" required class="bg-neutral-800 border border-neutral-700 text-white rounded p-2 w-full"></div>
+                <div><label class="block text-xs text-neutral-400">Nome do Produto</label><input type="text" id="d-nome-produto" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2 w-full"></div>
                 <div class="grid grid-cols-2 gap-3">
-                    <div><label class="block text-xs text-neutral-400">Valor Unitário</label><input type="number" step="0.01" id="d-valor-unitario" required class="bg-neutral-800 border border-neutral-700 text-white rounded p-2 w-full" oninput="calcTotalGasto()"></div>
-                    <div><label class="block text-xs text-neutral-400">Quantidade</label><input type="number" id="d-quantidade" required value="1" min="1" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2 w-full" oninput="calcTotalGasto()"></div>
-                    <div><label class="block text-xs text-neutral-400">Data Compra</label><input type="date" id="d-data-compra" required class="bg-neutral-800 border border-neutral-700 text-white rounded p-2 w-full"></div>
+                    <div><label class="block text-xs text-neutral-400">Valor Unitário</label><input type="number" step="0.01" id="d-valor-unitario" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2 w-full" oninput="calcTotalGasto()"></div>
+                    <div><label class="block text-xs text-neutral-400">Quantidade</label><input type="number" id="d-quantidade" value="1" min="1" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2 w-full" oninput="calcTotalGasto()"></div>
+                    <div><label class="block text-xs text-neutral-400">Data Compra</label><input type="date" id="d-data-compra" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2 w-full"></div>
                     <div><label class="block text-xs text-neutral-400">Tipo Pagamento</label><select id="d-tipo-pagamento" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2 w-full"><option value="Débito">Débito</option><option value="Crédito">Crédito</option><option value="Dinheiro">Dinheiro</option><option value="Pix">Pix</option></select></div>
                 </div>
-                <div><label class="block text-xs text-neutral-400">Onde Comprou</label><input type="text" id="d-onde-comprou" required class="bg-neutral-800 border border-neutral-700 text-white rounded p-2 w-full"></div>
-                <div><label class="block text-xs text-neutral-400">Total Gasto (R$)</label><input type="number" step="0.01" id="d-total-gasto" required class="bg-neutral-800 border border-neutral-700 text-white rounded p-2 w-full"></div>
+                <div><label class="block text-xs text-neutral-400">Onde Comprou</label><input type="text" id="d-onde-comprou" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2 w-full"></div>
+                <div><label class="block text-xs text-neutral-400">Total Gasto (R$)</label><input type="number" step="0.01" id="d-total-gasto" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2 w-full"></div>
                 <div id="d-finance-auto-box" class="hidden"><label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" id="d-finance-auto" class="rounded text-gold focus:ring-0"><span class="text-xs text-neutral-400">Lançar saída automaticamente no Financeiro</span></label></div>
                 <div class="flex justify-end gap-2 pt-2 border-t border-darkBorder">
                     <button type="button" onclick="closeModal('modal-despesa')" class="px-3 py-1.5 bg-neutral-800 rounded">Cancelar</button>
@@ -251,10 +251,10 @@
                     <div><label class="block text-xs text-neutral-400">Tipo</label><select id="f-tipo" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2 w-full"><option value="Entrada">Entrada (Receita)</option><option value="Saída">Saída (Despesa)</option></select></div>
                     <div><label class="block text-xs text-neutral-400">Categoria</label><select id="f-categoria" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2 w-full"><option value="Venda">Venda</option><option value="Insumos">Insumos</option><option value="Aluguel/Utilidades">Aluguel/Utilidades</option><option value="Salários">Salários</option><option value="Marketing">Marketing</option><option value="Investimento">Investimento</option><option value="Outros">Outros</option></select></div>
                 </div>
-                <div><label class="block text-xs text-neutral-400">Descrição</label><input type="text" id="f-descricao" required class="bg-neutral-800 border border-neutral-700 text-white rounded p-2 w-full"></div>
+                <div><label class="block text-xs text-neutral-400">Descrição</label><input type="text" id="f-descricao" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2 w-full"></div>
                 <div class="grid grid-cols-2 gap-3">
-                    <div><label class="block text-xs text-neutral-400">Valor (R$)</label><input type="number" step="0.01" id="f-valor" required class="bg-neutral-800 border border-neutral-700 text-white rounded p-2 w-full"></div>
-                    <div><label class="block text-xs text-neutral-400">Data</label><input type="date" id="f-data" required class="bg-neutral-800 border border-neutral-700 text-white rounded p-2 w-full"></div>
+                    <div><label class="block text-xs text-neutral-400">Valor (R$)</label><input type="number" step="0.01" id="f-valor" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2 w-full"></div>
+                    <div><label class="block text-xs text-neutral-400">Data</label><input type="date" id="f-data" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2 w-full"></div>
                 </div>
                 <div class="flex justify-end gap-2 pt-2 border-t border-darkBorder">
                     <button type="button" onclick="closeModal('modal-financeiro')" class="px-3 py-1.5 bg-neutral-800 rounded">Cancelar</button>
@@ -417,7 +417,7 @@
             const search = document.getElementById('pedidos-search').value.toLowerCase();
             const filtered = appState.pedidos.filter(p => {
                 const c = appState.clientes.find(cli => cli.id === p.clienteId);
-                return (c ? c.nome.toLowerCase() : '').includes(search) || p.servico.toLowerCase().includes(search);
+                return (c ? c.nome.toLowerCase() : 'sem cliente').includes(search) || p.servico.toLowerCase().includes(search);
             });
 
             if (filtered.length === 0) { tbody.innerHTML = `<tr><td colspan="7" class="p-4 text-center text-neutral-500 text-xs">Sem pedidos.</td></tr>`; return; }
@@ -432,7 +432,7 @@
 
                 tbody.innerHTML += `
                     <tr class="hover:bg-neutral-800/20 border-b border-darkBorder transition text-xs">
-                        <td class="p-4 text-neutral-200 font-semibold">${c ? c.nome : 'N/D'}</td>
+                        <td class="p-4 text-neutral-200 font-semibold">${c ? c.nome : '<span class="text-neutral-500">Sem Cliente</span>'}</td>
                         <td class="p-4">${pList}</td>
                         <td class="p-4 text-neutral-400">${p.largura}x${p.altura}m (Qtd: ${p.quantidade})</td>
                         <td class="p-4"><span class="text-emerald-400 font-bold">${formatCurrency(p.valor)}</span><br><span class="text-[10px] text-red-400">Desp: ${formatCurrency(p.despesa || 0)}</span></td>
@@ -537,7 +537,6 @@
 
         // ================================= LÓGICAS DOS MODAIS E BOTÕES =================================
 
-        // Preenchimento de Dropdown de Clientes 100% livre de erros de aspas/crases
         function populateClientesDropdown() {
             const select = document.getElementById('p-cliente');
             select.innerHTML = '<option value="">Selecione...</option>';
@@ -579,14 +578,14 @@
             editPedidoId = id;
             document.querySelector('#modal-pedido h3').textContent = 'Editar Pedido';
             populateClientesDropdown();
-            document.getElementById('p-cliente').value = p.clienteId;
+            document.getElementById('p-cliente').value = p.clienteId || '';
             document.getElementById('p-largura').value = p.largura || 1.0;
             document.getElementById('p-altura').value = p.altura || 1.0;
             document.getElementById('p-quantidade').value = p.quantidade || 1;
             document.getElementById('p-acabamento').value = p.acabamento || '';
             document.getElementById('p-total').value = p.valor || 0.0;
             document.getElementById('p-despesa').value = p.despesa || 0.0;
-            document.getElementById('p-data-entrega').value = p.data_entrega || '';
+            document.getElementById('p-data-entrega').value = p.data_entrega || todayStr;
             document.getElementById('p-responsavel').value = p.responsavel || '';
             document.getElementById('p-forma-pagamento').value = p.forma_pagamento || 'Dinheiro';
             document.getElementById('p-status').value = p.entrega || 'AGUARDANDO';
@@ -601,10 +600,14 @@
         document.getElementById('form-cliente').addEventListener('submit', (e) => {
             e.preventDefault();
             const d = {
-                nome: document.getElementById('c-nome').value, cpf_cnpj: document.getElementById('c-cpf-cnpj').value,
-                telefone: document.getElementById('c-telefone').value, whatsapp: document.getElementById('c-whatsapp').value,
-                email: document.getElementById('c-email').value, cidade: document.getElementById('c-cidade').value,
-                estado: document.getElementById('c-estado').value, endereco: document.getElementById('c-endereco').value,
+                nome: document.getElementById('c-nome').value.trim() || "Cliente Sem Nome",
+                cpf_cnpj: document.getElementById('c-cpf-cnpj').value,
+                telefone: document.getElementById('c-telefone').value,
+                whatsapp: document.getElementById('c-whatsapp').value,
+                email: document.getElementById('c-email').value,
+                cidade: document.getElementById('c-cidade').value,
+                estado: document.getElementById('c-estado').value,
+                endereco: document.getElementById('c-endereco').value,
                 observacoes: document.getElementById('c-observacoes').value
             };
             if (editClienteId) {
@@ -620,22 +623,25 @@
 
         document.getElementById('form-pedido').addEventListener('submit', (e) => {
             e.preventDefault();
-            const clienteId = document.getElementById('p-cliente').value;
-            const qty = parseInt(document.getElementById('p-quantidade').value);
-            const totalVal = parseFloat(document.getElementById('p-total').value);
-            const disp = parseFloat(document.getElementById('p-despesa').value);
-            const dt = document.getElementById('p-data-entrega').value;
-            const resp = document.getElementById('p-responsavel').value;
+            const clienteId = document.getElementById('p-cliente').value || '';
+            const qty = parseInt(document.getElementById('p-quantidade').value) || 1;
+            const totalVal = parseFloat(document.getElementById('p-total').value) || 0;
+            const disp = parseFloat(document.getElementById('p-despesa').value) || 0;
+            const dt = document.getElementById('p-data-entrega').value || todayStr;
+            const resp = document.getElementById('p-responsavel').value || 'N/A';
             const formPg = document.getElementById('p-forma-pagamento').value;
             const status = document.getElementById('p-status').value;
             const obs = document.getElementById('p-observacoes').value;
             const autoFin = document.getElementById('p-finance-auto').checked;
 
-            if (!clienteId || currentOrderItems.length === 0) { showToast("Preencha o cliente e inclua produtos!", "error"); return; }
             const items = [...currentOrderItems];
+            // Se nenhum item foi adicionado, define uma descrição padrão
+            const servicoPrincipal = items.length > 0 ? items[0].nome : (document.getElementById('p-acabamento').value || 'Serviço Sublimado');
+            const materialPrincipal = document.getElementById('p-acabamento').value || 'Geral';
+
             const pData = {
-                clienteId, servico: items[0].nome, material: document.getElementById('p-acabamento').value || 'Geral',
-                quantidade: qty, largura: parseFloat(document.getElementById('p-largura').value), altura: parseFloat(document.getElementById('p-altura').value),
+                clienteId, servico: servicoPrincipal, material: materialPrincipal,
+                quantidade: qty, largura: parseFloat(document.getElementById('p-largura').value) || 1.0, altura: parseFloat(document.getElementById('p-altura').value) || 1.0,
                 acabamento: document.getElementById('p-acabamento').value, valor: totalVal, despesa: disp, data_entrega: dt,
                 responsavel: resp, forma_pagamento: formPg, entrega: status, observacoes: obs, items
             };
@@ -658,10 +664,14 @@
         document.getElementById('form-despesa').addEventListener('submit', (e) => {
             e.preventDefault();
             const dData = {
-                nome_produto: document.getElementById('d-nome-produto').value, valor_unitario: parseFloat(document.getElementById('d-valor-unitario').value),
-                quantidade: parseInt(document.getElementById('d-quantidade').value), data_compra: document.getElementById('d-data-compra').value,
-                tipo_pagamento: document.getElementById('d-tipo-pagamento').value, onde_comprou: document.getElementById('d-onde-comprou').value,
-                total_gasto: parseFloat(document.getElementById('d-total-gasto').value), pago: 'Sim'
+                nome_produto: document.getElementById('d-nome-produto').value.trim() || "Produto Sem Nome",
+                valor_unitario: parseFloat(document.getElementById('d-valor-unitario').value) || 0,
+                quantidade: parseInt(document.getElementById('d-quantidade').value) || 1,
+                data_compra: document.getElementById('d-data-compra').value || todayStr,
+                tipo_pagamento: document.getElementById('d-tipo-pagamento').value,
+                onde_comprou: document.getElementById('d-onde-comprou').value || 'N/A',
+                total_gasto: parseFloat(document.getElementById('d-total-gasto').value) || 0,
+                pago: 'Sim'
             };
             appState.despesas.push({ id: 'd' + Date.now(), ...dData });
             if (document.getElementById('d-finance-auto').checked) {
@@ -674,8 +684,9 @@
             e.preventDefault();
             const fData = {
                 tipo: document.getElementById('f-tipo').value, categoria: document.getElementById('f-categoria').value,
-                descricao: document.getElementById('f-descricao').value, valor: parseFloat(document.getElementById('f-valor').value),
-                data: document.getElementById('f-data').value
+                descricao: document.getElementById('f-descricao').value.trim() || "Lançamento Sem Nome",
+                valor: parseFloat(document.getElementById('f-valor').value) || 0,
+                data: document.getElementById('f-data').value || todayStr
             };
             appState.financeiro.push({ id: 'f' + Date.now(), ...fData });
             saveState(); renderFinanceiro(); renderDashboard(); closeModal('modal-financeiro'); document.getElementById('form-financeiro').reset(); showToast("Lançamento registrado!");
@@ -715,7 +726,6 @@
             w.document.close();
         }
 
-        // Envio direto para o WhatsApp cadastrado
         function sendReportWhatsApp() {
             const receitas = appState.financeiro.filter(f => f.tipo === 'Entrada').reduce((sum, item) => sum + item.valor, 0);
             const investimentos = appState.financeiro.filter(f => f.tipo === 'Saída' && f.categoria === 'Investimento').reduce((sum, item) => sum + item.valor, 0);
@@ -727,7 +737,7 @@
             const text = `*PHSUBLIME - RELATÓRIO FINANCEIRO CONSOLIDADO*\n\n` +
                          `📊 *Receitas:* ${formatCurrency(receitas)}\n` +
                          `💼 *Investimentos:* ${formatCurrency(investimentos)}\n` +
-                         `% *Despesas:* ${formatCurrency(despesas)}\n\n` +
+                         `📉 *Despesas:* ${formatCurrency(despesas)}\n\n` +
                          `📈 *Lucro Bruto:* ${formatCurrency(lucro)}\n` +
                          `💰 *10% Lucro (Reserva):* ${formatCurrency(reserva)}\n` +
                          `🏆 *Lucro Líquido:* ${formatCurrency(liq)}\n\n` +
@@ -782,7 +792,6 @@
             window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
         }
 
-        // Inicializadores de Eventos Auxiliares
         window.addEventListener('DOMContentLoaded', () => {
             buildMenus(); loadState(); switchTab('dashboard');
         });
