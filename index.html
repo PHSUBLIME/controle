@@ -53,7 +53,7 @@
 </head>
 <body class="text-gray-100 flex flex-col md:flex-row h-screen overflow-hidden">
 
-    <!-- Toast Notification -->
+    <!-- Toast Notification (Mensagens de Feedback) -->
     <div id="toast" style="opacity: 0; transform: translateY(10px); transition: all 0.3s ease;" class="hidden fixed bottom-5 right-5 z-50 flex items-center px-4 py-3 rounded-xl shadow-lg border">
         <i id="toast-icon" class="mr-2 text-lg"></i>
         <span id="toast-message" class="text-sm font-semibold"></span>
@@ -72,26 +72,7 @@
         <div class="fixed inset-0 bg-black/60 backdrop-blur-sm" id="mobile-menu-overlay"></div>
         <div class="relative w-64 bg-neutral-900 h-full flex flex-col p-4 z-10 border-r border-darkBorder">
             <div class="text-[#ffd700] font-black text-2xl mb-8 tracking-wider">PHSUBLIME</div>
-            <nav class="space-y-2 flex-1">
-                <button onclick="switchTab('dashboard')" class="tab-link w-full text-left flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition" data-tab="dashboard">
-                    <i class="fa-solid fa-chart-simple w-5"></i> Dashboard
-                </button>
-                <button onclick="switchTab('pedidos')" class="tab-link w-full text-left flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition" data-tab="pedidos">
-                    <i class="fa-solid fa-cart-shopping w-5"></i> Pedidos
-                </button>
-                <button onclick="switchTab('financeiro')" class="tab-link w-full text-left flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition" data-tab="financeiro">
-                    <i class="fa-solid fa-wallet w-5"></i> Financeiro
-                </button>
-                <button onclick="switchTab('despesas')" class="tab-link w-full text-left flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition" data-tab="despesas">
-                    <i class="fa-solid fa-receipt w-5"></i> Despesas
-                </button>
-                <button onclick="switchTab('clientes')" class="tab-link w-full text-left flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition" data-tab="clientes">
-                    <i class="fa-solid fa-users w-5"></i> Clientes
-                </button>
-                <button onclick="switchTab('historico')" class="tab-link w-full text-left flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition" data-tab="historico">
-                    <i class="fa-solid fa-calendar-check w-5"></i> Histórico Mensal
-                </button>
-            </nav>
+            <nav class="space-y-2 flex-1" id="nav-mobile-list"></nav>
         </div>
     </div>
 
@@ -99,26 +80,7 @@
     <aside class="w-64 bg-neutral-900 border-r border-darkBorder flex flex-col justify-between hidden md:flex p-6">
         <div>
             <div class="text-[#ffd700] font-black text-2xl mb-10 tracking-wider text-center md:text-left">PHSUBLIME</div>
-            <nav class="space-y-2">
-                <button onclick="switchTab('dashboard')" class="tab-link w-full text-left flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition" data-tab="dashboard">
-                    <i class="fa-solid fa-chart-simple w-5"></i> Dashboard
-                </button>
-                <button onclick="switchTab('pedidos')" class="tab-link w-full text-left flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition" data-tab="pedidos">
-                    <i class="fa-solid fa-cart-shopping w-5"></i> Pedidos
-                </button>
-                <button onclick="switchTab('financeiro')" class="tab-link w-full text-left flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition" data-tab="financeiro">
-                    <i class="fa-solid fa-wallet w-5"></i> Financeiro
-                </button>
-                <button onclick="switchTab('despesas')" class="tab-link w-full text-left flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition" data-tab="despesas">
-                    <i class="fa-solid fa-receipt w-5"></i> Despesas
-                </button>
-                <button onclick="switchTab('clientes')" class="tab-link w-full text-left flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition" data-tab="clientes">
-                    <i class="fa-solid fa-users w-5"></i> Clientes
-                </button>
-                <button onclick="switchTab('historico')" class="tab-link w-full text-left flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition" data-tab="historico">
-                    <i class="fa-solid fa-calendar-check w-5"></i> Histórico Mensal
-                </button>
-            </nav>
+            <nav class="space-y-2" id="nav-desktop-list"></nav>
         </div>
         <div class="text-xs text-neutral-500 text-center border-t border-darkBorder pt-4">
             PHSUBLIME &copy; 2026
@@ -131,77 +93,16 @@
 
             <!-- TAB: DASHBOARD -->
             <div id="tab-dashboard" class="tab-content space-y-6 hidden">
-                <div class="flex justify-between items-center">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                     <h2 class="text-2xl font-black text-white">Dashboard</h2>
-                    <span class="text-xs px-3 py-1 bg-neutral-800 rounded-full border border-darkBorder text-neutral-400">Dados Diários e Métricas</span>
+                    <div class="flex items-center gap-2 bg-neutral-900 border border-darkBorder p-1.5 px-3 rounded-xl">
+                        <label class="text-xs text-neutral-400 font-medium whitespace-nowrap">Análise Diária:</label>
+                        <input type="date" id="dash-date-filter" class="bg-neutral-800 border border-neutral-700 text-white rounded p-1.5 text-xs focus:outline-none" onchange="renderDashboard()">
+                    </div>
                 </div>
 
                 <!-- KPI Cards Grid -->
-                <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                    <div class="bg-darkCard p-4 rounded-xl border border-darkBorder flex flex-col justify-between h-28">
-                        <div class="flex items-center justify-between">
-                            <span class="text-xs text-neutral-400 font-medium">Faturamento Dia</span>
-                            <div class="p-1.5 bg-emerald-500/10 text-emerald-400 rounded-lg"><i class="fa-solid fa-money-bill-wave text-xs"></i></div>
-                        </div>
-                        <h3 class="text-lg md:text-xl font-black text-emerald-400 mt-2" id="kpi-faturamento-dia">R$ 0,00</h3>
-                    </div>
-
-                    <div class="bg-darkCard p-4 rounded-xl border border-darkBorder flex flex-col justify-between h-28">
-                        <div class="flex items-center justify-between">
-                            <span class="text-xs text-neutral-400 font-medium">Em Produção</span>
-                            <div class="p-1.5 bg-blue-500/10 text-blue-400 rounded-lg"><i class="fa-solid fa-screwdriver-wrench text-xs"></i></div>
-                        </div>
-                        <h3 class="text-lg md:text-xl font-black text-blue-400 mt-2" id="kpi-em-producao">0</h3>
-                    </div>
-
-                    <div class="bg-darkCard p-4 rounded-xl border border-darkBorder flex flex-col justify-between h-28">
-                        <div class="flex items-center justify-between">
-                            <span class="text-xs text-neutral-400 font-medium">Entregues</span>
-                            <div class="p-1.5 bg-teal-500/10 text-teal-400 rounded-lg"><i class="fa-solid fa-circle-check text-xs"></i></div>
-                        </div>
-                        <h3 class="text-lg md:text-xl font-black text-teal-400 mt-2" id="kpi-entregues">0</h3>
-                    </div>
-
-                    <div class="bg-darkCard p-4 rounded-xl border border-darkBorder flex flex-col justify-between h-28">
-                        <div class="flex items-center justify-between">
-                            <span class="text-xs text-neutral-400 font-medium">Clientes</span>
-                            <div class="p-1.5 bg-indigo-500/10 text-indigo-400 rounded-lg"><i class="fa-solid fa-users text-xs"></i></div>
-                        </div>
-                        <h3 class="text-lg md:text-xl font-black text-indigo-400 mt-2" id="kpi-clientes">0</h3>
-                    </div>
-
-                    <div class="bg-darkCard p-4 rounded-xl border border-darkBorder flex flex-col justify-between h-28">
-                        <div class="flex items-center justify-between">
-                            <span class="text-xs text-neutral-400 font-medium">Investimento Total</span>
-                            <div class="p-1.5 bg-purple-500/10 text-purple-400 rounded-lg"><i class="fa-solid fa-chart-line text-xs"></i></div>
-                        </div>
-                        <h3 class="text-lg md:text-xl font-black text-purple-400 mt-2" id="kpi-investimento-total">R$ 0,00</h3>
-                    </div>
-
-                    <div class="bg-darkCard p-4 rounded-xl border border-darkBorder flex flex-col justify-between h-28">
-                        <div class="flex items-center justify-between">
-                            <span class="text-xs text-neutral-400 font-medium">Lucro</span>
-                            <div class="p-1.5 bg-yellow-500/10 text-gold rounded-lg"><i class="fa-solid fa-sack-dollar text-xs"></i></div>
-                        </div>
-                        <h3 class="text-lg md:text-xl font-black text-gold mt-2" id="kpi-lucro">R$ 0,00</h3>
-                    </div>
-
-                    <div class="bg-darkCard p-4 rounded-xl border border-darkBorder flex flex-col justify-between h-28">
-                        <div class="flex items-center justify-between">
-                            <span class="text-xs text-neutral-400 font-medium">Pedidos Pendentes</span>
-                            <div class="p-1.5 bg-amber-500/10 text-amber-400 rounded-lg"><i class="fa-solid fa-clock text-xs"></i></div>
-                        </div>
-                        <h3 class="text-lg md:text-xl font-black text-amber-400 mt-2" id="kpi-pedidos-pendentes">0</h3>
-                    </div>
-
-                    <div class="bg-darkCard p-4 rounded-xl border border-darkBorder flex flex-col justify-between h-28">
-                        <div class="flex items-center justify-between">
-                            <span class="text-xs text-neutral-400 font-medium">Pedidos Dia</span>
-                            <div class="p-1.5 bg-rose-500/10 text-rose-400 rounded-lg"><i class="fa-solid fa-basket-shopping text-xs"></i></div>
-                        </div>
-                        <h3 class="text-lg md:text-xl font-black text-rose-400 mt-2" id="kpi-pedidos-dia">0</h3>
-                    </div>
-                </div>
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-4" id="dashboard-kpis"></div>
 
                 <!-- Graficos -->
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -227,20 +128,55 @@
                 </div>
             </div>
 
+            <!-- TAB: CLIENTES -->
+            <div id="tab-clientes" class="tab-content space-y-6 hidden">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <div>
+                        <h2 class="text-2xl font-black">Clientes</h2>
+                        <p class="text-sm text-neutral-400">Cadastro de contatos e histórico de compras</p>
+                    </div>
+                    <button onclick="openAddClienteModal()" class="bg-[#ffd700] hover:bg-yellow-400 text-black font-bold text-sm px-4 py-2.5 rounded transition shadow-lg flex items-center gap-2">
+                        <i class="fa-solid fa-plus"></i> + Novo Cliente
+                    </button>
+                </div>
+
+                <div class="flex bg-darkCard p-4 rounded-xl border border-darkBorder">
+                    <input type="text" id="clientes-search" placeholder="Buscar cliente..." class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full text-sm focus:outline-none" oninput="renderClientes()">
+                </div>
+
+                <!-- Tabela Clientes -->
+                <div class="bg-darkCard rounded-xl border border-darkBorder overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-neutral-900 border-b border-darkBorder">
+                                    <th class="p-4 text-xs font-semibold text-neutral-400 uppercase tracking-wider">Nome</th>
+                                    <th class="p-4 text-xs font-semibold text-neutral-400 uppercase tracking-wider">CPF/CNPJ</th>
+                                    <th class="p-4 text-xs font-semibold text-neutral-400 uppercase tracking-wider">Contato / WhatsApp</th>
+                                    <th class="p-4 text-xs font-semibold text-neutral-400 uppercase tracking-wider">Cidade / Endereço</th>
+                                    <th class="p-4 text-xs font-semibold text-neutral-400 uppercase tracking-wider text-right">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="clientes-tbody" class="divide-y divide-darkBorder"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
             <!-- TAB: PEDIDOS -->
             <div id="tab-pedidos" class="tab-content space-y-6 hidden">
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                     <div>
                         <h2 class="text-2xl font-black">Pedidos</h2>
-                        <p class="text-sm text-neutral-400">Controle e produção de encomendas</p>
+                        <p class="text-sm text-neutral-400">Controle e produção de encomendas com carrinho de multi-produtos</p>
                     </div>
-                    <button onclick="openModal('modal-pedido')" class="bg-[#ffd700] hover:bg-yellow-400 text-black font-bold text-sm px-4 py-2.5 rounded transition shadow-lg flex items-center gap-2">
+                    <button onclick="openAddPedidoModal()" class="bg-[#ffd700] hover:bg-yellow-400 text-black font-bold text-sm px-4 py-2.5 rounded transition shadow-lg flex items-center gap-2">
                         <i class="fa-solid fa-plus"></i> + Novo Pedido
                     </button>
                 </div>
 
                 <div class="flex bg-darkCard p-4 rounded-xl border border-darkBorder">
-                    <input type="text" id="pedidos-search" placeholder="Buscar pedido por descrição ou cliente..." class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full text-sm focus:outline-none focus:border-gold">
+                    <input type="text" id="pedidos-search" placeholder="Buscar pedido por descrição ou cliente..." class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full text-sm focus:outline-none" oninput="renderPedidos()">
                 </div>
 
                 <!-- Tabela de Pedidos -->
@@ -250,10 +186,10 @@
                             <thead>
                                 <tr class="bg-neutral-900 border-b border-darkBorder">
                                     <th class="p-4 text-xs font-semibold text-neutral-400 uppercase tracking-wider">Cliente</th>
-                                    <th class="p-4 text-xs font-semibold text-neutral-400 uppercase tracking-wider">Serviço/Material</th>
+                                    <th class="p-4 text-xs font-semibold text-neutral-400 uppercase tracking-wider">Produtos Adicionados</th>
                                     <th class="p-4 text-xs font-semibold text-neutral-400 uppercase tracking-wider">Dimensões / Qtd</th>
                                     <th class="p-4 text-xs font-semibold text-neutral-400 uppercase tracking-wider">Financeiro</th>
-                                    <th class="p-4 text-xs font-semibold text-neutral-400 uppercase tracking-wider">Entrega</th>
+                                    <th class="p-4 text-xs font-semibold text-neutral-400 uppercase tracking-wider">Etapa</th>
                                     <th class="p-4 text-xs font-semibold text-neutral-400 uppercase tracking-wider">Responsável</th>
                                     <th class="p-4 text-xs font-semibold text-neutral-400 uppercase tracking-wider text-right">Ações</th>
                                 </tr>
@@ -264,12 +200,51 @@
                 </div>
             </div>
 
+            <!-- TAB: DESPESAS -->
+            <div id="tab-despesas" class="tab-content space-y-6 hidden">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <div>
+                        <h2 class="text-2xl font-black">Despesas</h2>
+                        <p class="text-sm text-neutral-400">Controle de saídas e compras operacionais</p>
+                    </div>
+                    <button onclick="openModal('modal-despesa')" class="bg-[#ffd700] hover:bg-yellow-400 text-black font-bold text-sm px-4 py-2.5 rounded transition shadow-lg flex items-center gap-2">
+                        <i class="fa-solid fa-plus"></i> + Nova Despesa
+                    </button>
+                </div>
+
+                <div class="flex bg-darkCard p-4 rounded-xl border border-darkBorder">
+                    <input type="text" id="despesas-search" placeholder="Buscar despesa..." class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full text-sm focus:outline-none" oninput="renderDespesas()">
+                </div>
+
+                <!-- Tabela Despesas -->
+                <div class="bg-darkCard rounded-xl border border-darkBorder overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-neutral-900 border-b border-darkBorder">
+                                    <th class="p-4 text-xs font-semibold text-neutral-400 uppercase tracking-wider">Nome do Produto</th>
+                                    <th class="p-4 text-xs font-semibold text-neutral-400 uppercase tracking-wider">Valor Unitário</th>
+                                    <th class="p-4 text-xs font-semibold text-neutral-400 uppercase tracking-wider">Quantidade</th>
+                                    <th class="p-4 text-xs font-semibold text-neutral-400 uppercase tracking-wider">Data Compra</th>
+                                    <th class="p-4 text-xs font-semibold text-neutral-400 uppercase tracking-wider">Forma Pgto</th>
+                                    <th class="p-4 text-xs font-semibold text-neutral-400 uppercase tracking-wider">Local da Compra</th>
+                                    <th class="p-4 text-xs font-semibold text-neutral-400 uppercase tracking-wider">Situação</th>
+                                    <th class="p-4 text-xs font-semibold text-neutral-400 uppercase tracking-wider text-right">Total Gasto</th>
+                                    <th class="p-4 text-xs font-semibold text-neutral-400 uppercase tracking-wider text-right">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="despesas-tbody" class="divide-y divide-darkBorder"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
             <!-- TAB: FINANCEIRO -->
             <div id="tab-financeiro" class="tab-content space-y-6 hidden">
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                     <div>
                         <h2 class="text-2xl font-black">Financeiro</h2>
-                        <p class="text-sm text-neutral-400">Controle integrado do caixa e lucratividade</p>
+                        <p class="text-sm text-neutral-400">Controle integrado de lucratividade e faturamento</p>
                     </div>
                     <div class="flex flex-wrap gap-2">
                         <button onclick="sendReportWhatsApp()" class="bg-[#25d366] hover:bg-emerald-600 text-white font-bold text-sm px-4 py-2.5 rounded transition shadow-lg flex items-center gap-2">
@@ -285,35 +260,10 @@
                 </div>
 
                 <!-- Financeiro KPI Cards Grid -->
-                <div class="grid grid-cols-2 lg:grid-cols-6 gap-3">
-                    <div class="bg-darkCard p-4 rounded-xl border border-darkBorder flex flex-col justify-between">
-                        <span class="text-xs text-neutral-400">Receitas</span>
-                        <h4 class="text-md md:text-lg font-black text-emerald-400 mt-1" id="fin-kpi-receitas">R$ 0,00</h4>
-                    </div>
-                    <div class="bg-darkCard p-4 rounded-xl border border-darkBorder flex flex-col justify-between">
-                        <span class="text-xs text-neutral-400">Investimentos</span>
-                        <h4 class="text-md md:text-lg font-black text-purple-400 mt-1" id="fin-kpi-investimentos">R$ 0,00</h4>
-                    </div>
-                    <div class="bg-darkCard p-4 rounded-xl border border-darkBorder flex flex-col justify-between">
-                        <span class="text-xs text-neutral-400">Despesas</span>
-                        <h4 class="text-md md:text-lg font-black text-red-400 mt-1" id="fin-kpi-despesas">R$ 0,00</h4>
-                    </div>
-                    <div class="bg-darkCard p-4 rounded-xl border border-darkBorder flex flex-col justify-between">
-                        <span class="text-xs text-neutral-400">Lucro</span>
-                        <h4 class="text-md md:text-lg font-black text-gold mt-1" id="fin-kpi-lucro">R$ 0,00</h4>
-                    </div>
-                    <div class="bg-darkCard p-4 rounded-xl border border-darkBorder flex flex-col justify-between">
-                        <span class="text-xs text-neutral-400">10% Lucro</span>
-                        <h4 class="text-md md:text-lg font-black text-pink-400 mt-1" id="fin-kpi-10lucro">R$ 0,00</h4>
-                    </div>
-                    <div class="bg-darkCard p-4 rounded-xl border border-darkBorder flex flex-col justify-between">
-                        <span class="text-xs text-neutral-400">Lucro Líquido</span>
-                        <h4 class="text-md md:text-lg font-black text-teal-400 mt-1" id="fin-kpi-lucro-liquido">R$ 0,00</h4>
-                    </div>
-                </div>
+                <div class="grid grid-cols-2 lg:grid-cols-6 gap-3" id="financeiro-kpis"></div>
 
                 <div class="flex bg-darkCard p-4 rounded-xl border border-darkBorder">
-                    <input type="text" id="financeiro-search" placeholder="Buscar lançamento..." class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full text-sm focus:outline-none focus:border-gold">
+                    <input type="text" id="financeiro-search" placeholder="Buscar lançamento..." class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full text-sm focus:outline-none" oninput="renderFinanceiro()">
                 </div>
 
                 <div class="bg-darkCard rounded-xl border border-darkBorder overflow-hidden">
@@ -335,84 +285,12 @@
                 </div>
             </div>
 
-            <!-- TAB: DESPESAS -->
-            <div id="tab-despesas" class="tab-content space-y-6 hidden">
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                    <div>
-                        <h2 class="text-2xl font-black">Despesas</h2>
-                        <p class="text-sm text-neutral-400">Controle de saídas e compras</p>
-                    </div>
-                    <button onclick="openModal('modal-despesa')" class="bg-[#ffd700] hover:bg-yellow-400 text-black font-bold text-sm px-4 py-2.5 rounded transition shadow-lg flex items-center gap-2">
-                        <i class="fa-solid fa-plus"></i> + Nova Despesa
-                    </button>
-                </div>
-
-                <div class="flex bg-darkCard p-4 rounded-xl border border-darkBorder">
-                    <input type="text" id="despesas-search" placeholder="Buscar despesa..." class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full text-sm focus:outline-none focus:border-gold">
-                </div>
-
-                <div class="bg-darkCard rounded-xl border border-darkBorder overflow-hidden">
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left border-collapse">
-                            <thead>
-                                <tr class="bg-neutral-900 border-b border-darkBorder">
-                                    <th class="p-4 text-xs font-semibold text-neutral-400 uppercase tracking-wider">Nome do Produto</th>
-                                    <th class="p-4 text-xs font-semibold text-neutral-400 uppercase tracking-wider">Valor Unitário</th>
-                                    <th class="p-4 text-xs font-semibold text-neutral-400 uppercase tracking-wider">Quantidade</th>
-                                    <th class="p-4 text-xs font-semibold text-neutral-400 uppercase tracking-wider">Data Compra</th>
-                                    <th class="p-4 text-xs font-semibold text-neutral-400 uppercase tracking-wider">Forma Pgto</th>
-                                    <th class="p-4 text-xs font-semibold text-neutral-400 uppercase tracking-wider">Local da Compra</th>
-                                    <th class="p-4 text-xs font-semibold text-neutral-400 uppercase tracking-wider text-right">Total Gasto</th>
-                                    <th class="p-4 text-xs font-semibold text-neutral-400 uppercase tracking-wider text-right">Ações</th>
-                                </tr>
-                            </thead>
-                            <tbody id="despesas-tbody" class="divide-y divide-darkBorder"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <!-- TAB: CLIENTES -->
-            <div id="tab-clientes" class="tab-content space-y-6 hidden">
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                    <div>
-                        <h2 class="text-2xl font-black">Clientes</h2>
-                        <p class="text-sm text-neutral-400">Contatos e dados fiscais</p>
-                    </div>
-                    <button onclick="openModal('modal-cliente')" class="bg-[#ffd700] hover:bg-yellow-400 text-black font-bold text-sm px-4 py-2.5 rounded transition shadow-lg flex items-center gap-2">
-                        <i class="fa-solid fa-plus"></i> + Novo Cliente
-                    </button>
-                </div>
-
-                <div class="flex bg-darkCard p-4 rounded-xl border border-darkBorder">
-                    <input type="text" id="clientes-search" placeholder="Buscar cliente..." class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full text-sm focus:outline-none focus:border-gold">
-                </div>
-
-                <div class="bg-darkCard rounded-xl border border-darkBorder overflow-hidden">
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left border-collapse">
-                            <thead>
-                                <tr class="bg-neutral-900 border-b border-darkBorder">
-                                    <th class="p-4 text-xs font-semibold text-neutral-400 uppercase tracking-wider">Nome</th>
-                                    <th class="p-4 text-xs font-semibold text-neutral-400 uppercase tracking-wider">CPF/CNPJ</th>
-                                    <th class="p-4 text-xs font-semibold text-neutral-400 uppercase tracking-wider">Contato / WhatsApp</th>
-                                    <th class="p-4 text-xs font-semibold text-neutral-400 uppercase tracking-wider">Endereço / E-mail</th>
-                                    <th class="p-4 text-xs font-semibold text-neutral-400 uppercase tracking-wider">Observações</th>
-                                    <th class="p-4 text-xs font-semibold text-neutral-400 uppercase tracking-wider text-right">Ações</th>
-                                </tr>
-                            </thead>
-                            <tbody id="clientes-tbody" class="divide-y divide-darkBorder"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
             <!-- TAB: HISTÓRICO MENSAL -->
             <div id="tab-historico" class="tab-content space-y-6 hidden">
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                     <div>
-                        <h2 class="text-2xl font-black">Histórico Mensal</h2>
-                        <p class="text-sm text-neutral-400">Fechamentos consolidados de períodos</p>
+                        <h2 class="text-2xl font-black">Histórico</h2>
+                        <p class="text-sm text-neutral-400">Fechamentos consolidados de períodos arquivados</p>
                     </div>
                     <button onclick="triggerCloseMonth()" class="bg-[#b45309] hover:bg-amber-800 text-white font-bold text-sm px-4 py-2.5 rounded transition shadow-lg flex items-center gap-2">
                         <i class="fa-solid fa-lock"></i> Fechar Mês
@@ -453,121 +331,158 @@
         </div>
     </main>
 
-    <!-- ================================= MODAIS ATUALIZADOS ================================= -->
+    <!-- ================================= MODAIS ================================= -->
 
-    <!-- MODAL NOVO CLIENTE -->
+    <!-- MODAL CLIENTE -->
     <div id="modal-cliente" class="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50 hidden">
         <div class="bg-neutral-900 border border-darkBorder rounded-xl max-w-lg w-full p-6 space-y-4 max-h-[90vh] overflow-y-auto">
             <h3 class="text-lg font-bold text-gold border-b border-darkBorder pb-2">Novo Cliente</h3>
-            <form id="form-cliente" class="space-y-4">
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="col-span-2">
-                        <label class="block text-xs text-neutral-400 mb-1">Nome</label>
-                        <input type="text" id="c-nome" required class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full text-sm focus:outline-none focus:border-gold">
-                    </div>
-                    <div>
-                        <label class="block text-xs text-neutral-400 mb-1">CPF/CNPJ</label>
-                        <input type="text" id="c-cpf-cnpj" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full text-sm focus:outline-none focus:border-gold">
-                    </div>
-                    <div>
-                        <label class="block text-xs text-neutral-400 mb-1">Telefone</label>
-                        <input type="text" id="c-telefone" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full text-sm focus:outline-none focus:border-gold">
-                    </div>
-                    <div>
-                        <label class="block text-xs text-neutral-400 mb-1">WhatsApp</label>
-                        <input type="text" id="c-whatsapp" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full text-sm focus:outline-none focus:border-gold">
-                    </div>
-                    <div>
-                        <label class="block text-xs text-neutral-400 mb-1">E-mail</label>
-                        <input type="email" id="c-email" placeholder="cliente@email.com" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full text-sm focus:outline-none focus:border-gold">
-                    </div>
-                    <div>
-                        <label class="block text-xs text-neutral-400 mb-1">Cidade</label>
-                        <input type="text" id="c-cidade" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full text-sm focus:outline-none focus:border-gold">
-                    </div>
-                    <div>
-                        <label class="block text-xs text-neutral-400 mb-1">Estado</label>
-                        <input type="text" id="c-estado" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full text-sm focus:outline-none focus:border-gold">
-                    </div>
-                    <div class="col-span-2">
-                        <label class="block text-xs text-neutral-400 mb-1">Endereço</label>
-                        <input type="text" id="c-endereco" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full text-sm focus:outline-none focus:border-gold">
-                    </div>
-                    <div class="col-span-2">
-                        <label class="block text-xs text-neutral-400 mb-1">Observações</label>
-                        <textarea id="c-observacoes" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full text-sm h-16 focus:outline-none focus:border-gold"></textarea>
-                    </div>
+            <form id="form-cliente" class="grid grid-cols-2 gap-3 text-sm">
+                <div class="col-span-2">
+                    <label class="block text-xs text-neutral-400 mb-1">Nome do Cliente</label>
+                    <input type="text" id="c-nome" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full focus:outline-none focus:border-gold">
                 </div>
-                <div class="flex justify-end gap-2 pt-2 border-t border-darkBorder">
+                <div>
+                    <label class="block text-xs text-neutral-400 mb-1">CPF/CNPJ</label>
+                    <input type="text" id="c-cpf-cnpj" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full focus:outline-none focus:border-gold">
+                </div>
+                <div>
+                    <label class="block text-xs text-neutral-400 mb-1">Telefone</label>
+                    <input type="text" id="c-telefone" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full focus:outline-none focus:border-gold">
+                </div>
+                <div>
+                    <label class="block text-xs text-neutral-400 mb-1">WhatsApp</label>
+                    <input type="text" id="c-whatsapp" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full focus:outline-none focus:border-gold">
+                </div>
+                <div>
+                    <label class="block text-xs text-neutral-400 mb-1">E-mail</label>
+                    <input type="email" id="c-email" placeholder="cliente@email.com" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full focus:outline-none focus:border-gold">
+                </div>
+                <div>
+                    <label class="block text-xs text-neutral-400 mb-1">Cidade</label>
+                    <input type="text" id="c-cidade" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full focus:outline-none focus:border-gold">
+                </div>
+                <div>
+                    <label class="block text-xs text-neutral-400 mb-1">Estado</label>
+                    <input type="text" id="c-estado" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full focus:outline-none focus:border-gold">
+                </div>
+                <div class="col-span-2">
+                    <label class="block text-xs text-neutral-400 mb-1">Endereço</label>
+                    <input type="text" id="c-endereco" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full focus:outline-none focus:border-gold">
+                </div>
+                <div class="col-span-2">
+                    <label class="block text-xs text-neutral-400 mb-1">Observações</label>
+                    <textarea id="c-observacoes" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full h-16 focus:outline-none focus:border-gold"></textarea>
+                </div>
+                <div class="col-span-2 flex justify-end gap-2 pt-2 border-t border-darkBorder">
                     <button type="button" onclick="closeModal('modal-cliente')" class="px-4 py-2 bg-neutral-800 text-neutral-300 hover:bg-neutral-700 text-sm font-semibold rounded">Cancelar</button>
-                    <button type="submit" class="px-4 py-2 bg-[#ffd700] hover:bg-yellow-400 text-black text-sm font-semibold rounded">Salvar</button>
+                    <button type="submit" class="px-4 py-2 bg-[#ffd700] hover:bg-yellow-400 text-black text-sm font-bold rounded">Salvar</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- MODAL NOVO PEDIDO -->
+    <!-- MODAL VISUALIZAR CLIENTE (HISTÓRICO COMPLETO) -->
+    <div id="modal-view-cliente" class="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50 hidden">
+        <div class="bg-neutral-900 border border-darkBorder rounded-xl max-w-2xl w-full p-6 space-y-4 max-h-[90vh] overflow-y-auto">
+            <h3 class="text-lg font-bold text-gold border-b border-darkBorder pb-2 flex justify-between">
+                <span>Ficha Detalhada do Cliente</span>
+                <button onclick="closeModal('modal-view-cliente')" class="text-neutral-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+            </h3>
+            <div class="grid grid-cols-2 gap-3 text-sm" id="client-view-details"></div>
+            <div class="border-t border-darkBorder pt-4 space-y-2">
+                <h4 class="text-xs font-bold text-neutral-400 uppercase tracking-wider">Histórico Real de Compras</h4>
+                <div class="overflow-x-auto max-h-48 border border-darkBorder rounded-lg">
+                    <table class="w-full text-left text-xs border-collapse">
+                        <thead>
+                            <tr class="bg-neutral-850 text-neutral-300">
+                                <th class="p-3 border-b border-darkBorder">Data Entrega</th>
+                                <th class="p-3 border-b border-darkBorder">Produtos</th>
+                                <th class="p-3 border-b border-darkBorder">Total Pago</th>
+                                <th class="p-3 border-b border-darkBorder">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="client-view-orders-tbody" class="divide-y divide-darkBorder"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL PEDIDO -->
     <div id="modal-pedido" class="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50 hidden">
         <div class="bg-neutral-900 border border-darkBorder rounded-xl max-w-xl w-full p-6 space-y-4 max-h-[90vh] overflow-y-auto">
             <h3 class="text-lg font-bold text-gold border-b border-darkBorder pb-2">Novo Pedido</h3>
-            <form id="form-pedido" class="space-y-4">
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="col-span-2">
-                        <label class="block text-xs text-neutral-400 mb-1">Cliente</label>
-                        <select id="p-cliente" required class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full text-sm focus:outline-none focus:border-gold"></select>
+            <form id="form-pedido" class="space-y-4 text-sm">
+                <div>
+                    <label class="block text-xs text-neutral-400 mb-1">Cliente</label>
+                    <select id="p-cliente" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full focus:outline-none focus:border-gold"></select>
+                </div>
+
+                <!-- Bloco de Carrinho de Multi-Produtos -->
+                <div class="border border-darkBorder p-3 rounded-xl space-y-3 bg-neutral-950">
+                    <span class="text-xs text-neutral-400 font-bold block uppercase"><i class="fa-solid fa-cart-plus text-gold mr-1"></i> Adicionar Produtos</span>
+                    <div class="flex flex-col sm:flex-row gap-2">
+                        <input type="text" id="p-item-nome" placeholder="Nome do produto" class="flex-1 bg-neutral-800 border border-neutral-700 text-white rounded p-2 text-xs focus:outline-none">
+                        <input type="number" step="0.01" id="p-item-valor" placeholder="Valor (R$)" class="sm:w-28 bg-neutral-800 border border-neutral-700 text-white rounded p-2 text-xs focus:outline-none">
+                        <button type="button" onclick="addItemToCurrentOrder()" class="bg-[#ffd700] hover:bg-yellow-400 text-black font-black text-xs px-4 py-2 rounded transition whitespace-nowrap">+ Incluir</button>
                     </div>
+                    <div id="p-current-items-list" class="space-y-1.5 max-h-32 overflow-y-auto pt-1"></div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-xs text-neutral-400 mb-1">Serviço</label>
-                        <input type="text" id="p-servico" required placeholder="Ex: Banner" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full text-sm focus:outline-none focus:border-gold">
+                        <label class="block text-xs text-neutral-400 mb-1">Serviço Principal / Nome do Item</label>
+                        <input type="text" id="p-servico" placeholder="Ex: Banner ou Camiseta" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full focus:outline-none focus:border-gold">
                     </div>
                     <div>
                         <label class="block text-xs text-neutral-400 mb-1">Material</label>
-                        <input type="text" id="p-material" placeholder="Ex: Lona 440g" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full text-sm focus:outline-none focus:border-gold">
-                    </div>
-                    <div>
-                        <label class="block text-xs text-neutral-400 mb-1">Quantidade</label>
-                        <input type="number" id="p-quantidade" required value="1" min="1" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full text-sm focus:outline-none focus:border-gold">
+                        <input type="text" id="p-material" placeholder="Ex: Lona 440g" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full focus:outline-none focus:border-gold">
                     </div>
                     <div>
                         <label class="block text-xs text-neutral-400 mb-1">Largura (m)</label>
-                        <input type="number" step="0.01" id="p-largura" required value="1.00" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full text-sm focus:outline-none focus:border-gold">
+                        <input type="number" step="0.01" id="p-largura" value="1.00" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full focus:outline-none focus:border-gold">
                     </div>
                     <div>
                         <label class="block text-xs text-neutral-400 mb-1">Altura (m)</label>
-                        <input type="number" step="0.01" id="p-altura" required value="1.00" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full text-sm focus:outline-none focus:border-gold">
+                        <input type="number" step="0.01" id="p-altura" value="1.00" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full focus:outline-none focus:border-gold">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-neutral-400 mb-1">Quantidade de Cópias</label>
+                        <input type="number" id="p-quantidade" value="1" min="1" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full focus:outline-none focus:border-gold">
                     </div>
                     <div>
                         <label class="block text-xs text-neutral-400 mb-1">Acabamento</label>
-                        <input type="text" id="p-acabamento" placeholder="Ex: Bastão e Cordão" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full text-sm focus:outline-none focus:border-gold">
+                        <input type="text" id="p-acabamento" placeholder="Ex: Bainha e Ilhós" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full focus:outline-none focus:border-gold">
                     </div>
                     <div>
-                        <label class="block text-xs text-neutral-400 mb-1">Total (R$)</label>
-                        <input type="number" step="0.01" id="p-total" required class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full text-sm focus:outline-none focus:border-gold">
+                        <label class="block text-xs text-neutral-400 mb-1">Total Geral (R$)</label>
+                        <input type="number" step="0.01" id="p-total" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full focus:outline-none focus:border-gold">
                     </div>
                     <div>
                         <label class="block text-xs text-neutral-400 mb-1">Despesa (R$)</label>
-                        <input type="number" step="0.01" id="p-despesa" required class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full text-sm focus:outline-none focus:border-gold">
+                        <input type="number" step="0.01" id="p-despesa" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full focus:outline-none focus:border-gold">
                     </div>
                     <div>
                         <label class="block text-xs text-neutral-400 mb-1">Data Entrega</label>
-                        <input type="date" id="p-data-entrega" required class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full text-sm focus:outline-none focus:border-gold">
+                        <input type="date" id="p-data-entrega" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full focus:outline-none focus:border-gold">
                     </div>
                     <div>
                         <label class="block text-xs text-neutral-400 mb-1">Responsável</label>
-                        <input type="text" id="p-responsavel" required class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full text-sm focus:outline-none focus:border-gold">
+                        <input type="text" id="p-responsavel" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full focus:outline-none focus:border-gold">
                     </div>
                     <div>
                         <label class="block text-xs text-neutral-400 mb-1">Forma Pagamento</label>
-                        <select id="p-forma-pagamento" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full text-sm focus:outline-none focus:border-gold">
+                        <select id="p-forma-pagamento" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full focus:outline-none focus:border-gold">
                             <option value="Dinheiro">Dinheiro</option>
                             <option value="Pix">Pix</option>
-                            <option value="Crédito">Cartão de Crédito</option>
-                            <option value="Débito">Cartão de Débito</option>
+                            <option value="Crédito">Crédito</option>
+                            <option value="Débito">Débito</option>
                         </select>
                     </div>
                     <div>
                         <label class="block text-xs text-neutral-400 mb-1">Status</label>
-                        <select id="p-status" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full text-sm focus:outline-none focus:border-gold">
+                        <select id="p-status" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full focus:outline-none focus:border-gold">
                             <option value="AGUARDANDO">AGUARDANDO</option>
                             <option value="Em Produção">Em Produção</option>
                             <option value="Finalizado">Finalizado</option>
@@ -575,18 +490,18 @@
                     </div>
                     <div class="col-span-2">
                         <label class="block text-xs text-neutral-400 mb-1">Observações</label>
-                        <textarea id="p-observacoes" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full text-sm h-16 focus:outline-none focus:border-gold"></textarea>
+                        <textarea id="p-observacoes" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full h-16 focus:outline-none focus:border-gold"></textarea>
                     </div>
                 </div>
                 <div id="p-finance-auto-box" class="hidden">
                     <label class="flex items-center gap-2 cursor-pointer">
                         <input type="checkbox" id="p-finance-auto" class="rounded bg-neutral-800 border-neutral-700 text-gold focus:ring-0">
-                        <span class="text-xs text-neutral-400 font-medium">Registrar pagamento automaticamente no fluxo Financeiro</span>
+                        <span class="text-xs text-neutral-400 font-medium">Lançar entrada automaticamente no fluxo Financeiro</span>
                     </label>
                 </div>
                 <div class="flex justify-end gap-2 pt-2 border-t border-darkBorder">
                     <button type="button" onclick="closeModal('modal-pedido')" class="px-4 py-2 bg-neutral-800 text-neutral-300 hover:bg-neutral-700 text-sm font-semibold rounded">Cancelar</button>
-                    <button type="submit" class="px-4 py-2 bg-[#ffd700] hover:bg-yellow-400 text-black text-sm font-semibold rounded">Salvar</button>
+                    <button type="submit" class="px-4 py-2 bg-[#ffd700] hover:bg-yellow-400 text-black text-sm font-bold rounded">Salvar</button>
                 </div>
             </form>
         </div>
@@ -596,29 +511,27 @@
     <div id="modal-despesa" class="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50 hidden">
         <div class="bg-neutral-900 border border-darkBorder rounded-xl max-w-md w-full p-6 space-y-4 max-h-[90vh] overflow-y-auto">
             <h3 class="text-lg font-bold text-gold border-b border-darkBorder pb-2">Nova Despesa</h3>
-            <form id="form-despesa" class="space-y-4">
+            <form id="form-despesa" class="space-y-4 text-sm">
                 <div>
                     <label class="block text-xs text-neutral-400 mb-1">Nome do Produto</label>
-                    <input type="text" id="d-nome-produto" required placeholder="Ex: Bobina Sublimática" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full text-sm focus:outline-none focus:border-gold">
+                    <input type="text" id="d-nome-produto" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full focus:outline-none focus:border-gold">
                 </div>
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs text-neutral-400 mb-1">Valor Unitário (R$)</label>
-                        <input type="number" step="0.01" id="d-valor-unitario" required class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full text-sm focus:outline-none focus:border-gold" oninput="calcTotalGasto()">
+                        <input type="number" step="0.01" id="d-valor-unitario" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full focus:outline-none focus:border-gold" oninput="calcTotalGasto()">
                     </div>
                     <div>
                         <label class="block text-xs text-neutral-400 mb-1">Quantidade</label>
-                        <input type="number" id="d-quantidade" required value="1" min="1" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full text-sm focus:outline-none focus:border-gold" oninput="calcTotalGasto()">
+                        <input type="number" id="d-quantidade" value="1" min="1" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full focus:outline-none focus:border-gold" oninput="calcTotalGasto()">
                     </div>
-                </div>
-                <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs text-neutral-400 mb-1">Data Compra</label>
-                        <input type="date" id="d-data-compra" required class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full text-sm focus:outline-none focus:border-gold">
+                        <input type="date" id="d-data-compra" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full focus:outline-none focus:border-gold">
                     </div>
                     <div>
                         <label class="block text-xs text-neutral-400 mb-1">Tipo Pagamento</label>
-                        <select id="d-tipo-pagamento" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full text-sm focus:outline-none focus:border-gold">
+                        <select id="d-tipo-pagamento" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full focus:outline-none focus:border-gold">
                             <option value="Débito">Débito</option>
                             <option value="Crédito">Crédito</option>
                             <option value="Dinheiro">Dinheiro</option>
@@ -628,42 +541,42 @@
                 </div>
                 <div>
                     <label class="block text-xs text-neutral-400 mb-1">Onde Comprou</label>
-                    <input type="text" id="d-onde-comprou" required placeholder="Fornecedor ou Loja" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full text-sm focus:outline-none focus:border-gold">
+                    <input type="text" id="d-onde-comprou" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full focus:outline-none focus:border-gold">
                 </div>
                 <div>
                     <label class="block text-xs text-neutral-400 mb-1">Total Gasto (R$)</label>
-                    <input type="number" step="0.01" id="d-total-gasto" required class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full text-sm focus:outline-none focus:border-gold">
+                    <input type="number" step="0.01" id="d-total-gasto" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full focus:outline-none focus:border-gold">
                 </div>
                 <div id="d-finance-auto-box" class="hidden">
                     <label class="flex items-center gap-2 cursor-pointer">
                         <input type="checkbox" id="d-finance-auto" class="rounded bg-neutral-800 border-neutral-700 text-gold focus:ring-0">
-                        <span class="text-xs text-neutral-400 font-medium">Registrar saída automaticamente no fluxo Financeiro</span>
+                        <span class="text-xs text-neutral-400 font-medium">Lançar saída automaticamente no fluxo Financeiro</span>
                     </label>
                 </div>
                 <div class="flex justify-end gap-2 pt-2 border-t border-darkBorder">
                     <button type="button" onclick="closeModal('modal-despesa')" class="px-4 py-2 bg-neutral-800 text-neutral-300 hover:bg-neutral-700 text-sm font-semibold rounded">Cancelar</button>
-                    <button type="submit" class="px-4 py-2 bg-[#ffd700] hover:bg-yellow-400 text-black text-sm font-semibold rounded">Salvar</button>
+                    <button type="submit" class="px-4 py-2 bg-[#ffd700] hover:bg-yellow-400 text-black text-sm font-bold rounded">Salvar</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- MODAL NOVO LANÇAMENTO (FINANCEIRO AVULSO) -->
+    <!-- MODAL NOVO LANÇAMENTO -->
     <div id="modal-financeiro" class="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50 hidden">
         <div class="bg-neutral-900 border border-darkBorder rounded-xl max-w-md w-full p-6 space-y-4 max-h-[90vh] overflow-y-auto">
             <h3 class="text-lg font-bold text-gold border-b border-darkBorder pb-2">Novo Lançamento</h3>
-            <form id="form-financeiro" class="space-y-4">
+            <form id="form-financeiro" class="space-y-4 text-sm">
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs text-neutral-400 mb-1">Tipo</label>
-                        <select id="f-tipo" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full text-sm focus:outline-none focus:border-gold">
+                        <select id="f-tipo" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full focus:outline-none focus:border-gold">
                             <option value="Entrada">Entrada (Receita)</option>
-                            <option value="Saída">Saída (Despesa/Investimento)</option>
+                            <option value="Saída">Saída (Despesa)</option>
                         </select>
                     </div>
                     <div>
                         <label class="block text-xs text-neutral-400 mb-1">Categoria</label>
-                        <select id="f-categoria" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full text-sm focus:outline-none focus:border-gold">
+                        <select id="f-categoria" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full focus:outline-none focus:border-gold">
                             <option value="Venda">Venda</option>
                             <option value="Insumos">Insumos</option>
                             <option value="Aluguel/Utilidades">Aluguel/Utilidades</option>
@@ -676,79 +589,71 @@
                 </div>
                 <div>
                     <label class="block text-xs text-neutral-400 mb-1">Descrição</label>
-                    <input type="text" id="f-descricao" required placeholder="Ex: Entrada do pedido..." class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full text-sm focus:outline-none focus:border-gold">
+                    <input type="text" id="f-descricao" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full focus:outline-none focus:border-gold">
                 </div>
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs text-neutral-400 mb-1">Valor (R$)</label>
-                        <input type="number" step="0.01" id="f-valor" required class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full text-sm focus:outline-none focus:border-gold">
+                        <input type="number" step="0.01" id="f-valor" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full focus:outline-none focus:border-gold">
                     </div>
                     <div>
                         <label class="block text-xs text-neutral-400 mb-1">Data</label>
-                        <input type="date" id="f-data" required class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full text-sm focus:outline-none focus:border-gold">
+                        <input type="date" id="f-data" class="bg-neutral-800 border border-neutral-700 text-white rounded p-2.5 w-full focus:outline-none focus:border-gold">
                     </div>
                 </div>
                 <div class="flex justify-end gap-2 pt-2 border-t border-darkBorder">
                     <button type="button" onclick="closeModal('modal-financeiro')" class="px-4 py-2 bg-neutral-800 text-neutral-300 hover:bg-neutral-700 text-sm font-semibold rounded">Cancelar</button>
-                    <button type="submit" class="px-4 py-2 bg-[#ffd700] hover:bg-yellow-400 text-black text-sm font-semibold rounded">Salvar</button>
+                    <button type="submit" class="px-4 py-2 bg-[#ffd700] hover:bg-yellow-400 text-black text-sm font-bold rounded">Salvar</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- ================================= LÓGICA DO JAVASCRIPT INTEGRADO ================================= -->
+    <!-- ================================= SCRIPT JAVASCRIPT ================================= -->
     <script>
-        // Dados de teste iniciais baseados na nova estrutura de dados (Julho de 2026)
-        function getSampleData() {
-            const todayStr = '2026-07-27';
-            const yesterdayStr = '2026-07-26';
-
-            return {
-                clientes: [
-                    { id: "c1", nome: "João Silva", cpf_cnpj: "123.456.789-00", telefone: "(21) 99999-1111", whatsapp: "(21) 99999-1111", email: "joao@email.com", cidade: "Rio de Janeiro", estado: "RJ", endereco: "Rua das Flores, 12", observacoes: "Cliente antigo da sublimação" },
-                    { id: "c2", nome: "Maria Santos", cpf_cnpj: "98.765.432/0001-99", telefone: "(21) 98888-2222", whatsapp: "(21) 98888-2222", email: "maria@email.com", cidade: "Niterói", estado: "RJ", endereco: "Av. Central, 500", observacoes: "Compra sempre no atacado" }
-                ],
-                pedidos: [
-                    { id: "p1", clienteId: "c1", servico: "Caneca Resinada", material: "Cerâmica", quantidade: 2, largura: 0.10, altura: 0.10, acabamento: "Resina Premium", valor: 80.00, despesa: 20.00, data_entrega: todayStr, responsavel: "Felipe", forma_pagamento: "Pix", entrega: "AGUARDANDO", observacoes: "Arte enviada por email" },
-                    { id: "p2", clienteId: "c2", servico: "Camiseta Sublimada", material: "Poliéster", quantidade: 1, largura: 0.50, altura: 0.70, acabamento: "Costura Dupla", valor: 55.00, despesa: 15.00, data_entrega: todayStr, responsavel: "Carlos", forma_pagamento: "Dinheiro", entrega: "Em Produção", observacoes: "Estampa de alta definição" }
-                ],
-                financeiro: [
-                    { id: "f1", tipo: "Entrada", descricao: "Venda Caneca João", valor: 80.00, data: todayStr, categoria: "Venda" },
-                    { id: "f2", tipo: "Entrada", descricao: "Venda Camiseta Maria", valor: 55.00, data: todayStr, categoria: "Venda" },
-                    { id: "f3", tipo: "Saída", descricao: "Compra de Tintas", valor: 120.00, data: yesterdayStr, categoria: "Insumos" },
-                    { id: "f4", tipo: "Saída", descricao: "Nova Prensa Plana", valor: 450.00, data: yesterdayStr, categoria: "Investimento" }
-                ],
-                despesas: [
-                    { id: "d1", nome_produto: "Compra de Tintas", valor_unitario: 120.00, quantidade: 1, data_compra: yesterdayStr, tipo_pagamento: "Débito", onde_comprou: "Multivisi", total_gasto: 120.00 },
-                    { id: "d2", nome_produto: "Nova Prensa Plana", valor_unitario: 450.00, quantidade: 1, data_compra: yesterdayStr, tipo_pagamento: "Débito", onde_comprou: "Prensas Rio", total_gasto: 450.00 }
-                ],
-                historico: [
-                    { id: "h1", mesYear: "Junho/2026", receitas: 1250.00, despesas: 450.00, saldo: 800.00, totalPedidos: 15 }
-                ]
-            };
-        }
-
+        const todayStr = '2026-07-27';
+        const yesterdayStr = '2026-07-26';
         let appState = {};
         let vendasChartInstance = null;
         let selectedHistoryId = null;
+        let editClienteId = null;
+        let editPedidoId = null;
+        let currentOrderItems = [];
+
+        // Abas organizadas estruturalmente
+        const tabs = [
+            { id: 'dashboard', label: 'Dashboard', icon: 'fa-chart-simple' },
+            { id: 'clientes', label: 'Clientes', icon: 'fa-users' },
+            { id: 'pedidos', label: 'Pedidos', icon: 'fa-cart-shopping' },
+            { id: 'despesas', label: 'Despesas', icon: 'fa-receipt' },
+            { id: 'financeiro', label: 'Financeiro', icon: 'fa-wallet' },
+            { id: 'historico', label: 'Histórico', icon: 'fa-calendar-check' }
+        ];
+
+        function buildMenus() {
+            const deskList = document.getElementById('nav-desktop-list');
+            const mobList = document.getElementById('nav-mobile-list');
+            deskList.innerHTML = '';
+            mobList.innerHTML = '';
+            tabs.forEach(t => {
+                const baseClass = "tab-link w-full text-left flex items-center gap-3 px-4 py-2.5 rounded-lg text-xs font-bold transition ";
+                deskList.innerHTML += '<button onclick="switchTab(\'' + t.id + '\')" class="' + baseClass + ' text-neutral-400" data-tab="' + t.id + '"><i class="fa-solid ' + t.icon + ' w-4"></i> ' + t.label + '</button>';
+                mobList.innerHTML += '<button onclick="switchTab(\'' + t.id + '\')" class="' + baseClass + ' text-neutral-400" data-tab="' + t.id + '"><i class="fa-solid ' + t.icon + ' w-4"></i> ' + t.label + '</button>';
+            });
+        }
 
         function loadState() {
             const saved = localStorage.getItem('phsublime_state');
             if (saved) {
-                try {
-                    appState = JSON.parse(saved);
-                } catch (e) {
-                    appState = getSampleData();
-                }
+                try { appState = JSON.parse(saved); } catch (e) { appState = getSampleData(); }
             } else {
                 appState = getSampleData();
                 saveState();
             }
+            document.getElementById('dash-date-filter').value = todayStr;
         }
 
-        function saveState() {
-            localStorage.setItem('phsublime_state', JSON.stringify(appState));
-        }
+        function saveState() { localStorage.setItem('phsublime_state', JSON.stringify(appState)); }
 
         // Auto cálculo de gastos para o modal despesa
         function calcTotalGasto() {
@@ -780,23 +685,23 @@
 
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+            document.getElementById('tab-' + tabId).classList.remove('hidden');
             
             document.querySelectorAll('.tab-link').forEach(el => {
                 el.classList.remove('bg-neutral-800', 'text-gold');
                 el.classList.add('text-neutral-400');
             });
-            const activeBtn = document.querySelectorAll(`[data-tab="${tabId}"]`);
-            activeBtn.forEach(btn => {
+            const activeBtns = document.querySelectorAll('[data-tab="' + tabId + '"]');
+            activeBtns.forEach(btn => {
                 btn.classList.add('bg-neutral-800', 'text-gold');
                 btn.classList.remove('text-neutral-400');
             });
             
             if (tabId === 'dashboard') renderDashboard();
-            if (tabId === 'pedidos') renderPedidos();
-            if (tabId === 'financeiro') renderFinanceiro();
-            if (tabId === 'despesas') renderDespesas();
             if (tabId === 'clientes') renderClientes();
+            if (tabId === 'pedidos') renderPedidos();
+            if (tabId === 'despesas') renderDespesas();
+            if (tabId === 'financeiro') renderFinanceiro();
             if (tabId === 'historico') renderHistorico();
             
             document.getElementById('mobile-menu').classList.add('hidden');
@@ -815,647 +720,339 @@
         function openModal(id) {
             document.getElementById(id).classList.remove('hidden');
             if (id === 'modal-pedido') populateClientesDropdown();
-
-            // Configurar datas padrões
-            const todayStr = '2026-07-27';
-            if (id === 'modal-pedido') document.getElementById('p-data-entrega').value = todayStr;
-            if (id === 'modal-despesa') document.getElementById('d-data-compra').value = todayStr;
-            if (id === 'modal-financeiro') document.getElementById('f-data').value = todayStr;
         }
 
         function closeModal(id) {
             document.getElementById(id).classList.add('hidden');
         }
 
+        // Preenchimento de Dropdown de Clientes 100% livre de erros de aspas/crases
         function populateClientesDropdown() {
             const select = document.getElementById('p-cliente');
             select.innerHTML = '<option value="">Selecione...</option>';
-            appState.clientes.forEach(c => {
-                select.innerHTML += `<option value="${c.id}">${c.nome}</option>`;
+            // Clientes em ordem alfabética no dropdown de seleção de pedidos
+            const sortedClientes = [...appState.clientes].sort((a, b) => a.nome.localeCompare(b.nome));
+            sortedClientes.forEach(c => {
+                select.innerHTML += '<option value="' + c.id + '">' + c.nome + '</option>';
             });
         }
 
-        document.getElementById('p-pagamento').addEventListener('change', (e) => {
-            const box = document.getElementById('p-finance-auto-box');
-            if (e.target.value === 'Pago') box.classList.remove('hidden');
-            else box.classList.add('hidden');
-        });
+        // ================================= LÓGICA DE MULTI-PRODUTOS NO PEDIDO =================================
 
-        document.getElementById('d-pago').addEventListener('change', (e) => {
-            const box = document.getElementById('d-finance-auto-box');
-            if (e.target.value === 'Sim') box.classList.remove('hidden');
-            else box.classList.add('hidden');
-        });
+        function addItemToCurrentOrder() {
+            const nome = document.getElementById('p-item-nome').value.trim();
+            const valor = parseFloat(document.getElementById('p-item-valor').value);
+            if (!nome || isNaN(valor)) {
+                showToast("Preencha o nome do produto e o valor!", "error");
+                return;
+            }
+            currentOrderItems.push({ id: 'item_' + Date.now(), nome, valor });
+            document.getElementById('p-item-nome').value = '';
+            document.getElementById('p-item-valor').value = '';
+            renderCurrentOrderItemsList();
+        }
 
-        document.getElementById('mobile-menu-btn').addEventListener('click', () => {
-            document.getElementById('mobile-menu').classList.remove('hidden');
-        });
-        document.getElementById('mobile-menu-overlay').addEventListener('click', () => {
-            document.getElementById('mobile-menu').classList.add('hidden');
-        });
+        function removeItemFromCurrentOrder(itemId) {
+            currentOrderItems = currentOrderItems.filter(item => item.id !== itemId);
+            renderCurrentOrderItemsList();
+        }
 
-        // ================================= SUBMISSÕES DE FORMULÁRIO =================================
+        function renderCurrentOrderItemsList() {
+            const list = document.getElementById('p-current-items-list');
+            list.innerHTML = '';
+            let total = 0;
+            currentOrderItems.forEach(item => {
+                total += item.valor;
+                list.innerHTML += `
+                    <div class="flex justify-between items-center bg-neutral-800 p-2 rounded text-xs border border-darkBorder">
+                        <span class="truncate max-w-[60%] font-semibold text-neutral-300">${item.nome}</span>
+                        <div class="flex items-center gap-2">
+                            <span class="font-bold text-[#ffd700]">${formatCurrency(item.valor)}</span>
+                            <button type="button" onclick="removeItemFromCurrentOrder('${item.id}')" class="text-neutral-500 hover:text-red-400 transition text-sm"><i class="fa-solid fa-trash-can"></i></button>
+                        </div>
+                    </div>`;
+            });
+            document.getElementById('p-total').value = total.toFixed(2);
+        }
+
+        // ================================= SUBMISSÕES E GERENCIAMENTO =================================
+
+        function openAddClienteModal() {
+            editClienteId = null;
+            document.getElementById('form-cliente').reset();
+            document.querySelector('#modal-cliente h3').textContent = 'Cadastrar Novo Cliente';
+            openModal('modal-cliente');
+        }
+
+        function editCliente(id) {
+            const c = appState.clientes.find(item => item.id === id);
+            if (!c) return;
+
+            editClienteId = id;
+            document.querySelector('#modal-cliente h3').textContent = 'Editar Cliente';
+            
+            document.getElementById('c-nome').value = c.nome || '';
+            document.getElementById('c-cpf-cnpj').value = c.cpf_cnpj || '';
+            document.getElementById('c-telefone').value = c.telefone || '';
+            document.getElementById('c-whatsapp').value = c.whatsapp || '';
+            document.getElementById('c-email').value = c.email || '';
+            document.getElementById('c-cidade').value = c.cidade || '';
+            document.getElementById('c-estado').value = c.estado || '';
+            document.getElementById('c-endereco').value = c.endereco || '';
+            document.getElementById('c-observacoes').value = c.observacoes || '';
+
+            openModal('modal-cliente');
+        }
+
+        function viewCliente(id) {
+            const c = appState.clientes.find(item => item.id === id); if (!c) return;
+            document.getElementById('client-view-details').innerHTML = `
+                <div><strong>Nome:</strong> <span class="text-neutral-300">${c.nome}</span></div>
+                <div><strong>CPF/CNPJ:</strong> <span class="text-neutral-300">${c.cpf_cnpj || 'N/D'}</span></div>
+                <div><strong>WhatsApp:</strong> <span class="text-[#25d366]">${c.whatsapp || 'N/D'}</span></div>
+                <div><strong>E-mail:</strong> <span class="text-neutral-300">${c.email || 'N/D'}</span></div>
+                <div class="col-span-2"><strong>Endereço:</strong> <span class="text-neutral-300">${c.endereco || 'N/D'} (${c.cidade || 'N/D'}/${c.estado || 'N/D'})</span></div>
+                <div class="col-span-2"><strong>Obs:</strong> <p class="text-neutral-400 italic text-xs bg-neutral-800 p-2 rounded mt-1">${c.observacoes || 'Sem registros.'}</p></div>`;
+
+            const filteredPedidos = appState.pedidos.filter(p => p.clienteId === id);
+            const tbody = document.getElementById('client-view-orders-tbody'); tbody.innerHTML = '';
+            if (filteredPedidos.length === 0) { tbody.innerHTML = `<tr><td colspan="4" class="p-3 text-center text-neutral-500">Nenhum pedido realizado.</td></tr>`; }
+            else {
+                filteredPedidos.forEach(p => {
+                    const itemsStr = p.items && p.items.length > 0 ? p.items.map(item => `${item.nome} (${formatCurrency(item.valor)})`).join('<br>') : p.servico;
+                    tbody.innerHTML += `
+                        <tr class="hover:bg-neutral-800/20 text-xs">
+                            <td class="p-2.5">${formatDate(p.data_entrega)}</td>
+                            <td class="p-2.5 text-neutral-300">${itemsStr}</td>
+                            <td class="p-2.5 font-bold text-[#ffd700]">${formatCurrency(p.valor)}</td>
+                            <td class="p-2.5 text-neutral-450">${p.entrega}</td>
+                        </tr>`;
+                });
+            }
+            openModal('modal-view-cliente');
+        }
+
+        function openAddPedidoModal() {
+            editPedidoId = null;
+            currentOrderItems = [];
+            document.getElementById('form-pedido').reset();
+            document.getElementById('p-current-items-list').innerHTML = '';
+            document.querySelector('#modal-pedido h3').textContent = 'Novo Pedido';
+            openModal('modal-pedido');
+        }
+
+        function editPedido(id) {
+            const p = appState.pedidos.find(item => item.id === id); if (!p) return;
+            editPedidoId = id;
+            document.querySelector('#modal-pedido h3').textContent = 'Editar Pedido';
+            populateClientesDropdown();
+            document.getElementById('p-cliente').value = p.clienteId || '';
+            document.getElementById('p-servico').value = p.servico || '';
+            document.getElementById('p-material').value = p.material || '';
+            document.getElementById('p-largura').value = p.largura || 1.0;
+            document.getElementById('p-altura').value = p.altura || 1.0;
+            document.getElementById('p-quantidade').value = p.quantidade || 1;
+            document.getElementById('p-acabamento').value = p.acabamento || '';
+            document.getElementById('p-total').value = p.valor || 0.0;
+            document.getElementById('p-despesa').value = p.despesa || 0.0;
+            document.getElementById('p-data-entrega').value = p.data_entrega || todayStr;
+            document.getElementById('p-responsavel').value = p.responsavel || '';
+            document.getElementById('p-forma-pagamento').value = p.forma_pagamento || 'Dinheiro';
+            document.getElementById('p-status').value = p.entrega || 'AGUARDANDO';
+            document.getElementById('p-observacoes').value = p.observacoes || '';
+            currentOrderItems = p.items ? [...p.items] : [];
+            renderCurrentOrderItemsList();
+            openModal('modal-pedido');
+        }
+
+        // ================================= FORMULÁRIOS SAVE E EXCLUSÕES =================================
 
         document.getElementById('form-cliente').addEventListener('submit', (e) => {
             e.preventDefault();
-            const nome = document.getElementById('c-nome').value;
-            const cpf_cnpj = document.getElementById('c-cpf-cnpj').value;
-            const telefone = document.getElementById('c-telefone').value;
-            const whatsapp = document.getElementById('c-whatsapp').value;
-            const email = document.getElementById('c-email').value;
-            const cidade = document.getElementById('c-cidade').value;
-            const estado = document.getElementById('c-estado').value;
-            const endereco = document.getElementById('c-endereco').value;
-            const observacoes = document.getElementById('c-observacoes').value;
-            
-            appState.clientes.push({ id: 'c' + Date.now(), nome, cpf_cnpj, telefone, whatsapp, email, cidade, estado, endereco, observacoes, status: "Ativo" });
-            saveState();
-            renderClientes();
-            closeModal('modal-cliente');
-            document.getElementById('form-cliente').reset();
-            showToast("Cliente adicionado!");
+            const d = {
+                nome: document.getElementById('c-nome').value.trim() || "Cliente Sem Nome",
+                cpf_cnpj: document.getElementById('c-cpf-cnpj').value,
+                telefone: document.getElementById('c-telefone').value,
+                whatsapp: document.getElementById('c-whatsapp').value,
+                email: document.getElementById('c-email').value,
+                cidade: document.getElementById('c-cidade').value,
+                estado: document.getElementById('c-estado').value,
+                endereco: document.getElementById('c-endereco').value,
+                observacoes: document.getElementById('c-observacoes').value
+            };
+            if (editClienteId) {
+                const i = appState.clientes.findIndex(c => c.id === editClienteId);
+                if (i !== -1) appState.clientes[i] = { ...appState.clientes[i], ...d };
+                showToast("Cliente atualizado!");
+            } else {
+                appState.clientes.push({ id: 'c' + Date.now(), ...d, status: 'Ativo' });
+                showToast("Cliente cadastrado!");
+            }
+            editClienteId = null; saveState(); renderClientes(); renderDashboard(); closeModal('modal-cliente');
         });
 
         document.getElementById('form-pedido').addEventListener('submit', (e) => {
             e.preventDefault();
-            const clienteId = document.getElementById('p-cliente').value;
-            const servico = document.getElementById('p-servico').value;
-            const material = document.getElementById('p-material').value;
-            const quantidade = parseInt(document.getElementById('p-quantidade').value);
-            const largura = parseFloat(document.getElementById('p-largura').value);
-            const altura = parseFloat(document.getElementById('p-altura').value);
-            const acabamento = document.getElementById('p-acabamento').value;
-            const valor = parseFloat(document.getElementById('p-total').value);
-            const despesa = parseFloat(document.getElementById('p-despesa').value);
-            const data_entrega = document.getElementById('p-data-entrega').value;
-            const responsavel = document.getElementById('p-responsavel').value;
-            const forma_pagamento = document.getElementById('p-forma-pagamento').value;
-            const entrega = document.getElementById('p-status').value;
-            const observacoes = document.getElementById('p-observacoes').value;
-            const autoFinance = document.getElementById('p-finance-auto').checked;
-            
-            if (!clienteId) {
-                showToast("Selecione um cliente!", "error");
-                return;
-            }
-            
-            appState.pedidos.push({ id: 'p' + Date.now(), clienteId, servico, material, quantidade, largura, altura, acabamento, valor, despesa, data_entrega, responsavel, forma_pagamento, entrega, observacoes, pago: (forma_pagamento === 'Dinheiro' ? 'Pago' : 'Pendente') });
-            
-            if (autoFinance) {
-                const cliente = appState.clientes.find(c => c.id === clienteId);
-                appState.financeiro.push({
-                    id: 'f' + Date.now(),
-                    tipo: 'Entrada',
-                    descricao: `Pedido: ${servico} (${cliente ? cliente.nome : 'Cliente'})`,
-                    valor,
-                    data: data_entrega,
-                    categoria: 'Venda'
-                });
-            }
-            
-            saveState();
-            renderPedidos();
-            closeModal('modal-pedido');
-            document.getElementById('form-pedido').reset();
-            document.getElementById('p-finance-auto-box').classList.add('hidden');
-            showToast("Pedido salvo com sucesso!");
-        });
+            const clienteId = document.getElementById('p-cliente').value || '';
+            const qty = parseInt(document.getElementById('p-quantidade').value) || 1;
+            const totalVal = parseFloat(document.getElementById('p-total').value) || 0;
+            const disp = parseFloat(document.getElementById('p-despesa').value) || 0;
+            const dt = document.getElementById('p-data-entrega').value || todayStr;
+            const resp = document.getElementById('p-responsavel').value || 'N/A';
+            const formPg = document.getElementById('p-forma-pagamento').value;
+            const status = document.getElementById('p-status').value;
+            const obs = document.getElementById('p-observacoes').value;
+            const autoFin = document.getElementById('p-finance-auto').checked;
 
-        document.getElementById('form-financeiro').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const tipo = document.getElementById('f-tipo').value;
-            const descricao = document.getElementById('f-descricao').value;
-            const valor = parseFloat(document.getElementById('f-valor').value);
-            const data = document.getElementById('f-data').value;
-            const categoria = document.getElementById('f-categoria').value;
-            
-            appState.financeiro.push({ id: 'f' + Date.now(), tipo, descricao, valor, data, categoria });
-            saveState();
-            renderFinanceiro();
-            closeModal('modal-financeiro');
-            document.getElementById('form-financeiro').reset();
-            showToast("Lançamento registrado!");
+            const items = [...currentOrderItems];
+            // Se nenhum item foi adicionado ao carrinho, define a descrição padrão baseada no Serviço digitado
+            const servicoPrincipal = document.getElementById('p-servico').value.trim() || (items.length > 0 ? items[0].nome : 'Serviço Sublimado');
+            const materialPrincipal = document.getElementById('p-material').value.trim() || 'Geral';
+
+            const pData = {
+                clienteId, servico: servicoPrincipal, material: materialPrincipal,
+                quantidade: qty, largura: parseFloat(document.getElementById('p-largura').value) || 1.0, altura: parseFloat(document.getElementById('p-altura').value) || 1.0,
+                acabamento: document.getElementById('p-acabamento').value, valor: totalVal, despesa: disp, data_entrega: dt,
+                responsavel: resp, forma_pagamento: formPg, entrega: status, observacoes: obs, items
+            };
+
+            if (editPedidoId) {
+                const i = appState.pedidos.findIndex(p => p.id === editPedidoId);
+                if (i !== -1) appState.pedidos[i] = { ...appState.pedidos[i], ...pData };
+                showToast("Pedido atualizado!");
+            } else {
+                appState.pedidos.push({ id: 'p' + Date.now(), ...pData, pago: (formPg === 'Dinheiro' ? 'Pago' : 'Pendente') });
+                if (autoFin) {
+                    const cliName = (appState.clientes.find(c => c.id === clienteId) || {nome: 'Cliente'}).nome;
+                    appState.financeiro.push({ id: 'f' + Date.now(), tipo: 'Entrada', descricao: `Pedido: ${pData.servico} (${cliName})`, valor: totalVal, data: dt, categoria: 'Venda' });
+                }
+                showToast("Pedido cadastrado!");
+            }
+            editPedidoId = null; currentOrderItems = []; saveState(); renderPedidos(); renderDashboard(); closeModal('modal-pedido');
         });
 
         document.getElementById('form-despesa').addEventListener('submit', (e) => {
             e.preventDefault();
-            const nome_produto = document.getElementById('d-nome-produto').value;
-            const valor_unitario = parseFloat(document.getElementById('d-valor-unitario').value);
-            const quantidade = parseInt(document.getElementById('d-quantidade').value);
-            const data_compra = document.getElementById('d-data-compra').value;
-            const tipo_pagamento = document.getElementById('d-tipo-pagamento').value;
-            const onde_comprou = document.getElementById('d-onde-comprou').value;
-            const total_gasto = parseFloat(document.getElementById('d-total-gasto').value);
-            const autoFinance = document.getElementById('d-finance-auto').checked;
-            
-            appState.despesas.push({ id: 'd' + Date.now(), nome_produto, valor_unitario, quantidade, data_compra, tipo_pagamento, onde_comprou, total_gasto });
-            
-            if (autoFinance) {
-                appState.financeiro.push({
-                    id: 'f' + Date.now(),
-                    tipo: 'Saída',
-                    descricao: `Despesa: ${nome_produto}`,
-                    valor: total_gasto,
-                    data: data_compra,
-                    categoria: 'Insumos'
-                });
+            const dData = {
+                nome_produto: document.getElementById('d-nome-produto').value.trim() || "Produto Sem Nome",
+                valor_unitario: parseFloat(document.getElementById('d-valor-unitario').value) || 0,
+                quantidade: parseInt(document.getElementById('d-quantidade').value) || 1,
+                data_compra: document.getElementById('d-data-compra').value || todayStr,
+                tipo_pagamento: document.getElementById('d-tipo-pagamento').value,
+                onde_comprou: document.getElementById('d-onde-comprou').value || 'N/A',
+                total_gasto: parseFloat(document.getElementById('d-total-gasto').value) || 0,
+                pago: 'Sim'
+            };
+            appState.despesas.push({ id: 'd' + Date.now(), ...dData });
+            if (document.getElementById('d-finance-auto').checked) {
+                appState.financeiro.push({ id: 'f' + Date.now(), tipo: 'Saída', descricao: `Despesa: ${dData.nome_produto}`, valor: dData.total_gasto, data: dData.data_compra, categoria: 'Insumos' });
             }
-            
-            saveState();
-            renderDespesas();
-            closeModal('modal-despesa');
-            document.getElementById('form-despesa').reset();
-            document.getElementById('d-finance-auto-box').classList.add('hidden');
-            showToast("Despesa registrada!");
+            saveState(); renderDespesas(); renderDashboard(); closeModal('modal-despesa'); document.getElementById('form-despesa').reset(); showToast("Despesa cadastrada!");
         });
 
-        // ================================= RENDEREZADOR DAS VISTAS =================================
+        document.getElementById('form-financeiro').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const fData = {
+                tipo: document.getElementById('f-tipo').value, categoria: document.getElementById('f-categoria').value,
+                descricao: document.getElementById('f-descricao').value.trim() || "Lançamento Sem Nome",
+                valor: parseFloat(document.getElementById('f-valor').value) || 0,
+                data: document.getElementById('f-data').value || todayStr
+            };
+            appState.financeiro.push({ id: 'f' + Date.now(), ...fData });
+            saveState(); renderFinanceiro(); renderDashboard(); closeModal('modal-financeiro'); document.getElementById('form-financeiro').reset(); showToast("Lançamento registrado!");
+        });
 
-        function renderDashboard() {
-            const todayStr = '2026-07-27';
-
-            // Faturamento Dia
-            const faturamentoDia = appState.financeiro
-                .filter(f => f.tipo === 'Entrada' && f.data === todayStr)
-                .reduce((sum, item) => sum + item.valor, 0);
-            document.getElementById('kpi-faturamento-dia').textContent = formatCurrency(faturamentoDia);
-
-            // Em Produção
-            const emProducao = appState.pedidos.filter(p => p.entrega === 'Em Produção').length;
-            document.getElementById('kpi-em-producao').textContent = emProducao;
-
-            // Entregues
-            const entregues = appState.pedidos.filter(p => p.entrega === 'Finalizado').length;
-            document.getElementById('kpi-entregues').textContent = entregues;
-
-            // Clientes
-            const totalClientes = appState.clientes.length;
-            document.getElementById('kpi-clientes').textContent = totalClientes;
-
-            // Investimento Total
-            const investimentoTotal = appState.financeiro
-                .filter(f => f.tipo === 'Saída' && f.categoria === 'Investimento')
-                .reduce((sum, item) => sum + item.valor, 0);
-            document.getElementById('kpi-investimento-total').textContent = formatCurrency(investimentoTotal);
-
-            // Lucro
-            const totalEntradas = appState.financeiro.filter(f => f.tipo === 'Entrada').reduce((sum, item) => sum + item.valor, 0);
-            const totalSaidas = appState.financeiro.filter(f => f.tipo === 'Saída').reduce((sum, item) => sum + item.valor, 0);
-            const lucroTotal = totalEntradas - totalSaidas;
-            document.getElementById('kpi-lucro').textContent = formatCurrency(lucroTotal);
-
-            // Pedidos Pendentes
-            const pedidosPendentes = appState.pedidos.filter(p => p.entrega === 'AGUARDANDO').length;
-            document.getElementById('kpi-pedidos-pendentes').textContent = pedidosPendentes;
-
-            // Pedidos Dia
-            const pedidosDia = appState.pedidos.filter(p => p.data_entrega === todayStr).length;
-            document.getElementById('kpi-pedidos-dia').textContent = pedidosDia;
-
-            // --- GRÁFICO: ÚLTIMOS 7 DIAS ---
-            const last7DaysLabels = [];
-            const last7DaysData = [];
-            for (let i = 6; i >= 0; i--) {
-                const d = new Date();
-                d.setDate(d.getDate() - i);
-                const dateStr = d.toLocaleDateString('sv-SE');
-                const label = d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
-                last7DaysLabels.push(label);
-                
-                const dailyTotal = appState.financeiro
-                    .filter(f => f.tipo === 'Entrada' && f.data === dateStr)
-                    .reduce((sum, item) => sum + item.valor, 0);
-                last7DaysData.push(dailyTotal);
-            }
-
-            if (vendasChartInstance) vendasChartInstance.destroy();
-            const ctxVendas = document.getElementById('vendasSeteDiasChart').getContext('2d');
-            const gradient = ctxVendas.createLinearGradient(0, 0, 0, 200);
-            gradient.addColorStop(0, 'rgba(255, 215, 0, 0.3)');
-            gradient.addColorStop(1, 'rgba(255, 215, 0, 0)');
-
-            vendasChartInstance = new Chart(ctxVendas, {
-                type: 'line',
-                data: {
-                    labels: last7DaysLabels,
-                    datasets: [{
-                        label: 'Vendas (R$)',
-                        data: last7DaysData,
-                        borderColor: '#ffd700',
-                        borderWidth: 2,
-                        backgroundColor: gradient,
-                        fill: true,
-                        tension: 0.3,
-                        pointBackgroundColor: '#ffd700',
-                        pointRadius: 4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        x: { ticks: { color: '#a3a3a3' }, grid: { color: '#222' } },
-                        y: { ticks: { color: '#a3a3a3' }, grid: { color: '#222' } }
-                    }
-                }
-            });
-
-            // --- WIDGET: SERVIÇOS MAIS VENDIDOS ---
-            const counts = {};
-            appState.pedidos.forEach(p => {
-                const desc = p.servico || 'Serviço Sublimado';
-                counts[desc] = (counts[desc] || 0) + 1;
-            });
-            const sortedServices = Object.keys(counts).map(key => ({
-                name: key,
-                count: counts[key]
-            })).sort((a, b) => b.count - a.count).slice(0, 5);
-
-            const servicesContainer = document.getElementById('servicos-mais-vendidos-list');
-            servicesContainer.innerHTML = '';
-            
-            if (sortedServices.length === 0) {
-                servicesContainer.innerHTML = `<p class="text-sm text-neutral-500 text-center py-8">Sem serviços.</p>`;
-            } else {
-                const totalCount = sortedServices.reduce((sum, s) => sum + s.count, 0);
-                sortedServices.forEach((s, idx) => {
-                    const percentage = totalCount > 0 ? ((s.count / totalCount) * 100).toFixed(0) : 0;
-                    const medalColor = idx === 0 ? 'text-[#ffd700]' : idx === 1 ? 'text-gray-300' : idx === 2 ? 'text-amber-600' : 'text-neutral-500';
-                    servicesContainer.innerHTML += `
-                        <div class="space-y-1">
-                            <div class="flex justify-between items-center text-sm">
-                                <span class="flex items-center gap-2 font-semibold text-neutral-200 truncate max-w-[70%]">
-                                    <i class="fa-solid fa-medal ${medalColor}"></i> ${s.name}
-                                </span>
-                                <span class="text-xs text-neutral-400 font-bold whitespace-nowrap">${s.count} (${percentage}%)</span>
-                            </div>
-                            <div class="w-full bg-neutral-800 rounded-full h-2">
-                                <div class="bg-gold h-2 rounded-full" style="width: ${percentage}%"></div>
-                            </div>
-                        </div>
-                    `;
-                });
-            }
-        }
-
-        function renderPedidos() {
-            const tbody = document.getElementById('pedidos-tbody');
-            tbody.innerHTML = '';
-            const search = document.getElementById('pedidos-search').value.toLowerCase();
-            const filtered = appState.pedidos.filter(p => {
-                const cliente = appState.clientes.find(c => c.id === p.clienteId);
-                const cliNome = cliente ? cliente.nome.toLowerCase() : '';
-                return cliNome.includes(search) || p.servico.toLowerCase().includes(search);
-            });
-
-            if (filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" class="p-4 text-center text-neutral-500 text-sm">Nenhum pedido encontrado.</td></tr>`;
-                return;
-            }
-
-            filtered.forEach(p => {
-                const cliente = appState.clientes.find(c => c.id === p.clienteId);
-                
-                let entClass = 'bg-neutral-800 text-neutral-400 border border-neutral-700';
-                if (p.entrega === 'Finalizado') entClass = 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20';
-                else if (p.entrega === 'Em Produção') entClass = 'bg-blue-500/10 text-blue-400 border border-blue-500/20';
-                else if (p.entrega === 'AGUARDANDO') entClass = 'bg-amber-500/10 text-amber-400 border border-amber-500/20';
-
-                tbody.innerHTML += `
-                    <tr class="hover:bg-neutral-800/40 border-b border-darkBorder transition">
-                        <td class="p-4 text-sm text-neutral-200 font-semibold">${cliente ? cliente.nome : 'N/D'}</td>
-                        <td class="p-4 text-sm text-neutral-300">${p.servico} / ${p.material || 'N/D'}</td>
-                        <td class="p-4 text-sm text-neutral-400">${p.largura}x${p.altura}m (Qtd: ${p.quantidade})</td>
-                        <td class="p-4 text-sm">
-                            <span class="text-emerald-400 font-bold">${formatCurrency(p.valor)}</span><br>
-                            <span class="text-xs text-red-400">Gasto: ${formatCurrency(p.despesa || 0)}</span>
-                        </td>
-                        <td class="p-4 text-sm"><span class="px-2.5 py-1 rounded-full text-xs font-semibold ${entClass}">${p.entrega}</span></td>
-                        <td class="p-4 text-sm text-neutral-300">${p.responsavel || 'N/D'}</td>
-                        <td class="p-4 text-sm text-right space-x-2">
-                            <button onclick="togglePedidoStatus('${p.id}')" class="text-neutral-400 hover:text-gold transition"><i class="fa-solid fa-arrows-rotate"></i></button>
-                            <button onclick="deletePedido('${p.id}')" class="text-neutral-400 hover:text-red-500 transition"><i class="fa-solid fa-trash-can"></i></button>
-                        </td>
-                    </tr>
-                `;
-            });
-        }
-
+        function deleteFinanceiro(id) { if (confirm("Apagar lançamento?")) { appState.financeiro = appState.financeiro.filter(f => f.id !== id); saveState(); renderFinanceiro(); renderDashboard(); } }
+        function deletePedido(id) { if (confirm("Apagar pedido?")) { appState.pedidos = appState.pedidos.filter(p => p.id !== id); saveState(); renderPedidos(); renderDashboard(); } }
         function togglePedidoStatus(id) {
-            const p = appState.pedidos.find(item => item.id === id);
-            if (!p) return;
-
+            const p = appState.pedidos.find(item => item.id === id); if (!p) return;
             const etapas = ['AGUARDANDO', 'Em Produção', 'Finalizado'];
-            const nextIdx = (etapas.indexOf(p.entrega) + 1) % etapas.length;
-            if (confirm(`Avançar status da produção para: ${etapas[nextIdx]}?`)) {
-                p.entrega = etapas[nextIdx];
-            }
-
-            saveState();
-            renderPedidos();
-            showToast("Etapa atualizada!");
+            p.entrega = etapas[(etapas.indexOf(p.entrega) + 1) % etapas.length];
+            saveState(); renderPedidos(); renderDashboard(); showToast("Status atualizado!");
         }
 
-        function deletePedido(id) {
-            if (confirm("Deseja apagar este pedido?")) {
-                appState.pedidos = appState.pedidos.filter(p => p.id !== id);
-                saveState();
-                renderPedidos();
-                showToast("Pedido excluído.");
-            }
-        }
+        // ================================= EXPORTAÇÃO PDF E WHATSAPP =================================
 
-        function renderFinanceiro() {
-            const tbody = document.getElementById('financeiro-tbody');
-            tbody.innerHTML = '';
-            const search = document.getElementById('financeiro-search').value.toLowerCase();
-            const filtered = appState.financeiro.filter(f => f.descricao.toLowerCase().includes(search) || f.categoria.toLowerCase().includes(search));
-
-            // Calcular Métricas Exclusivas Solicitadas
+        function downloadPDF() {
             const receitas = appState.financeiro.filter(f => f.tipo === 'Entrada').reduce((sum, item) => sum + item.valor, 0);
             const investimentos = appState.financeiro.filter(f => f.tipo === 'Saída' && f.categoria === 'Investimento').reduce((sum, item) => sum + item.valor, 0);
             const despesas = appState.financeiro.filter(f => f.tipo === 'Saída' && f.categoria !== 'Investimento').reduce((sum, item) => sum + item.valor, 0);
             const lucro = receitas - despesas - investimentos;
-            const reservaLucro = lucro > 0 ? lucro * 0.10 : 0;
-            const lucroLiquido = lucro - reservaLucro;
+            const reserva = lucro > 0 ? lucro * 0.10 : 0;
+            const liq = lucro - reserva;
 
-            document.getElementById('fin-kpi-receitas').textContent = formatCurrency(receitas);
-            document.getElementById('fin-kpi-investimentos').textContent = formatCurrency(investimentos);
-            document.getElementById('fin-kpi-despesas').textContent = formatCurrency(despesas);
-            document.getElementById('fin-kpi-lucro').textContent = formatCurrency(lucro);
-            document.getElementById('fin-kpi-10lucro').textContent = formatCurrency(reservaLucro);
-            document.getElementById('fin-kpi-lucro-liquido').textContent = formatCurrency(lucroLiquido);
-
-            if (filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-neutral-500 text-sm">Sem movimentações.</td></tr>`;
-                return;
-            }
-
-            filtered.forEach(f => {
-                const tipoClass = f.tipo === 'Entrada' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-red-500/10 text-red-400 border border-red-500/20';
-                tbody.innerHTML += `
-                    <tr class="hover:bg-neutral-800/40 border-b border-darkBorder transition">
-                        <td class="p-4 text-sm"><span class="px-2.5 py-1 rounded-full text-xs font-semibold ${tipoClass}">${f.tipo}</span></td>
-                        <td class="p-4 text-sm text-neutral-200 font-semibold">${f.descricao}</td>
-                        <td class="p-4 text-sm font-bold text-white">${formatCurrency(f.valor)}</td>
-                        <td class="p-4 text-sm text-neutral-400">${formatDate(f.data)}</td>
-                        <td class="p-4 text-sm"><span class="px-2.5 py-1 bg-neutral-800 border border-darkBorder rounded text-neutral-300 text-xs">${f.categoria}</span></td>
-                        <td class="p-4 text-sm text-right">
-                            <button onclick="deleteFinanceiro('${f.id}')" class="text-neutral-400 hover:text-red-500 transition"><i class="fa-solid fa-trash-can"></i></button>
-                        </td>
-                    </tr>
-                `;
-            });
+            const w = window.open('', '_blank');
+            w.document.write('<html><head><title>PHSUBLIME</title><style>body{font-family:sans-serif;padding:30px;}table{width:100%;border-collapse:collapse;}th,td{border:1px solid #ddd;padding:10px;}</style></head><body>');
+            w.document.write('<h2>PHSUBLIME - Relatório Financeiro</h2><p>Gerado em: ' + new Date().toLocaleString('pt-BR') + '</p>');
+            w.document.write('<table><thead><tr><th>Indicador</th><th>Valor</th></tr></thead><tbody>');
+            w.document.write('<tr><td>Receitas</td><td>' + formatCurrency(receitas) + '</td></tr>');
+            w.document.write('<tr><td>Investimentos</td><td>' + formatCurrency(investimentos) + '</td></tr>');
+            w.document.write('<tr><td>Despesas</td><td>' + formatCurrency(despesas) + '</td></tr>');
+            w.document.write('<tr><td>Lucro Bruto</td><td>' + formatCurrency(lucro) + '</td></tr>');
+            w.document.write('<tr><td>10% Lucro (Reserva)</td><td>' + formatCurrency(reserva) + '</td></tr>');
+            w.document.write('<tr style="font-weight:bold;background:#ecfdf5"><td>Lucro Líquido</td><td>' + formatCurrency(liq) + '</td></tr>');
+            w.document.write('</tbody></table>');
+            w.document.write('<script>window.onload=function(){window.print();window.close();};</' + 'script></body></html>');
+            w.document.close();
         }
 
-        function deleteFinanceiro(id) {
-            if (confirm("Deseja deletar este lançamento do livro caixa?")) {
-                appState.financeiro = appState.financeiro.filter(f => f.id !== id);
-                saveState();
-                renderFinanceiro();
-                showToast("Lançamento excluído.");
-            }
-        }
-
-        // Relatórios: WhatsApp Direto para 5521986147221
         function sendReportWhatsApp() {
             const receitas = appState.financeiro.filter(f => f.tipo === 'Entrada').reduce((sum, item) => sum + item.valor, 0);
             const investimentos = appState.financeiro.filter(f => f.tipo === 'Saída' && f.categoria === 'Investimento').reduce((sum, item) => sum + item.valor, 0);
             const despesas = appState.financeiro.filter(f => f.tipo === 'Saída' && f.categoria !== 'Investimento').reduce((sum, item) => sum + item.valor, 0);
             const lucro = receitas - despesas - investimentos;
-            const reservaLucro = lucro > 0 ? lucro * 0.10 : 0;
-            const lucroLiquido = lucro - reservaLucro;
+            const reserva = lucro > 0 ? lucro * 0.10 : 0;
+            const liq = lucro - reserva;
 
             const text = `*PHSUBLIME - RELATÓRIO FINANCEIRO CONSOLIDADO*\n\n` +
                          `📊 *Receitas:* ${formatCurrency(receitas)}\n` +
                          `💼 *Investimentos:* ${formatCurrency(investimentos)}\n` +
                          `📉 *Despesas:* ${formatCurrency(despesas)}\n\n` +
                          `📈 *Lucro Bruto:* ${formatCurrency(lucro)}\n` +
-                         `💰 *10% Lucro (Reserva):* ${formatCurrency(reservaLucro)}\n` +
-                         `🏆 *Lucro Líquido:* ${formatCurrency(lucroLiquido)}\n\n` +
+                         `💰 *10% Lucro (Reserva):* ${formatCurrency(reserva)}\n` +
+                         `🏆 *Lucro Líquido:* ${formatCurrency(liq)}\n\n` +
                          `_Gerado em: ${new Date().toLocaleString('pt-BR')}_`;
             
             window.open(`https://api.whatsapp.com/send?phone=5521986147221&text=${encodeURIComponent(text)}`, '_blank');
             showToast("Mensagem de relatório enviada!");
         }
 
-        // Relatórios: Baixa em PDF com visualização elegante de impressão
-        function downloadPDF() {
-            const receitas = appState.financeiro.filter(f => f.tipo === 'Entrada').reduce((sum, item) => sum + item.valor, 0);
-            const investimentos = appState.financeiro.filter(f => f.tipo === 'Saída' && f.categoria === 'Investimento').reduce((sum, item) => sum + item.valor, 0);
-            const despesas = appState.financeiro.filter(f => f.tipo === 'Saída' && f.categoria !== 'Investimento').reduce((sum, item) => sum + item.valor, 0);
-            const lucro = receitas - despesas - investimentos;
-            const reservaLucro = lucro > 0 ? lucro * 0.10 : 0;
-            const lucroLiquido = lucro - reservaLucro;
-
-            const printWindow = window.open('', '_blank');
-            printWindow.document.write(`
-                <html>
-                <head>
-                    <title>Relatório Financeiro - PHSUBLIME</title>
-                    <style>
-                        body { font-family: sans-serif; padding: 40px; color: #111; }
-                        h1 { color: #b45309; text-align: center; font-size: 24px; margin-bottom: 5px; }
-                        h3 { text-align: center; color: #555; margin-top: 0; margin-bottom: 30px; font-weight: normal; }
-                        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-                        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
-                        th { background-color: #f8fafc; font-weight: bold; }
-                        .total-row { font-weight: bold; background-color: #f1f5f9; }
-                        .lucro-liquido { background-color: #ecfdf5; font-weight: bold; }
-                        .date { text-align: center; color: #777; font-size: 13px; margin-bottom: 40px; }
-                        .footer { text-align: center; margin-top: 60px; font-size: 12px; color: #aaa; border-top: 1px dashed #eee; padding-top: 20px; }
-                    </style>
-                </head>
-                <body>
-                    <h1>PHSUBLIME</h1>
-                    <h3>Extrato Consolidado do Livro Caixa</h3>
-                    <p class="date">Relatório gerado em: ${new Date().toLocaleString('pt-BR')}</p>
-                    
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Indicador</th>
-                                <th>Valor Calculado</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr><td>Receitas</td><td>${formatCurrency(receitas)}</td></tr>
-                            <tr><td>Investimentos</td><td>${formatCurrency(investimentos)}</td></tr>
-                            <tr><td>Despesas</td><td>${formatCurrency(despesas)}</td></tr>
-                            <tr class="total-row"><td>Lucro Bruto</td><td>${formatCurrency(lucro)}</td></tr>
-                            <tr><td>10% Lucro (Reserva)</td><td>${formatCurrency(reservaLucro)}</td></tr>
-                            <tr class="lucro-liquido"><td>Lucro Líquido</td><td>${formatCurrency(lucroLiquido)}</td></tr>
-                        </tbody>
-                    </table>
-                    
-                    <p class="footer">Este documento foi impresso e exportado via plataforma de gestão PHSUBLIME.</p>
-                    <script>
-                        window.onload = function() {
-                            window.print();
-                            window.close();
-                        };
-                    <\/script>
-                </body>
-                </html>
-            `);
-            printWindow.document.close();
-        }
-
-        function renderDespesas() {
-            const tbody = document.getElementById('despesas-tbody');
-            tbody.innerHTML = '';
-            const search = document.getElementById('despesas-search').value.toLowerCase();
-            const filtered = appState.despesas.filter(d => d.nome_produto.toLowerCase().includes(search) || d.onde_comprou.toLowerCase().includes(search));
-
-            if (filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="8" class="p-4 text-center text-neutral-500 text-sm">Sem despesas encontradas.</td></tr>`;
-                return;
-            }
-
-            filtered.forEach(d => {
-                tbody.innerHTML += `
-                    <tr class="hover:bg-neutral-800/40 border-b border-darkBorder transition">
-                        <td class="p-4 text-sm text-neutral-200 font-semibold">${d.nome_produto}</td>
-                        <td class="p-4 text-sm text-neutral-300 font-bold">${formatCurrency(d.valor_unitario)}</td>
-                        <td class="p-4 text-sm text-neutral-400">${d.quantidade}</td>
-                        <td class="p-4 text-sm text-neutral-400">${formatDate(d.data_compra)}</td>
-                        <td class="p-4 text-sm text-neutral-300">${d.tipo_pagamento}</td>
-                        <td class="p-4 text-sm text-neutral-300">${d.onde_comprou}</td>
-                        <td class="p-4 text-sm font-bold text-red-400 text-right">${formatCurrency(d.total_gasto)}</td>
-                        <td class="p-4 text-sm text-right">
-                            <button onclick="deleteDespesa('${d.id}')" class="text-neutral-400 hover:text-red-500 transition"><i class="fa-solid fa-trash-can"></i></button>
-                        </td>
-                    </tr>
-                `;
-            });
-        }
-
-        function deleteDespesa(id) {
-            if (confirm("Deseja remover esta despesa?")) {
-                appState.despesas = appState.despesas.filter(d => d.id !== id);
-                saveState();
-                renderDespesas();
-                showToast("Despesa removida.");
-            }
-        }
-
-        function renderClientes() {
-            const tbody = document.getElementById('clientes-tbody');
-            tbody.innerHTML = '';
-            const search = document.getElementById('clientes-search').value.toLowerCase();
-            const filtered = appState.clientes.filter(c => c.nome.toLowerCase().includes(search) || (c.cpf_cnpj && c.cpf_cnpj.toLowerCase().includes(search)));
-
-            if (filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-neutral-500 text-sm">Nenhum cliente cadastrado.</td></tr>`;
-                return;
-            }
-
-            filtered.forEach(c => {
-                tbody.innerHTML += `
-                    <tr class="hover:bg-neutral-800/40 border-b border-darkBorder transition">
-                        <td class="p-4 text-sm text-neutral-200 font-semibold">${c.nome}</td>
-                        <td class="p-4 text-sm text-neutral-400">${c.cpf_cnpj || 'N/A'}</td>
-                        <td class="p-4 text-sm text-neutral-300">
-                            Fixo: ${c.telefone || 'N/A'}<br>
-                            <span class="text-[#25d366]">Whats: ${c.whatsapp || 'N/A'}</span>
-                        </td>
-                        <td class="p-4 text-sm text-neutral-300">
-                            Email: ${c.email || 'N/A'}<br>
-                            <span class="text-xs text-neutral-400">End: ${c.endereco || 'N/A'} (${c.cidade}/${c.estado})</span>
-                        </td>
-                        <td class="p-4 text-sm text-neutral-400 italic">${c.observacoes || 'N/A'}</td>
-                        <td class="p-4 text-sm text-right">
-                            <button onclick="deleteCliente('${c.id}')" class="text-neutral-400 hover:text-red-500 transition"><i class="fa-solid fa-trash-can"></i></button>
-                        </td>
-                    </tr>
-                `;
-            });
-        }
-
-        function deleteCliente(id) {
-            if (confirm("Remover este cliente?")) {
-                appState.clientes = appState.clientes.filter(c => c.id !== id);
-                saveState();
-                renderClientes();
-                showToast("Cliente removido.");
-            }
-        }
-
-        function renderHistorico() {
-            const tbody = document.getElementById('historico-tbody');
-            tbody.innerHTML = '';
-            disableHistoryButtons();
-
-            if (appState.historico.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-neutral-500 text-sm">Sem fechamentos cadastrados.</td></tr>`;
-                return;
-            }
-
-            appState.historico.forEach(h => {
-                const colors = h.saldo >= 0 ? 'text-emerald-400' : 'text-red-400';
-                tbody.innerHTML += `
-                    <tr onclick="selectHistoryRow('${h.id}', this)" class="history-row cursor-pointer hover:bg-neutral-800 border-b border-darkBorder transition">
-                        <td class="p-4 text-sm font-bold text-neutral-200">${h.mesYear}</td>
-                        <td class="p-4 text-sm text-emerald-400">${formatCurrency(h.receitas)}</td>
-                        <td class="p-4 text-sm text-red-400">${formatCurrency(h.despesas)}</td>
-                        <td class="p-4 text-sm font-black ${colors}">${formatCurrency(h.saldo)}</td>
-                        <td class="p-4 text-sm text-neutral-400">${h.totalPedidos}</td>
-                    </tr>
-                `;
-            });
-        }
+        // ================================= COMPLEMENTOS HISTÓRICO E INICIAIS =================================
 
         function selectHistoryRow(id, element) {
             selectedHistoryId = id;
-            document.querySelectorAll('.history-row').forEach(row => {
-                row.classList.remove('bg-neutral-800', 'border-l-4', 'border-gold');
-            });
+            document.querySelectorAll('.history-row').forEach(row => { row.classList.remove('bg-neutral-800', 'border-l-4', 'border-gold'); });
             element.classList.add('bg-neutral-800', 'border-l-4', 'border-gold');
-
             document.getElementById('history-copy-btn').classList.remove('opacity-50', 'cursor-not-allowed');
             document.getElementById('history-whatsapp-btn').classList.remove('opacity-50', 'cursor-not-allowed');
             document.getElementById('history-delete-btn').classList.remove('opacity-50', 'cursor-not-allowed');
         }
 
-        function disableHistoryButtons() {
-            selectedHistoryId = null;
-            document.getElementById('history-copy-btn').classList.add('opacity-50', 'cursor-not-allowed');
-            document.getElementById('history-whatsapp-btn').classList.add('opacity-50', 'cursor-not-allowed');
-            document.getElementById('history-delete-btn').classList.add('opacity-50', 'cursor-not-allowed');
-        }
-
         function triggerCloseMonth() {
-            const d = new Date();
-            const defaultName = d.toLocaleString('pt-BR', { month: 'long', year: 'numeric' });
-            const mesYear = prompt("Qual período de fechamento deseja arquivar?", defaultName);
+            const mesYear = prompt("Qual período de fechamento deseja arquivar?", new Date().toLocaleString('pt-BR', { month: 'long', year: 'numeric' }));
             if (!mesYear) return;
-
             const entradas = appState.financeiro.filter(f => f.tipo === 'Entrada').reduce((sum, item) => sum + item.valor, 0);
             const saidas = appState.financeiro.filter(f => f.tipo === 'Saída').reduce((sum, item) => sum + item.valor, 0);
-            const saldo = entradas - saidas;
-            const totalPedidos = appState.pedidos.length;
+            appState.historico.push({ id: 'h' + Date.now(), mesYear, receitas: entradas, despesas: saidas, saldo: entradas - saidas, totalPedidos: appState.pedidos.length });
+            if (confirm("Fechar mês concluído! Deseja zerar os pedidos, despesas e lançamentos do mês ativo para o novo ciclo?")) { appState.financeiro = []; appState.pedidos = []; appState.despesas = []; }
+            saveState(); renderDashboard();
+        }
 
-            appState.historico.push({ id: 'h' + Date.now(), mesYear, receitas: entradas, despesas: saidas, saldo, totalPedidos });
+        function toggleDespesaPago(id) {
+            const d = appState.despesas.find(item => item.id === id); if (!d) return;
+            d.pago = d.pago === 'Sim' ? 'Não' : 'Sim'; saveState(); renderDespesas(); renderDashboard();
+        }
 
-            if (confirm(`Fechamento arquivado!\n\nDeseja limpar os lançamentos de fluxo de caixa, despesas e pedidos ativos para iniciar o próximo mês?`)) {
-                appState.financeiro = [];
-                appState.pedidos = [];
-                appState.despesas = [];
-            }
-
-            saveState();
-            renderDashboard();
-            showToast("Período arquivado com sucesso!");
+        function deleteHistoryItem() {
+            if (!selectedHistoryId) return;
+            if (confirm("Apagar registro do histórico?")) { appState.historico = appState.historico.filter(item => item.id !== selectedHistoryId); saveState(); renderHistorico(); }
         }
 
         function copyHistoryData() {
             if (!selectedHistoryId) return;
             const h = appState.historico.find(item => item.id === selectedHistoryId);
             const text = `EXTRATO - PHSUBLIME\n\nPeríodo: ${h.mesYear}\nReceitas: ${formatCurrency(h.receitas)}\nDespesas: ${formatCurrency(h.despesas)}\nSaldo Líquido: ${formatCurrency(h.saldo)}\nPedidos Totais: ${h.totalPedidos}`;
-            navigator.clipboard.writeText(text).then(() => {
-                showToast("Copiado!");
-            });
+            navigator.clipboard.writeText(text).then(() => { showToast("Copiado!"); });
         }
 
         function shareWhatsapp() {
@@ -1465,26 +1062,8 @@
             window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
         }
 
-        function deleteHistoryItem() {
-            if (!selectedHistoryId) return;
-            if (confirm("Apagar permanentemente este período consolidado?")) {
-                appState.historico = appState.historico.filter(item => item.id !== selectedHistoryId);
-                saveState();
-                renderHistorico();
-                showToast("Deletado do histórico.");
-            }
-        }
-
-        // Buscas em tempo real
-        document.getElementById('pedidos-search').addEventListener('input', renderPedidos);
-        document.getElementById('clientes-search').addEventListener('input', renderClientes);
-        document.getElementById('financeiro-search').addEventListener('input', renderFinanceiro);
-        document.getElementById('despesas-search').addEventListener('input', renderDespesas);
-
-        // Inicialização
         window.addEventListener('DOMContentLoaded', () => {
-            loadState();
-            switchTab('dashboard');
+            buildMenus(); loadState(); switchTab('dashboard');
         });
     </script>
 </body>
