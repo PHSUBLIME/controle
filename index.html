@@ -1,45 +1,215 @@
 <!doctype html>
 <html lang="pt-BR">
- <head><script>window["__codeletBootstrap__"]=JSON.parse('{"A":"A","B":"20260727-05-609cca1"}');</script><script src="/_sdk/728f18890c0241e5.telemetry_sdk.js" integrity="sha512-cMy0xd29wRWs8nyV19fws/+pwQ0u98A3fewCalZ/OWXQXUwzmcx7jKUuZ511uTJlUe1gP0Undii48zuekOylMw=="></script>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PHSUBLIME - ERP</title>
-  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
-  <script src="/_sdk/935a53bc2e11fb8d.data_sdk.js" integrity="sha512-qr2oyPnEys1WebcOABaRh6hG77r5PWpqeWW6JTKbRJqly/INsfBi31CVNlTmHqjgeLpkVmmHZJUdxSx/32tOFQ=="></script>
-  <style>
-    body { font-family: 'DM Sans', sans-serif; }
-    .gold { color: #FFD700; }
-    .bg-gold { background-color: #FFD700; }
-    .sidebar-btn { display: flex; align-items: center; gap: 10px; padding: 10px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all .2s; width: 100%; text-align: left; border: none; color: #aaa; background: transparent; }
-    .sidebar-btn:hover, .sidebar-btn.active { background: #1a1a1a; color: #FFD700; }
-    .card-kpi { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 12px; padding: 20px; }
-    .card-kpi h4 { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #888; margin-bottom: 6px; }
-    .card-kpi p { font-size: 22px; font-weight: 800; color: #fff; }
-    .table-erp { width: 100%; font-size: 12px; }
-    .table-erp th { text-align: left; padding: 8px 10px; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #666; border-bottom: 1px solid #222; }
-    .table-erp td { padding: 8px 10px; border-bottom: 1px solid #1a1a1a; }
-    .table-erp tbody tr:hover { background: #1a1a1a; }
-    .btn-action { padding: 4px 10px; border-radius: 4px; font-size: 10px; font-weight: 700; text-transform: uppercase; cursor: pointer; border: none; }
-    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.7); display: flex; align-items: center; justify-content: center; z-index: 100; padding: 16px; }
-    .modal-box { background: #111; border: 1px solid #333; border-radius: 12px; padding: 24px; max-width: 600px; width: 90%; max-height: calc(85 * min(var(--vh, 1vh), 1vh)); overflow-y: auto; }
-    .status-production { background: #FFD700; color: #000; }
-    .status-waiting { background: #555; color: #FFD700; }
-    .status-done { background: #22c55e; color: #fff; }
-    .status-delivered { background: #3b82f6; color: #fff; }
-    .status-cancelled { background: #6b7280; color: #fff; }
-    .input-erp { width: 100%; background: #000; border: 1px solid #333; border-radius: 6px; padding: 8px 12px; font-size: 13px; color: #fff; }
-    .input-erp:focus { border-color: #FFD700; outline: none; }
-  </style>
-  <script src="/_sdk/6030e540d4419216.resizing_sdk.js" type="text/javascript" integrity="sha512-b5KWzyoXsbWP4smq4sftIi6Kts4YVBpBsz0BwCViwbBJkK64a3/Z6ZMdWA+qnplNcXw4mhZeqvQi3mOosiRJdA=="></script>
- </head>
- <body data-template-id="__page-root" class="min-h-screen text-white" style="width:100%">
-  <div id="app-main" class="flex min-h-screen w-full"><!-- SIDEBAR -->
-   <aside class="w-56 bg-[#0a0a0a] border-r border-gray-800 p-4 flex flex-col shrink-0 hidden md:flex">
-    <h2 class="text-2xl font-black text-yellow-400 tracking-wide">
-    PHSUBLIME
+<head>
+<script>
+window["__codeletBootstrap__"]=JSON.parse('{"A":"A","B":"20260727-05-609cca1"}');
+</script>
+
+<script src="/_sdk/728f18890c0241e5.telemetry_sdk.js"></script>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>PHSUBLIME - ERP</title>
+
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+<script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+
+<script src="/_sdk/935a53bc2e11fb8d.data_sdk.js"></script>
+
+<style>
+
+html,
+body{
+    margin:0;
+    padding:0;
+    width:100%;
+    min-height:100vh;
+    background:#000 !important;
+    color:#fff;
+    font-family:'DM Sans',sans-serif;
+}
+
+#app-main{
+    background:#000 !important;
+    min-height:100vh;
+}
+
+.gold{
+    color:#FFD700;
+}
+
+.bg-gold{
+    background:#FFD700;
+}
+
+.sidebar-btn{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:10px 16px;
+    border-radius:8px;
+    font-size:13px;
+    font-weight:600;
+    cursor:pointer;
+    transition:.2s;
+    width:100%;
+    text-align:left;
+    border:none;
+    color:#aaa;
+    background:transparent;
+}
+
+.sidebar-btn:hover,
+.sidebar-btn.active{
+    background:#1a1a1a;
+    color:#FFD700;
+}
+
+.card-kpi{
+    background:#111;
+    border:1px solid #2a2a2a;
+    border-radius:12px;
+    padding:20px;
+}
+
+.card-kpi h4{
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    color:#888;
+    margin-bottom:6px;
+}
+
+.card-kpi p{
+    font-size:22px;
+    font-weight:800;
+    color:#fff;
+}
+
+.table-erp{
+    width:100%;
+    font-size:12px;
+    background:#111;
+}
+
+.table-erp th{
+    text-align:left;
+    padding:8px 10px;
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    color:#666;
+    border-bottom:1px solid #222;
+}
+
+.table-erp td{
+    padding:8px 10px;
+    border-bottom:1px solid #1a1a1a;
+}
+
+.table-erp tbody tr:hover{
+    background:#1a1a1a;
+}
+
+.btn-action{
+    padding:4px 10px;
+    border-radius:4px;
+    font-size:10px;
+    font-weight:700;
+    text-transform:uppercase;
+    cursor:pointer;
+    border:none;
+}
+
+.modal-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.7);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:100;
+    padding:16px;
+}
+
+.modal-box{
+    background:#111;
+    border:1px solid #333;
+    border-radius:12px;
+    padding:24px;
+    max-width:600px;
+    width:90%;
+    overflow-y:auto;
+}
+
+.status-production{
+    background:#FFD700;
+    color:#000;
+}
+
+.status-waiting{
+    background:#555;
+    color:#FFD700;
+}
+
+.status-done{
+    background:#22c55e;
+    color:#fff;
+}
+
+.status-delivered{
+    background:#3b82f6;
+    color:#fff;
+}
+
+.status-cancelled{
+    background:#6b7280;
+    color:#fff;
+}
+
+.input-erp{
+    width:100%;
+    background:#000;
+    border:1px solid #333;
+    border-radius:6px;
+    padding:8px 12px;
+    font-size:13px;
+    color:#fff;
+}
+
+.input-erp:focus{
+    border-color:#FFD700;
+    outline:none;
+}
+
+</style>
+
+<script src="/_sdk/6030e540d4419216.resizing_sdk.js"></script>
+
+</head>
+
+<body
+data-template-id="__page-root"
+class="min-h-screen bg-black text-white"
+style="width:100%;background:#000;">
+
+<div id="app-main" class="flex min-h-screen w-full">
+
+<!-- SIDEBAR -->
+
+<aside class="w-56 bg-[#0a0a0a] border-r border-gray-800 p-4 flex flex-col shrink-0 hidden md:flex">
+
+<h2 class="text-2xl font-black text-yellow-400 tracking-wide">
+PHSUBLIME
 </h2>
+
+<p class="text-[10px] uppercase tracking-[4px] text-gray-500 mb-8">
+ERP • GRÁFICA
+</p>
 
 <p class="text-[10px] uppercase tracking-[4px] text-gray-500 mb-8">
     ERP • GRÁFICA
