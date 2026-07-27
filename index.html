@@ -142,7 +142,15 @@
     </section><!-- ORDERS -->
     <section id="page-orders" class="hidden">
      <div class="flex items-center justify-between mb-6">
-      <h2 data-template-id="orders-title" class="canva-text text-2xl font-black"></h2><button data-template-id="orders-add-btn" class="canva-button px-4 py-2 rounded-lg font-bold text-sm" onclick="openOrderModal()"></button>
+     <h2 class="text-2xl font-black">Pedidos</h2>
+
+<button
+  data-template-id="orders-add-btn"
+  class="canva-button px-4 py-2 rounded-lg font-bold text-sm"
+  style="background-color: #FFD700 !important; color: #000000 !important; border: none; cursor: pointer;"
+  onclick="openOrderModal()">
+  + Adicionar Pedido
+</button>
      </div>
      <div class="flex gap-3 mb-4 items-center flex-wrap"><button class="px-3 py-1 text-xs font-bold rounded-lg bg-gold text-black" id="order-filter-all" onclick="setOrderFilter('all')">Todos</button> <button class="px-3 py-1 text-xs font-bold rounded-lg bg-gray-700 text-white" id="order-filter-today" onclick="setOrderFilter('day')">Hoje</button> <label class="text-xs opacity-60 ml-2">Data:</label> <input type="date" id="order-date-filter" class="input-erp" style="width:auto" onchange="setOrderFilter('date')">
      </div>
