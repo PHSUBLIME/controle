@@ -15,7 +15,7 @@
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #000000; }
         
-        /* Oculta sidebar na impressão */
+        /* Oculta elementos na impressão */
         @media print {
             .no-print { display: none !important; }
             body { background: #000000 !important; color: #ffffff !important; }
@@ -195,7 +195,7 @@
                     <div class="flex justify-between items-start">
                         <div>
                             <p class="text-xs font-bold text-yellow-400 uppercase tracking-wider">Clientes</p>
-                            <h3 class="text-2xl font-black text-white mt-1">89</h3>
+                            <h3 class="text-2xl font-black text-white mt-1" id="kpi-clientes-count">89</h3>
                         </div>
                         <div class="p-3 bg-neutral-800 text-yellow-400 border border-neutral-700 rounded-xl">
                             <i class="fa-solid fa-users text-xl"></i>
@@ -265,42 +265,80 @@
 
         <!-- ================= SEÇÃO: CLIENTES ================= -->
         <section id="secao-clientes" class="secao-conteudo hidden space-y-6">
-            <div class="bg-neutral-900 p-6 rounded-2xl border border-neutral-800">
-                <h2 class="text-2xl font-black text-yellow-400">Clientes PHSUBLIME</h2>
-                <p class="text-neutral-400 text-sm mt-1">Gerenciamento da carteira de clientes ativos.</p>
+            
+            <!-- HEADER CLIENTES E BOTÕES -->
+            <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-neutral-900 p-6 rounded-2xl border border-neutral-800">
+                <div>
+                    <h2 class="text-2xl font-black text-yellow-400 flex items-center gap-2">
+                        <i class="fa-solid fa-users text-yellow-400"></i> Histórico de Clientes Cadastrados
+                    </h2>
+                    <p class="text-neutral-400 text-sm mt-1">Gerenciamento completo da base de clientes da PHSUBLIME.</p>
+                </div>
+
+                <!-- BOTÕES DE AÇÃO -->
+                <div class="flex flex-wrap gap-2.5">
+                    <button onclick="abrirModalNovoCliente()" class="flex items-center gap-2 bg-yellow-400 hover:bg-yellow-300 text-black font-bold px-4 py-2.5 rounded-xl text-sm transition-all shadow-lg shadow-yellow-950/30">
+                        <i class="fa-solid fa-user-plus"></i> + Novo Cliente
+                    </button>
+
+                    <button onclick="abrirModalMassa()" class="flex items-center gap-2 bg-neutral-800 hover:bg-neutral-700 text-neutral-200 border border-neutral-700 px-4 py-2.5 rounded-xl font-medium text-sm transition-all">
+                        <i class="fa-solid fa-file-import text-yellow-400"></i> Adicionar em Massa (Planilha/Colar)
+                    </button>
+                </div>
             </div>
+
+            <!-- BARRA DE PESQUISA -->
+            <div class="bg-neutral-900 p-4 rounded-2xl border border-neutral-800 flex items-center gap-3">
+                <i class="fa-solid fa-magnifying-glass text-yellow-400 text-lg ml-2"></i>
+                <input type="text" id="input-pesquisar-cliente" onkeyup="filtrarClientes()" placeholder="Pesquisar por nome, CPF, telefone, WhatsApp, cidade..." class="w-full bg-transparent text-white focus:outline-none text-sm placeholder-neutral-500">
+            </div>
+
+            <!-- TABELA HISTÓRICO DE CLIENTES -->
             <div class="bg-neutral-900 p-6 rounded-2xl border border-neutral-800 overflow-x-auto">
-                <table class="w-full text-left text-sm text-neutral-300">
+                <table class="w-full text-left text-sm text-neutral-300" id="tabela-clientes">
                     <thead class="text-xs uppercase bg-neutral-800 text-yellow-400 border-b border-neutral-700">
                         <tr>
                             <th class="p-3">Nome</th>
-                            <th class="p-3">Contato</th>
-                            <th class="p-3">Total Pedidos</th>
-                            <th class="p-3">Status</th>
+                            <th class="p-3">CPF / CNPJ</th>
+                            <th class="p-3">Telefone / WhatsApp</th>
+                            <th class="p-3">E-mail</th>
+                            <th class="p-3">Cidade / UF</th>
+                            <th class="p-3">Endereço</th>
+                            <th class="p-3">Observações</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-neutral-800">
+                    <tbody class="divide-y divide-neutral-800" id="tabela-clientes-body">
                         <tr>
                             <td class="p-3 font-semibold text-white">Empresa Alfa Ltda</td>
+                            <td class="p-3">12.345.678/0001-90</td>
                             <td class="p-3">(21) 98888-0001</td>
-                            <td class="p-3">12 pedidos</td>
-                            <td class="p-3"><span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-xs px-2.5 py-1 rounded-full">Ativo</span></td>
+                            <td class="p-3">contato@alfa.com.br</td>
+                            <td class="p-3">Rio de Janeiro / RJ</td>
+                            <td class="p-3">Av. Brasil, 1500</td>
+                            <td class="p-3 text-xs text-neutral-400">Cliente VIP - Sublimação mensal</td>
                         </tr>
                         <tr>
                             <td class="p-3 font-semibold text-white">Studio Design RIO</td>
+                            <td class="p-3">987.654.321-00</td>
                             <td class="p-3">(21) 97777-0002</td>
-                            <td class="p-3">8 pedidos</td>
-                            <td class="p-3"><span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-xs px-2.5 py-1 rounded-full">Ativo</span></td>
+                            <td class="p-3">rio@studiodesign.com</td>
+                            <td class="p-3">Niterói / RJ</td>
+                            <td class="p-3">Rua das Flores, 45</td>
+                            <td class="p-3 text-xs text-neutral-400">Prefere entrega via motoboy</td>
                         </tr>
                         <tr>
                             <td class="p-3 font-semibold text-white">Gráfica Express</td>
+                            <td class="p-3">45.678.910/0001-22</td>
                             <td class="p-3">(21) 96666-0003</td>
-                            <td class="p-3">25 pedidos</td>
-                            <td class="p-3"><span class="bg-yellow-400/10 text-yellow-400 border border-yellow-400/30 text-xs px-2.5 py-1 rounded-full">VIP</span></td>
+                            <td class="p-3">grafica@express.com</td>
+                            <td class="p-3">Duque de Caxias / RJ</td>
+                            <td class="p-3">Rua São José, 102</td>
+                            <td class="p-3 text-xs text-neutral-400">Pedido frequente de banners</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
+
         </section>
 
         <!-- ================= SEÇÃO: PEDIDOS ================= -->
@@ -405,6 +443,82 @@
 
     </main>
 
+    <!-- ================= MODAL: NOVO CLIENTE ================= -->
+    <div id="modal-novo-cliente" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-neutral-900 border border-neutral-800 rounded-2xl max-w-2xl w-full p-6 space-y-4 shadow-2xl overflow-y-auto max-h-[90vh]">
+            <div class="flex justify-between items-center border-b border-neutral-800 pb-3">
+                <h3 class="text-xl font-bold text-yellow-400 flex items-center gap-2">
+                    <i class="fa-solid fa-user-plus"></i> Novo Cliente
+                </h3>
+                <button onclick="fecharModalNovoCliente()" class="text-neutral-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="form-novo-cliente" onsubmit="salvarNovoCliente(event)" class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                <div>
+                    <label class="block text-neutral-400 text-xs font-semibold mb-1">Nome</label>
+                    <input type="text" id="cli-nome" placeholder="Nome completo ou razão social" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400">
+                </div>
+                <div>
+                    <label class="block text-neutral-400 text-xs font-semibold mb-1">CPF/CNPJ</label>
+                    <input type="text" id="cli-cpf" placeholder="000.000.000-00" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400">
+                </div>
+                <div>
+                    <label class="block text-neutral-400 text-xs font-semibold mb-1">Telefone</label>
+                    <input type="text" id="cli-telefone" placeholder="(21) 0000-0000" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400">
+                </div>
+                <div>
+                    <label class="block text-neutral-400 text-xs font-semibold mb-1">WhatsApp</label>
+                    <input type="text" id="cli-whatsapp" placeholder="(21) 90000-0000" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400">
+                </div>
+                <div class="md:col-span-2">
+                    <label class="block text-neutral-400 text-xs font-semibold mb-1">E-mail</label>
+                    <input type="email" id="cli-email" placeholder="cliente@email.com" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400">
+                </div>
+                <div>
+                    <label class="block text-neutral-400 text-xs font-semibold mb-1">Cidade</label>
+                    <input type="text" id="cli-cidade" placeholder="Rio de Janeiro" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400">
+                </div>
+                <div>
+                    <label class="block text-neutral-400 text-xs font-semibold mb-1">Estado</label>
+                    <input type="text" id="cli-estado" placeholder="RJ" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400">
+                </div>
+                <div class="md:col-span-2">
+                    <label class="block text-neutral-400 text-xs font-semibold mb-1">Endereço</label>
+                    <input type="text" id="cli-endereco" placeholder="Rua, Número, Bairro" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400">
+                </div>
+                <div class="md:col-span-2">
+                    <label class="block text-neutral-400 text-xs font-semibold mb-1">Observações</label>
+                    <textarea id="cli-obs" rows="3" placeholder="Informações adicionais..." class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400"></textarea>
+                </div>
+
+                <div class="md:col-span-2 flex justify-end gap-3 pt-3 border-t border-neutral-800">
+                    <button type="button" onclick="fecharModalNovoCliente()" class="px-4 py-2.5 bg-neutral-800 hover:bg-neutral-700 text-neutral-300 rounded-xl font-medium text-sm">Cancelar</button>
+                    <button type="submit" class="px-5 py-2.5 bg-yellow-400 hover:bg-yellow-300 text-black font-bold rounded-xl text-sm">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ================= MODAL: ADICIONAR EM MASSA ================= -->
+    <div id="modal-massa" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-neutral-900 border border-neutral-800 rounded-2xl max-w-2xl w-full p-6 space-y-4 shadow-2xl overflow-y-auto max-h-[90vh]">
+            <div class="flex justify-between items-center border-b border-neutral-800 pb-3">
+                <h3 class="text-xl font-bold text-yellow-400 flex items-center gap-2">
+                    <i class="fa-solid fa-file-import"></i> Adicionar Clientes em Massa
+                </h3>
+                <button onclick="fecharModalMassa()" class="text-neutral-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <p class="text-xs text-neutral-400">Cole abaixo as linhas da sua planilha (Excel ou Google Sheets) ou separadas por ponto e vírgula (;). Exemplo: <br><span class="text-yellow-400">Nome; CPF; Telefone; Email; Cidade</span></p>
+            <div>
+                <textarea id="input-massa-texto" rows="8" placeholder="João Silva; 111.222.333-44; (21) 99999-8888; joao@email.com; Rio de Janeiro
+Maria Souza; 222.333.444-55; (21) 98888-7777; maria@email.com; Niterói" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl p-3 text-white text-xs font-mono focus:outline-none focus:border-yellow-400"></textarea>
+            </div>
+            <div class="flex justify-end gap-3 pt-3 border-t border-neutral-800">
+                <button type="button" onclick="fecharModalMassa()" class="px-4 py-2.5 bg-neutral-800 hover:bg-neutral-700 text-neutral-300 rounded-xl font-medium text-sm">Cancelar</button>
+                <button type="button" onclick="processarMassa()" class="px-5 py-2.5 bg-yellow-400 hover:bg-yellow-300 text-black font-bold rounded-xl text-sm">Importar e Salvar</button>
+            </div>
+        </div>
+    </div>
+
     <!-- TOAST / NOTIFICAÇÃO -->
     <div id="toast" class="fixed bottom-5 right-5 bg-neutral-800 text-white border border-yellow-400 px-5 py-3 rounded-xl shadow-2xl transform translate-y-20 opacity-0 transition-all duration-300 flex items-center gap-3 z-50">
         <i class="fa-solid fa-circle-check text-yellow-400 text-lg"></i>
@@ -427,16 +541,13 @@
 
         // --- SISTEMA DE NAVEGAÇÃO ENTRE ABAS ---
         function navegar(secao) {
-            // Esconde todas as seções
             document.querySelectorAll('.secao-conteudo').forEach(el => el.classList.add('hidden'));
 
-            // Mostra a seção selecionada
             const secaoAlvo = document.getElementById(`secao-${secao}`);
             if (secaoAlvo) {
                 secaoAlvo.classList.remove('hidden');
             }
 
-            // Atualiza o visual dos botões no menu lateral
             document.querySelectorAll('.nav-btn').forEach(btn => {
                 btn.classList.remove('active', 'text-yellow-400', 'bg-yellow-400/10', 'border-l-4', 'border-yellow-400', 'font-bold');
                 btn.classList.add('text-neutral-400', 'hover:text-white', 'hover:bg-neutral-800', 'font-semibold');
@@ -447,6 +558,117 @@
                 btnAtivo.classList.remove('text-neutral-400', 'hover:text-white', 'hover:bg-neutral-800', 'font-semibold');
                 btnAtivo.classList.add('active', 'text-yellow-400', 'bg-yellow-400/10', 'border-l-4', 'border-yellow-400', 'font-bold');
             }
+        }
+
+        // --- MODAL NOVO CLIENTE ---
+        function abrirModalNovoCliente() {
+            document.getElementById('modal-novo-cliente').classList.remove('hidden');
+        }
+
+        function fecharModalNovoCliente() {
+            document.getElementById('modal-novo-cliente').classList.add('hidden');
+            document.getElementById('form-novo-cliente').reset();
+        }
+
+        function salvarNovoCliente(e) {
+            e.preventDefault();
+
+            // Pega os valores (pode estar vazio ou não)
+            const nome = document.getElementById('cli-nome').value || '-';
+            const cpf = document.getElementById('cli-cpf').value || '-';
+            const telefone = document.getElementById('cli-telefone').value || document.getElementById('cli-whatsapp').value || '-';
+            const email = document.getElementById('cli-email').value || '-';
+            const cidade = document.getElementById('cli-cidade').value ? `${document.getElementById('cli-cidade').value} / ${document.getElementById('cli-estado').value}` : '-';
+            const endereco = document.getElementById('cli-endereco').value || '-';
+            const obs = document.getElementById('cli-obs').value || '-';
+
+            // Adiciona na tabela
+            const tbody = document.getElementById('tabela-clientes-body');
+            const novaLinha = document.createElement('tr');
+            novaLinha.innerHTML = `
+                <td class="p-3 font-semibold text-white">${nome}</td>
+                <td class="p-3">${cpf}</td>
+                <td class="p-3">${telefone}</td>
+                <td class="p-3">${email}</td>
+                <td class="p-3">${cidade}</td>
+                <td class="p-3">${endereco}</td>
+                <td class="p-3 text-xs text-neutral-400">${obs}</td>
+            `;
+            tbody.prepend(novaLinha);
+
+            // Atualiza KPI
+            dados.clientes++;
+            document.getElementById('kpi-clientes-count').innerText = dados.clientes;
+
+            fecharModalNovoCliente();
+            mostrarToast("Cliente cadastrado com sucesso!");
+        }
+
+        // --- MODAL IMPORTAÇÃO EM MASSA ---
+        function abrirModalMassa() {
+            document.getElementById('modal-massa').classList.remove('hidden');
+        }
+
+        function fecharModalMassa() {
+            document.getElementById('modal-massa').classList.add('hidden');
+            document.getElementById('input-massa-texto').value = '';
+        }
+
+        function processarMassa() {
+            const texto = document.getElementById('input-massa-texto').value.trim();
+            if (!texto) {
+                fecharModalMassa();
+                return;
+            }
+
+            const linhas = texto.split('\n');
+            const tbody = document.getElementById('tabela-clientes-body');
+            let importados = 0;
+
+            linhas.forEach(linha => {
+                if (linha.trim() !== '') {
+                    const partes = linha.split(/;|\t/);
+                    const nome = partes[0] ? partes[0].trim() : '-';
+                    const cpf = partes[1] ? partes[1].trim() : '-';
+                    const tel = partes[2] ? partes[2].trim() : '-';
+                    const email = partes[3] ? partes[3].trim() : '-';
+                    const cidade = partes[4] ? partes[4].trim() : '-';
+
+                    const novaLinha = document.createElement('tr');
+                    novaLinha.innerHTML = `
+                        <td class="p-3 font-semibold text-white">${nome}</td>
+                        <td class="p-3">${cpf}</td>
+                        <td class="p-3">${tel}</td>
+                        <td class="p-3">${email}</td>
+                        <td class="p-3">${cidade}</td>
+                        <td class="p-3">-</td>
+                        <td class="p-3 text-xs text-neutral-400">Importado em Massa</td>
+                    `;
+                    tbody.prepend(novaLinha);
+                    importados++;
+                }
+            });
+
+            dados.clientes += importados;
+            document.getElementById('kpi-clientes-count').innerText = dados.clientes;
+
+            fecharModalMassa();
+            mostrarToast(`${importados} cliente(s) importado(s) com sucesso!`);
+        }
+
+        // --- FILTRO DE PESQUISA EM TEMPO REAL ---
+        function filtrarClientes() {
+            const termo = document.getElementById('input-pesquisar-cliente').value.toLowerCase();
+            const linhas = document.querySelectorAll('#tabela-clientes-body tr');
+
+            linhas.forEach(linha => {
+                const conteudo = linha.innerText.toLowerCase();
+                if (conteudo.includes(termo)) {
+                    linha.style.display = '';
+                } else {
+                    linha.style.display = 'none';
+                }
+            });
         }
 
         // --- INICIALIZAÇÃO DOS GRÁFICOS ---
@@ -541,7 +763,6 @@
         });
 
         // --- AÇÕES DOS BOTÕES ---
-
         function copiarCSV() {
             const csvContent = `Indicador;Valor\n` +
                 `Visualizando;${dados.periodo}\n` +
