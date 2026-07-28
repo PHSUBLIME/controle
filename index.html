@@ -683,17 +683,20 @@
         </div>
     </div>
 
-    <!-- MODAL NOVA DESPESA AVULSA -->
+    <!-- MODAL NOVA / EDITAR DESPESA AVULSA -->
     <div id="modal-nova-despesa" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-neutral-900 border border-neutral-800 rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl">
             <div class="flex justify-between items-center border-b border-neutral-800 pb-3">
-                <h3 class="text-xl font-bold text-yellow-400 flex items-center gap-2">
+                <h3 class="text-xl font-bold text-yellow-400 flex items-center gap-2" id="modal-despesa-titulo">
                     <i class="fa-solid fa-file-invoice-dollar"></i> Nova Despesa
                 </h3>
                 <button onclick="fecharModalNovaDespesa()" class="text-neutral-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
             </div>
 
             <form id="form-nova-despesa" onsubmit="salvarNovaDespesa(event)" class="space-y-3 text-sm">
+                <!-- Campo oculto para ID da despesa em edição -->
+                <input type="hidden" id="desp-id">
+                
                 <div>
                     <label class="block text-neutral-400 text-xs font-semibold mb-1">Nome do Produto / Despesa</label>
                     <input type="text" id="desp-nome" placeholder="Ex: Bobina de Papel, Tinta, Conta de Luz" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400">
@@ -1455,7 +1458,9 @@
 
         // --- DESPESAS ---
         function abrirModalNovaDespesa() {
+            document.getElementById('modal-despesa-titulo').innerHTML = `<i class="fa-solid fa-file-invoice-dollar"></i> Nova Despesa`;
             document.getElementById('form-nova-despesa').reset();
+            document.getElementById('desp-id').value = '';
             document.getElementById('desp-data').value = appData.dataAtual;
             document.getElementById('modal-nova-despesa').classList.remove('hidden');
         }
@@ -1464,28 +1469,59 @@
             document.getElementById('modal-nova-despesa').classList.add('hidden');
         }
 
+        // FUNÇÃO DE EDIÇÃO DE DESPESA AVULSA
+        function editarDespesa(id) {
+            const d = appData.despesasOutras.find(x => x.id == id);
+            if (!d) return;
+
+            document.getElementById('modal-despesa-titulo').innerHTML = `<i class="fa-solid fa-pen"></i> Editar Despesa`;
+            document.getElementById('desp-id').value = d.id;
+            document.getElementById('desp-nome').value = d.nome || '';
+            document.getElementById('desp-data').value = d.data || appData.dataAtual;
+            document.getElementById('desp-tipo-pagamento').value = d.tipoPagamento || 'Pix';
+            document.getElementById('desp-onde-comprou').value = d.loja || '';
+            document.getElementById('desp-valor').value = d.valor || '';
+
+            document.getElementById('modal-nova-despesa').classList.remove('hidden');
+        }
+
         function salvarNovaDespesa(e) {
             e.preventDefault();
+            const id = document.getElementById('desp-id').value;
             const nome = document.getElementById('desp-nome').value.trim() || 'Despesa Diversa';
             const data = document.getElementById('desp-data').value || appData.dataAtual;
             const tipo = document.getElementById('desp-tipo-pagamento').value;
             const loja = document.getElementById('desp-onde-comprou').value || 'Loja/Fornecedor';
             const valor = parseFloat(document.getElementById('desp-valor').value || 0);
 
-            appData.despesasOutras.unshift({
-                id: Date.now(),
-                nome: nome,
-                data: data,
-                tipoPagamento: tipo,
-                loja: loja,
-                valor: valor,
-                arquivado: false
-            });
+            if (id) {
+                // Atualiza despesa existente
+                const d = appData.despesasOutras.find(x => x.id == id);
+                if (d) {
+                    d.nome = nome;
+                    d.data = data;
+                    d.tipoPagamento = tipo;
+                    d.loja = loja;
+                    d.valor = valor;
+                }
+                mostrarToast("Despesa atualizada!");
+            } else {
+                // Cadastra nova despesa
+                appData.despesasOutras.unshift({
+                    id: Date.now(),
+                    nome: nome,
+                    data: data,
+                    tipoPagamento: tipo,
+                    loja: loja,
+                    valor: valor,
+                    arquivado: false
+                });
+                mostrarToast("Nova despesa cadastrada!");
+            }
 
             salvarStorage();
             fecharModalNovaDespesa();
             atualizarInterfaceCompleta();
-            mostrarToast("Nova despesa cadastrada!");
         }
 
         function renderizarDespesas() {
@@ -1517,7 +1553,7 @@
                 if (d.arquivado) return;
                 const buscaTexto = `${d.nome} ${d.loja} ${d.tipoPagamento}`.toLowerCase();
                 if (!filtro || buscaTexto.includes(filtro)) {
-                    // CORREÇÃO ERRO 9: Sanitização com escapeAttr
+                    // CORREÇÃO ERRO 9: Sanitização com escapeAttr + Adicionado botão de editar
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
                         <td class="p-3 font-semibold text-white">${escapeAttr(d.nome)}</td>
@@ -1525,7 +1561,10 @@
                         <td class="p-3 text-xs text-neutral-400">${escapeAttr(d.tipoPagamento)}</td>
                         <td class="p-3 text-neutral-300">${escapeAttr(d.loja)}</td>
                         <td class="p-3 font-bold text-rose-400">R$ ${parseFloat(d.valor||0).toLocaleString('pt-BR', {minimumFractionDigits: 2})}</td>
-                        <td class="p-3 text-right">
+                        <td class="p-3 text-right space-x-1">
+                            <button onclick="editarDespesa(${d.id})" class="bg-neutral-800 hover:bg-neutral-700 text-neutral-200 p-2 rounded-lg text-xs" title="Editar Despesa">
+                                <i class="fa-solid fa-pen"></i>
+                            </button>
                             <button onclick="excluirDespesaAvulsa(${d.id})" class="bg-rose-950/50 hover:bg-rose-900 text-rose-400 p-2 rounded-lg text-xs" title="Excluir Despesa">
                                 <i class="fa-solid fa-trash"></i>
                             </button>
