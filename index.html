@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard de Vendas</title>
+    <title>Dashboard Black & Yellow</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Chart.js -->
@@ -11,168 +11,168 @@
     <!-- Font Awesome (Ícones) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; }
+        body { font-family: 'Inter', sans-serif; background-color: #000000; }
         @media print {
             .no-print { display: none !important; }
-            body { background: white; }
-            .print-card { border: 1px solid #e5e7eb; shadow: none; }
+            body { background: #000000 !important; color: #ffffff !important; }
+            .print-card { border: 1px solid #333333 !important; }
         }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 min-h-screen p-4 md:p-8">
+<body class="bg-black text-slate-100 min-h-screen p-4 md:p-8">
 
     <div class="max-w-7xl mx-auto space-y-6">
 
         <!-- HEADER & AÇÕES -->
-        <header class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+        <header class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-neutral-900 p-6 rounded-2xl border border-neutral-800 shadow-2xl">
             <div>
                 <div class="flex items-center gap-3">
-                    <h1 class="text-2xl font-bold text-slate-900">Dashboard</h1>
-                    <span class="bg-indigo-50 text-indigo-700 text-xs font-semibold px-3 py-1 rounded-full border border-indigo-100 flex items-center gap-1.5">
-                        <i class="fa-regular font-bold fa-calendar"></i>
-                        Visualizando: <strong id="periodoAtual">Jul/2026</strong>
+                    <h1 class="text-3xl font-extrabold text-yellow-400 tracking-tight">Dashboard</h1>
+                    <span class="bg-yellow-400/10 text-yellow-400 text-xs font-bold px-3.5 py-1.5 rounded-full border border-yellow-400/30 flex items-center gap-2">
+                        <i class="fa-regular fa-calendar text-yellow-400"></i>
+                        Visualizando: <strong id="periodoAtual" class="text-yellow-300">Jul/2026</strong>
                     </span>
                 </div>
-                <p class="text-sm text-slate-500 mt-1">Acompanhamento de desempenho e indicadores de vendas</p>
+                <p class="text-sm text-neutral-400 mt-1">Acompanhamento de desempenho e indicadores de vendas</p>
             </div>
 
             <!-- Botões de Ação -->
             <div class="flex flex-wrap gap-2.5 no-print">
-                <button onclick="copiarCSV()" class="flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2.5 rounded-xl font-medium text-sm transition-all">
-                    <i class="fa-solid fa-file-csv text-slate-500"></i> Copiar Dados CSV
+                <button onclick="copiarCSV()" class="flex items-center gap-2 bg-neutral-800 hover:bg-neutral-700 text-neutral-200 border border-neutral-700 px-4 py-2.5 rounded-xl font-medium text-sm transition-all">
+                    <i class="fa-solid fa-file-csv text-yellow-400"></i> Copiar Dados CSV
                 </button>
 
-                <button onclick="enviarWhatsApp()" class="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-xl font-medium text-sm transition-all shadow-sm shadow-emerald-200">
+                <button onclick="enviarWhatsApp()" class="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2.5 rounded-xl font-medium text-sm transition-all shadow-lg shadow-emerald-950/50">
                     <i class="fa-brands fa-whatsapp text-lg"></i> WhatsApp
                 </button>
 
-                <button onclick="baixarPDF()" class="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2.5 rounded-xl font-medium text-sm transition-all shadow-sm shadow-indigo-200">
+                <button onclick="baixarPDF()" class="flex items-center gap-2 bg-yellow-400 hover:bg-yellow-300 text-black font-bold px-4 py-2.5 rounded-xl text-sm transition-all shadow-lg shadow-yellow-950/30">
                     <i class="fa-solid fa-file-pdf"></i> Baixar PDF
                 </button>
 
-                <button onclick="fecharMes()" class="flex items-center gap-2 bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 px-4 py-2.5 rounded-xl font-medium text-sm transition-all">
+                <button onclick="fecharMes()" class="flex items-center gap-2 bg-rose-950/40 hover:bg-rose-900/60 text-rose-400 border border-rose-800/50 px-4 py-2.5 rounded-xl font-medium text-sm transition-all">
                     <i class="fa-solid fa-lock"></i> Fechar Mês
                 </button>
             </div>
         </header>
 
-        <!-- CARDS DE METRICAS (KPIs) -->
+        <!-- CARDS DE MÉTRICAS (KPIs) -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             
             <!-- Faturamento Dia -->
-            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 print-card">
+            <div class="bg-neutral-900 p-5 rounded-2xl border border-neutral-800 print-card hover:border-yellow-400/50 transition-all">
                 <div class="flex justify-between items-start">
                     <div>
-                        <p class="text-xs font-medium text-slate-500 uppercase tracking-wider">Faturamento Dia</p>
-                        <h3 class="text-2xl font-bold text-slate-900 mt-1" id="kpi-faturamento">R$ 2.850,00</h3>
+                        <p class="text-xs font-bold text-yellow-400 uppercase tracking-wider">Faturamento Dia</p>
+                        <h3 class="text-2xl font-black text-white mt-1" id="kpi-faturamento">R$ 2.850,00</h3>
                     </div>
-                    <div class="p-3 bg-emerald-50 text-emerald-600 rounded-xl">
+                    <div class="p-3 bg-neutral-800 text-yellow-400 border border-neutral-700 rounded-xl">
                         <i class="fa-solid fa-sack-dollar text-xl"></i>
                     </div>
                 </div>
-                <p class="text-xs text-emerald-600 font-medium mt-3 flex items-center gap-1">
+                <p class="text-xs text-emerald-400 font-medium mt-3 flex items-center gap-1">
                     <i class="fa-solid fa-arrow-trend-up"></i> +12.5% em relação a ontem
                 </p>
             </div>
 
             <!-- Pedidos Dia -->
-            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 print-card">
+            <div class="bg-neutral-900 p-5 rounded-2xl border border-neutral-800 print-card hover:border-yellow-400/50 transition-all">
                 <div class="flex justify-between items-start">
                     <div>
-                        <p class="text-xs font-medium text-slate-500 uppercase tracking-wider">Pedidos Dia</p>
-                        <h3 class="text-2xl font-bold text-slate-900 mt-1" id="kpi-pedidos-dia">18</h3>
+                        <p class="text-xs font-bold text-yellow-400 uppercase tracking-wider">Pedidos Dia</p>
+                        <h3 class="text-2xl font-black text-white mt-1" id="kpi-pedidos-dia">18</h3>
                     </div>
-                    <div class="p-3 bg-blue-50 text-blue-600 rounded-xl">
+                    <div class="p-3 bg-neutral-800 text-yellow-400 border border-neutral-700 rounded-xl">
                         <i class="fa-solid fa-cart-shopping text-xl"></i>
                     </div>
                 </div>
-                <p class="text-xs text-slate-500 mt-3">Ticket Médio: R$ 158,33</p>
+                <p class="text-xs text-neutral-400 mt-3">Ticket Médio: R$ 158,33</p>
             </div>
 
             <!-- Em Produção -->
-            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 print-card">
+            <div class="bg-neutral-900 p-5 rounded-2xl border border-neutral-800 print-card hover:border-yellow-400/50 transition-all">
                 <div class="flex justify-between items-start">
                     <div>
-                        <p class="text-xs font-medium text-slate-500 uppercase tracking-wider">Em Produção</p>
-                        <h3 class="text-2xl font-bold text-slate-900 mt-1" id="kpi-producao">14</h3>
+                        <p class="text-xs font-bold text-yellow-400 uppercase tracking-wider">Em Produção</p>
+                        <h3 class="text-2xl font-black text-white mt-1" id="kpi-producao">14</h3>
                     </div>
-                    <div class="p-3 bg-amber-50 text-amber-600 rounded-xl">
+                    <div class="p-3 bg-neutral-800 text-yellow-400 border border-neutral-700 rounded-xl">
                         <i class="fa-solid fa-gears text-xl"></i>
                     </div>
                 </div>
-                <p class="text-xs text-amber-600 font-medium mt-3">Em andamento na fábrica</p>
+                <p class="text-xs text-amber-400 font-medium mt-3">Em andamento na fábrica</p>
             </div>
 
             <!-- Pedidos Pendentes -->
-            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 print-card">
+            <div class="bg-neutral-900 p-5 rounded-2xl border border-neutral-800 print-card hover:border-yellow-400/50 transition-all">
                 <div class="flex justify-between items-start">
                     <div>
-                        <p class="text-xs font-medium text-slate-500 uppercase tracking-wider">Pedidos Pendentes</p>
-                        <h3 class="text-2xl font-bold text-slate-900 mt-1" id="kpi-pendentes">5</h3>
+                        <p class="text-xs font-bold text-yellow-400 uppercase tracking-wider">Pedidos Pendentes</p>
+                        <h3 class="text-2xl font-black text-white mt-1" id="kpi-pendentes">5</h3>
                     </div>
-                    <div class="p-3 bg-orange-50 text-orange-600 rounded-xl">
+                    <div class="p-3 bg-neutral-800 text-yellow-400 border border-neutral-700 rounded-xl">
                         <i class="fa-solid fa-clock text-xl"></i>
                     </div>
                 </div>
-                <p class="text-xs text-orange-600 font-medium mt-3">Aguardando aprovação</p>
+                <p class="text-xs text-orange-400 font-medium mt-3">Aguardando aprovação</p>
             </div>
 
             <!-- Entregues -->
-            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 print-card">
+            <div class="bg-neutral-900 p-5 rounded-2xl border border-neutral-800 print-card hover:border-yellow-400/50 transition-all">
                 <div class="flex justify-between items-start">
                     <div>
-                        <p class="text-xs font-medium text-slate-500 uppercase tracking-wider">Entregues</p>
-                        <h3 class="text-2xl font-bold text-slate-900 mt-1" id="kpi-entregues">142</h3>
+                        <p class="text-xs font-bold text-yellow-400 uppercase tracking-wider">Entregues</p>
+                        <h3 class="text-2xl font-black text-white mt-1" id="kpi-entregues">142</h3>
                     </div>
-                    <div class="p-3 bg-indigo-50 text-indigo-600 rounded-xl">
+                    <div class="p-3 bg-neutral-800 text-yellow-400 border border-neutral-700 rounded-xl">
                         <i class="fa-solid fa-truck-fast text-xl"></i>
                     </div>
                 </div>
-                <p class="text-xs text-slate-500 mt-3">Neste mês de Jul/2026</p>
+                <p class="text-xs text-neutral-400 mt-3">Neste mês de Jul/2026</p>
             </div>
 
             <!-- Clientes -->
-            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 print-card">
+            <div class="bg-neutral-900 p-5 rounded-2xl border border-neutral-800 print-card hover:border-yellow-400/50 transition-all">
                 <div class="flex justify-between items-start">
                     <div>
-                        <p class="text-xs font-medium text-slate-500 uppercase tracking-wider">Clientes</p>
-                        <h3 class="text-2xl font-bold text-slate-900 mt-1" id="kpi-clientes">89</h3>
+                        <p class="text-xs font-bold text-yellow-400 uppercase tracking-wider">Clientes</p>
+                        <h3 class="text-2xl font-black text-white mt-1" id="kpi-clientes">89</h3>
                     </div>
-                    <div class="p-3 bg-purple-50 text-purple-600 rounded-xl">
+                    <div class="p-3 bg-neutral-800 text-yellow-400 border border-neutral-700 rounded-xl">
                         <i class="fa-solid fa-users text-xl"></i>
                     </div>
                 </div>
-                <p class="text-xs text-purple-600 font-medium mt-3">+8 novos este mês</p>
+                <p class="text-xs text-purple-400 font-medium mt-3">+8 novos este mês</p>
             </div>
 
             <!-- Investimento Total -->
-            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 print-card">
+            <div class="bg-neutral-900 p-5 rounded-2xl border border-neutral-800 print-card hover:border-yellow-400/50 transition-all">
                 <div class="flex justify-between items-start">
                     <div>
-                        <p class="text-xs font-medium text-slate-500 uppercase tracking-wider">Investimento Total</p>
-                        <h3 class="text-2xl font-bold text-slate-900 mt-1" id="kpi-investimento">R$ 8.500,00</h3>
+                        <p class="text-xs font-bold text-yellow-400 uppercase tracking-wider">Investimento Total</p>
+                        <h3 class="text-2xl font-black text-white mt-1" id="kpi-investimento">R$ 8.500,00</h3>
                     </div>
-                    <div class="p-3 bg-rose-50 text-rose-600 rounded-xl">
+                    <div class="p-3 bg-neutral-800 text-yellow-400 border border-neutral-700 rounded-xl">
                         <i class="fa-solid fa-chart-line-down text-xl"></i>
                     </div>
                 </div>
-                <p class="text-xs text-slate-500 mt-3">Anúncios, infra e insumos</p>
+                <p class="text-xs text-neutral-400 mt-3">Anúncios, infra e insumos</p>
             </div>
 
             <!-- Lucro -->
-            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 print-card">
+            <div class="bg-neutral-900 p-5 rounded-2xl border border-neutral-800 print-card hover:border-yellow-400/50 transition-all">
                 <div class="flex justify-between items-start">
                     <div>
-                        <p class="text-xs font-medium text-slate-500 uppercase tracking-wider">Lucro Líquido</p>
-                        <h3 class="text-2xl font-bold text-emerald-600 mt-1" id="kpi-lucro">R$ 18.240,00</h3>
+                        <p class="text-xs font-bold text-yellow-400 uppercase tracking-wider">Lucro Líquido</p>
+                        <h3 class="text-2xl font-black text-yellow-400 mt-1" id="kpi-lucro">R$ 18.240,00</h3>
                     </div>
-                    <div class="p-3 bg-emerald-100 text-emerald-700 rounded-xl">
+                    <div class="p-3 bg-yellow-400/10 text-yellow-400 border border-yellow-400/30 rounded-xl">
                         <i class="fa-solid fa-wallet text-xl"></i>
                     </div>
                 </div>
-                <p class="text-xs text-emerald-600 font-medium mt-3">Margem estimada: 68%</p>
+                <p class="text-xs text-emerald-400 font-medium mt-3">Margem estimada: 68%</p>
             </div>
 
         </div>
@@ -181,10 +181,10 @@
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             
             <!-- Vendas — Últimos 31 dias/mês atual -->
-            <div class="lg:col-span-2 bg-white p-6 rounded-2xl shadow-sm border border-slate-100 print-card">
-                <div class="flex items-center justify-between mb-4">
-                    <h2 class="text-base font-semibold text-slate-900">Vendas — Últimos 31 dias / Mês Atual</h2>
-                    <span class="text-xs text-slate-400">Atualizado diariamente</span>
+            <div class="lg:col-span-2 bg-neutral-900 p-6 rounded-2xl border border-neutral-800 print-card">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-lg font-extrabold text-yellow-400 uppercase tracking-wide">Vendas — Últimos 31 dias / Mês Atual</h2>
+                    <span class="text-xs text-neutral-500">Atualizado diariamente</span>
                 </div>
                 <div class="relative h-72">
                     <canvas id="vendasChart"></canvas>
@@ -192,10 +192,10 @@
             </div>
 
             <!-- Serviços Mais Vendidos -->
-            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 print-card">
-                <div class="flex items-center justify-between mb-4">
-                    <h2 class="text-base font-semibold text-slate-900">Serviços Mais Vendidos</h2>
-                    <span class="text-xs text-slate-400">Por volume</span>
+            <div class="bg-neutral-900 p-6 rounded-2xl border border-neutral-800 print-card">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-lg font-extrabold text-yellow-400 uppercase tracking-wide">Serviços Mais Vendidos</h2>
+                    <span class="text-xs text-neutral-500">Por volume</span>
                 </div>
                 <div class="relative h-72 flex items-center justify-center">
                     <canvas id="servicosChart"></canvas>
@@ -207,9 +207,9 @@
     </div>
 
     <!-- TOAST / NOTIFICAÇÃO -->
-    <div id="toast" class="fixed bottom-5 right-5 bg-slate-900 text-white px-5 py-3 rounded-xl shadow-lg transform translate-y-20 opacity-0 transition-all duration-300 flex items-center gap-3">
-        <i class="fa-solid fa-circle-check text-emerald-400"></i>
-        <span id="toast-message">Ação realizada com sucesso!</span>
+    <div id="toast" class="fixed bottom-5 right-5 bg-neutral-800 text-white border border-yellow-400 px-5 py-3 rounded-xl shadow-2xl transform translate-y-20 opacity-0 transition-all duration-300 flex items-center gap-3 z-50">
+        <i class="fa-solid fa-circle-check text-yellow-400 text-lg"></i>
+        <span id="toast-message" class="font-medium text-sm">Ação realizada com sucesso!</span>
     </div>
 
     <script>
@@ -229,13 +229,16 @@
         // --- INICIALIZAÇÃO DOS GRÁFICOS ---
         document.addEventListener('DOMContentLoaded', () => {
             
-            // 1. Gráfico de Vendas (Linha)
+            // Ajustar cores globais do Chart.js para o tema escuro
+            Chart.defaults.color = '#a1a1aa';
+            Chart.defaults.borderColor = '#27272a';
+
+            // 1. Gráfico de Vendas (Linha Amarela)
             const ctxVendas = document.getElementById('vendasChart').getContext('2d');
             const gradient = ctxVendas.createLinearGradient(0, 0, 0, 300);
-            gradient.addColorStop(0, 'rgba(79, 70, 229, 0.3)');
-            gradient.addColorStop(1, 'rgba(79, 70, 229, 0.0)');
+            gradient.addColorStop(0, 'rgba(250, 204, 21, 0.35)'); // Amarelo
+            gradient.addColorStop(1, 'rgba(250, 204, 21, 0.0)');
 
-            // Gera os últimos 31 dias do mês atual (Julho)
             const diasJulho = Array.from({length: 31}, (_, i) => `${i + 1}/07`);
             const vendasValores = [
                 1200, 1500, 900, 2100, 1800, 2500, 3100, 
@@ -251,13 +254,14 @@
                     datasets: [{
                         label: 'Vendas (R$)',
                         data: vendasValores,
-                        borderColor: '#4f46e5',
-                        borderWidth: 2,
+                        borderColor: '#facc15', // Amarelo
+                        borderWidth: 3,
                         backgroundColor: gradient,
                         fill: true,
                         tension: 0.3,
-                        pointRadius: 2,
-                        pointHoverRadius: 6
+                        pointBackgroundColor: '#facc15',
+                        pointBorderColor: '#000000',
+                        pointHoverRadius: 7
                     }]
                 },
                 options: {
@@ -266,15 +270,18 @@
                     plugins: { legend: { display: false } },
                     scales: {
                         y: {
-                            grid: { color: '#f1f5f9' },
-                            ticks: { callback: value => 'R$ ' + value }
+                            grid: { color: '#27272a' },
+                            ticks: { callback: value => 'R$ ' + value, color: '#a1a1aa' }
                         },
-                        x: { grid: { display: false } }
+                        x: { 
+                            grid: { display: false },
+                            ticks: { color: '#a1a1aa' }
+                        }
                     }
                 }
             });
 
-            // 2. Gráfico de Serviços Mais Vendidos (Doughnut)
+            // 2. Gráfico de Serviços Mais Vendidos (Doughnut Amarelo e Escala de Tons)
             const ctxServicos = document.getElementById('servicosChart').getContext('2d');
             new Chart(ctxServicos, {
                 type: 'doughnut',
@@ -283,13 +290,14 @@
                     datasets: [{
                         data: [40, 25, 15, 12, 8],
                         backgroundColor: [
-                            '#4f46e5',
-                            '#06b6d4',
-                            '#10b981',
-                            '#f59e0b',
-                            '#8b5cf6'
+                            '#facc15', // Amarelo vibrante
+                            '#eab308', // Amarelo médio
+                            '#ca8a04', // Amarelo escuro
+                            '#a16207', // Bronze/Castanho
+                            '#52525b'  // Cinza escuro
                         ],
-                        borderWidth: 0
+                        borderWidth: 2,
+                        borderColor: '#18181b'
                     }]
                 },
                 options: {
@@ -298,10 +306,14 @@
                     plugins: {
                         legend: {
                             position: 'bottom',
-                            labels: { boxWidth: 12, font: { size: 11 } }
+                            labels: { 
+                                boxWidth: 12, 
+                                font: { size: 11 },
+                                color: '#d4d4d8'
+                            }
                         }
                     },
-                    cutout: '70%'
+                    cutout: '72%'
                 }
             });
         });
@@ -346,7 +358,7 @@
             window.open(url, '_blank');
         }
 
-        // 3. Baixar em PDF (Abre a janela de impressão otimizada para PDF)
+        // 3. Baixar em PDF
         function baixarPDF() {
             window.print();
         }
