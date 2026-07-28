@@ -3,19 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PHSUBLIME - Dashboard</title>
+    <title>PHSUBLIME - Sistema de Gestão</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- Font Awesome (Ícones) -->
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #000000; }
-        
-        /* Oculta elementos na impressão */
         @media print {
             .no-print { display: none !important; }
             body { background: #000000 !important; color: #ffffff !important; }
@@ -72,7 +70,7 @@
         <!-- FOOTER SIDEBAR -->
         <div class="mt-8 pt-4 border-t border-neutral-800 px-2 text-xs text-neutral-500">
             <p>© 2026 <strong class="text-yellow-400">PHSUBLIME</strong></p>
-            <p class="mt-0.5">Sistema de Vendas v2.4</p>
+            <p class="mt-0.5">Sistema de Vendas v3.0</p>
         </div>
     </aside>
 
@@ -89,16 +87,15 @@
                         <h2 class="text-3xl font-extrabold text-yellow-400 tracking-tight">Dashboard</h2>
                         <span class="bg-yellow-400/10 text-yellow-400 text-xs font-bold px-3.5 py-1.5 rounded-full border border-yellow-400/30 flex items-center gap-2">
                             <i class="fa-regular fa-calendar text-yellow-400"></i>
-                            Visualizando: <strong id="periodoAtual" class="text-yellow-300">Jul/2026</strong>
+                            Hoje: <strong id="dataAtualExtenso" class="text-yellow-300">--/--/----</strong>
                         </span>
                     </div>
-                    <p class="text-sm text-neutral-400 mt-1">Acompanhamento de desempenho e indicadores de vendas</p>
+                    <p class="text-sm text-neutral-400 mt-1">Zerado diariamente. Os indicadores diários resetam a cada novo dia.</p>
                 </div>
 
-                <!-- Botões de Ação -->
                 <div class="flex flex-wrap gap-2.5 no-print">
                     <button onclick="copiarCSV()" class="flex items-center gap-2 bg-neutral-800 hover:bg-neutral-700 text-neutral-200 border border-neutral-700 px-4 py-2.5 rounded-xl font-medium text-sm transition-all">
-                        <i class="fa-solid fa-file-csv text-yellow-400"></i> Copiar Dados CSV
+                        <i class="fa-solid fa-file-csv text-yellow-400"></i> Copiar CSV
                     </button>
 
                     <button onclick="enviarWhatsApp()" class="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2.5 rounded-xl font-medium text-sm transition-all shadow-lg shadow-emerald-950/50">
@@ -118,56 +115,50 @@
             <!-- CARDS DE MÉTRICAS (KPIs) -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 
-                <!-- Faturamento Dia -->
                 <div class="bg-neutral-900 p-5 rounded-2xl border border-neutral-800 print-card hover:border-yellow-400/50 transition-all">
                     <div class="flex justify-between items-start">
                         <div>
                             <p class="text-xs font-bold text-yellow-400 uppercase tracking-wider">Faturamento Dia</p>
-                            <h3 class="text-2xl font-black text-white mt-1">R$ 2.850,00</h3>
+                            <h3 class="text-2xl font-black text-white mt-1" id="dash-faturamento-dia">R$ 0,00</h3>
                         </div>
                         <div class="p-3 bg-neutral-800 text-yellow-400 border border-neutral-700 rounded-xl">
                             <i class="fa-solid fa-sack-dollar text-xl"></i>
                         </div>
                     </div>
-                    <p class="text-xs text-emerald-400 font-medium mt-3 flex items-center gap-1">
-                        <i class="fa-solid fa-arrow-trend-up"></i> +12.5% em relação a ontem
-                    </p>
+                    <p class="text-xs text-neutral-400 font-medium mt-3">Resetado às 00:00</p>
                 </div>
 
-                <!-- Pedidos Dia -->
                 <div class="bg-neutral-900 p-5 rounded-2xl border border-neutral-800 print-card hover:border-yellow-400/50 transition-all">
                     <div class="flex justify-between items-start">
                         <div>
                             <p class="text-xs font-bold text-yellow-400 uppercase tracking-wider">Pedidos Dia</p>
-                            <h3 class="text-2xl font-black text-white mt-1">18</h3>
+                            <h3 class="text-2xl font-black text-white mt-1" id="dash-pedidos-dia">0</h3>
                         </div>
                         <div class="p-3 bg-neutral-800 text-yellow-400 border border-neutral-700 rounded-xl">
                             <i class="fa-solid fa-cart-shopping text-xl"></i>
                         </div>
                     </div>
-                    <p class="text-xs text-neutral-400 mt-3">Ticket Médio: R$ 158,33</p>
+                    <p class="text-xs text-neutral-400 mt-3">Novos pedidos hoje</p>
                 </div>
 
-                <!-- Em Produção -->
                 <div class="bg-neutral-900 p-5 rounded-2xl border border-neutral-800 print-card hover:border-yellow-400/50 transition-all">
                     <div class="flex justify-between items-start">
                         <div>
                             <p class="text-xs font-bold text-yellow-400 uppercase tracking-wider">Em Produção</p>
-                            <h3 class="text-2xl font-black text-white mt-1">14</h3>
+                            <h3 class="text-2xl font-black text-white mt-1" id="dash-em-producao">0</h3>
                         </div>
                         <div class="p-3 bg-neutral-800 text-yellow-400 border border-neutral-700 rounded-xl">
                             <i class="fa-solid fa-gears text-xl"></i>
                         </div>
                     </div>
-                    <p class="text-xs text-amber-400 font-medium mt-3">Em andamento na fábrica</p>
+                    <p class="text-xs text-amber-400 font-medium mt-3">Na fábrica</p>
                 </div>
 
-                <!-- Pedidos Pendentes -->
                 <div class="bg-neutral-900 p-5 rounded-2xl border border-neutral-800 print-card hover:border-yellow-400/50 transition-all">
                     <div class="flex justify-between items-start">
                         <div>
                             <p class="text-xs font-bold text-yellow-400 uppercase tracking-wider">Pedidos Pendentes</p>
-                            <h3 class="text-2xl font-black text-white mt-1">5</h3>
+                            <h3 class="text-2xl font-black text-white mt-1" id="dash-pendentes">0</h3>
                         </div>
                         <div class="p-3 bg-neutral-800 text-yellow-400 border border-neutral-700 rounded-xl">
                             <i class="fa-solid fa-clock text-xl"></i>
@@ -176,97 +167,91 @@
                     <p class="text-xs text-orange-400 font-medium mt-3">Aguardando aprovação</p>
                 </div>
 
-                <!-- Entregues -->
                 <div class="bg-neutral-900 p-5 rounded-2xl border border-neutral-800 print-card hover:border-yellow-400/50 transition-all">
                     <div class="flex justify-between items-start">
                         <div>
-                            <p class="text-xs font-bold text-yellow-400 uppercase tracking-wider">Entregues</p>
-                            <h3 class="text-2xl font-black text-white mt-1">142</h3>
+                            <p class="text-xs font-bold text-yellow-400 uppercase tracking-wider">Entregues Hoje</p>
+                            <h3 class="text-2xl font-black text-white mt-1" id="dash-entregues">0</h3>
                         </div>
                         <div class="p-3 bg-neutral-800 text-yellow-400 border border-neutral-700 rounded-xl">
                             <i class="fa-solid fa-truck-fast text-xl"></i>
                         </div>
                     </div>
-                    <p class="text-xs text-neutral-400 mt-3">Neste mês de Jul/2026</p>
+                    <p class="text-xs text-emerald-400 mt-3">Concluídos e entregues</p>
                 </div>
 
-                <!-- Clientes -->
                 <div class="bg-neutral-900 p-5 rounded-2xl border border-neutral-800 print-card hover:border-yellow-400/50 transition-all">
                     <div class="flex justify-between items-start">
                         <div>
-                            <p class="text-xs font-bold text-yellow-400 uppercase tracking-wider">Clientes</p>
-                            <h3 class="text-2xl font-black text-white mt-1" id="kpi-clientes-count">89</h3>
+                            <p class="text-xs font-bold text-yellow-400 uppercase tracking-wider">Clientes Totais</p>
+                            <h3 class="text-2xl font-black text-white mt-1" id="dash-clientes-count">0</h3>
                         </div>
                         <div class="p-3 bg-neutral-800 text-yellow-400 border border-neutral-700 rounded-xl">
                             <i class="fa-solid fa-users text-xl"></i>
                         </div>
                     </div>
-                    <p class="text-xs text-purple-400 font-medium mt-3">+8 novos este mês</p>
+                    <p class="text-xs text-purple-400 font-medium mt-3">Base cadastrada</p>
                 </div>
 
-                <!-- Investimento Total -->
                 <div class="bg-neutral-900 p-5 rounded-2xl border border-neutral-800 print-card hover:border-yellow-400/50 transition-all">
                     <div class="flex justify-between items-start">
                         <div>
                             <p class="text-xs font-bold text-yellow-400 uppercase tracking-wider">Investimento Total</p>
-                            <h3 class="text-2xl font-black text-white mt-1">R$ 8.500,00</h3>
+                            <h3 class="text-2xl font-black text-white mt-1" id="dash-investimento">R$ 0,00</h3>
                         </div>
                         <div class="p-3 bg-neutral-800 text-yellow-400 border border-neutral-700 rounded-xl">
                             <i class="fa-solid fa-chart-line-down text-xl"></i>
                         </div>
                     </div>
-                    <p class="text-xs text-neutral-400 mt-3">Anúncios, infra e insumos</p>
+                    <p class="text-xs text-neutral-400 mt-3">Despesas acumuladas</p>
                 </div>
 
-                <!-- Lucro -->
                 <div class="bg-neutral-900 p-5 rounded-2xl border border-neutral-800 print-card hover:border-yellow-400/50 transition-all">
                     <div class="flex justify-between items-start">
                         <div>
                             <p class="text-xs font-bold text-yellow-400 uppercase tracking-wider">Lucro Líquido</p>
-                            <h3 class="text-2xl font-black text-yellow-400 mt-1">R$ 18.240,00</h3>
+                            <h3 class="text-2xl font-black text-yellow-400 mt-1" id="dash-lucro">R$ 0,00</h3>
                         </div>
                         <div class="p-3 bg-yellow-400/10 text-yellow-400 border border-yellow-400/30 rounded-xl">
                             <i class="fa-solid fa-wallet text-xl"></i>
                         </div>
                     </div>
-                    <p class="text-xs text-emerald-400 font-medium mt-3">Margem estimada: 68%</p>
+                    <p class="text-xs text-emerald-400 font-medium mt-3">Receita - Despesas</p>
                 </div>
 
             </div>
 
-            <!-- GRÁFICOS -->
+            <!-- GRÁFICOS HISTÓRICOS -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                
-                <!-- Vendas — Últimos 31 dias/mês atual -->
                 <div class="lg:col-span-2 bg-neutral-900 p-6 rounded-2xl border border-neutral-800 print-card">
                     <div class="flex items-center justify-between mb-6">
-                        <h3 class="text-lg font-extrabold text-yellow-400 uppercase tracking-wide">Vendas — Últimos 31 dias / Mês Atual</h3>
-                        <span class="text-xs text-neutral-500">Atualizado diariamente</span>
+                        <div>
+                            <h3 class="text-lg font-extrabold text-yellow-400 uppercase tracking-wide">Vendas — Últimos 31 dias / Mês Atual</h3>
+                            <p class="text-xs text-neutral-500">Atualizado diariamente (Histórico preservado)</p>
+                        </div>
                     </div>
                     <div class="relative h-72">
                         <canvas id="vendasChart"></canvas>
                     </div>
                 </div>
 
-                <!-- Serviços Mais Vendidos -->
                 <div class="bg-neutral-900 p-6 rounded-2xl border border-neutral-800 print-card">
                     <div class="flex items-center justify-between mb-6">
-                        <h3 class="text-lg font-extrabold text-yellow-400 uppercase tracking-wide">Serviços Mais Vendidos</h3>
-                        <span class="text-xs text-neutral-500">Por volume</span>
+                        <div>
+                            <h3 class="text-lg font-extrabold text-yellow-400 uppercase tracking-wide">Serviços Mais Vendidos</h3>
+                            <p class="text-xs text-neutral-500">Por volume histórico</p>
+                        </div>
                     </div>
                     <div class="relative h-72 flex items-center justify-center">
                         <canvas id="servicosChart"></canvas>
                     </div>
                 </div>
-
             </div>
 
         </section>
 
         <!-- ================= SEÇÃO: CLIENTES ================= -->
         <section id="secao-clientes" class="secao-conteudo hidden space-y-6">
-            
-            <!-- HEADER CLIENTES E BOTÕES -->
             <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-neutral-900 p-6 rounded-2xl border border-neutral-800">
                 <div>
                     <h2 class="text-2xl font-black text-yellow-400 flex items-center gap-2">
@@ -275,131 +260,135 @@
                     <p class="text-neutral-400 text-sm mt-1">Gerenciamento completo da base de clientes da PHSUBLIME.</p>
                 </div>
 
-                <!-- BOTÕES DE AÇÃO -->
                 <div class="flex flex-wrap gap-2.5">
-                    <button onclick="abrirModalNovoCliente()" class="flex items-center gap-2 bg-yellow-400 hover:bg-yellow-300 text-black font-bold px-4 py-2.5 rounded-xl text-sm transition-all shadow-lg shadow-yellow-950/30">
+                    <button onclick="abrirModalCliente()" class="flex items-center gap-2 bg-yellow-400 hover:bg-yellow-300 text-black font-bold px-4 py-2.5 rounded-xl text-sm transition-all shadow-lg shadow-yellow-950/30">
                         <i class="fa-solid fa-user-plus"></i> + Novo Cliente
                     </button>
 
                     <button onclick="abrirModalMassa()" class="flex items-center gap-2 bg-neutral-800 hover:bg-neutral-700 text-neutral-200 border border-neutral-700 px-4 py-2.5 rounded-xl font-medium text-sm transition-all">
-                        <i class="fa-solid fa-file-import text-yellow-400"></i> Adicionar em Massa (Planilha/Colar)
+                        <i class="fa-solid fa-file-import text-yellow-400"></i> Adicionar em Massa
                     </button>
                 </div>
             </div>
 
-            <!-- BARRA DE PESQUISA -->
+            <!-- BARRA DE PESQUISA CLIENTES -->
             <div class="bg-neutral-900 p-4 rounded-2xl border border-neutral-800 flex items-center gap-3">
                 <i class="fa-solid fa-magnifying-glass text-yellow-400 text-lg ml-2"></i>
-                <input type="text" id="input-pesquisar-cliente" onkeyup="filtrarClientes()" placeholder="Pesquisar por nome, CPF, telefone, WhatsApp, cidade..." class="w-full bg-transparent text-white focus:outline-none text-sm placeholder-neutral-500">
+                <input type="text" id="input-pesquisar-cliente" onkeyup="renderizarClientes()" placeholder="Pesquisar por nome, CPF, telefone, cidade..." class="w-full bg-transparent text-white focus:outline-none text-sm placeholder-neutral-500">
             </div>
 
-            <!-- TABELA HISTÓRICO DE CLIENTES -->
+            <!-- TABELA CLIENTES -->
             <div class="bg-neutral-900 p-6 rounded-2xl border border-neutral-800 overflow-x-auto">
-                <table class="w-full text-left text-sm text-neutral-300" id="tabela-clientes">
+                <table class="w-full text-left text-sm text-neutral-300">
                     <thead class="text-xs uppercase bg-neutral-800 text-yellow-400 border-b border-neutral-700">
                         <tr>
                             <th class="p-3">Nome</th>
-                            <th class="p-3">CPF / CNPJ</th>
-                            <th class="p-3">Telefone / WhatsApp</th>
-                            <th class="p-3">E-mail</th>
-                            <th class="p-3">Cidade / UF</th>
-                            <th class="p-3">Endereço</th>
-                            <th class="p-3">Observações</th>
+                            <th class="p-3">CPF/CNPJ</th>
+                            <th class="p-3">Telefone / Whats</th>
+                            <th class="p-3">Cidade/UF</th>
+                            <th class="p-3">Total Comprado</th>
+                            <th class="p-3 text-right">Ações</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-neutral-800" id="tabela-clientes-body">
+                        <!-- Inserido via JS -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- ================= SEÇÃO: PEDIDOS ================= -->
+        <section id="secao-pedidos" class="secao-conteudo hidden space-y-6">
+            
+            <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-neutral-900 p-6 rounded-2xl border border-neutral-800">
+                <div>
+                    <h2 class="text-2xl font-black text-yellow-400 flex items-center gap-2">
+                        <i class="fa-solid fa-cart-shopping text-yellow-400"></i> Gerenciamento de Pedidos
+                    </h2>
+                    <p class="text-neutral-400 text-sm mt-1">Acompanhe pedidos em fila, produção e entregues.</p>
+                </div>
+
+                <button onclick="abrirModalPedido()" class="flex items-center gap-2 bg-yellow-400 hover:bg-yellow-300 text-black font-bold px-5 py-3 rounded-xl text-sm transition-all shadow-lg shadow-yellow-950/30">
+                    <i class="fa-solid fa-plus text-base"></i> + Novo Pedido
+                </button>
+            </div>
+
+            <!-- CARDS KPI DE PEDIDOS -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="bg-neutral-900 p-5 rounded-2xl border border-neutral-800">
+                    <p class="text-xs font-bold text-yellow-400 uppercase">Pedidos Novos (Aguardando)</p>
+                    <h3 class="text-3xl font-black text-white mt-1" id="kpi-pedidos-novos">0</h3>
+                </div>
+                <div class="bg-neutral-900 p-5 rounded-2xl border border-neutral-800">
+                    <p class="text-xs font-bold text-amber-400 uppercase">Em Produção</p>
+                    <h3 class="text-3xl font-black text-white mt-1" id="kpi-pedidos-producao">0</h3>
+                </div>
+                <div class="bg-neutral-900 p-5 rounded-2xl border border-neutral-800">
+                    <p class="text-xs font-bold text-emerald-400 uppercase">Total de Pedidos</p>
+                    <h3 class="text-3xl font-black text-white mt-1" id="kpi-pedidos-total">0</h3>
+                </div>
+            </div>
+
+            <!-- FILTROS E PESQUISA DE PEDIDOS -->
+            <div class="bg-neutral-900 p-4 rounded-2xl border border-neutral-800 flex flex-col md:flex-row gap-4 items-center justify-between">
+                <div class="flex items-center gap-2 w-full md:w-auto">
+                    <button onclick="filtrarPedidosAba('todos')" id="btn-filtro-todos" class="px-4 py-2 rounded-xl text-xs font-bold bg-yellow-400 text-black">Todos</button>
+                    <button onclick="filtrarPedidosAba('hoje')" id="btn-filtro-hoje" class="px-4 py-2 rounded-xl text-xs font-bold bg-neutral-800 text-neutral-300 hover:text-white">Hoje</button>
+                    <div class="flex items-center gap-1 bg-neutral-800 px-3 py-1.5 rounded-xl border border-neutral-700">
+                        <span class="text-xs text-neutral-400">Data:</span>
+                        <input type="date" id="filtro-data-especifica" onchange="renderizarPedidos()" class="bg-transparent text-xs text-white focus:outline-none">
+                    </div>
+                </div>
+
+                <div class="w-full md:w-80 bg-neutral-800 px-3 py-2 rounded-xl border border-neutral-700 flex items-center gap-2">
+                    <i class="fa-solid fa-magnifying-glass text-yellow-400"></i>
+                    <input type="text" id="input-pesquisar-pedido" onkeyup="renderizarPedidos()" placeholder="Pesquisar pedido, cliente, serviço..." class="bg-transparent text-white focus:outline-none text-xs w-full">
+                </div>
+            </div>
+
+            <!-- TABELA HISTÓRICO DE PEDIDOS -->
+            <div class="bg-neutral-900 p-6 rounded-2xl border border-neutral-800 overflow-x-auto">
+                <h3 class="text-base font-bold text-yellow-400 mb-4 uppercase tracking-wide">Histórico de Pedidos</h3>
+                <table class="w-full text-left text-sm text-neutral-300">
+                    <thead class="text-xs uppercase bg-neutral-800 text-yellow-400 border-b border-neutral-700">
                         <tr>
-                            <td class="p-3 font-semibold text-white">Empresa Alfa Ltda</td>
-                            <td class="p-3">12.345.678/0001-90</td>
-                            <td class="p-3">(21) 98888-0001</td>
-                            <td class="p-3">contato@alfa.com.br</td>
-                            <td class="p-3">Rio de Janeiro / RJ</td>
-                            <td class="p-3">Av. Brasil, 1500</td>
-                            <td class="p-3 text-xs text-neutral-400">Cliente VIP - Sublimação mensal</td>
+                            <th class="p-3">ID / Data</th>
+                            <th class="p-3">Cliente</th>
+                            <th class="p-3">Produtos / Descrição</th>
+                            <th class="p-3">Total (R$)</th>
+                            <th class="p-3">Despesa (R$)</th>
+                            <th class="p-3">Pagamento</th>
+                            <th class="p-3">Status</th>
+                            <th class="p-3 text-right">Ações</th>
                         </tr>
-                        <tr>
-                            <td class="p-3 font-semibold text-white">Studio Design RIO</td>
-                            <td class="p-3">987.654.321-00</td>
-                            <td class="p-3">(21) 97777-0002</td>
-                            <td class="p-3">rio@studiodesign.com</td>
-                            <td class="p-3">Niterói / RJ</td>
-                            <td class="p-3">Rua das Flores, 45</td>
-                            <td class="p-3 text-xs text-neutral-400">Prefere entrega via motoboy</td>
-                        </tr>
-                        <tr>
-                            <td class="p-3 font-semibold text-white">Gráfica Express</td>
-                            <td class="p-3">45.678.910/0001-22</td>
-                            <td class="p-3">(21) 96666-0003</td>
-                            <td class="p-3">grafica@express.com</td>
-                            <td class="p-3">Duque de Caxias / RJ</td>
-                            <td class="p-3">Rua São José, 102</td>
-                            <td class="p-3 text-xs text-neutral-400">Pedido frequente de banners</td>
-                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-neutral-800" id="tabela-pedidos-body">
+                        <!-- Inserido via JS -->
                     </tbody>
                 </table>
             </div>
 
         </section>
 
-        <!-- ================= SEÇÃO: PEDIDOS ================= -->
-        <section id="secao-pedidos" class="secao-conteudo hidden space-y-6">
-            <div class="bg-neutral-900 p-6 rounded-2xl border border-neutral-800">
-                <h2 class="text-2xl font-black text-yellow-400">Gerenciamento de Pedidos</h2>
-                <p class="text-neutral-400 text-sm mt-1">Acompanhe pedidos em fila, produção e entregues.</p>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div class="bg-neutral-900 p-4 rounded-xl border border-neutral-800">
-                    <h3 class="font-bold text-yellow-400 mb-3 border-b border-neutral-800 pb-2">Pendentes (5)</h3>
-                    <div class="space-y-2 text-xs">
-                        <div class="bg-neutral-800 p-3 rounded-lg border border-neutral-700">#1092 - Banner 2x1m</div>
-                        <div class="bg-neutral-800 p-3 rounded-lg border border-neutral-700">#1093 - 1000 Cartões</div>
-                    </div>
-                </div>
-                <div class="bg-neutral-900 p-4 rounded-xl border border-neutral-800">
-                    <h3 class="font-bold text-amber-400 mb-3 border-b border-neutral-800 pb-2">Em Produção (14)</h3>
-                    <div class="space-y-2 text-xs">
-                        <div class="bg-neutral-800 p-3 rounded-lg border border-neutral-700">#1085 - Camisetas Sublimadas</div>
-                        <div class="bg-neutral-800 p-3 rounded-lg border border-neutral-700">#1088 - Fachada ACM</div>
-                    </div>
-                </div>
-                <div class="bg-neutral-900 p-4 rounded-xl border border-neutral-800">
-                    <h3 class="font-bold text-emerald-400 mb-3 border-b border-neutral-800 pb-2">Concluídos Hoje (18)</h3>
-                    <div class="space-y-2 text-xs">
-                        <div class="bg-neutral-800 p-3 rounded-lg border border-neutral-700">#1070 - Adesivos Vinil</div>
-                        <div class="bg-neutral-800 p-3 rounded-lg border border-neutral-700">#1072 - Canecas Personalizadas</div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
         <!-- ================= SEÇÃO: DESPESAS ================= -->
         <section id="secao-despesas" class="secao-conteudo hidden space-y-6">
             <div class="bg-neutral-900 p-6 rounded-2xl border border-neutral-800">
                 <h2 class="text-2xl font-black text-yellow-400">Controle de Despesas</h2>
-                <p class="text-neutral-400 text-sm mt-1">Registros de custos operacionais e compra de insumos.</p>
+                <p class="text-neutral-400 text-sm mt-1">Calculado e atualizado automaticamente com base nos pedidos e compras de insumos.</p>
             </div>
-            <div class="bg-neutral-900 p-6 rounded-2xl border border-neutral-800 space-y-3">
-                <div class="flex justify-between items-center p-3 bg-neutral-800 rounded-xl border border-neutral-700">
-                    <div>
-                        <p class="font-bold text-white text-sm">Tinta Sublimática & Papel</p>
-                        <p class="text-xs text-neutral-400">Insumos de Produção</p>
-                    </div>
-                    <span class="text-rose-400 font-bold">R$ 2.400,00</span>
-                </div>
-                <div class="flex justify-between items-center p-3 bg-neutral-800 rounded-xl border border-neutral-700">
-                    <div>
-                        <p class="font-bold text-white text-sm">Tráfego Pago (Meta Ads)</p>
-                        <p class="text-xs text-neutral-400">Marketing & Vendas</p>
-                    </div>
-                    <span class="text-rose-400 font-bold">R$ 1.500,00</span>
-                </div>
-                <div class="flex justify-between items-center p-3 bg-neutral-800 rounded-xl border border-neutral-700">
-                    <div>
-                        <p class="font-bold text-white text-sm">Energia Elétrica & Net</p>
-                        <p class="text-xs text-neutral-400">Infraestrutura</p>
-                    </div>
-                    <span class="text-rose-400 font-bold">R$ 1.100,00</span>
-                </div>
+            <div class="bg-neutral-900 p-6 rounded-2xl border border-neutral-800 overflow-x-auto">
+                <table class="w-full text-left text-sm text-neutral-300">
+                    <thead class="text-xs uppercase bg-neutral-800 text-yellow-400 border-b border-neutral-700">
+                        <tr>
+                            <th class="p-3">Origem / Pedido</th>
+                            <th class="p-3">Data</th>
+                            <th class="p-3">Valor Despesa</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-neutral-800" id="tabela-despesas-body">
+                        <!-- Inserido via JS -->
+                    </tbody>
+                </table>
             </div>
         </section>
 
@@ -407,16 +396,20 @@
         <section id="secao-financeiro" class="secao-conteudo hidden space-y-6">
             <div class="bg-neutral-900 p-6 rounded-2xl border border-neutral-800">
                 <h2 class="text-2xl font-black text-yellow-400">Visão Financeira</h2>
-                <p class="text-neutral-400 text-sm mt-1">Resumo do fluxo de caixa e entradas.</p>
+                <p class="text-neutral-400 text-sm mt-1">Fluxo de caixa atualizado em tempo real.</p>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div class="bg-neutral-900 p-5 rounded-2xl border border-neutral-800">
-                    <p class="text-xs text-neutral-400 uppercase font-bold">Entradas Brutas (Mês)</p>
-                    <h3 class="text-3xl font-black text-emerald-400 mt-2">R$ 26.740,00</h3>
+                    <p class="text-xs text-neutral-400 uppercase font-bold">Total Receitas (Entradas)</p>
+                    <h3 class="text-3xl font-black text-emerald-400 mt-2" id="fin-entradas">R$ 0,00</h3>
                 </div>
                 <div class="bg-neutral-900 p-5 rounded-2xl border border-neutral-800">
-                    <p class="text-xs text-neutral-400 uppercase font-bold">Saídas / Custos (Mês)</p>
-                    <h3 class="text-3xl font-black text-rose-400 mt-2">R$ 8.500,00</h3>
+                    <p class="text-xs text-neutral-400 uppercase font-bold">Total Despesas (Saídas)</p>
+                    <h3 class="text-3xl font-black text-rose-400 mt-2" id="fin-saidas">R$ 0,00</h3>
+                </div>
+                <div class="bg-neutral-900 p-5 rounded-2xl border border-neutral-800">
+                    <p class="text-xs text-neutral-400 uppercase font-bold">Saldo / Lucro em Caixa</p>
+                    <h3 class="text-3xl font-black text-yellow-400 mt-2" id="fin-saldo">R$ 0,00</h3>
                 </div>
             </div>
         </section>
@@ -424,42 +417,36 @@
         <!-- ================= SEÇÃO: HISTÓRICO ================= -->
         <section id="secao-historico" class="secao-conteudo hidden space-y-6">
             <div class="bg-neutral-900 p-6 rounded-2xl border border-neutral-800">
-                <h2 class="text-2xl font-black text-yellow-400">Histórico de Fechamentos</h2>
-                <p class="text-neutral-400 text-sm mt-1">Relatórios e dados consolidados dos meses anteriores.</p>
+                <h2 class="text-2xl font-black text-yellow-400">Histórico de Fechamentos Mensais</h2>
+                <p class="text-neutral-400 text-sm mt-1">Relatórios e consolidação de meses encerrados.</p>
             </div>
-            <div class="bg-neutral-900 p-6 rounded-2xl border border-neutral-800 space-y-3">
-                <div class="flex justify-between items-center p-3 bg-neutral-800 rounded-xl border border-neutral-700 text-sm">
-                    <span class="font-bold text-yellow-400">Junho / 2026</span>
-                    <span class="text-neutral-300">Faturamento: R$ 68.400,00</span>
-                    <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-xs px-2.5 py-1 rounded-full">Fechado</span>
-                </div>
-                <div class="flex justify-between items-center p-3 bg-neutral-800 rounded-xl border border-neutral-700 text-sm">
-                    <span class="font-bold text-yellow-400">Maio / 2026</span>
-                    <span class="text-neutral-300">Faturamento: R$ 62.100,00</span>
-                    <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-xs px-2.5 py-1 rounded-full">Fechado</span>
-                </div>
+            <div class="bg-neutral-900 p-6 rounded-2xl border border-neutral-800 space-y-3" id="historico-fechamentos">
+                <p class="text-sm text-neutral-500">Nenhum mês fechado até o momento.</p>
             </div>
         </section>
 
     </main>
 
-    <!-- ================= MODAL: NOVO CLIENTE ================= -->
-    <div id="modal-novo-cliente" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <!-- ================= MODAIS ================= -->
+
+    <!-- MODAL CLIENTE (NOVO / EDITAR) -->
+    <div id="modal-cliente" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-neutral-900 border border-neutral-800 rounded-2xl max-w-2xl w-full p-6 space-y-4 shadow-2xl overflow-y-auto max-h-[90vh]">
             <div class="flex justify-between items-center border-b border-neutral-800 pb-3">
-                <h3 class="text-xl font-bold text-yellow-400 flex items-center gap-2">
+                <h3 class="text-xl font-bold text-yellow-400 flex items-center gap-2" id="modal-cliente-titulo">
                     <i class="fa-solid fa-user-plus"></i> Novo Cliente
                 </h3>
-                <button onclick="fecharModalNovoCliente()" class="text-neutral-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+                <button onclick="fecharModalCliente()" class="text-neutral-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <form id="form-novo-cliente" onsubmit="salvarNovoCliente(event)" class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+            <form id="form-cliente" onsubmit="salvarCliente(event)" class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                <input type="hidden" id="cli-id">
                 <div>
                     <label class="block text-neutral-400 text-xs font-semibold mb-1">Nome</label>
-                    <input type="text" id="cli-nome" placeholder="Nome completo ou razão social" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400">
+                    <input type="text" id="cli-nome" placeholder="Nome completo ou empresa" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400">
                 </div>
                 <div>
                     <label class="block text-neutral-400 text-xs font-semibold mb-1">CPF/CNPJ</label>
-                    <input type="text" id="cli-cpf" placeholder="000.000.000-00" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400">
+                    <input type="text" id="cli-cpf" placeholder="CPF ou CNPJ" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400">
                 </div>
                 <div>
                     <label class="block text-neutral-400 text-xs font-semibold mb-1">Telefone</label>
@@ -483,70 +470,232 @@
                 </div>
                 <div class="md:col-span-2">
                     <label class="block text-neutral-400 text-xs font-semibold mb-1">Endereço</label>
-                    <input type="text" id="cli-endereco" placeholder="Rua, Número, Bairro" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400">
+                    <input type="text" id="cli-endereco" placeholder="Endereço completo" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400">
                 </div>
                 <div class="md:col-span-2">
                     <label class="block text-neutral-400 text-xs font-semibold mb-1">Observações</label>
-                    <textarea id="cli-obs" rows="3" placeholder="Informações adicionais..." class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400"></textarea>
+                    <textarea id="cli-obs" rows="2" placeholder="Observações..." class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400"></textarea>
                 </div>
 
                 <div class="md:col-span-2 flex justify-end gap-3 pt-3 border-t border-neutral-800">
-                    <button type="button" onclick="fecharModalNovoCliente()" class="px-4 py-2.5 bg-neutral-800 hover:bg-neutral-700 text-neutral-300 rounded-xl font-medium text-sm">Cancelar</button>
+                    <button type="button" onclick="fecharModalCliente()" class="px-4 py-2.5 bg-neutral-800 hover:bg-neutral-700 text-neutral-300 rounded-xl font-medium text-sm">Cancelar</button>
                     <button type="submit" class="px-5 py-2.5 bg-yellow-400 hover:bg-yellow-300 text-black font-bold rounded-xl text-sm">Salvar</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- ================= MODAL: ADICIONAR EM MASSA ================= -->
-    <div id="modal-massa" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-neutral-900 border border-neutral-800 rounded-2xl max-w-2xl w-full p-6 space-y-4 shadow-2xl overflow-y-auto max-h-[90vh]">
+    <!-- MODAL HISTÓRICO DE COMPRAS DO CLIENTE -->
+    <div id="modal-historico-cliente" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-neutral-900 border border-neutral-800 rounded-2xl max-w-3xl w-full p-6 space-y-4 shadow-2xl overflow-y-auto max-h-[90vh]">
             <div class="flex justify-between items-center border-b border-neutral-800 pb-3">
-                <h3 class="text-xl font-bold text-yellow-400 flex items-center gap-2">
-                    <i class="fa-solid fa-file-import"></i> Adicionar Clientes em Massa
-                </h3>
-                <button onclick="fecharModalMassa()" class="text-neutral-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+                <div>
+                    <h3 class="text-xl font-bold text-yellow-400" id="hist-cliente-nome">Histórico de Compras</h3>
+                    <p class="text-xs text-neutral-400" id="hist-cliente-detalhe">Listagem completa dos pedidos</p>
+                </div>
+                <button onclick="fecharModalHistoricoCliente()" class="text-neutral-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <p class="text-xs text-neutral-400">Cole abaixo as linhas da sua planilha (Excel ou Google Sheets) ou separadas por ponto e vírgula (;). Exemplo: <br><span class="text-yellow-400">Nome; CPF; Telefone; Email; Cidade</span></p>
-            <div>
-                <textarea id="input-massa-texto" rows="8" placeholder="João Silva; 111.222.333-44; (21) 99999-8888; joao@email.com; Rio de Janeiro
-Maria Souza; 222.333.444-55; (21) 98888-7777; maria@email.com; Niterói" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl p-3 text-white text-xs font-mono focus:outline-none focus:border-yellow-400"></textarea>
+            
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs text-neutral-300">
+                    <thead class="uppercase bg-neutral-800 text-yellow-400 border-b border-neutral-700">
+                        <tr>
+                            <th class="p-2.5">ID / Data</th>
+                            <th class="p-2.5">Itens / Serviços</th>
+                            <th class="p-2.5">Total (R$)</th>
+                            <th class="p-2.5">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-neutral-800" id="hist-cliente-tabela">
+                        <!-- Inserido via JS -->
+                    </tbody>
+                </table>
             </div>
-            <div class="flex justify-end gap-3 pt-3 border-t border-neutral-800">
-                <button type="button" onclick="fecharModalMassa()" class="px-4 py-2.5 bg-neutral-800 hover:bg-neutral-700 text-neutral-300 rounded-xl font-medium text-sm">Cancelar</button>
-                <button type="button" onclick="processarMassa()" class="px-5 py-2.5 bg-yellow-400 hover:bg-yellow-300 text-black font-bold rounded-xl text-sm">Importar e Salvar</button>
+
+            <div class="flex justify-between items-center pt-3 border-t border-neutral-800 text-sm">
+                <span class="text-neutral-400 font-semibold">Total Acumulado Comprado:</span>
+                <span class="text-yellow-400 font-black text-lg" id="hist-cliente-total">R$ 0,00</span>
             </div>
         </div>
     </div>
 
-    <!-- TOAST / NOTIFICAÇÃO -->
-    <div id="toast" class="fixed bottom-5 right-5 bg-neutral-800 text-white border border-yellow-400 px-5 py-3 rounded-xl shadow-2xl transform translate-y-20 opacity-0 transition-all duration-300 flex items-center gap-3 z-50">
-        <i class="fa-solid fa-circle-check text-yellow-400 text-lg"></i>
-        <span id="toast-message" class="font-medium text-sm">Ação realizada com sucesso!</span>
+    <!-- MODAL NOVO PEDIDO -->
+    <div id="modal-pedido" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-neutral-900 border border-neutral-800 rounded-2xl max-w-4xl w-full p-6 space-y-5 shadow-2xl overflow-y-auto max-h-[90vh]">
+            <div class="flex justify-between items-center border-b border-neutral-800 pb-3">
+                <h3 class="text-xl font-bold text-yellow-400 flex items-center gap-2">
+                    <i class="fa-solid fa-cart-plus"></i> Novo Pedido
+                </h3>
+                <button onclick="fecharModalPedido()" class="text-neutral-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <form id="form-pedido" onsubmit="salvarPedido(event)" class="space-y-4 text-sm">
+                
+                <!-- SELEÇÃO DE CLIENTE (ORDEM ALFABÉTICA) -->
+                <div>
+                    <label class="block text-yellow-400 text-xs font-bold uppercase mb-1">Cliente (Ordem Alfabética)</label>
+                    <select id="ped-cliente-id" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400">
+                        <!-- Preenchido via JS em ordem alfabética -->
+                    </select>
+                </div>
+
+                <!-- CONTÊINER DE PRODUTOS/SERVIÇOS (MÚLTIPLOS ITENS) -->
+                <div class="border border-neutral-800 bg-black/50 p-4 rounded-xl space-y-4">
+                    <div class="flex justify-between items-center border-b border-neutral-800 pb-2">
+                        <h4 class="text-xs font-bold uppercase text-yellow-400">Produtos / Serviços do Pedido</h4>
+                        <button type="button" onclick="adicionarItemProduto()" class="text-xs bg-yellow-400 text-black px-3 py-1.5 rounded-lg font-bold hover:bg-yellow-300">
+                            + Adicionar Outro Produto
+                        </button>
+                    </div>
+
+                    <div id="lista-produtos-pedido" class="space-y-4">
+                        <!-- Blocos de produtos renderizados dinamicamente -->
+                    </div>
+                </div>
+
+                <!-- DETALHES DE VALORES, PAGAMENTO E STATUS -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-neutral-400 text-xs font-semibold mb-1">Total do Pedido (R$)</label>
+                        <input type="number" step="0.01" id="ped-total" placeholder="0.00" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-yellow-400 font-bold focus:outline-none focus:border-yellow-400">
+                    </div>
+                    <div>
+                        <label class="block text-neutral-400 text-xs font-semibold mb-1">Despesa / Custo (R$)</label>
+                        <input type="number" step="0.01" id="ped-despesa" placeholder="0.00" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-rose-400 font-bold focus:outline-none focus:border-yellow-400">
+                    </div>
+                    <div>
+                        <label class="block text-neutral-400 text-xs font-semibold mb-1">Data de Entrega</label>
+                        <input type="date" id="ped-data-entrega" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-neutral-400 text-xs font-semibold mb-1">Responsável</label>
+                        <input type="text" id="ped-responsavel" placeholder="Nome do atendente/operador" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400">
+                    </div>
+                    <div>
+                        <label class="block text-neutral-400 text-xs font-semibold mb-1">Forma de Pagamento</label>
+                        <select id="ped-forma-pagamento" onchange="verificarFormaPagamento()" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400">
+                            <option value="Dinheiro">Dinheiro</option>
+                            <option value="Pix">Pix</option>
+                            <option value="Cartão de Crédito">Cartão de Crédito</option>
+                            <option value="Cartão de Débito">Cartão de Débito</option>
+                            <option value="Parte Dinheiro / Parte Pix">Parte Dinheiro / Parte Pix</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-neutral-400 text-xs font-semibold mb-1">Status do Pedido</label>
+                        <select id="ped-status" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400">
+                            <option value="AGUARDANDO">AGUARDANDO</option>
+                            <option value="Em Produção">Em Produção</option>
+                            <option value="Concluído">Concluído</option>
+                            <option value="Entregue">Entregue</option>
+                            <option value="Cancelado">Cancelado</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- CAMPO CONDICIONAL PARA PAGAMENTO MISTO -->
+                <div id="campo-pagamento-misto" class="hidden grid grid-cols-1 md:grid-cols-2 gap-4 p-3 bg-neutral-800/50 rounded-xl border border-neutral-700">
+                    <div>
+                        <label class="block text-xs text-yellow-400 font-semibold mb-1">Valor em Dinheiro (R$)</label>
+                        <input type="number" step="0.01" id="ped-valor-dinheiro" placeholder="0.00" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-yellow-400 font-semibold mb-1">Valor em Pix (R$)</label>
+                        <input type="number" step="0.01" id="ped-valor-pix" placeholder="0.00" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-neutral-400 text-xs font-semibold mb-1">Observações</label>
+                    <textarea id="ped-obs" rows="2" placeholder="Observações do pedido..." class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400"></textarea>
+                </div>
+
+                <div class="flex justify-end gap-3 pt-3 border-t border-neutral-800">
+                    <button type="button" onclick="fecharModalPedido()" class="px-4 py-2.5 bg-neutral-800 hover:bg-neutral-700 text-neutral-300 rounded-xl font-medium text-sm">Cancelar</button>
+                    <button type="submit" class="px-5 py-2.5 bg-yellow-400 hover:bg-yellow-300 text-black font-bold rounded-xl text-sm">Salvar Pedido</button>
+                </div>
+            </form>
+        </div>
     </div>
 
+    <!-- MODAL MASSA CLIENTES -->
+    <div id="modal-massa" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-neutral-900 border border-neutral-800 rounded-2xl max-w-2xl w-full p-6 space-y-4 shadow-2xl">
+            <div class="flex justify-between items-center border-b border-neutral-800 pb-3">
+                <h3 class="text-xl font-bold text-yellow-400"><i class="fa-solid fa-file-import"></i> Adicionar em Massa</h3>
+                <button onclick="fecharModalMassa()" class="text-neutral-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <p class="text-xs text-neutral-400">Cole as linhas da planilha (Nome; CPF; Telefone; Email; Cidade):</p>
+            <textarea id="input-massa-texto" rows="7" placeholder="João Silva; 111.222.333-44; (21) 99999-8888; joao@email.com; Rio de Janeiro" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl p-3 text-white text-xs font-mono focus:outline-none focus:border-yellow-400"></textarea>
+            <div class="flex justify-end gap-3 border-t border-neutral-800 pt-3">
+                <button onclick="fecharModalMassa()" class="px-4 py-2 bg-neutral-800 text-neutral-300 rounded-xl text-sm">Cancelar</button>
+                <button onclick="processarMassa()" class="px-5 py-2 bg-yellow-400 text-black font-bold rounded-xl text-sm">Importar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST -->
+    <div id="toast" class="fixed bottom-5 right-5 bg-neutral-800 text-white border border-yellow-400 px-5 py-3 rounded-xl shadow-2xl transform translate-y-20 opacity-0 transition-all duration-300 flex items-center gap-3 z-50">
+        <i class="fa-solid fa-circle-check text-yellow-400 text-lg"></i>
+        <span id="toast-message" class="font-medium text-sm">Ação realizada!</span>
+    </div>
+
+    <!-- SCRIPT PRINCIPAL & REGRAS DE NEGÓCIO -->
     <script>
-        // --- DADOS DO DASHBOARD ---
-        const dados = {
-            periodo: "Jul/2026",
-            faturamentoDia: "R$ 2.850,00",
-            pedidosDia: 18,
-            emProducao: 14,
-            pedidosPendentes: 5,
-            entregues: 142,
-            clientes: 89,
-            investimentoTotal: "R$ 8.500,00",
-            lucro: "R$ 18.240,00"
+        // --- BANCO DE DADOS EM MEMÓRIA / LOCALSTORAGE ---
+        let appData = {
+            dataAtual: new Date().toISOString().split('T')[0],
+            clientes: [
+                { id: 1, nome: "Empresa Alfa Ltda", cpf: "12.345.678/0001-90", telefone: "(21) 98888-0001", email: "contato@alfa.com", cidade: "Rio de Janeiro", estado: "RJ", endereco: "Av. Brasil, 1500", obs: "VIP" },
+                { id: 2, nome: "Studio Design RIO", cpf: "987.654.321-00", telefone: "(21) 97777-0002", email: "rio@studio.com", cidade: "Niterói", estado: "RJ", endereco: "Rua das Flores, 45", obs: "" },
+                { id: 3, nome: "Gráfica Express", cpf: "45.678.910/0001-22", telefone: "(21) 96666-0003", email: "contato@express.com", cidade: "Duque de Caxias", estado: "RJ", endereco: "Rua São José, 102", obs: "" }
+            ],
+            pedidos: [],
+            despesasOutras: [],
+            historicoFechamentos: [],
+            vendasChart: null,
+            servicosChart: null,
+            abaPedidoFiltro: 'todos'
         };
 
-        // --- SISTEMA DE NAVEGAÇÃO ENTRE ABAS ---
+        // --- CARREGAR OU VERIFICAR ZERAMENTO DIÁRIO ---
+        function carregarDados() {
+            const salvos = localStorage.getItem('PHSUBLIME_DATA_V3');
+            if (salvos) {
+                try {
+                    const parsed = JSON.parse(salvos);
+                    appData.clientes = parsed.clientes || appData.clientes;
+                    appData.pedidos = parsed.pedidos || [];
+                    appData.despesasOutras = parsed.despesasOutras || [];
+                    appData.historicoFechamentos = parsed.historicoFechamentos || [];
+                } catch(e) {}
+            }
+
+            // Verificar se o dia mudou para zerar o Dashboard do Dia
+            const hojeStr = new Date().toISOString().split('T')[0];
+            appData.dataAtual = hojeStr;
+
+            salvarStorage();
+            atualizarInterfaceCompleta();
+        }
+
+        function salvarStorage() {
+            localStorage.setItem('PHSUBLIME_DATA_V3', JSON.stringify({
+                clientes: appData.clientes,
+                pedidos: appData.pedidos,
+                despesasOutras: appData.despesasOutras,
+                historicoFechamentos: appData.historicoFechamentos
+            }));
+        }
+
+        // --- SISTEMA DE NAVEGAÇÃO ---
         function navegar(secao) {
             document.querySelectorAll('.secao-conteudo').forEach(el => el.classList.add('hidden'));
-
-            const secaoAlvo = document.getElementById(`secao-${secao}`);
-            if (secaoAlvo) {
-                secaoAlvo.classList.remove('hidden');
-            }
+            const alvo = document.getElementById(`secao-${secao}`);
+            if (alvo) alvo.classList.remove('hidden');
 
             document.querySelectorAll('.nav-btn').forEach(btn => {
                 btn.classList.remove('active', 'text-yellow-400', 'bg-yellow-400/10', 'border-l-4', 'border-yellow-400', 'font-bold');
@@ -560,267 +709,659 @@ Maria Souza; 222.333.444-55; (21) 98888-7777; maria@email.com; Niterói" class="
             }
         }
 
-        // --- MODAL NOVO CLIENTE ---
-        function abrirModalNovoCliente() {
-            document.getElementById('modal-novo-cliente').classList.remove('hidden');
+        // --- ATUALIZAÇÃO REATIVA GERAL (REAL-TIME) ---
+        function atualizarInterfaceCompleta() {
+            const hojeStr = appData.dataAtual;
+            
+            // Formatador de data extenso no header
+            const dData = new Date();
+            document.getElementById('dataAtualExtenso').innerText = dData.toLocaleDateString('pt-BR');
+
+            // --- REGRAS DE CÁLCULO DASHBOARD ---
+            let fatDia = 0;
+            let pedDiaCount = 0;
+            let producaoCount = 0;
+            let pendentesCount = 0;
+            let entreguesDiaCount = 0;
+
+            let totalReceitaGeral = 0;
+            let totalDespesaGeral = 0;
+
+            appData.pedidos.forEach(p => {
+                const pData = p.data;
+                const pTotal = parseFloat(p.total || 0);
+                const pDespesa = parseFloat(p.despesa || 0);
+
+                if (p.status !== 'Cancelado') {
+                    totalReceitaGeral += pTotal;
+                    totalDespesaGeral += pDespesa;
+                }
+
+                // Indicadores do Dia (Reseta a cada novo dia)
+                if (pData === hojeStr && p.status !== 'Cancelado') {
+                    fatDia += pTotal;
+                    pedDiaCount++;
+                    if (p.status === 'Entregue' || p.status === 'Concluído') entreguesDiaCount++;
+                }
+
+                if (p.status === 'Em Produção') producaoCount++;
+                if (p.status === 'AGUARDANDO') pendentesCount++;
+            });
+
+            appData.despesasOutras.forEach(d => {
+                totalDespesaGeral += parseFloat(d.valor || 0);
+            });
+
+            const lucroGeral = totalReceitaGeral - totalDespesaGeral;
+
+            // Renderizar KPIs do Dashboard
+            document.getElementById('dash-faturamento-dia').innerText = `R$ ${fatDia.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+            document.getElementById('dash-pedidos-dia').innerText = pedDiaCount;
+            document.getElementById('dash-em-producao').innerText = producaoCount;
+            document.getElementById('dash-pendentes').innerText = pendentesCount;
+            document.getElementById('dash-entregues').innerText = entreguesDiaCount;
+            document.getElementById('dash-clientes-count').innerText = appData.clientes.length;
+            document.getElementById('dash-investimento').innerText = `R$ ${totalDespesaGeral.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+            document.getElementById('dash-lucro').innerText = `R$ ${lucroGeral.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+
+            // Financeiro
+            document.getElementById('fin-entradas').innerText = `R$ ${totalReceitaGeral.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+            document.getElementById('fin-saidas').innerText = `R$ ${totalDespesaGeral.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+            document.getElementById('fin-saldo').innerText = `R$ ${lucroGeral.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+
+            // Renderizar Tabelas e Listas
+            renderizarClientes();
+            renderizarPedidos();
+            renderizarDespesas();
+            atualizarGraficos();
         }
 
-        function fecharModalNovoCliente() {
-            document.getElementById('modal-novo-cliente').classList.add('hidden');
-            document.getElementById('form-novo-cliente').reset();
-        }
-
-        function salvarNovoCliente(e) {
-            e.preventDefault();
-
-            // Pega os valores (pode estar vazio ou não)
-            const nome = document.getElementById('cli-nome').value || '-';
-            const cpf = document.getElementById('cli-cpf').value || '-';
-            const telefone = document.getElementById('cli-telefone').value || document.getElementById('cli-whatsapp').value || '-';
-            const email = document.getElementById('cli-email').value || '-';
-            const cidade = document.getElementById('cli-cidade').value ? `${document.getElementById('cli-cidade').value} / ${document.getElementById('cli-estado').value}` : '-';
-            const endereco = document.getElementById('cli-endereco').value || '-';
-            const obs = document.getElementById('cli-obs').value || '-';
-
-            // Adiciona na tabela
+        // --- CLIENTES: GESTÃO & HISTÓRICO ---
+        function renderizarClientes() {
             const tbody = document.getElementById('tabela-clientes-body');
-            const novaLinha = document.createElement('tr');
-            novaLinha.innerHTML = `
-                <td class="p-3 font-semibold text-white">${nome}</td>
-                <td class="p-3">${cpf}</td>
-                <td class="p-3">${telefone}</td>
-                <td class="p-3">${email}</td>
-                <td class="p-3">${cidade}</td>
-                <td class="p-3">${endereco}</td>
-                <td class="p-3 text-xs text-neutral-400">${obs}</td>
-            `;
-            tbody.prepend(novaLinha);
+            tbody.innerHTML = '';
+            const filtro = document.getElementById('input-pesquisar-cliente').value.toLowerCase();
 
-            // Atualiza KPI
-            dados.clientes++;
-            document.getElementById('kpi-clientes-count').innerText = dados.clientes;
+            // Ordenar por nome
+            const clientesOrdenados = [...appData.clientes].sort((a, b) => a.nome.localeCompare(b.nome));
 
-            fecharModalNovoCliente();
-            mostrarToast("Cliente cadastrado com sucesso!");
+            clientesOrdenados.forEach(c => {
+                const textoBusca = `${c.nome} ${c.cpf} ${c.telefone} ${c.cidade}`.toLowerCase();
+                if (filtro && !textoBusca.includes(filtro)) return;
+
+                // Calcular Total Comprado por este cliente
+                let totalComprado = 0;
+                appData.pedidos.forEach(p => {
+                    if (p.clienteId == c.id && p.status !== 'Cancelado') {
+                        totalComprado += parseFloat(p.total || 0);
+                    }
+                });
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="p-3 font-semibold text-white">${c.nome}</td>
+                    <td class="p-3">${c.cpf || '-'}</td>
+                    <td class="p-3">${c.telefone || c.whatsapp || '-'}</td>
+                    <td class="p-3">${c.cidade ? `${c.cidade}/${c.estado || ''}` : '-'}</td>
+                    <td class="p-3 font-bold text-yellow-400">R$ ${totalComprado.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</td>
+                    <td class="p-3 text-right space-x-1.5">
+                        <button onclick="abrirHistoricoCompras(${c.id})" class="bg-yellow-400/10 hover:bg-yellow-400 text-yellow-400 hover:text-black p-2 rounded-lg text-xs font-bold transition-all" title="Histórico de Compras">
+                            <i class="fa-solid fa-clock-rotate-left"></i> Compras
+                        </button>
+                        <button onclick="editarCliente(${c.id})" class="bg-neutral-800 hover:bg-neutral-700 text-neutral-200 p-2 rounded-lg text-xs transition-all" title="Editar">
+                            <i class="fa-solid fa-pen"></i>
+                        </button>
+                        <button onclick="excluirCliente(${c.id})" class="bg-rose-950/50 hover:bg-rose-900 text-rose-400 p-2 rounded-lg text-xs transition-all" title="Excluir">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
         }
 
-        // --- MODAL IMPORTAÇÃO EM MASSA ---
-        function abrirModalMassa() {
-            document.getElementById('modal-massa').classList.remove('hidden');
+        function abrirModalCliente() {
+            document.getElementById('modal-cliente-titulo').innerHTML = `<i class="fa-solid fa-user-plus"></i> Novo Cliente`;
+            document.getElementById('form-cliente').reset();
+            document.getElementById('cli-id').value = '';
+            document.getElementById('modal-cliente').classList.remove('hidden');
         }
 
-        function fecharModalMassa() {
-            document.getElementById('modal-massa').classList.add('hidden');
-            document.getElementById('input-massa-texto').value = '';
+        function fecharModalCliente() {
+            document.getElementById('modal-cliente').classList.add('hidden');
         }
 
+        function editarCliente(id) {
+            const cli = appData.clientes.find(c => c.id == id);
+            if (!cli) return;
+
+            document.getElementById('modal-cliente-titulo').innerHTML = `<i class="fa-solid fa-user-pen"></i> Editar Cliente`;
+            document.getElementById('cli-id').value = cli.id;
+            document.getElementById('cli-nome').value = cli.nome || '';
+            document.getElementById('cli-cpf').value = cli.cpf || '';
+            document.getElementById('cli-telefone').value = cli.telefone || '';
+            document.getElementById('cli-whatsapp').value = cli.whatsapp || '';
+            document.getElementById('cli-email').value = cli.email || '';
+            document.getElementById('cli-cidade').value = cli.cidade || '';
+            document.getElementById('cli-estado').value = cli.estado || '';
+            document.getElementById('cli-endereco').value = cli.endereco || '';
+            document.getElementById('cli-obs').value = cli.obs || '';
+
+            document.getElementById('modal-cliente').classList.remove('hidden');
+        }
+
+        function salvarCliente(e) {
+            e.preventDefault();
+            const id = document.getElementById('cli-id').value;
+            const nome = document.getElementById('cli-nome').value.trim() || 'Cliente sem nome';
+
+            if (id) {
+                // Editar existente
+                const cli = appData.clientes.find(c => c.id == id);
+                if (cli) {
+                    cli.nome = nome;
+                    cli.cpf = document.getElementById('cli-cpf').value;
+                    cli.telefone = document.getElementById('cli-telefone').value;
+                    cli.whatsapp = document.getElementById('cli-whatsapp').value;
+                    cli.email = document.getElementById('cli-email').value;
+                    cli.cidade = document.getElementById('cli-cidade').value;
+                    cli.estado = document.getElementById('cli-estado').value;
+                    cli.endereco = document.getElementById('cli-endereco').value;
+                    cli.obs = document.getElementById('cli-obs').value;
+                }
+                mostrarToast("Cliente atualizado!");
+            } else {
+                // Criar Novo
+                const novoCli = {
+                    id: Date.now(),
+                    nome: nome,
+                    cpf: document.getElementById('cli-cpf').value,
+                    telefone: document.getElementById('cli-telefone').value,
+                    whatsapp: document.getElementById('cli-whatsapp').value,
+                    email: document.getElementById('cli-email').value,
+                    cidade: document.getElementById('cli-cidade').value,
+                    estado: document.getElementById('cli-estado').value,
+                    endereco: document.getElementById('cli-endereco').value,
+                    obs: document.getElementById('cli-obs').value
+                };
+                appData.clientes.push(novoCli);
+                mostrarToast("Novo cliente cadastrado!");
+            }
+
+            salvarStorage();
+            fecharModalCliente();
+            atualizarInterfaceCompleta();
+        }
+
+        function excluirCliente(id) {
+            if (confirm("Tem certeza que deseja excluir este cliente?")) {
+                appData.clientes = appData.clientes.filter(c => c.id != id);
+                salvarStorage();
+                atualizarInterfaceCompleta();
+                mostrarToast("Cliente removido.");
+            }
+        }
+
+        function abrirHistoricoCompras(clienteId) {
+            const cli = appData.clientes.find(c => c.id == clienteId);
+            if (!cli) return;
+
+            document.getElementById('hist-cliente-nome').innerText = `Histórico de Compras - ${cli.nome}`;
+            document.getElementById('hist-cliente-detalhe').innerText = `CPF/CNPJ: ${cli.cpf || 'Não informado'} | Tel: ${cli.telefone || cli.whatsapp || '-'}`;
+
+            const tbody = document.getElementById('hist-cliente-tabela');
+            tbody.innerHTML = '';
+            let acumulado = 0;
+
+            const pedidosCliente = appData.pedidos.filter(p => p.clienteId == clienteId);
+
+            if (pedidosCliente.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-neutral-500">Nenhuma compra cadastrada para este cliente.</td></tr>`;
+            } else {
+                pedidosCliente.forEach(p => {
+                    const pTotal = parseFloat(p.total || 0);
+                    if (p.status !== 'Cancelado') acumulado += pTotal;
+
+                    let descItens = p.itens ? p.itens.map(i => `${i.servico || 'Produto'} (${i.qtd || 1}x)`).join(', ') : 'Serviço Geral';
+
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td class="p-2.5 font-bold">#${p.id}<br><span class="text-neutral-500 font-normal">${p.data}</span></td>
+                        <td class="p-2.5">${descItens}</td>
+                        <td class="p-2.5 font-bold text-yellow-400">R$ ${pTotal.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</td>
+                        <td class="p-2.5"><span class="px-2 py-0.5 text-[10px] rounded-full font-bold ${p.status === 'Entregue' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-yellow-400/10 text-yellow-400'}">${p.status}</span></td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            }
+
+            document.getElementById('hist-cliente-total').innerText = `R$ ${acumulado.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+            document.getElementById('modal-historico-cliente').classList.remove('hidden');
+        }
+
+        function fecharModalHistoricoCliente() {
+            document.getElementById('modal-historico-cliente').classList.add('hidden');
+        }
+
+        // --- MASSA CLIENTES ---
+        function abrirModalMassa() { document.getElementById('modal-massa').classList.remove('hidden'); }
+        function fecharModalMassa() { document.getElementById('modal-massa').classList.add('hidden'); }
         function processarMassa() {
-            const texto = document.getElementById('input-massa-texto').value.trim();
-            if (!texto) {
-                fecharModalMassa();
+            const txt = document.getElementById('input-massa-texto').value.trim();
+            if (!txt) return fecharModalMassa();
+
+            const linhas = txt.split('\n');
+            let count = 0;
+            linhas.forEach(l => {
+                if (l.trim()) {
+                    const p = l.split(/;|\t/);
+                    appData.clientes.push({
+                        id: Date.now() + Math.floor(Math.random() * 1000),
+                        nome: p[0] ? p[0].trim() : 'Cliente Importado',
+                        cpf: p[1] ? p[1].trim() : '',
+                        telefone: p[2] ? p[2].trim() : '',
+                        email: p[3] ? p[3].trim() : '',
+                        cidade: p[4] ? p[4].trim() : ''
+                    });
+                    count++;
+                }
+            });
+            salvarStorage();
+            fecharModalMassa();
+            atualizarInterfaceCompleta();
+            mostrarToast(`${count} clientes importados!`);
+        }
+
+        // --- PEDIDOS: GERENCIAMENTO E MÚLTIPLOS PRODUTOS ---
+        let itensPedidoTemp = [];
+
+        function abrirModalPedido() {
+            if (appData.clientes.length === 0) {
+                alert("Cadastre pelo menos um cliente antes de criar um pedido!");
                 return;
             }
 
-            const linhas = texto.split('\n');
-            const tbody = document.getElementById('tabela-clientes-body');
-            let importados = 0;
+            // Preencher Select de Clientes em ORDEM ALFABÉTICA
+            const selectCli = document.getElementById('ped-cliente-id');
+            selectCli.innerHTML = '';
+            const clientesOrdenados = [...appData.clientes].sort((a, b) => a.nome.localeCompare(b.nome));
 
-            linhas.forEach(linha => {
-                if (linha.trim() !== '') {
-                    const partes = linha.split(/;|\t/);
-                    const nome = partes[0] ? partes[0].trim() : '-';
-                    const cpf = partes[1] ? partes[1].trim() : '-';
-                    const tel = partes[2] ? partes[2].trim() : '-';
-                    const email = partes[3] ? partes[3].trim() : '-';
-                    const cidade = partes[4] ? partes[4].trim() : '-';
-
-                    const novaLinha = document.createElement('tr');
-                    novaLinha.innerHTML = `
-                        <td class="p-3 font-semibold text-white">${nome}</td>
-                        <td class="p-3">${cpf}</td>
-                        <td class="p-3">${tel}</td>
-                        <td class="p-3">${email}</td>
-                        <td class="p-3">${cidade}</td>
-                        <td class="p-3">-</td>
-                        <td class="p-3 text-xs text-neutral-400">Importado em Massa</td>
-                    `;
-                    tbody.prepend(novaLinha);
-                    importados++;
-                }
+            clientesOrdenados.forEach(c => {
+                const opt = document.createElement('option');
+                opt.value = c.id;
+                opt.innerText = `${c.nome} (${c.cidade || 'Sem cidade'})`;
+                selectCli.appendChild(opt);
             });
 
-            dados.clientes += importados;
-            document.getElementById('kpi-clientes-count').innerText = dados.clientes;
-
-            fecharModalMassa();
-            mostrarToast(`${importados} cliente(s) importado(s) com sucesso!`);
-        }
-
-        // --- FILTRO DE PESQUISA EM TEMPO REAL ---
-        function filtrarClientes() {
-            const termo = document.getElementById('input-pesquisar-cliente').value.toLowerCase();
-            const linhas = document.querySelectorAll('#tabela-clientes-body tr');
-
-            linhas.forEach(linha => {
-                const conteudo = linha.innerText.toLowerCase();
-                if (conteudo.includes(termo)) {
-                    linha.style.display = '';
-                } else {
-                    linha.style.display = 'none';
-                }
-            });
-        }
-
-        // --- INICIALIZAÇÃO DOS GRÁFICOS ---
-        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('form-pedido').reset();
+            itensPedidoTemp = [];
+            adicionarItemProduto(); // Inicia com 1 produto
             
-            Chart.defaults.color = '#a1a1aa';
-            Chart.defaults.borderColor = '#27272a';
+            // Setar data entrega padrão para hoje
+            document.getElementById('ped-data-entrega').value = appData.dataAtual;
 
-            // 1. Gráfico de Vendas
-            const ctxVendas = document.getElementById('vendasChart').getContext('2d');
-            const gradient = ctxVendas.createLinearGradient(0, 0, 0, 300);
-            gradient.addColorStop(0, 'rgba(250, 204, 21, 0.35)');
-            gradient.addColorStop(1, 'rgba(250, 204, 21, 0.0)');
+            document.getElementById('modal-pedido').classList.remove('hidden');
+        }
 
+        function fecharModalPedido() {
+            document.getElementById('modal-pedido').classList.add('hidden');
+        }
+
+        function adicionarItemProduto() {
+            const index = itensPedidoTemp.length;
+            itensPedidoTemp.push({ servico: '', material: '', qtd: 1, largura: '', altura: '', acabamento: '', valor: 0 });
+            renderizarItensFormPedido();
+        }
+
+        function removerItemProduto(index) {
+            if (itensPedidoTemp.length <= 1) return;
+            itensPedidoTemp.splice(index, 1);
+            renderizarItensFormPedido();
+            calcularTotalPedidoAutomatico();
+        }
+
+        function renderizarItensFormPedido() {
+            const container = document.getElementById('lista-produtos-pedido');
+            container.innerHTML = '';
+
+            itensPedidoTemp.forEach((item, idx) => {
+                const div = document.createElement('div');
+                div.className = 'p-3 bg-neutral-900 rounded-xl border border-neutral-800 space-y-3 relative';
+                div.innerHTML = `
+                    <div class="flex justify-between items-center text-xs font-bold text-neutral-400">
+                        <span>Produto #${idx + 1}</span>
+                        ${itensPedidoTemp.length > 1 ? `<button type="button" onclick="removerItemProduto(${idx})" class="text-rose-400 hover:text-rose-300 text-xs"><i class="fa-solid fa-trash"></i> Remover</button>` : ''}
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+                        <div>
+                            <label class="block text-neutral-400 mb-1">Serviço / Item</label>
+                            <input type="text" value="${item.servico}" onchange="itensPedidoTemp[${idx}].servico = this.value" placeholder="Ex: Banner, Camiseta..." class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-white">
+                        </div>
+                        <div>
+                            <label class="block text-neutral-400 mb-1">Material</label>
+                            <input type="text" value="${item.material}" onchange="itensPedidoTemp[${idx}].material = this.value" placeholder="Ex: Lona 440g, Algodão..." class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-white">
+                        </div>
+                        <div>
+                            <label class="block text-neutral-400 mb-1">Quantidade</label>
+                            <input type="number" min="1" value="${item.qtd}" onchange="itensPedidoTemp[${idx}].qtd = parseFloat(this.value)||1; calcularTotalPedidoAutomatico()" class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-white">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-3 text-xs">
+                        <div>
+                            <label class="block text-neutral-400 mb-1">Largura (cm)</label>
+                            <input type="number" value="${item.largura}" onchange="itensPedidoTemp[${idx}].largura = this.value" placeholder="100" class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-white">
+                        </div>
+                        <div>
+                            <label class="block text-neutral-400 mb-1">Altura (cm)</label>
+                            <input type="number" value="${item.altura}" onchange="itensPedidoTemp[${idx}].altura = this.value" placeholder="150" class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-white">
+                        </div>
+                        <div>
+                            <label class="block text-neutral-400 mb-1">Acabamento</label>
+                            <input type="text" value="${item.acabamento}" onchange="itensPedidoTemp[${idx}].acabamento = this.value" placeholder="Ilhós, Bainha..." class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-white">
+                        </div>
+                        <div>
+                            <label class="block text-neutral-400 mb-1">Subtotal (R$)</label>
+                            <input type="number" step="0.01" value="${item.valor || ''}" onchange="itensPedidoTemp[${idx}].valor = parseFloat(this.value)||0; calcularTotalPedidoAutomatico()" placeholder="0.00" class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-yellow-400 font-bold">
+                        </div>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function calcularTotalPedidoAutomatico() {
+            let soma = 0;
+            itensPedidoTemp.forEach(i => {
+                soma += parseFloat(i.valor || 0);
+            });
+            document.getElementById('ped-total').value = soma > 0 ? soma.toFixed(2) : '';
+        }
+
+        function verificarFormaPagamento() {
+            const val = document.getElementById('ped-forma-pagamento').value;
+            const campoMisto = document.getElementById('campo-pagamento-misto');
+            if (val === 'Parte Dinheiro / Parte Pix') {
+                campoMisto.classList.remove('hidden');
+            } else {
+                campoMisto.classList.add('hidden');
+            }
+        }
+
+        function salvarPedido(e) {
+            e.preventDefault();
+
+            const clienteId = document.getElementById('ped-cliente-id').value;
+            const cli = appData.clientes.find(c => c.id == clienteId);
+            const total = parseFloat(document.getElementById('ped-total').value || 0);
+            const despesa = parseFloat(document.getElementById('ped-despesa').value || 0);
+            const formaPag = document.getElementById('ped-forma-pagamento').value;
+
+            let detalhePag = formaPag;
+            if (formaPag === 'Parte Dinheiro / Parte Pix') {
+                const din = parseFloat(document.getElementById('ped-valor-dinheiro').value || 0);
+                const pix = parseFloat(document.getElementById('ped-valor-pix').value || 0);
+                detalhePag = `Misto (Dinheiro: R$ ${din.toFixed(2)} | Pix: R$ ${pix.toFixed(2)})`;
+            }
+
+            const novoPedido = {
+                id: Math.floor(1000 + Math.random() * 9000),
+                data: appData.dataAtual,
+                clienteId: clienteId,
+                clienteNome: cli ? cli.nome : 'Cliente Desconhecido',
+                itens: [...itensPedidoTemp],
+                total: total,
+                despesa: despesa,
+                dataEntrega: document.getElementById('ped-data-entrega').value || '-',
+                responsavel: document.getElementById('ped-responsavel').value || 'Atendente',
+                formaPagamento: detalhePag,
+                status: document.getElementById('ped-status').value,
+                obs: document.getElementById('ped-obs').value
+            };
+
+            appData.pedidos.unshift(novoPedido);
+            salvarStorage();
+            fecharModalPedido();
+            atualizarInterfaceCompleta();
+            mostrarToast("Pedido salvo e valores atualizados!");
+        }
+
+        function filtrarPedidosAba(aba) {
+            appData.abaPedidoFiltro = aba;
+            document.getElementById('btn-filtro-todos').className = aba === 'todos' ? 'px-4 py-2 rounded-xl text-xs font-bold bg-yellow-400 text-black' : 'px-4 py-2 rounded-xl text-xs font-bold bg-neutral-800 text-neutral-300 hover:text-white';
+            document.getElementById('btn-filtro-hoje').className = aba === 'hoje' ? 'px-4 py-2 rounded-xl text-xs font-bold bg-yellow-400 text-black' : 'px-4 py-2 rounded-xl text-xs font-bold bg-neutral-800 text-neutral-300 hover:text-white';
+            renderizarPedidos();
+        }
+
+        function renderizarPedidos() {
+            const tbody = document.getElementById('tabela-pedidos-body');
+            tbody.innerHTML = '';
+
+            const busca = document.getElementById('input-pesquisar-pedido').value.toLowerCase();
+            const dataEspec = document.getElementById('filtro-data-especifica').value;
+
+            let countNovos = 0;
+            let countProducao = 0;
+            let countTotal = appData.pedidos.length;
+
+            appData.pedidos.forEach(p => {
+                if (p.status === 'AGUARDANDO') countNovos++;
+                if (p.status === 'Em Produção') countProducao++;
+
+                // Filtros de aba e busca
+                if (appData.abaPedidoFiltro === 'hoje' && p.data !== appData.dataAtual) return;
+                if (dataEspec && p.data !== dataEspec) return;
+
+                const descProdutos = p.itens ? p.itens.map(i => `${i.servico || 'Item'} (${i.qtd}x)`).join(', ') : 'Serviço';
+                const buscaTexto = `${p.id} ${p.clienteNome} ${descProdutos} ${p.status}`.toLowerCase();
+                if (busca && !buscaTexto.includes(busca)) return;
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="p-3 font-bold text-white">#${p.id}<br><span class="text-xs text-neutral-500 font-normal">${p.data}</span></td>
+                    <td class="p-3 font-semibold text-yellow-400">${p.clienteNome}</td>
+                    <td class="p-3 text-xs">${descProdutos}</td>
+                    <td class="p-3 font-black text-white">R$ ${parseFloat(p.total||0).toLocaleString('pt-BR', {minimumFractionDigits: 2})}</td>
+                    <td class="p-3 font-bold text-rose-400">R$ ${parseFloat(p.despesa||0).toLocaleString('pt-BR', {minimumFractionDigits: 2})}</td>
+                    <td class="p-3 text-xs text-neutral-400">${p.formaPagamento}</td>
+                    <td class="p-3">
+                        <select onchange="alterarStatusPedido(${p.id}, this.value)" class="bg-neutral-800 text-xs text-white border border-neutral-700 rounded-lg p-1 font-bold focus:outline-none">
+                            <option value="AGUARDANDO" ${p.status==='AGUARDANDO'?'selected':''}>AGUARDANDO</option>
+                            <option value="Em Produção" ${p.status==='Em Produção'?'selected':''}>Em Produção</option>
+                            <option value="Concluído" ${p.status==='Concluído'?'selected':''}>Concluído</option>
+                            <option value="Entregue" ${p.status==='Entregue'?'selected':''}>Entregue</option>
+                            <option value="Cancelado" ${p.status==='Cancelado'?'selected':''}>Cancelado</option>
+                        </select>
+                    </td>
+                    <td class="p-3 text-right">
+                        <button onclick="excluirPedido(${p.id})" class="bg-rose-950/50 hover:bg-rose-900 text-rose-400 p-2 rounded-lg text-xs" title="Excluir Pedido">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            document.getElementById('kpi-pedidos-novos').innerText = countNovos;
+            document.getElementById('kpi-pedidos-producao').innerText = countProducao;
+            document.getElementById('kpi-pedidos-total').innerText = countTotal;
+        }
+
+        function alterarStatusPedido(id, novoStatus) {
+            const p = appData.pedidos.find(x => x.id == id);
+            if (p) {
+                p.status = novoStatus;
+                salvarStorage();
+                atualizarInterfaceCompleta();
+                mostrarToast(`Status do pedido #${id} alterado!`);
+            }
+        }
+
+        function excluirPedido(id) {
+            if (confirm("Deseja realmente excluir este pedido? Seus valores serão deduzidos do caixa.")) {
+                appData.pedidos = appData.pedidos.filter(p => p.id != id);
+                salvarStorage();
+                atualizarInterfaceCompleta();
+                mostrarToast("Pedido removido.");
+            }
+        }
+
+        // --- DESPESAS ---
+        function renderizarDespesas() {
+            const tbody = document.getElementById('tabela-despesas-body');
+            tbody.innerHTML = '';
+
+            appData.pedidos.forEach(p => {
+                if (p.despesa > 0 && p.status !== 'Cancelado') {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td class="p-3 font-semibold text-white">Insumos/Custo Pedido #${p.id} (${p.clienteNome})</td>
+                        <td class="p-3 text-neutral-400">${p.data}</td>
+                        <td class="p-3 font-bold text-rose-400">R$ ${parseFloat(p.despesa).toLocaleString('pt-BR', {minimumFractionDigits: 2})}</td>
+                    `;
+                    tbody.appendChild(tr);
+                }
+            });
+        }
+
+        // --- GRÁFICOS (CHART.JS) ---
+        function atualizarGraficos() {
+            // 1. Gráfico de Vendas por Dia
             const diasJulho = Array.from({length: 31}, (_, i) => `${i + 1}/07`);
-            const vendasValores = [
-                1200, 1500, 900, 2100, 1800, 2500, 3100, 
-                1400, 1900, 2200, 1700, 2800, 3000, 2400, 
-                1600, 2100, 2600, 2900, 1900, 2300, 3200, 
-                2700, 2100, 2400, 2850, 3100, 2900, 3300, 3000, 3400, 3600
-            ];
+            const vendasAcumuladas = new Array(31).fill(0);
 
-            new Chart(ctxVendas, {
-                type: 'line',
-                data: {
-                    labels: diasJulho,
-                    datasets: [{
-                        label: 'Vendas (R$)',
-                        data: vendasValores,
-                        borderColor: '#facc15',
-                        borderWidth: 3,
-                        backgroundColor: gradient,
-                        fill: true,
-                        tension: 0.3,
-                        pointBackgroundColor: '#facc15',
-                        pointBorderColor: '#000000',
-                        pointHoverRadius: 7
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        y: {
-                            grid: { color: '#27272a' },
-                            ticks: { callback: value => 'R$ ' + value, color: '#a1a1aa' }
-                        },
-                        x: { 
-                            grid: { display: false },
-                            ticks: { color: '#a1a1aa' }
-                        }
+            appData.pedidos.forEach(p => {
+                if (p.status !== 'Cancelado') {
+                    const diaNum = parseInt(p.data.split('-')[2] || '1');
+                    if (diaNum >= 1 && diaNum <= 31) {
+                        vendasAcumuladas[diaNum - 1] += parseFloat(p.total || 0);
                     }
                 }
             });
 
-            // 2. Gráfico de Serviços Mais Vendidos
-            const ctxServicos = document.getElementById('servicosChart').getContext('2d');
-            new Chart(ctxServicos, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Criação de Sites', 'Gestão de Tráfego', 'Branding/Logo', 'Social Media', 'Consultoria'],
-                    datasets: [{
-                        data: [40, 25, 15, 12, 8],
-                        backgroundColor: [
-                            '#facc15',
-                            '#eab308',
-                            '#ca8a04',
-                            '#a16207',
-                            '#52525b'
-                        ],
-                        borderWidth: 2,
-                        borderColor: '#18181b'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: { 
-                                boxWidth: 12, 
-                                font: { size: 11 },
-                                color: '#d4d4d8'
-                            }
-                        }
+            if (!appData.vendasChart) {
+                const ctx = document.getElementById('vendasChart').getContext('2d');
+                const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+                gradient.addColorStop(0, 'rgba(250, 204, 21, 0.35)');
+                gradient.addColorStop(1, 'rgba(250, 204, 21, 0.0)');
+
+                appData.vendasChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: diasJulho,
+                        datasets: [{
+                            label: 'Vendas (R$)',
+                            data: vendasAcumuladas,
+                            borderColor: '#facc15',
+                            borderWidth: 3,
+                            backgroundColor: gradient,
+                            fill: true,
+                            tension: 0.3
+                        }]
                     },
-                    cutout: '72%'
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            y: { grid: { color: '#27272a' }, ticks: { callback: v => 'R$ ' + v } },
+                            x: { grid: { display: false } }
+                        }
+                    }
+                });
+            } else {
+                appData.vendasChart.data.datasets[0].data = vendasAcumuladas;
+                appData.vendasChart.update();
+            }
+
+            // 2. Gráfico de Serviços Mais Vendidos
+            const servicosMap = {};
+            appData.pedidos.forEach(p => {
+                if (p.status !== 'Cancelado' && p.itens) {
+                    p.itens.forEach(i => {
+                        const nomeS = i.servico || 'Outros';
+                        servicosMap[nomeS] = (servicosMap[nomeS] || 0) + (parseInt(i.qtd) || 1);
+                    });
                 }
             });
-        });
 
-        // --- AÇÕES DOS BOTÕES ---
-        function copiarCSV() {
-            const csvContent = `Indicador;Valor\n` +
-                `Visualizando;${dados.periodo}\n` +
-                `Faturamento Dia;${dados.faturamentoDia}\n` +
-                `Pedidos Dia;${dados.pedidosDia}\n` +
-                `Em Producao;${dados.emProducao}\n` +
-                `Pedidos Pendentes;${dados.pedidosPendentes}\n` +
-                `Entregues;${dados.entregues}\n` +
-                `Clientes;${dados.clientes}\n` +
-                `Investimento Total;${dados.investimentoTotal}\n` +
-                `Lucro;${dados.lucro}`;
+            const labelsServ = Object.keys(servicosMap).length > 0 ? Object.keys(servicosMap) : ['Nenhum serviço registrado'];
+            const dataServ = Object.keys(servicosMap).length > 0 ? Object.values(servicosMap) : [1];
 
-            navigator.clipboard.writeText(csvContent).then(() => {
-                mostrarToast("Dados CSV copiados para a área de transferência!");
-            }).catch(() => {
-                mostrarToast("Erro ao copiar CSV.");
-            });
-        }
-
-        function enviarWhatsApp() {
-            const numero = "5521986147221";
-            const mensagem = `📊 *PHSUBLIME - DASHBOARD (${dados.periodo})*\n\n` +
-                `💰 *Faturamento Dia:* ${dados.faturamentoDia}\n` +
-                `📦 *Pedidos Dia:* ${dados.pedidosDia}\n` +
-                `⚙️ *Em Produção:* ${dados.emProducao}\n` +
-                `⏳ *Pendentes:* ${dados.pedidosPendentes}\n` +
-                `✅ *Entregues:* ${dados.entregues}\n` +
-                `👥 *Clientes:* ${dados.clientes}\n` +
-                `📉 *Investimento Total:* ${dados.investimentoTotal}\n` +
-                `💵 *Lucro:* ${dados.lucro}\n\n` +
-                `_Relatório gerado automaticamente por PHSUBLIME._`;
-
-            const url = `https://api.whatsapp.com/send?phone=${numero}&text=${encodeURIComponent(mensagem)}`;
-            window.open(url, '_blank');
-        }
-
-        function baixarPDF() {
-            window.print();
-        }
-
-        function fecharMes() {
-            const confirmacao = confirm("Deseja realmente FECHAR O MÊS de Jul/2026?\nOs dados serão consolidados no Histórico.");
-            if (confirmacao) {
-                mostrarToast("Mês de Jul/2026 fechado e consolidado!");
+            if (!appData.servicosChart) {
+                const ctxS = document.getElementById('servicosChart').getContext('2d');
+                appData.servicosChart = new Chart(ctxS, {
+                    type: 'doughnut',
+                    data: {
+                        labels: labelsServ,
+                        datasets: [{
+                            data: dataServ,
+                            backgroundColor: ['#facc15', '#eab308', '#ca8a04', '#a16207', '#52525b'],
+                            borderWidth: 2,
+                            borderColor: '#18181b'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { position: 'bottom', labels: { color: '#d4d4d8' } } },
+                        cutout: '70%'
+                    }
+                });
+            } else {
+                appData.servicosChart.data.labels = labelsServ;
+                appData.servicosChart.data.datasets[0].data = dataServ;
+                appData.servicosChart.update();
             }
         }
 
-        function mostrarToast(mensagem) {
-            const toast = document.getElementById('toast');
-            const toastMsg = document.getElementById('toast-message');
-            toastMsg.innerText = mensagem;
-            
-            toast.classList.remove('translate-y-20', 'opacity-0');
-            
-            setTimeout(() => {
-                toast.classList.add('translate-y-20', 'opacity-0');
-            }, 3000);
+        // --- BOTÕES DE AÇÃO ---
+        function copiarCSV() {
+            let csv = "ID;Data;Cliente;Total;Despesa;Status\n";
+            appData.pedidos.forEach(p => {
+                csv += `${p.id};${p.data};${p.clienteNome};${p.total};${p.despesa};${p.status}\n`;
+            });
+            navigator.clipboard.writeText(csv).then(() => mostrarToast("Dados CSV copiados!"));
         }
+
+        function enviarWhatsApp() {
+            const num = "5521986147221";
+            const fatDia = document.getElementById('dash-faturamento-dia').innerText;
+            const pedDia = document.getElementById('dash-pedidos-dia').innerText;
+            const lucro = document.getElementById('dash-lucro').innerText;
+
+            const msg = `📊 *RESUMO PHSUBLIME (${appData.dataAtual})*\n\n` +
+                `💰 *Faturamento Dia:* ${fatDia}\n` +
+                `📦 *Pedidos Dia:* ${pedDia}\n` +
+                `💵 *Lucro Líquido Acumulado:* ${lucro}\n` +
+                `👥 *Clientes Totais:* ${appData.clientes.length}\n\n` +
+                `_Gerado por PHSUBLIME System._`;
+
+            window.open(`https://api.whatsapp.com/send?phone=${num}&text=${encodeURIComponent(msg)}`, '_blank');
+        }
+
+        function baixarPDF() { window.print(); }
+
+        function fecharMes() {
+            if (confirm("Deseja FECHAR O MÊS atual? Os totais serão arquivados em Histórico.")) {
+                const totalFat = appData.pedidos.reduce((acc, p) => acc + (p.status !== 'Cancelado' ? p.total : 0), 0);
+                appData.historicoFechamentos.unshift({
+                    mes: new Date().toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' }),
+                    faturamento: totalFat
+                });
+                salvarStorage();
+                mostrarToast("Mês fechado e arquivado com sucesso!");
+            }
+        }
+
+        function mostrarToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-message').innerText = msg;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => toast.classList.add('translate-y-20', 'opacity-0'), 3000);
+        }
+
+        // Inicializar aplicação ao carregar
+        window.onload = carregarDados;
     </script>
 </body>
 </html>
