@@ -717,7 +717,7 @@
                 <button onclick="fecharModalPedido()" class="text-neutral-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
             </div>
 
-            <form id="form-pedido" onsubmit="salvarPedido(event)" class="space-y-4 text-sm">
+            <form id="form-pedido" onsubmit="salvarPedido(event, false)" class="space-y-4 text-sm">
                 <input type="hidden" id="ped-id">
                 
                 <!-- BUSCA E SELEÇÃO DE CLIENTE -->
@@ -808,9 +808,16 @@
                     <textarea id="ped-obs" rows="2" placeholder="Observações do pedido..." class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400"></textarea>
                 </div>
 
-                <div class="flex justify-end gap-3 pt-3 border-t border-neutral-800">
-                    <button type="button" onclick="fecharModalPedido()" class="px-4 py-2.5 bg-neutral-800 hover:bg-neutral-700 text-neutral-300 rounded-xl font-medium text-sm">Cancelar</button>
-                    <button type="submit" class="px-5 py-2.5 bg-yellow-400 hover:bg-yellow-300 text-black font-bold rounded-xl text-sm">Salvar Pedido</button>
+                <div class="flex flex-col sm:flex-row justify-end gap-3 pt-3 border-t border-neutral-800">
+                    <button type="button" onclick="fecharModalPedido()" class="px-4 py-2.5 bg-neutral-800 hover:bg-neutral-700 text-neutral-300 rounded-xl font-medium text-sm flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-xmark"></i> Cancelar
+                    </button>
+                    <button type="button" onclick="salvarPedido(event, true)" class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-sm flex items-center justify-center gap-2 shadow-lg shadow-emerald-950/40">
+                        <i class="fa-solid fa-plus-circle"></i> Salvar e Criar Outro
+                    </button>
+                    <button type="submit" class="px-5 py-2.5 bg-yellow-400 hover:bg-yellow-300 text-black font-bold rounded-xl text-sm flex items-center justify-center gap-2 shadow-lg shadow-yellow-950/30">
+                        <i class="fa-solid fa-check"></i> Salvar Pedido
+                    </button>
                 </div>
             </form>
         </div>
@@ -1368,8 +1375,9 @@
             document.getElementById('modal-pedido').classList.remove('hidden');
         }
 
+        // ADICIONA NOVO ITEM NO TOPO (UNSHIFT) E COM VALORES VAZIOS POR PADRÃO
         function adicionarItemProduto() {
-            itensPedidoTemp.push({ servico: '', material: '', qtd: 1, largura: '', altura: '', acabamento: '', valor: 0, despesa: 0 });
+            itensPedidoTemp.unshift({ servico: '', material: '', qtd: 1, largura: '', altura: '', acabamento: '', valor: '', despesa: '' });
             renderizarItensFormPedido();
         }
 
@@ -1389,7 +1397,7 @@
                 div.className = 'p-3 bg-neutral-900 rounded-xl border border-neutral-800 space-y-3 relative';
                 div.innerHTML = `
                     <div class="flex justify-between items-center text-xs font-bold text-yellow-400">
-                        <span>Produto #${idx + 1}</span>
+                        <span>Produto #${idx + 1} ${idx === 0 && itensPedidoTemp.length > 1 ? '<span class="text-[10px] text-emerald-400 font-semibold">(Novo Item)</span>' : ''}</span>
                         ${itensPedidoTemp.length > 1 ? `<button type="button" onclick="removerItemProduto(${idx})" class="text-rose-400 hover:text-rose-300 text-xs"><i class="fa-solid fa-trash"></i> Remover Produto</button>` : ''}
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
@@ -1421,12 +1429,12 @@
                         </div>
                         <div>
                             <label class="block text-neutral-400 mb-1">Valor Venda (R$)</label>
-                            <input type="number" step="0.01" value="${escapeAttr(item.valor)}" onchange="itensPedidoTemp[${idx}].valor = parseFloat(this.value)||0; calcularTotalPedidoAutomatico()" placeholder="0.00" class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-yellow-400 font-bold">
+                            <input type="number" step="0.01" value="${escapeAttr(item.valor)}" oninput="itensPedidoTemp[${idx}].valor = this.value; calcularTotalPedidoAutomatico()" placeholder="0.00" class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-yellow-400 font-bold">
                         </div>
                     </div>
                     <div class="pt-1 border-t border-neutral-800/60">
                         <label class="block text-rose-400 text-xs font-semibold mb-1">Despesa / Custo (R$) deste Produto</label>
-                        <input type="number" step="0.01" value="${escapeAttr(item.despesa)}" onchange="itensPedidoTemp[${idx}].despesa = parseFloat(this.value)||0; calcularTotalPedidoAutomatico()" placeholder="Custo deste produto específico..." class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-rose-400 font-bold">
+                        <input type="number" step="0.01" value="${escapeAttr(item.despesa)}" oninput="itensPedidoTemp[${idx}].despesa = this.value; calcularTotalPedidoAutomatico()" placeholder="0.00" class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-rose-400 font-bold">
                     </div>
                 `;
                 container.appendChild(div);
@@ -1438,8 +1446,12 @@
             let somaDespesa = 0;
 
             itensPedidoTemp.forEach(i => {
-                somaTotal += parseFloat(i.valor || 0);
-                somaDespesa += parseFloat(i.despesa || 0);
+                if (i.valor && !isNaN(parseFloat(i.valor))) {
+                    somaTotal += parseFloat(i.valor);
+                }
+                if (i.despesa && !isNaN(parseFloat(i.despesa))) {
+                    somaDespesa += parseFloat(i.despesa);
+                }
             });
 
             document.getElementById('ped-total').value = somaTotal > 0 ? somaTotal.toFixed(2) : '';
@@ -1456,11 +1468,17 @@
             }
         }
 
-        function salvarPedido(e) {
-            e.preventDefault();
+        function salvarPedido(e, criarOutro = false) {
+            if (e && e.preventDefault) e.preventDefault();
 
             const pedId = document.getElementById('ped-id').value;
             const clienteId = document.getElementById('ped-cliente-id').value;
+
+            if (!clienteId) {
+                alert("Selecione um cliente para o pedido!");
+                return;
+            }
+
             const cli = appData.clientes.find(c => c.id == clienteId);
             const total = parseFloat(document.getElementById('ped-total').value || 0);
             const despesa = parseFloat(document.getElementById('ped-despesa').value || 0);
@@ -1510,8 +1528,13 @@
             }
 
             salvarStorage();
-            fecharModalPedido();
             atualizarInterfaceCompleta();
+
+            if (criarOutro) {
+                abrirModalPedido();
+            } else {
+                fecharModalPedido();
+            }
         }
 
         function filtrarPedidosAba(aba) {
