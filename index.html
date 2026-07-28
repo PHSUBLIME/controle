@@ -67,10 +67,9 @@
             </nav>
         </div>
 
-        <!-- FOOTER SIDEBAR -->
         <div class="mt-8 pt-4 border-t border-neutral-800 px-2 text-xs text-neutral-500">
             <p>© 2026 <strong class="text-yellow-400">PHSUBLIME</strong></p>
-            <p class="mt-0.5">Sistema de Vendas v3.0</p>
+            <p class="mt-0.5">Sistema de Vendas v3.5</p>
         </div>
     </aside>
 
@@ -79,18 +78,16 @@
 
         <!-- ================= SEÇÃO: DASHBOARD ================= -->
         <section id="secao-dashboard" class="secao-conteudo space-y-6">
-            
-            <!-- HEADER & AÇÕES -->
             <header class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-neutral-900 p-6 rounded-2xl border border-neutral-800 shadow-2xl">
                 <div>
                     <div class="flex items-center gap-3">
                         <h2 class="text-3xl font-extrabold text-yellow-400 tracking-tight">Dashboard</h2>
                         <span class="bg-yellow-400/10 text-yellow-400 text-xs font-bold px-3.5 py-1.5 rounded-full border border-yellow-400/30 flex items-center gap-2">
                             <i class="fa-regular fa-calendar text-yellow-400"></i>
-                            Hoje: <strong id="dataAtualExtenso" class="text-yellow-300">--/--/----</strong>
+                            Hoje: <strong id="dataAtualExtenso" class="text-yellow-300">28/07/2026</strong>
                         </span>
                     </div>
-                    <p class="text-sm text-neutral-400 mt-1">Zerado diariamente. Os indicadores diários resetam a cada novo dia.</p>
+                    <p class="text-sm text-neutral-400 mt-1">Zerado automaticamente todo dia. Métrica das vendas e caixa atualizados em tempo real.</p>
                 </div>
 
                 <div class="flex flex-wrap gap-2.5 no-print">
@@ -151,7 +148,7 @@
                             <i class="fa-solid fa-gears text-xl"></i>
                         </div>
                     </div>
-                    <p class="text-xs text-amber-400 font-medium mt-3">Na fábrica</p>
+                    <p class="text-xs text-amber-400 font-medium mt-3">Em andamento</p>
                 </div>
 
                 <div class="bg-neutral-900 p-5 rounded-2xl border border-neutral-800 print-card hover:border-yellow-400/50 transition-all">
@@ -203,7 +200,7 @@
                             <i class="fa-solid fa-chart-line-down text-xl"></i>
                         </div>
                     </div>
-                    <p class="text-xs text-neutral-400 mt-3">Despesas acumuladas</p>
+                    <p class="text-xs text-neutral-400 mt-3">Despesas totais da empresa</p>
                 </div>
 
                 <div class="bg-neutral-900 p-5 rounded-2xl border border-neutral-800 print-card hover:border-yellow-400/50 transition-all">
@@ -370,19 +367,57 @@
 
         </section>
 
-        <!-- ================= SEÇÃO: DESPESAS ================= -->
+        <!-- ================= SEÇÃO: CONTROLE DE DESPESAS ================= -->
         <section id="secao-despesas" class="secao-conteudo hidden space-y-6">
-            <div class="bg-neutral-900 p-6 rounded-2xl border border-neutral-800">
-                <h2 class="text-2xl font-black text-yellow-400">Controle de Despesas</h2>
-                <p class="text-neutral-400 text-sm mt-1">Calculado e atualizado automaticamente com base nos pedidos e compras de insumos.</p>
+            <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-neutral-900 p-6 rounded-2xl border border-neutral-800">
+                <div>
+                    <h2 class="text-2xl font-black text-yellow-400 flex items-center gap-2">
+                        <i class="fa-solid fa-file-invoice-dollar text-yellow-400"></i> Controle de Despesas
+                    </h2>
+                    <p class="text-neutral-400 text-sm mt-1">Calculado e atualizado automaticamente com base nos pedidos e compras de insumos.</p>
+                </div>
+
+                <button onclick="abrirModalNovaDespesa()" class="flex items-center gap-2 bg-yellow-400 hover:bg-yellow-300 text-black font-bold px-4 py-2.5 rounded-xl text-sm transition-all shadow-lg shadow-yellow-950/30">
+                    <i class="fa-solid fa-plus"></i> + Nova Despesa
+                </button>
             </div>
+
+            <!-- CARDS DE RESUMO DE DESPESAS -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="bg-neutral-900 p-5 rounded-2xl border border-neutral-800">
+                    <p class="text-xs font-bold text-yellow-400 uppercase">Despesas / Outros</p>
+                    <h3 class="text-3xl font-black text-white mt-1" id="desp-kpi-outros">R$ 0,00</h3>
+                    <p class="text-xs text-neutral-500 mt-2">Compras avulsas da empresa</p>
+                </div>
+                <div class="bg-neutral-900 p-5 rounded-2xl border border-neutral-800">
+                    <p class="text-xs font-bold text-amber-400 uppercase">Despesa dos Pedidos</p>
+                    <h3 class="text-3xl font-black text-white mt-1" id="desp-kpi-pedidos">R$ 0,00</h3>
+                    <p class="text-xs text-neutral-500 mt-2">Custo de produção dos pedidos</p>
+                </div>
+                <div class="bg-neutral-900 p-5 rounded-2xl border border-neutral-800">
+                    <p class="text-xs font-bold text-rose-400 uppercase">Despesa Total</p>
+                    <h3 class="text-3xl font-black text-rose-400 mt-1" id="desp-kpi-total">R$ 0,00</h3>
+                    <p class="text-xs text-rose-400/80 mt-2">Soma geral de saídas</p>
+                </div>
+            </div>
+
+            <!-- BUSCA DE DESPESAS -->
+            <div class="bg-neutral-900 p-4 rounded-2xl border border-neutral-800 flex items-center gap-3">
+                <i class="fa-solid fa-magnifying-glass text-yellow-400 text-lg ml-2"></i>
+                <input type="text" id="input-pesquisar-despesa" onkeyup="renderizarDespesas()" placeholder="Pesquisar despesas por produto, loja, tipo..." class="w-full bg-transparent text-white focus:outline-none text-sm placeholder-neutral-500">
+            </div>
+
+            <!-- TABELA DE DESPESAS CONSOLIDADA -->
             <div class="bg-neutral-900 p-6 rounded-2xl border border-neutral-800 overflow-x-auto">
                 <table class="w-full text-left text-sm text-neutral-300">
                     <thead class="text-xs uppercase bg-neutral-800 text-yellow-400 border-b border-neutral-700">
                         <tr>
-                            <th class="p-3">Origem / Pedido</th>
-                            <th class="p-3">Data</th>
-                            <th class="p-3">Valor Despesa</th>
+                            <th class="p-3">Produto / Origem</th>
+                            <th class="p-3">Data Compra</th>
+                            <th class="p-3">Tipo Pagamento</th>
+                            <th class="p-3">Onde Comprou (Loja/Fornecedor)</th>
+                            <th class="p-3">Total Gasto</th>
+                            <th class="p-3 text-right">Ações</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-neutral-800" id="tabela-despesas-body">
@@ -429,7 +464,7 @@
 
     <!-- ================= MODAIS ================= -->
 
-    <!-- MODAL CLIENTE (NOVO / EDITAR) -->
+    <!-- MODAL CLIENTE -->
     <div id="modal-cliente" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-neutral-900 border border-neutral-800 rounded-2xl max-w-2xl w-full p-6 space-y-4 shadow-2xl overflow-y-auto max-h-[90vh]">
             <div class="flex justify-between items-center border-b border-neutral-800 pb-3">
@@ -485,13 +520,13 @@
         </div>
     </div>
 
-    <!-- MODAL HISTÓRICO DE COMPRAS DO CLIENTE -->
+    <!-- MODAL HISTÓRICO CLIENTE -->
     <div id="modal-historico-cliente" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-neutral-900 border border-neutral-800 rounded-2xl max-w-3xl w-full p-6 space-y-4 shadow-2xl overflow-y-auto max-h-[90vh]">
             <div class="flex justify-between items-center border-b border-neutral-800 pb-3">
                 <div>
                     <h3 class="text-xl font-bold text-yellow-400" id="hist-cliente-nome">Histórico de Compras</h3>
-                    <p class="text-xs text-neutral-400" id="hist-cliente-detalhe">Listagem completa dos pedidos</p>
+                    <p class="text-xs text-neutral-400" id="hist-cliente-detalhe">Listagem de pedidos</p>
                 </div>
                 <button onclick="fecharModalHistoricoCliente()" class="text-neutral-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
             </div>
@@ -519,27 +554,34 @@
         </div>
     </div>
 
-    <!-- MODAL NOVO PEDIDO -->
+    <!-- MODAL PEDIDO (NOVO / EDITAR) -->
     <div id="modal-pedido" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-neutral-900 border border-neutral-800 rounded-2xl max-w-4xl w-full p-6 space-y-5 shadow-2xl overflow-y-auto max-h-[90vh]">
             <div class="flex justify-between items-center border-b border-neutral-800 pb-3">
-                <h3 class="text-xl font-bold text-yellow-400 flex items-center gap-2">
+                <h3 class="text-xl font-bold text-yellow-400 flex items-center gap-2" id="modal-pedido-titulo">
                     <i class="fa-solid fa-cart-plus"></i> Novo Pedido
                 </h3>
                 <button onclick="fecharModalPedido()" class="text-neutral-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
             </div>
 
             <form id="form-pedido" onsubmit="salvarPedido(event)" class="space-y-4 text-sm">
+                <input type="hidden" id="ped-id">
                 
-                <!-- SELEÇÃO DE CLIENTE (ORDEM ALFABÉTICA) -->
-                <div>
-                    <label class="block text-yellow-400 text-xs font-bold uppercase mb-1">Cliente (Ordem Alfabética)</label>
-                    <select id="ped-cliente-id" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400">
-                        <!-- Preenchido via JS em ordem alfabética -->
-                    </select>
+                <!-- BUSCA E SELEÇÃO DE CLIENTE -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-yellow-400 text-xs font-bold uppercase mb-1">Buscar Cliente (Digite Nome ou CPF)</label>
+                        <input type="text" id="ped-cliente-busca" onkeyup="filtrarSelectClientes(this.value)" placeholder="Digite para filtrar..." class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400">
+                    </div>
+                    <div>
+                        <label class="block text-yellow-400 text-xs font-bold uppercase mb-1">Cliente Selecionado (Ordem Alfabética)</label>
+                        <select id="ped-cliente-id" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400">
+                            <!-- Preenchido via JS -->
+                        </select>
+                    </div>
                 </div>
 
-                <!-- CONTÊINER DE PRODUTOS/SERVIÇOS (MÚLTIPLOS ITENS) -->
+                <!-- CONTÊINER DE PRODUTOS DO PEDIDO -->
                 <div class="border border-neutral-800 bg-black/50 p-4 rounded-xl space-y-4">
                     <div class="flex justify-between items-center border-b border-neutral-800 pb-2">
                         <h4 class="text-xs font-bold uppercase text-yellow-400">Produtos / Serviços do Pedido</h4>
@@ -549,19 +591,19 @@
                     </div>
 
                     <div id="lista-produtos-pedido" class="space-y-4">
-                        <!-- Blocos de produtos renderizados dinamicamente -->
+                        <!-- Renderizado via JS -->
                     </div>
                 </div>
 
-                <!-- DETALHES DE VALORES, PAGAMENTO E STATUS -->
+                <!-- DETALHES DE VALORES, CUSTOS, PAGAMENTO -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
                         <label class="block text-neutral-400 text-xs font-semibold mb-1">Total do Pedido (R$)</label>
                         <input type="number" step="0.01" id="ped-total" placeholder="0.00" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-yellow-400 font-bold focus:outline-none focus:border-yellow-400">
                     </div>
                     <div>
-                        <label class="block text-neutral-400 text-xs font-semibold mb-1">Despesa / Custo (R$)</label>
-                        <input type="number" step="0.01" id="ped-despesa" placeholder="0.00" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-rose-400 font-bold focus:outline-none focus:border-yellow-400">
+                        <label class="block text-neutral-400 text-xs font-semibold mb-1">Despesa / Custo Total Pedido (R$)</label>
+                        <input type="number" step="0.01" id="ped-despesa" placeholder="Soma automática dos custos" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-rose-400 font-bold focus:outline-none focus:border-yellow-400">
                     </div>
                     <div>
                         <label class="block text-neutral-400 text-xs font-semibold mb-1">Data de Entrega</label>
@@ -572,7 +614,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
                         <label class="block text-neutral-400 text-xs font-semibold mb-1">Responsável</label>
-                        <input type="text" id="ped-responsavel" placeholder="Nome do atendente/operador" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400">
+                        <input type="text" id="ped-responsavel" placeholder="Atendente/Operador" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400">
                     </div>
                     <div>
                         <label class="block text-neutral-400 text-xs font-semibold mb-1">Forma de Pagamento</label>
@@ -596,7 +638,7 @@
                     </div>
                 </div>
 
-                <!-- CAMPO CONDICIONAL PARA PAGAMENTO MISTO -->
+                <!-- CAMPO PAGAMENTO MISTO -->
                 <div id="campo-pagamento-misto" class="hidden grid grid-cols-1 md:grid-cols-2 gap-4 p-3 bg-neutral-800/50 rounded-xl border border-neutral-700">
                     <div>
                         <label class="block text-xs text-yellow-400 font-semibold mb-1">Valor em Dinheiro (R$)</label>
@@ -616,6 +658,52 @@
                 <div class="flex justify-end gap-3 pt-3 border-t border-neutral-800">
                     <button type="button" onclick="fecharModalPedido()" class="px-4 py-2.5 bg-neutral-800 hover:bg-neutral-700 text-neutral-300 rounded-xl font-medium text-sm">Cancelar</button>
                     <button type="submit" class="px-5 py-2.5 bg-yellow-400 hover:bg-yellow-300 text-black font-bold rounded-xl text-sm">Salvar Pedido</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL NOVA DESPESA AVULSA -->
+    <div id="modal-nova-despesa" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-neutral-900 border border-neutral-800 rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl">
+            <div class="flex justify-between items-center border-b border-neutral-800 pb-3">
+                <h3 class="text-xl font-bold text-yellow-400 flex items-center gap-2">
+                    <i class="fa-solid fa-file-invoice-dollar"></i> Nova Despesa
+                </h3>
+                <button onclick="fecharModalNovaDespesa()" class="text-neutral-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <form id="form-nova-despesa" onsubmit="salvarNovaDespesa(event)" class="space-y-3 text-sm">
+                <div>
+                    <label class="block text-neutral-400 text-xs font-semibold mb-1">Nome do Produto / Despesa</label>
+                    <input type="text" id="desp-nome" placeholder="Ex: Bobina de Papel, Tinta, Conta de Luz" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400">
+                </div>
+                <div>
+                    <label class="block text-neutral-400 text-xs font-semibold mb-1">Data Compra</label>
+                    <input type="date" id="desp-data" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400">
+                </div>
+                <div>
+                    <label class="block text-neutral-400 text-xs font-semibold mb-1">Tipo Pagamento</label>
+                    <select id="desp-tipo-pagamento" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400">
+                        <option value="Pix">Pix</option>
+                        <option value="Dinheiro">Dinheiro</option>
+                        <option value="Cartão de Crédito">Cartão de Crédito</option>
+                        <option value="Cartão de Débito">Cartão de Débito</option>
+                        <option value="Boleto">Boleto</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-neutral-400 text-xs font-semibold mb-1">Onde Comprou (Loja / Fornecedor)</label>
+                    <input type="text" id="desp-onde-comprou" placeholder="Ex: Kalunga, Mercado Livre, Distribuidor" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400">
+                </div>
+                <div>
+                    <label class="block text-neutral-400 text-xs font-semibold mb-1">Total Gasto (R$)</label>
+                    <input type="number" step="0.01" id="desp-valor" placeholder="0.00" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-rose-400 font-bold focus:outline-none focus:border-yellow-400">
+                </div>
+
+                <div class="flex justify-end gap-3 pt-3 border-t border-neutral-800">
+                    <button type="button" onclick="fecharModalNovaDespesa()" class="px-4 py-2.5 bg-neutral-800 hover:bg-neutral-700 text-neutral-300 rounded-xl font-medium text-sm">Cancelar</button>
+                    <button type="submit" class="px-5 py-2.5 bg-yellow-400 hover:bg-yellow-300 text-black font-bold rounded-xl text-sm">Salvar</button>
                 </div>
             </form>
         </div>
@@ -643,11 +731,10 @@
         <span id="toast-message" class="font-medium text-sm">Ação realizada!</span>
     </div>
 
-    <!-- SCRIPT PRINCIPAL & REGRAS DE NEGÓCIO -->
+    <!-- SCRIPT PRINCIPAL -->
     <script>
-        // --- BANCO DE DADOS EM MEMÓRIA / LOCALSTORAGE ---
         let appData = {
-            dataAtual: new Date().toISOString().split('T')[0],
+            dataAtual: "2026-07-28",
             clientes: [
                 { id: 1, nome: "Empresa Alfa Ltda", cpf: "12.345.678/0001-90", telefone: "(21) 98888-0001", email: "contato@alfa.com", cidade: "Rio de Janeiro", estado: "RJ", endereco: "Av. Brasil, 1500", obs: "VIP" },
                 { id: 2, nome: "Studio Design RIO", cpf: "987.654.321-00", telefone: "(21) 97777-0002", email: "rio@studio.com", cidade: "Niterói", estado: "RJ", endereco: "Rua das Flores, 45", obs: "" },
@@ -661,9 +748,8 @@
             abaPedidoFiltro: 'todos'
         };
 
-        // --- CARREGAR OU VERIFICAR ZERAMENTO DIÁRIO ---
         function carregarDados() {
-            const salvos = localStorage.getItem('PHSUBLIME_DATA_V3');
+            const salvos = localStorage.getItem('PHSUBLIME_DATA_V3_5');
             if (salvos) {
                 try {
                     const parsed = JSON.parse(salvos);
@@ -674,7 +760,6 @@
                 } catch(e) {}
             }
 
-            // Verificar se o dia mudou para zerar o Dashboard do Dia
             const hojeStr = new Date().toISOString().split('T')[0];
             appData.dataAtual = hojeStr;
 
@@ -683,7 +768,7 @@
         }
 
         function salvarStorage() {
-            localStorage.setItem('PHSUBLIME_DATA_V3', JSON.stringify({
+            localStorage.setItem('PHSUBLIME_DATA_V3_5', JSON.stringify({
                 clientes: appData.clientes,
                 pedidos: appData.pedidos,
                 despesasOutras: appData.despesasOutras,
@@ -691,7 +776,6 @@
             }));
         }
 
-        // --- SISTEMA DE NAVEGAÇÃO ---
         function navegar(secao) {
             document.querySelectorAll('.secao-conteudo').forEach(el => el.classList.add('hidden'));
             const alvo = document.getElementById(`secao-${secao}`);
@@ -709,15 +793,14 @@
             }
         }
 
-        // --- ATUALIZAÇÃO REATIVA GERAL (REAL-TIME) ---
         function atualizarInterfaceCompleta() {
             const hojeStr = appData.dataAtual;
             
-            // Formatador de data extenso no header
-            const dData = new Date();
-            document.getElementById('dataAtualExtenso').innerText = dData.toLocaleDateString('pt-BR');
+            const pData = appData.dataAtual.split('-');
+            if (pData.length === 3) {
+                document.getElementById('dataAtualExtenso').innerText = `${pData[2]}/${pData[1]}/${pData[0]}`;
+            }
 
-            // --- REGRAS DE CÁLCULO DASHBOARD ---
             let fatDia = 0;
             let pedDiaCount = 0;
             let producaoCount = 0;
@@ -725,20 +808,19 @@
             let entreguesDiaCount = 0;
 
             let totalReceitaGeral = 0;
-            let totalDespesaGeral = 0;
+            let despesaPedidosGeral = 0;
+            let despesaOutrasGeral = 0;
 
             appData.pedidos.forEach(p => {
-                const pData = p.data;
                 const pTotal = parseFloat(p.total || 0);
                 const pDespesa = parseFloat(p.despesa || 0);
 
                 if (p.status !== 'Cancelado') {
                     totalReceitaGeral += pTotal;
-                    totalDespesaGeral += pDespesa;
+                    despesaPedidosGeral += pDespesa;
                 }
 
-                // Indicadores do Dia (Reseta a cada novo dia)
-                if (pData === hojeStr && p.status !== 'Cancelado') {
+                if (p.data === hojeStr && p.status !== 'Cancelado') {
                     fatDia += pTotal;
                     pedDiaCount++;
                     if (p.status === 'Entregue' || p.status === 'Concluído') entreguesDiaCount++;
@@ -749,12 +831,13 @@
             });
 
             appData.despesasOutras.forEach(d => {
-                totalDespesaGeral += parseFloat(d.valor || 0);
+                despesaOutrasGeral += parseFloat(d.valor || 0);
             });
 
+            const totalDespesaGeral = despesaPedidosGeral + despesaOutrasGeral;
             const lucroGeral = totalReceitaGeral - totalDespesaGeral;
 
-            // Renderizar KPIs do Dashboard
+            // Renderizar Dashboard
             document.getElementById('dash-faturamento-dia').innerText = `R$ ${fatDia.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
             document.getElementById('dash-pedidos-dia').innerText = pedDiaCount;
             document.getElementById('dash-em-producao').innerText = producaoCount;
@@ -764,32 +847,34 @@
             document.getElementById('dash-investimento').innerText = `R$ ${totalDespesaGeral.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
             document.getElementById('dash-lucro').innerText = `R$ ${lucroGeral.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
 
-            // Financeiro
+            // Renderizar Despesas KPIs
+            document.getElementById('desp-kpi-outros').innerText = `R$ ${despesaOutrasGeral.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+            document.getElementById('desp-kpi-pedidos').innerText = `R$ ${despesaPedidosGeral.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+            document.getElementById('desp-kpi-total').innerText = `R$ ${totalDespesaGeral.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+
+            // Renderizar Financeiro
             document.getElementById('fin-entradas').innerText = `R$ ${totalReceitaGeral.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
             document.getElementById('fin-saidas').innerText = `R$ ${totalDespesaGeral.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
             document.getElementById('fin-saldo').innerText = `R$ ${lucroGeral.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
 
-            // Renderizar Tabelas e Listas
             renderizarClientes();
             renderizarPedidos();
             renderizarDespesas();
             atualizarGraficos();
         }
 
-        // --- CLIENTES: GESTÃO & HISTÓRICO ---
+        // --- CLIENTES ---
         function renderizarClientes() {
             const tbody = document.getElementById('tabela-clientes-body');
             tbody.innerHTML = '';
             const filtro = document.getElementById('input-pesquisar-cliente').value.toLowerCase();
 
-            // Ordenar por nome
             const clientesOrdenados = [...appData.clientes].sort((a, b) => a.nome.localeCompare(b.nome));
 
             clientesOrdenados.forEach(c => {
                 const textoBusca = `${c.nome} ${c.cpf} ${c.telefone} ${c.cidade}`.toLowerCase();
                 if (filtro && !textoBusca.includes(filtro)) return;
 
-                // Calcular Total Comprado por este cliente
                 let totalComprado = 0;
                 appData.pedidos.forEach(p => {
                     if (p.clienteId == c.id && p.status !== 'Cancelado') {
@@ -805,13 +890,13 @@
                     <td class="p-3">${c.cidade ? `${c.cidade}/${c.estado || ''}` : '-'}</td>
                     <td class="p-3 font-bold text-yellow-400">R$ ${totalComprado.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</td>
                     <td class="p-3 text-right space-x-1.5">
-                        <button onclick="abrirHistoricoCompras(${c.id})" class="bg-yellow-400/10 hover:bg-yellow-400 text-yellow-400 hover:text-black p-2 rounded-lg text-xs font-bold transition-all" title="Histórico de Compras">
+                        <button onclick="abrirHistoricoCompras(${c.id})" class="bg-yellow-400/10 hover:bg-yellow-400 text-yellow-400 hover:text-black p-2 rounded-lg text-xs font-bold transition-all" title="Histórico">
                             <i class="fa-solid fa-clock-rotate-left"></i> Compras
                         </button>
-                        <button onclick="editarCliente(${c.id})" class="bg-neutral-800 hover:bg-neutral-700 text-neutral-200 p-2 rounded-lg text-xs transition-all" title="Editar">
+                        <button onclick="editarCliente(${c.id})" class="bg-neutral-800 hover:bg-neutral-700 text-neutral-200 p-2 rounded-lg text-xs" title="Editar">
                             <i class="fa-solid fa-pen"></i>
                         </button>
-                        <button onclick="excluirCliente(${c.id})" class="bg-rose-950/50 hover:bg-rose-900 text-rose-400 p-2 rounded-lg text-xs transition-all" title="Excluir">
+                        <button onclick="excluirCliente(${c.id})" class="bg-rose-950/50 hover:bg-rose-900 text-rose-400 p-2 rounded-lg text-xs" title="Excluir">
                             <i class="fa-solid fa-trash"></i>
                         </button>
                     </td>
@@ -827,9 +912,7 @@
             document.getElementById('modal-cliente').classList.remove('hidden');
         }
 
-        function fecharModalCliente() {
-            document.getElementById('modal-cliente').classList.add('hidden');
-        }
+        function fecharModalCliente() { document.getElementById('modal-cliente').classList.add('hidden'); }
 
         function editarCliente(id) {
             const cli = appData.clientes.find(c => c.id == id);
@@ -856,7 +939,6 @@
             const nome = document.getElementById('cli-nome').value.trim() || 'Cliente sem nome';
 
             if (id) {
-                // Editar existente
                 const cli = appData.clientes.find(c => c.id == id);
                 if (cli) {
                     cli.nome = nome;
@@ -871,7 +953,6 @@
                 }
                 mostrarToast("Cliente atualizado!");
             } else {
-                // Criar Novo
                 const novoCli = {
                     id: Date.now(),
                     nome: nome,
@@ -894,7 +975,7 @@
         }
 
         function excluirCliente(id) {
-            if (confirm("Tem certeza que deseja excluir este cliente?")) {
+            if (confirm("Deseja excluir este cliente?")) {
                 appData.clientes = appData.clientes.filter(c => c.id != id);
                 salvarStorage();
                 atualizarInterfaceCompleta();
@@ -916,13 +997,13 @@
             const pedidosCliente = appData.pedidos.filter(p => p.clienteId == clienteId);
 
             if (pedidosCliente.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-neutral-500">Nenhuma compra cadastrada para este cliente.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-neutral-500">Nenhuma compra cadastrada.</td></tr>`;
             } else {
                 pedidosCliente.forEach(p => {
                     const pTotal = parseFloat(p.total || 0);
                     if (p.status !== 'Cancelado') acumulado += pTotal;
 
-                    let descItens = p.itens ? p.itens.map(i => `${i.servico || 'Produto'} (${i.qtd || 1}x)`).join(', ') : 'Serviço Geral';
+                    let descItens = p.itens ? p.itens.map(i => `${i.servico || 'Item'} (${i.qtd || 1}x)`).join(', ') : 'Serviço Geral';
 
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
@@ -939,83 +1020,95 @@
             document.getElementById('modal-historico-cliente').classList.remove('hidden');
         }
 
-        function fecharModalHistoricoCliente() {
-            document.getElementById('modal-historico-cliente').classList.add('hidden');
-        }
+        function fecharModalHistoricoCliente() { document.getElementById('modal-historico-cliente').classList.add('hidden'); }
 
-        // --- MASSA CLIENTES ---
-        function abrirModalMassa() { document.getElementById('modal-massa').classList.remove('hidden'); }
-        function fecharModalMassa() { document.getElementById('modal-massa').classList.add('hidden'); }
-        function processarMassa() {
-            const txt = document.getElementById('input-massa-texto').value.trim();
-            if (!txt) return fecharModalMassa();
-
-            const linhas = txt.split('\n');
-            let count = 0;
-            linhas.forEach(l => {
-                if (l.trim()) {
-                    const p = l.split(/;|\t/);
-                    appData.clientes.push({
-                        id: Date.now() + Math.floor(Math.random() * 1000),
-                        nome: p[0] ? p[0].trim() : 'Cliente Importado',
-                        cpf: p[1] ? p[1].trim() : '',
-                        telefone: p[2] ? p[2].trim() : '',
-                        email: p[3] ? p[3].trim() : '',
-                        cidade: p[4] ? p[4].trim() : ''
-                    });
-                    count++;
-                }
-            });
-            salvarStorage();
-            fecharModalMassa();
-            atualizarInterfaceCompleta();
-            mostrarToast(`${count} clientes importados!`);
-        }
-
-        // --- PEDIDOS: GERENCIAMENTO E MÚLTIPLOS PRODUTOS ---
+        // --- PEDIDOS (EDITAR, BUSCA CLIENTE, CUSTO POR PRODUTO) ---
         let itensPedidoTemp = [];
 
         function abrirModalPedido() {
             if (appData.clientes.length === 0) {
-                alert("Cadastre pelo menos um cliente antes de criar um pedido!");
+                alert("Cadastre pelo menos um cliente antes!");
                 return;
             }
 
-            // Preencher Select de Clientes em ORDEM ALFABÉTICA
+            document.getElementById('modal-pedido-titulo').innerHTML = `<i class="fa-solid fa-cart-plus"></i> Novo Pedido`;
+            document.getElementById('ped-id').value = '';
+            document.getElementById('form-pedido').reset();
+            document.getElementById('ped-cliente-busca').value = '';
+
+            popularSelectClientes();
+            
+            itensPedidoTemp = [];
+            adicionarItemProduto();
+            
+            document.getElementById('ped-data-entrega').value = appData.dataAtual;
+            document.getElementById('modal-pedido').classList.remove('hidden');
+        }
+
+        function popularSelectClientes(termoBusca = '') {
             const selectCli = document.getElementById('ped-cliente-id');
             selectCli.innerHTML = '';
+
             const clientesOrdenados = [...appData.clientes].sort((a, b) => a.nome.localeCompare(b.nome));
 
             clientesOrdenados.forEach(c => {
+                const texto = `${c.nome} ${c.cpf}`.toLowerCase();
+                if (termoBusca && !texto.includes(termoBusca.toLowerCase())) return;
+
                 const opt = document.createElement('option');
                 opt.value = c.id;
-                opt.innerText = `${c.nome} (${c.cidade || 'Sem cidade'})`;
+                opt.innerText = `${c.nome} ${c.cpf ? `(CPF/CNPJ: ${c.cpf})` : ''}`;
                 selectCli.appendChild(opt);
             });
+        }
 
-            document.getElementById('form-pedido').reset();
-            itensPedidoTemp = [];
-            adicionarItemProduto(); // Inicia com 1 produto
+        function filtrarSelectClientes(valor) {
+            popularSelectClientes(valor);
+        }
+
+        function fecharModalPedido() { document.getElementById('modal-pedido').classList.add('hidden'); }
+
+        function editarPedido(id) {
+            const p = appData.pedidos.find(x => x.id == id);
+            if (!p) return;
+
+            document.getElementById('modal-pedido-titulo').innerHTML = `<i class="fa-solid fa-pen"></i> Editar Pedido #${p.id}`;
+            document.getElementById('ped-id').value = p.id;
+            document.getElementById('ped-cliente-busca').value = '';
+
+            popularSelectClientes();
+            document.getElementById('ped-cliente-id').value = p.clienteId;
+
+            itensPedidoTemp = p.itens ? JSON.parse(JSON.stringify(p.itens)) : [];
+            if (itensPedidoTemp.length === 0) adicionarItemProduto();
+            else renderizarItensFormPedido();
+
+            document.getElementById('ped-total').value = p.total || '';
+            document.getElementById('ped-despesa').value = p.despesa || '';
+            document.getElementById('ped-data-entrega').value = p.dataEntrega || appData.dataAtual;
+            document.getElementById('ped-responsavel').value = p.responsavel || '';
             
-            // Setar data entrega padrão para hoje
-            document.getElementById('ped-data-entrega').value = appData.dataAtual;
+            if (p.formaPagamento && p.formaPagamento.includes('Misto')) {
+                document.getElementById('ped-forma-pagamento').value = 'Parte Dinheiro / Parte Pix';
+            } else {
+                document.getElementById('ped-forma-pagamento').value = p.formaPagamento || 'Dinheiro';
+            }
+            verificarFormaPagamento();
+
+            document.getElementById('ped-status').value = p.status || 'AGUARDANDO';
+            document.getElementById('ped-obs').value = p.obs || '';
 
             document.getElementById('modal-pedido').classList.remove('hidden');
         }
 
-        function fecharModalPedido() {
-            document.getElementById('modal-pedido').classList.add('hidden');
-        }
-
         function adicionarItemProduto() {
-            const index = itensPedidoTemp.length;
-            itensPedidoTemp.push({ servico: '', material: '', qtd: 1, largura: '', altura: '', acabamento: '', valor: 0 });
+            itensPedidoTemp.push({ servico: '', material: '', qtd: 1, largura: '', altura: '', acabamento: '', valor: 0, despesa: 0 });
             renderizarItensFormPedido();
         }
 
-        function removerItemProduto(index) {
+        function removerItemProduto(idx) {
             if (itensPedidoTemp.length <= 1) return;
-            itensPedidoTemp.splice(index, 1);
+            itensPedidoTemp.splice(idx, 1);
             renderizarItensFormPedido();
             calcularTotalPedidoAutomatico();
         }
@@ -1028,41 +1121,45 @@
                 const div = document.createElement('div');
                 div.className = 'p-3 bg-neutral-900 rounded-xl border border-neutral-800 space-y-3 relative';
                 div.innerHTML = `
-                    <div class="flex justify-between items-center text-xs font-bold text-neutral-400">
+                    <div class="flex justify-between items-center text-xs font-bold text-yellow-400">
                         <span>Produto #${idx + 1}</span>
-                        ${itensPedidoTemp.length > 1 ? `<button type="button" onclick="removerItemProduto(${idx})" class="text-rose-400 hover:text-rose-300 text-xs"><i class="fa-solid fa-trash"></i> Remover</button>` : ''}
+                        ${itensPedidoTemp.length > 1 ? `<button type="button" onclick="removerItemProduto(${idx})" class="text-rose-400 hover:text-rose-300 text-xs"><i class="fa-solid fa-trash"></i> Remover Produto</button>` : ''}
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
                         <div>
                             <label class="block text-neutral-400 mb-1">Serviço / Item</label>
-                            <input type="text" value="${item.servico}" onchange="itensPedidoTemp[${idx}].servico = this.value" placeholder="Ex: Banner, Camiseta..." class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-white">
+                            <input type="text" value="${item.servico || ''}" onchange="itensPedidoTemp[${idx}].servico = this.value" placeholder="Ex: Banner, Camiseta..." class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-white">
                         </div>
                         <div>
                             <label class="block text-neutral-400 mb-1">Material</label>
-                            <input type="text" value="${item.material}" onchange="itensPedidoTemp[${idx}].material = this.value" placeholder="Ex: Lona 440g, Algodão..." class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-white">
+                            <input type="text" value="${item.material || ''}" onchange="itensPedidoTemp[${idx}].material = this.value" placeholder="Ex: Lona 440g, Algodão..." class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-white">
                         </div>
                         <div>
                             <label class="block text-neutral-400 mb-1">Quantidade</label>
-                            <input type="number" min="1" value="${item.qtd}" onchange="itensPedidoTemp[${idx}].qtd = parseFloat(this.value)||1; calcularTotalPedidoAutomatico()" class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-white">
+                            <input type="number" min="1" value="${item.qtd || 1}" onchange="itensPedidoTemp[${idx}].qtd = parseFloat(this.value)||1; calcularTotalPedidoAutomatico()" class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-white">
                         </div>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-3 text-xs">
                         <div>
                             <label class="block text-neutral-400 mb-1">Largura (cm)</label>
-                            <input type="number" value="${item.largura}" onchange="itensPedidoTemp[${idx}].largura = this.value" placeholder="100" class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-white">
+                            <input type="number" value="${item.largura || ''}" onchange="itensPedidoTemp[${idx}].largura = this.value" placeholder="100" class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-white">
                         </div>
                         <div>
                             <label class="block text-neutral-400 mb-1">Altura (cm)</label>
-                            <input type="number" value="${item.altura}" onchange="itensPedidoTemp[${idx}].altura = this.value" placeholder="150" class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-white">
+                            <input type="number" value="${item.altura || ''}" onchange="itensPedidoTemp[${idx}].altura = this.value" placeholder="150" class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-white">
                         </div>
                         <div>
                             <label class="block text-neutral-400 mb-1">Acabamento</label>
-                            <input type="text" value="${item.acabamento}" onchange="itensPedidoTemp[${idx}].acabamento = this.value" placeholder="Ilhós, Bainha..." class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-white">
+                            <input type="text" value="${item.acabamento || ''}" onchange="itensPedidoTemp[${idx}].acabamento = this.value" placeholder="Ilhós, Bainha..." class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-white">
                         </div>
                         <div>
-                            <label class="block text-neutral-400 mb-1">Subtotal (R$)</label>
+                            <label class="block text-neutral-400 mb-1">Valor Venda (R$)</label>
                             <input type="number" step="0.01" value="${item.valor || ''}" onchange="itensPedidoTemp[${idx}].valor = parseFloat(this.value)||0; calcularTotalPedidoAutomatico()" placeholder="0.00" class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-yellow-400 font-bold">
                         </div>
+                    </div>
+                    <div class="pt-1 border-t border-neutral-800/60">
+                        <label class="block text-rose-400 text-xs font-semibold mb-1">Despesa / Custo (R$) deste Produto</label>
+                        <input type="number" step="0.01" value="${item.despesa || ''}" onchange="itensPedidoTemp[${idx}].despesa = parseFloat(this.value)||0; calcularTotalPedidoAutomatico()" placeholder="Custo deste produto específico..." class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-rose-400 font-bold">
                     </div>
                 `;
                 container.appendChild(div);
@@ -1070,11 +1167,16 @@
         }
 
         function calcularTotalPedidoAutomatico() {
-            let soma = 0;
+            let somaTotal = 0;
+            let somaDespesa = 0;
+
             itensPedidoTemp.forEach(i => {
-                soma += parseFloat(i.valor || 0);
+                somaTotal += parseFloat(i.valor || 0);
+                somaDespesa += parseFloat(i.despesa || 0);
             });
-            document.getElementById('ped-total').value = soma > 0 ? soma.toFixed(2) : '';
+
+            document.getElementById('ped-total').value = somaTotal > 0 ? somaTotal.toFixed(2) : '';
+            document.getElementById('ped-despesa').value = somaDespesa > 0 ? somaDespesa.toFixed(2) : '';
         }
 
         function verificarFormaPagamento() {
@@ -1090,6 +1192,7 @@
         function salvarPedido(e) {
             e.preventDefault();
 
+            const pedId = document.getElementById('ped-id').value;
             const clienteId = document.getElementById('ped-cliente-id').value;
             const cli = appData.clientes.find(c => c.id == clienteId);
             const total = parseFloat(document.getElementById('ped-total').value || 0);
@@ -1103,26 +1206,45 @@
                 detalhePag = `Misto (Dinheiro: R$ ${din.toFixed(2)} | Pix: R$ ${pix.toFixed(2)})`;
             }
 
-            const novoPedido = {
-                id: Math.floor(1000 + Math.random() * 9000),
-                data: appData.dataAtual,
-                clienteId: clienteId,
-                clienteNome: cli ? cli.nome : 'Cliente Desconhecido',
-                itens: [...itensPedidoTemp],
-                total: total,
-                despesa: despesa,
-                dataEntrega: document.getElementById('ped-data-entrega').value || '-',
-                responsavel: document.getElementById('ped-responsavel').value || 'Atendente',
-                formaPagamento: detalhePag,
-                status: document.getElementById('ped-status').value,
-                obs: document.getElementById('ped-obs').value
-            };
+            if (pedId) {
+                // Editar pedido existente
+                const p = appData.pedidos.find(x => x.id == pedId);
+                if (p) {
+                    p.clienteId = clienteId;
+                    p.clienteNome = cli ? cli.nome : 'Cliente Desconhecido';
+                    p.itens = [...itensPedidoTemp];
+                    p.total = total;
+                    p.despesa = despesa;
+                    p.dataEntrega = document.getElementById('ped-data-entrega').value || appData.dataAtual;
+                    p.responsavel = document.getElementById('ped-responsavel').value || 'Atendente';
+                    p.formaPagamento = detalhePag;
+                    p.status = document.getElementById('ped-status').value;
+                    p.obs = document.getElementById('ped-obs').value;
+                }
+                mostrarToast("Pedido alterado e atualizado!");
+            } else {
+                // Novo Pedido
+                const novoPedido = {
+                    id: Math.floor(1000 + Math.random() * 9000),
+                    data: appData.dataAtual,
+                    clienteId: clienteId,
+                    clienteNome: cli ? cli.nome : 'Cliente Desconhecido',
+                    itens: [...itensPedidoTemp],
+                    total: total,
+                    despesa: despesa,
+                    dataEntrega: document.getElementById('ped-data-entrega').value || appData.dataAtual,
+                    responsavel: document.getElementById('ped-responsavel').value || 'Atendente',
+                    formaPagamento: detalhePag,
+                    status: document.getElementById('ped-status').value,
+                    obs: document.getElementById('ped-obs').value
+                };
+                appData.pedidos.unshift(novoPedido);
+                mostrarToast("Novo pedido salvo!");
+            }
 
-            appData.pedidos.unshift(novoPedido);
             salvarStorage();
             fecharModalPedido();
             atualizarInterfaceCompleta();
-            mostrarToast("Pedido salvo e valores atualizados!");
         }
 
         function filtrarPedidosAba(aba) {
@@ -1147,7 +1269,6 @@
                 if (p.status === 'AGUARDANDO') countNovos++;
                 if (p.status === 'Em Produção') countProducao++;
 
-                // Filtros de aba e busca
                 if (appData.abaPedidoFiltro === 'hoje' && p.data !== appData.dataAtual) return;
                 if (dataEspec && p.data !== dataEspec) return;
 
@@ -1172,7 +1293,10 @@
                             <option value="Cancelado" ${p.status==='Cancelado'?'selected':''}>Cancelado</option>
                         </select>
                     </td>
-                    <td class="p-3 text-right">
+                    <td class="p-3 text-right space-x-1">
+                        <button onclick="editarPedido(${p.id})" class="bg-neutral-800 hover:bg-neutral-700 text-neutral-200 p-2 rounded-lg text-xs" title="Editar Pedido">
+                            <i class="fa-solid fa-pen"></i>
+                        </button>
                         <button onclick="excluirPedido(${p.id})" class="bg-rose-950/50 hover:bg-rose-900 text-rose-400 p-2 rounded-lg text-xs" title="Excluir Pedido">
                             <i class="fa-solid fa-trash"></i>
                         </button>
@@ -1197,7 +1321,7 @@
         }
 
         function excluirPedido(id) {
-            if (confirm("Deseja realmente excluir este pedido? Seus valores serão deduzidos do caixa.")) {
+            if (confirm("Deseja excluir este pedido? Seus valores serão deduzidos do caixa.")) {
                 appData.pedidos = appData.pedidos.filter(p => p.id != id);
                 salvarStorage();
                 atualizarInterfaceCompleta();
@@ -1205,27 +1329,98 @@
             }
         }
 
-        // --- DESPESAS ---
+        // --- CONTROLE DE DESPESAS (NOVA DESPESA & BUSCA) ---
+        function abrirModalNovaDespesa() {
+            document.getElementById('form-nova-despesa').reset();
+            document.getElementById('desp-data').value = appData.dataAtual;
+            document.getElementById('modal-nova-despesa').classList.remove('hidden');
+        }
+
+        function fecharModalNovaDespesa() {
+            document.getElementById('modal-nova-despesa').classList.add('hidden');
+        }
+
+        function salvarNovaDespesa(e) {
+            e.preventDefault();
+            const nome = document.getElementById('desp-nome').value.trim() || 'Despesa Diversa';
+            const data = document.getElementById('desp-data').value || appData.dataAtual;
+            const tipo = document.getElementById('desp-tipo-pagamento').value;
+            const loja = document.getElementById('desp-onde-comprou').value || 'Loja/Fornecedor';
+            const valor = parseFloat(document.getElementById('desp-valor').value || 0);
+
+            appData.despesasOutras.unshift({
+                id: Date.now(),
+                nome: nome,
+                data: data,
+                tipoPagamento: tipo,
+                loja: loja,
+                valor: valor
+            });
+
+            salvarStorage();
+            fecharModalNovaDespesa();
+            atualizarInterfaceCompleta();
+            mostrarToast("Nova despesa cadastrada!");
+        }
+
         function renderizarDespesas() {
             const tbody = document.getElementById('tabela-despesas-body');
             tbody.innerHTML = '';
+            const filtro = document.getElementById('input-pesquisar-despesa').value.toLowerCase();
 
+            // 1. Renderizar Despesas dos Pedidos
             appData.pedidos.forEach(p => {
                 if (p.despesa > 0 && p.status !== 'Cancelado') {
+                    const descProdutos = p.itens ? p.itens.map(i => i.servico).join(', ') : 'Insumos do Pedido';
+                    const buscaTexto = `pedido #${p.id} ${p.clienteNome} ${descProdutos} custo producao`.toLowerCase();
+                    if (!filtro || buscaTexto.includes(filtro)) {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td class="p-3 font-semibold text-white">Custo Pedido #${p.id} (${p.clienteNome} - ${descProdutos})</td>
+                            <td class="p-3 text-neutral-400">${p.data}</td>
+                            <td class="p-3 text-xs text-neutral-400">Interno Pedido</td>
+                            <td class="p-3 text-neutral-400">Produção/Fábrica</td>
+                            <td class="p-3 font-bold text-rose-400">R$ ${parseFloat(p.despesa).toLocaleString('pt-BR', {minimumFractionDigits: 2})}</td>
+                            <td class="p-3 text-right"><span class="text-xs text-neutral-500 font-mono">Via Pedido</span></td>
+                        `;
+                        tbody.appendChild(tr);
+                    }
+                }
+            });
+
+            // 2. Renderizar Despesas Avulsas / Outros
+            appData.despesasOutras.forEach(d => {
+                const buscaTexto = `${d.nome} ${d.loja} ${d.tipoPagamento}`.toLowerCase();
+                if (!filtro || buscaTexto.includes(filtro)) {
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
-                        <td class="p-3 font-semibold text-white">Insumos/Custo Pedido #${p.id} (${p.clienteNome})</td>
-                        <td class="p-3 text-neutral-400">${p.data}</td>
-                        <td class="p-3 font-bold text-rose-400">R$ ${parseFloat(p.despesa).toLocaleString('pt-BR', {minimumFractionDigits: 2})}</td>
+                        <td class="p-3 font-semibold text-white">${d.nome}</td>
+                        <td class="p-3 text-neutral-400">${d.data}</td>
+                        <td class="p-3 text-xs text-neutral-400">${d.tipoPagamento}</td>
+                        <td class="p-3 text-neutral-300">${d.loja}</td>
+                        <td class="p-3 font-bold text-rose-400">R$ ${parseFloat(d.valor||0).toLocaleString('pt-BR', {minimumFractionDigits: 2})}</td>
+                        <td class="p-3 text-right">
+                            <button onclick="excluirDespesaAvulsa(${d.id})" class="bg-rose-950/50 hover:bg-rose-900 text-rose-400 p-2 rounded-lg text-xs" title="Excluir Despesa">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </td>
                     `;
                     tbody.appendChild(tr);
                 }
             });
         }
 
-        // --- GRÁFICOS (CHART.JS) ---
+        function excluirDespesaAvulsa(id) {
+            if (confirm("Deseja excluir esta despesa?")) {
+                appData.despesasOutras = appData.despesasOutras.filter(d => d.id != id);
+                salvarStorage();
+                atualizarInterfaceCompleta();
+                mostrarToast("Despesa removida.");
+            }
+        }
+
+        // --- GRÁFICOS ---
         function atualizarGraficos() {
-            // 1. Gráfico de Vendas por Dia
             const diasJulho = Array.from({length: 31}, (_, i) => `${i + 1}/07`);
             const vendasAcumuladas = new Array(31).fill(0);
 
@@ -1273,7 +1468,6 @@
                 appData.vendasChart.update();
             }
 
-            // 2. Gráfico de Serviços Mais Vendidos
             const servicosMap = {};
             appData.pedidos.forEach(p => {
                 if (p.status !== 'Cancelado' && p.itens) {
@@ -1284,7 +1478,7 @@
                 }
             });
 
-            const labelsServ = Object.keys(servicosMap).length > 0 ? Object.keys(servicosMap) : ['Nenhum serviço registrado'];
+            const labelsServ = Object.keys(servicosMap).length > 0 ? Object.keys(servicosMap) : ['Nenhum serviço'];
             const dataServ = Object.keys(servicosMap).length > 0 ? Object.values(servicosMap) : [1];
 
             if (!appData.servicosChart) {
@@ -1314,7 +1508,7 @@
             }
         }
 
-        // --- BOTÕES DE AÇÃO ---
+        // --- AÇÕES DO HEADER ---
         function copiarCSV() {
             let csv = "ID;Data;Cliente;Total;Despesa;Status\n";
             appData.pedidos.forEach(p => {
@@ -1360,7 +1554,6 @@
             setTimeout(() => toast.classList.add('translate-y-20', 'opacity-0'), 3000);
         }
 
-        // Inicializar aplicação ao carregar
         window.onload = carregarDados;
     </script>
 </body>
