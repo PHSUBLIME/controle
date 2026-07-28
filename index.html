@@ -1,3 +1,15 @@
+Aqui está o código completo corrigido.
+
+A correção foi aplicada em duas etapas no JavaScript:
+
+1.  atualizarGraficos(): Agora verifica se a seção Dashboard está visível na
+    tela antes de tentar renderizar/atualizar os gráficos do Chart.js. Se a aba
+    estiver oculta, a função interrompe a execução para evitar que o canvas
+    receba tamanho 0px.
+2.  navegar('dashboard'): Sempre que você clica para voltar à aba Dashboard, o
+    sistema agora torna a tela visível primeiro e logo em seguida
+    recarrega/redimensiona os gráficos perfeitamente.
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -811,6 +823,11 @@
                 btnAtivo.classList.remove('text-neutral-400', 'hover:text-white', 'hover:bg-neutral-800', 'font-semibold');
                 btnAtivo.classList.add('active', 'text-yellow-400', 'bg-yellow-400/10', 'border-l-4', 'border-yellow-400', 'font-bold');
             }
+
+            // CORREÇÃO ERRO 1: Recarrega e ajusta os gráficos apenas se a aba ativa for o Dashboard
+            if (secao === 'dashboard') {
+                atualizarGraficos();
+            }
         }
 
         function atualizarInterfaceCompleta() {
@@ -1517,6 +1534,12 @@
 
         // --- GRÁFICOS DINÂMICOS ---
         function atualizarGraficos() {
+            // CORREÇÃO ERRO 1: Verifica se a aba Dashboard está visível. Se estiver oculta, ignora para não quebrar o layout.
+            const secaoDash = document.getElementById('secao-dashboard');
+            if (secaoDash && secaoDash.classList.contains('hidden')) {
+                return;
+            }
+
             const hoje = new Date();
             const anoAtual = hoje.getFullYear();
             const mesAtual = hoje.getMonth(); 
