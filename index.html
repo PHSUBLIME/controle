@@ -1,15 +1,3 @@
-Aqui está o código completo corrigido.
-
-A correção foi aplicada em duas etapas no JavaScript:
-
-1.  atualizarGraficos(): Agora verifica se a seção Dashboard está visível na
-    tela antes de tentar renderizar/atualizar os gráficos do Chart.js. Se a aba
-    estiver oculta, a função interrompe a execução para evitar que o canvas
-    receba tamanho 0px.
-2.  navegar('dashboard'): Sempre que você clica para voltar à aba Dashboard, o
-    sistema agora torna a tela visível primeiro e logo em seguida
-    recarrega/redimensiona os gráficos perfeitamente.
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
