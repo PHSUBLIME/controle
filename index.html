@@ -771,7 +771,7 @@
         // CORREÇÃO ERRO 4: Guarda o cliente do pedido em edição (mesmo que já tenha sido excluído da base)
         let clienteExtraSelect = null;
 
-        // CORREÇÃO ERRO 2: Função para sanitizar valores e impedir que aspas duplas/simples ou código HTML quebrem os inputs
+        // CORREÇÃO ERRO 2 e ERRO 9: Função para sanitizar valores e impedir que aspas duplas/simples ou código HTML quebrem a tela (XSS)
         function escapeAttr(str) {
             if (str === null || str === undefined) return '';
             return String(str)
@@ -851,6 +851,9 @@
             let despesaOutrasGeral = 0;
 
             appData.pedidos.forEach(p => {
+                // CORREÇÃO ERRO 6: Se o pedido foi arquivado pelo fechamento de mês, não soma nas métricas ativas do mês atual
+                if (p.arquivado) return;
+
                 const pTotal = parseFloat(p.total || 0);
                 const pDespesa = parseFloat(p.despesa || 0);
 
@@ -862,15 +865,25 @@
                 if (p.data === hojeStr && p.status !== 'Cancelado') {
                     fatDia += pTotal;
                     pedDiaCount++;
-                    if (p.status === 'Entregue' || p.status === 'Concluído') entreguesDiaCount++;
                 }
 
                 if (p.status === 'Em Produção') producaoCount++;
                 if (p.status === 'AGUARDANDO') pendentesCount++;
             });
 
+            // CORREÇÃO ERRO 5: Contabiliza 'Entregues Hoje' se a data de entrega for hoje e o status for Entregue/Concluído (mesmo que venha de outro dia de criação)
+            appData.pedidos.forEach(p => {
+                if (p.status !== 'Cancelado' && (p.status === 'Entregue' || p.status === 'Concluído')) {
+                    if (p.dataEntrega === hojeStr || p.data === hojeStr) {
+                        entreguesDiaCount++;
+                    }
+                }
+            });
+
             appData.despesasOutras.forEach(d => {
-                despesaOutrasGeral += parseFloat(d.valor || 0);
+                if (!d.arquivado) {
+                    despesaOutrasGeral += parseFloat(d.valor || 0);
+                }
             });
 
             const totalDespesaGeral = despesaPedidosGeral + despesaOutrasGeral;
@@ -928,12 +941,13 @@
                     }
                 });
 
+                // CORREÇÃO ERRO 9: Sanitização com escapeAttr para evitar XSS
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td class="p-3 font-semibold text-white">${c.nome}</td>
-                    <td class="p-3">${c.cpf || '-'}</td>
-                    <td class="p-3">${c.telefone || c.whatsapp || '-'}</td>
-                    <td class="p-3">${c.cidade ? `${c.cidade}/${c.estado || ''}` : '-'}</td>
+                    <td class="p-3 font-semibold text-white">${escapeAttr(c.nome)}</td>
+                    <td class="p-3">${escapeAttr(c.cpf || '-')}</td>
+                    <td class="p-3">${escapeAttr(c.telefone || c.whatsapp || '-')}</td>
+                    <td class="p-3">${escapeAttr(c.cidade ? `${c.cidade}/${c.estado || ''}` : '-')}</td>
                     <td class="p-3 font-bold text-yellow-400">R$ ${totalComprado.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</td>
                     <td class="p-3 text-right space-x-1.5">
                         <button onclick="abrirHistoricoCompras(${c.id})" class="bg-yellow-400/10 hover:bg-yellow-400 text-yellow-400 hover:text-black p-2 rounded-lg text-xs font-bold transition-all" title="Histórico">
@@ -1097,12 +1111,13 @@
 
                     let descItens = p.itens ? p.itens.map(i => `${i.servico || 'Item'} (${i.qtd || 1}x)`).join(', ') : 'Serviço Geral';
 
+                    // CORREÇÃO ERRO 9: Sanitização com escapeAttr para evitar XSS
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
-                        <td class="p-2.5 font-bold">#${p.id}<br><span class="text-neutral-500 font-normal">${p.data}</span></td>
-                        <td class="p-2.5">${descItens}</td>
+                        <td class="p-2.5 font-bold">#${p.id}<br><span class="text-neutral-500 font-normal">${escapeAttr(p.data)}</span></td>
+                        <td class="p-2.5">${escapeAttr(descItens)}</td>
                         <td class="p-2.5 font-bold text-yellow-400">R$ ${pTotal.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</td>
-                        <td class="p-2.5"><span class="px-2 py-0.5 text-[10px] rounded-full font-bold ${p.status === 'Entregue' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-yellow-400/10 text-yellow-400'}">${p.status}</span></td>
+                        <td class="p-2.5"><span class="px-2 py-0.5 text-[10px] rounded-full font-bold ${p.status === 'Entregue' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-yellow-400/10 text-yellow-400'}">${escapeAttr(p.status)}</span></td>
                     `;
                     tbody.appendChild(tr);
                 });
@@ -1343,7 +1358,8 @@
                     responsavel: document.getElementById('ped-responsavel').value || 'Atendente',
                     formaPagamento: detalhePag,
                     status: document.getElementById('ped-status').value,
-                    obs: document.getElementById('ped-obs').value
+                    obs: document.getElementById('ped-obs').value,
+                    arquivado: false
                 };
                 appData.pedidos.unshift(novoPedido);
                 mostrarToast("Novo pedido salvo!");
@@ -1383,14 +1399,15 @@
                 const buscaTexto = `${p.id} ${p.clienteNome} ${descProdutos} ${p.status}`.toLowerCase();
                 if (busca && !buscaTexto.includes(busca)) return;
 
+                // CORREÇÃO ERRO 9: Sanitização com escapeAttr para evitar XSS
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td class="p-3 font-bold text-white">#${p.id}<br><span class="text-xs text-neutral-500 font-normal">${p.data}</span></td>
-                    <td class="p-3 font-semibold text-yellow-400">${p.clienteNome}</td>
-                    <td class="p-3 text-xs">${descProdutos}</td>
+                    <td class="p-3 font-bold text-white">#${p.id}<br><span class="text-xs text-neutral-500 font-normal">${escapeAttr(p.data)}</span></td>
+                    <td class="p-3 font-semibold text-yellow-400">${escapeAttr(p.clienteNome)}</td>
+                    <td class="p-3 text-xs">${escapeAttr(descProdutos)}</td>
                     <td class="p-3 font-black text-white">R$ ${parseFloat(p.total||0).toLocaleString('pt-BR', {minimumFractionDigits: 2})}</td>
                     <td class="p-3 font-bold text-rose-400">R$ ${parseFloat(p.despesa||0).toLocaleString('pt-BR', {minimumFractionDigits: 2})}</td>
-                    <td class="p-3 text-xs text-neutral-400">${p.formaPagamento}</td>
+                    <td class="p-3 text-xs text-neutral-400">${escapeAttr(p.formaPagamento)}</td>
                     <td class="p-3">
                         <select onchange="alterarStatusPedido(${p.id}, this.value)" class="bg-neutral-800 text-xs text-white border border-neutral-700 rounded-lg p-1 font-bold focus:outline-none">
                             <option value="AGUARDANDO" ${p.status==='AGUARDANDO'?'selected':''}>AGUARDANDO</option>
@@ -1461,7 +1478,8 @@
                 data: data,
                 tipoPagamento: tipo,
                 loja: loja,
-                valor: valor
+                valor: valor,
+                arquivado: false
             });
 
             salvarStorage();
@@ -1476,14 +1494,15 @@
             const filtro = document.getElementById('input-pesquisar-despesa').value.toLowerCase();
 
             appData.pedidos.forEach(p => {
-                if (p.despesa > 0 && p.status !== 'Cancelado') {
+                if (!p.arquivado && p.despesa > 0 && p.status !== 'Cancelado') {
                     const descProdutos = p.itens ? p.itens.map(i => i.servico).join(', ') : 'Insumos do Pedido';
                     const buscaTexto = `pedido #${p.id} ${p.clienteNome} ${descProdutos} custo producao`.toLowerCase();
                     if (!filtro || buscaTexto.includes(filtro)) {
+                        // CORREÇÃO ERRO 9: Sanitização com escapeAttr
                         const tr = document.createElement('tr');
                         tr.innerHTML = `
-                            <td class="p-3 font-semibold text-white">Custo Pedido #${p.id} (${p.clienteNome} - ${descProdutos})</td>
-                            <td class="p-3 text-neutral-400">${p.data}</td>
+                            <td class="p-3 font-semibold text-white">Custo Pedido #${p.id} (${escapeAttr(p.clienteNome)} - ${escapeAttr(descProdutos)})</td>
+                            <td class="p-3 text-neutral-400">${escapeAttr(p.data)}</td>
                             <td class="p-3 text-xs text-neutral-400">Interno Pedido</td>
                             <td class="p-3 text-neutral-400">Produção/Fábrica</td>
                             <td class="p-3 font-bold text-rose-400">R$ ${parseFloat(p.despesa).toLocaleString('pt-BR', {minimumFractionDigits: 2})}</td>
@@ -1495,14 +1514,16 @@
             });
 
             appData.despesasOutras.forEach(d => {
+                if (d.arquivado) return;
                 const buscaTexto = `${d.nome} ${d.loja} ${d.tipoPagamento}`.toLowerCase();
                 if (!filtro || buscaTexto.includes(filtro)) {
+                    // CORREÇÃO ERRO 9: Sanitização com escapeAttr
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
-                        <td class="p-3 font-semibold text-white">${d.nome}</td>
-                        <td class="p-3 text-neutral-400">${d.data}</td>
-                        <td class="p-3 text-xs text-neutral-400">${d.tipoPagamento}</td>
-                        <td class="p-3 text-neutral-300">${d.loja}</td>
+                        <td class="p-3 font-semibold text-white">${escapeAttr(d.nome)}</td>
+                        <td class="p-3 text-neutral-400">${escapeAttr(d.data)}</td>
+                        <td class="p-3 text-xs text-neutral-400">${escapeAttr(d.tipoPagamento)}</td>
+                        <td class="p-3 text-neutral-300">${escapeAttr(d.loja)}</td>
                         <td class="p-3 font-bold text-rose-400">R$ ${parseFloat(d.valor||0).toLocaleString('pt-BR', {minimumFractionDigits: 2})}</td>
                         <td class="p-3 text-right">
                             <button onclick="excluirDespesaAvulsa(${d.id})" class="bg-rose-950/50 hover:bg-rose-900 text-rose-400 p-2 rounded-lg text-xs" title="Excluir Despesa">
@@ -1539,7 +1560,7 @@
                 div.className = 'flex justify-between items-center p-4 bg-neutral-800/60 rounded-xl border border-neutral-700';
                 div.innerHTML = `
                     <div>
-                        <h4 class="font-bold text-yellow-400 capitalize">${item.mes}</h4>
+                        <h4 class="font-bold text-yellow-400 capitalize">${escapeAttr(item.mes)}</h4>
                         <p class="text-xs text-neutral-400">Fechamento arquivado</p>
                     </div>
                     <div class="text-right">
@@ -1569,7 +1590,8 @@
             const vendasAcumuladas = new Array(totalDiasMes).fill(0);
 
             appData.pedidos.forEach(p => {
-                if (p.status !== 'Cancelado' && p.data) {
+                // Desconsidera pedidos arquivados no faturamento do mês atual
+                if (!p.arquivado && p.status !== 'Cancelado' && p.data) {
                     const [pAno, pMes, pDia] = p.data.split('-').map(Number);
                     if (pAno === anoAtual && pMes === (mesAtual + 1)) {
                         if (pDia >= 1 && pDia <= totalDiasMes) {
@@ -1617,7 +1639,7 @@
 
             const servicosMap = {};
             appData.pedidos.forEach(p => {
-                if (p.status !== 'Cancelado' && p.itens) {
+                if (!p.arquivado && p.status !== 'Cancelado' && p.itens) {
                     p.itens.forEach(i => {
                         const nomeS = i.servico || 'Outros';
                         servicosMap[nomeS] = (servicosMap[nomeS] || 0) + (parseInt(i.qtd) || 1);
@@ -1656,12 +1678,15 @@
         }
 
         // --- AÇÕES DO HEADER ---
+        // CORREÇÃO ERRO 7: Trata aspas duplas e remove pontos e vírgulas para não desalinhar a planilha no Excel
         function copiarCSV() {
             let csv = "ID;Data;Cliente;Total;Despesa;Status\n";
             appData.pedidos.forEach(p => {
-                csv += `${p.id};${p.data};${p.clienteNome};${p.total};${p.despesa};${p.status}\n`;
+                const clienteClean = String(p.clienteNome || '').replace(/;/g, ' ').replace(/"/g, '""');
+                const statusClean = String(p.status || '').replace(/;/g, ' ').replace(/"/g, '""');
+                csv += `"${p.id}";"${p.data}";"${clienteClean}";"${parseFloat(p.total||0).toFixed(2)}";"${parseFloat(p.despesa||0).toFixed(2)}";"${statusClean}"\n`;
             });
-            navigator.clipboard.writeText(csv).then(() => mostrarToast("Dados CSV copiados!"));
+            navigator.clipboard.writeText(csv).then(() => mostrarToast("Dados CSV copiados com sucesso!"));
         }
 
         function enviarWhatsApp() {
@@ -1682,13 +1707,21 @@
 
         function baixarPDF() { window.print(); }
 
+        // CORREÇÃO ERRO 6 e ERRO 8: Arquiva pedidos ativos ao fechar mês e utiliza parseFloat seguro no reduce
         function fecharMes() {
-            if (confirm("Deseja FECHAR O MÊS atual? Os totais serão arquivados em Histórico.")) {
-                const totalFat = appData.pedidos.reduce((acc, p) => acc + (p.status !== 'Cancelado' ? p.total : 0), 0);
+            if (confirm("Deseja FECHAR O MÊS atual? Os totais serão arquivados em Histórico e o faturamento do novo mês recomeçará do zero.")) {
+                const pedidosAtivos = appData.pedidos.filter(p => !p.arquivado && p.status !== 'Cancelado');
+                const totalFat = pedidosAtivos.reduce((acc, p) => acc + parseFloat(p.total || 0), 0);
+                
                 appData.historicoFechamentos.unshift({
                     mes: new Date().toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' }),
                     faturamento: totalFat
                 });
+
+                // Marca pedidos e despesas do ciclo como arquivados
+                appData.pedidos.forEach(p => { p.arquivado = true; });
+                appData.despesasOutras.forEach(d => { d.arquivado = true; });
+
                 salvarStorage();
                 atualizarInterfaceCompleta();
                 mostrarToast("Mês fechado e arquivado com sucesso!");
