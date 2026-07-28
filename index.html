@@ -768,6 +768,17 @@
             abaPedidoFiltro: 'todos'
         };
 
+        // CORREÇÃO ERRO 2: Função para sanitizar valores e impedir que aspas duplas/simples ou código HTML quebrem os inputs
+        function escapeAttr(str) {
+            if (str === null || str === undefined) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
+        }
+
         function carregarDados() {
             const salvos = localStorage.getItem('PHSUBLIME_DATA_V3_5');
             if (salvos) {
@@ -1198,6 +1209,7 @@
             itensPedidoTemp.forEach((item, idx) => {
                 const div = document.createElement('div');
                 div.className = 'p-3 bg-neutral-900 rounded-xl border border-neutral-800 space-y-3 relative';
+                // CORREÇÃO ERRO 2: Aplicando escapeAttr(...) nos valores exibidos nos atributos value HTML
                 div.innerHTML = `
                     <div class="flex justify-between items-center text-xs font-bold text-yellow-400">
                         <span>Produto #${idx + 1}</span>
@@ -1206,38 +1218,38 @@
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
                         <div>
                             <label class="block text-neutral-400 mb-1">Serviço / Item</label>
-                            <input type="text" value="${item.servico || ''}" onchange="itensPedidoTemp[${idx}].servico = this.value" placeholder="Ex: Banner, Camiseta..." class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-white">
+                            <input type="text" value="${escapeAttr(item.servico)}" onchange="itensPedidoTemp[${idx}].servico = this.value" placeholder="Ex: Banner, Camiseta..." class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-white">
                         </div>
                         <div>
                             <label class="block text-neutral-400 mb-1">Material</label>
-                            <input type="text" value="${item.material || ''}" onchange="itensPedidoTemp[${idx}].material = this.value" placeholder="Ex: Lona 440g, Algodão..." class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-white">
+                            <input type="text" value="${escapeAttr(item.material)}" onchange="itensPedidoTemp[${idx}].material = this.value" placeholder="Ex: Lona 440g, Algodão..." class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-white">
                         </div>
                         <div>
                             <label class="block text-neutral-400 mb-1">Quantidade</label>
-                            <input type="number" min="1" value="${item.qtd || 1}" onchange="itensPedidoTemp[${idx}].qtd = parseFloat(this.value)||1; calcularTotalPedidoAutomatico()" class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-white">
+                            <input type="number" min="1" value="${escapeAttr(item.qtd || 1)}" onchange="itensPedidoTemp[${idx}].qtd = parseFloat(this.value)||1; calcularTotalPedidoAutomatico()" class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-white">
                         </div>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-3 text-xs">
                         <div>
                             <label class="block text-neutral-400 mb-1">Largura (cm)</label>
-                            <input type="number" value="${item.largura || ''}" onchange="itensPedidoTemp[${idx}].largura = this.value" placeholder="100" class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-white">
+                            <input type="number" value="${escapeAttr(item.largura)}" onchange="itensPedidoTemp[${idx}].largura = this.value" placeholder="100" class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-white">
                         </div>
                         <div>
                             <label class="block text-neutral-400 mb-1">Altura (cm)</label>
-                            <input type="number" value="${item.altura || ''}" onchange="itensPedidoTemp[${idx}].altura = this.value" placeholder="150" class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-white">
+                            <input type="number" value="${escapeAttr(item.altura)}" onchange="itensPedidoTemp[${idx}].altura = this.value" placeholder="150" class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-white">
                         </div>
                         <div>
                             <label class="block text-neutral-400 mb-1">Acabamento</label>
-                            <input type="text" value="${item.acabamento || ''}" onchange="itensPedidoTemp[${idx}].acabamento = this.value" placeholder="Ilhós, Bainha..." class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-white">
+                            <input type="text" value="${escapeAttr(item.acabamento)}" onchange="itensPedidoTemp[${idx}].acabamento = this.value" placeholder="Ilhós, Bainha..." class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-white">
                         </div>
                         <div>
                             <label class="block text-neutral-400 mb-1">Valor Venda (R$)</label>
-                            <input type="number" step="0.01" value="${item.valor || ''}" onchange="itensPedidoTemp[${idx}].valor = parseFloat(this.value)||0; calcularTotalPedidoAutomatico()" placeholder="0.00" class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-yellow-400 font-bold">
+                            <input type="number" step="0.01" value="${escapeAttr(item.valor)}" onchange="itensPedidoTemp[${idx}].valor = parseFloat(this.value)||0; calcularTotalPedidoAutomatico()" placeholder="0.00" class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-yellow-400 font-bold">
                         </div>
                     </div>
                     <div class="pt-1 border-t border-neutral-800/60">
                         <label class="block text-rose-400 text-xs font-semibold mb-1">Despesa / Custo (R$) deste Produto</label>
-                        <input type="number" step="0.01" value="${item.despesa || ''}" onchange="itensPedidoTemp[${idx}].despesa = parseFloat(this.value)||0; calcularTotalPedidoAutomatico()" placeholder="Custo deste produto específico..." class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-rose-400 font-bold">
+                        <input type="number" step="0.01" value="${escapeAttr(item.despesa)}" onchange="itensPedidoTemp[${idx}].despesa = parseFloat(this.value)||0; calcularTotalPedidoAutomatico()" placeholder="Custo deste produto específico..." class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-rose-400 font-bold">
                     </div>
                 `;
                 container.appendChild(div);
