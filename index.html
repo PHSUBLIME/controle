@@ -84,7 +84,7 @@
                         <h2 class="text-3xl font-extrabold text-yellow-400 tracking-tight">Dashboard</h2>
                         <span class="bg-yellow-400/10 text-yellow-400 text-xs font-bold px-3.5 py-1.5 rounded-full border border-yellow-400/30 flex items-center gap-2">
                             <i class="fa-regular fa-calendar text-yellow-400"></i>
-                            Hoje: <strong id="dataAtualExtenso" class="text-yellow-300">28/07/2026</strong>
+                            Hoje: <strong id="dataAtualExtenso" class="text-yellow-300">--/--/----</strong>
                         </span>
                     </div>
                     <p class="text-sm text-neutral-400 mt-1">Zerado automaticamente todo dia. Métrica das vendas e caixa atualizados em tempo real.</p>
@@ -223,7 +223,7 @@
                 <div class="lg:col-span-2 bg-neutral-900 p-6 rounded-2xl border border-neutral-800 print-card">
                     <div class="flex items-center justify-between mb-6">
                         <div>
-                            <h3 class="text-lg font-extrabold text-yellow-400 uppercase tracking-wide">Vendas — Últimos 31 dias / Mês Atual</h3>
+                            <h3 class="text-lg font-extrabold text-yellow-400 uppercase tracking-wide">Vendas — Mês Atual</h3>
                             <p class="text-xs text-neutral-500">Atualizado diariamente (Histórico preservado)</p>
                         </div>
                     </div>
@@ -734,7 +734,7 @@
     <!-- SCRIPT PRINCIPAL -->
     <script>
         let appData = {
-            dataAtual: "2026-07-28",
+            dataAtual: new Date().toISOString().split('T')[0],
             clientes: [
                 { id: 1, nome: "Empresa Alfa Ltda", cpf: "12.345.678/0001-90", telefone: "(21) 98888-0001", email: "contato@alfa.com", cidade: "Rio de Janeiro", estado: "RJ", endereco: "Av. Brasil, 1500", obs: "VIP" },
                 { id: 2, nome: "Studio Design RIO", cpf: "987.654.321-00", telefone: "(21) 97777-0002", email: "rio@studio.com", cidade: "Niterói", estado: "RJ", endereco: "Rua das Flores, 45", obs: "" },
@@ -860,6 +860,7 @@
             renderizarClientes();
             renderizarPedidos();
             renderizarDespesas();
+            renderizarHistoricoFechamentos();
             atualizarGraficos();
         }
 
@@ -983,6 +984,52 @@
             }
         }
 
+        // --- IMPORTAÇÃO EM MASSA (CORRIGIDO) ---
+        function abrirModalMassa() {
+            document.getElementById('input-massa-texto').value = '';
+            document.getElementById('modal-massa').classList.remove('hidden');
+        }
+
+        function fecharModalMassa() {
+            document.getElementById('modal-massa').classList.add('hidden');
+        }
+
+        function processarMassa() {
+            const texto = document.getElementById('input-massa-texto').value.trim();
+            if (!texto) {
+                alert("Cole o texto da planilha antes de importar.");
+                return;
+            }
+
+            const linhas = texto.split('\n');
+            let importados = 0;
+
+            linhas.forEach((linha, index) => {
+                if (!linha.trim()) return;
+                const partes = linha.split(';').map(p => p.trim());
+                
+                if (partes[0]) {
+                    appData.clientes.push({
+                        id: Date.now() + index,
+                        nome: partes[0] || 'Cliente Importado',
+                        cpf: partes[1] || '',
+                        telefone: partes[2] || '',
+                        email: partes[3] || '',
+                        cidade: partes[4] || '',
+                        estado: '',
+                        endereco: '',
+                        obs: 'Importado em massa'
+                    });
+                    importados++;
+                }
+            });
+
+            salvarStorage();
+            fecharModalMassa();
+            atualizarInterfaceCompleta();
+            mostrarToast(`${importados} cliente(s) importado(s)!`);
+        }
+
         function abrirHistoricoCompras(clienteId) {
             const cli = appData.clientes.find(c => c.id == clienteId);
             if (!cli) return;
@@ -1022,7 +1069,7 @@
 
         function fecharModalHistoricoCliente() { document.getElementById('modal-historico-cliente').classList.add('hidden'); }
 
-        // --- PEDIDOS (EDITAR, BUSCA CLIENTE, CUSTO POR PRODUTO) ---
+        // --- PEDIDOS ---
         let itensPedidoTemp = [];
 
         function abrirModalPedido() {
@@ -1207,7 +1254,6 @@
             }
 
             if (pedId) {
-                // Editar pedido existente
                 const p = appData.pedidos.find(x => x.id == pedId);
                 if (p) {
                     p.clienteId = clienteId;
@@ -1223,7 +1269,6 @@
                 }
                 mostrarToast("Pedido alterado e atualizado!");
             } else {
-                // Novo Pedido
                 const novoPedido = {
                     id: Math.floor(1000 + Math.random() * 9000),
                     data: appData.dataAtual,
@@ -1329,7 +1374,7 @@
             }
         }
 
-        // --- CONTROLE DE DESPESAS (NOVA DESPESA & BUSCA) ---
+        // --- DESPESAS ---
         function abrirModalNovaDespesa() {
             document.getElementById('form-nova-despesa').reset();
             document.getElementById('desp-data').value = appData.dataAtual;
@@ -1368,7 +1413,6 @@
             tbody.innerHTML = '';
             const filtro = document.getElementById('input-pesquisar-despesa').value.toLowerCase();
 
-            // 1. Renderizar Despesas dos Pedidos
             appData.pedidos.forEach(p => {
                 if (p.despesa > 0 && p.status !== 'Cancelado') {
                     const descProdutos = p.itens ? p.itens.map(i => i.servico).join(', ') : 'Insumos do Pedido';
@@ -1388,7 +1432,6 @@
                 }
             });
 
-            // 2. Renderizar Despesas Avulsas / Outros
             appData.despesasOutras.forEach(d => {
                 const buscaTexto = `${d.nome} ${d.loja} ${d.tipoPagamento}`.toLowerCase();
                 if (!filtro || buscaTexto.includes(filtro)) {
@@ -1419,16 +1462,51 @@
             }
         }
 
-        // --- GRÁFICOS ---
+        // --- RENDERIZAR HISTÓRICO DE FECHAMENTOS (CORRIGIDO) ---
+        function renderizarHistoricoFechamentos() {
+            const container = document.getElementById('historico-fechamentos');
+            container.innerHTML = '';
+
+            if (appData.historicoFechamentos.length === 0) {
+                container.innerHTML = `<p class="text-sm text-neutral-500">Nenhum mês fechado até o momento.</p>`;
+                return;
+            }
+
+            appData.historicoFechamentos.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = 'flex justify-between items-center p-4 bg-neutral-800/60 rounded-xl border border-neutral-700';
+                div.innerHTML = `
+                    <div>
+                        <h4 class="font-bold text-yellow-400 capitalize">${item.mes}</h4>
+                        <p class="text-xs text-neutral-400">Fechamento arquivado</p>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-xs text-neutral-400 block">Faturamento Total</span>
+                        <strong class="text-emerald-400 font-black text-base">R$ ${parseFloat(item.faturamento||0).toLocaleString('pt-BR', {minimumFractionDigits: 2})}</strong>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        // --- GRÁFICOS DINÂMICOS (CORRIGIDO) ---
         function atualizarGraficos() {
-            const diasJulho = Array.from({length: 31}, (_, i) => `${i + 1}/07`);
-            const vendasAcumuladas = new Array(31).fill(0);
+            const hoje = new Date();
+            const anoAtual = hoje.getFullYear();
+            const mesAtual = hoje.getMonth(); 
+            const totalDiasMes = new Date(anoAtual, mesAtual + 1, 0).getDate();
+            
+            const mesFormatado = String(mesAtual + 1).padStart(2, '0');
+            const diasMes = Array.from({length: totalDiasMes}, (_, i) => `${i + 1}/${mesFormatado}`);
+            const vendasAcumuladas = new Array(totalDiasMes).fill(0);
 
             appData.pedidos.forEach(p => {
-                if (p.status !== 'Cancelado') {
-                    const diaNum = parseInt(p.data.split('-')[2] || '1');
-                    if (diaNum >= 1 && diaNum <= 31) {
-                        vendasAcumuladas[diaNum - 1] += parseFloat(p.total || 0);
+                if (p.status !== 'Cancelado' && p.data) {
+                    const [pAno, pMes, pDia] = p.data.split('-').map(Number);
+                    if (pAno === anoAtual && pMes === (mesAtual + 1)) {
+                        if (pDia >= 1 && pDia <= totalDiasMes) {
+                            vendasAcumuladas[pDia - 1] += parseFloat(p.total || 0);
+                        }
                     }
                 }
             });
@@ -1442,7 +1520,7 @@
                 appData.vendasChart = new Chart(ctx, {
                     type: 'line',
                     data: {
-                        labels: diasJulho,
+                        labels: diasMes,
                         datasets: [{
                             label: 'Vendas (R$)',
                             data: vendasAcumuladas,
@@ -1464,6 +1542,7 @@
                     }
                 });
             } else {
+                appData.vendasChart.data.labels = diasMes;
                 appData.vendasChart.data.datasets[0].data = vendasAcumuladas;
                 appData.vendasChart.update();
             }
@@ -1543,6 +1622,7 @@
                     faturamento: totalFat
                 });
                 salvarStorage();
+                atualizarInterfaceCompleta();
                 mostrarToast("Mês fechado e arquivado com sucesso!");
             }
         }
