@@ -87,7 +87,7 @@
                             Hoje: <strong id="dataAtualExtenso" class="text-yellow-300">--/--/----</strong>
                         </span>
                     </div>
-                    <p class="text-sm text-neutral-400 mt-1">Zerado automaticamente todo dia. Métrica das vendas e caixa atualizados em tempo real.</p>
+                    <p class="text-sm text-neutral-400 mt-1">Métrica das vendas e caixa do mês ativo atualizados em tempo real.</p>
                 </div>
 
                 <div class="flex flex-wrap gap-2.5 no-print">
@@ -200,7 +200,7 @@
                             <i class="fa-solid fa-chart-line-down text-xl"></i>
                         </div>
                     </div>
-                    <p class="text-xs text-neutral-400 mt-3">Despesas totais da empresa</p>
+                    <p class="text-xs text-neutral-400 mt-3">Despesas totais da empresa (Mês Ativo)</p>
                 </div>
 
                 <div class="bg-neutral-900 p-5 rounded-2xl border border-neutral-800 print-card hover:border-yellow-400/50 transition-all">
@@ -213,7 +213,7 @@
                             <i class="fa-solid fa-wallet text-xl"></i>
                         </div>
                     </div>
-                    <p class="text-xs text-emerald-400 font-medium mt-3">Receita - Despesas</p>
+                    <p class="text-xs text-emerald-400 font-medium mt-3">Receita - Despesas (Mês Ativo)</p>
                 </div>
 
             </div>
@@ -224,7 +224,7 @@
                     <div class="flex items-center justify-between mb-6">
                         <div>
                             <h3 class="text-lg font-extrabold text-yellow-400 uppercase tracking-wide">Vendas — Mês Atual</h3>
-                            <p class="text-xs text-neutral-500">Atualizado diariamente (Histórico preservado)</p>
+                            <p class="text-xs text-neutral-500">Atualizado diariamente (Mês Ativo)</p>
                         </div>
                     </div>
                     <div class="relative h-72">
@@ -236,7 +236,7 @@
                     <div class="flex items-center justify-between mb-6">
                         <div>
                             <h3 class="text-lg font-extrabold text-yellow-400 uppercase tracking-wide">Serviços Mais Vendidos</h3>
-                            <p class="text-xs text-neutral-500">Por volume histórico</p>
+                            <p class="text-xs text-neutral-500">Por volume no mês ativo</p>
                         </div>
                     </div>
                     <div class="relative h-72 flex items-center justify-center">
@@ -283,7 +283,7 @@
                             <th class="p-3">CPF/CNPJ</th>
                             <th class="p-3">Telefone / Whats</th>
                             <th class="p-3">Cidade/UF</th>
-                            <th class="p-3">Total Comprado</th>
+                            <th class="p-3">Total Comprado (Geral)</th>
                             <th class="p-3 text-right">Ações</th>
                         </tr>
                     </thead>
@@ -300,9 +300,9 @@
             <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-neutral-900 p-6 rounded-2xl border border-neutral-800">
                 <div>
                     <h2 class="text-2xl font-black text-yellow-400 flex items-center gap-2">
-                        <i class="fa-solid fa-cart-shopping text-yellow-400"></i> Gerenciamento de Pedidos
+                        <i class="fa-solid fa-cart-shopping text-yellow-400"></i> Gerenciamento de Pedidos (Mês Ativo)
                     </h2>
-                    <p class="text-neutral-400 text-sm mt-1">Acompanhe pedidos em fila, produção e entregues.</p>
+                    <p class="text-neutral-400 text-sm mt-1">Acompanhe pedidos em fila, produção e entregues no ciclo atual.</p>
                 </div>
 
                 <button onclick="abrirModalPedido()" class="flex items-center gap-2 bg-yellow-400 hover:bg-yellow-300 text-black font-bold px-5 py-3 rounded-xl text-sm transition-all shadow-lg shadow-yellow-950/30">
@@ -345,7 +345,7 @@
 
             <!-- TABELA HISTÓRICO DE PEDIDOS -->
             <div class="bg-neutral-900 p-6 rounded-2xl border border-neutral-800 overflow-x-auto">
-                <h3 class="text-base font-bold text-yellow-400 mb-4 uppercase tracking-wide">Histórico de Pedidos</h3>
+                <h3 class="text-base font-bold text-yellow-400 mb-4 uppercase tracking-wide">Lista de Pedidos do Mês Ativo</h3>
                 <table class="w-full text-left text-sm text-neutral-300">
                     <thead class="text-xs uppercase bg-neutral-800 text-yellow-400 border-b border-neutral-700">
                         <tr>
@@ -372,9 +372,9 @@
             <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-neutral-900 p-6 rounded-2xl border border-neutral-800">
                 <div>
                     <h2 class="text-2xl font-black text-yellow-400 flex items-center gap-2">
-                        <i class="fa-solid fa-file-invoice-dollar text-yellow-400"></i> Controle de Despesas
+                        <i class="fa-solid fa-file-invoice-dollar text-yellow-400"></i> Controle de Despesas (Mês Ativo)
                     </h2>
-                    <p class="text-neutral-400 text-sm mt-1">Calculado e atualizado automaticamente com base nos pedidos e compras de insumos.</p>
+                    <p class="text-neutral-400 text-sm mt-1">Calculado e atualizado automaticamente com base nos pedidos ativos e compras de insumos.</p>
                 </div>
 
                 <button onclick="abrirModalNovaDespesa()" class="flex items-center gap-2 bg-yellow-400 hover:bg-yellow-300 text-black font-bold px-4 py-2.5 rounded-xl text-sm transition-all shadow-lg shadow-yellow-950/30">
@@ -431,9 +431,9 @@
         <section id="secao-financeiro" class="secao-conteudo hidden space-y-6">
             <div class="bg-neutral-900 p-6 rounded-2xl border border-neutral-800">
                 <h2 class="text-2xl font-black text-yellow-400 flex items-center gap-2">
-                    <i class="fa-solid fa-wallet text-yellow-400"></i> Visão Financeira
+                    <i class="fa-solid fa-wallet text-yellow-400"></i> Visão Financeira (Mês Ativo)
                 </h2>
-                <p class="text-neutral-400 text-sm mt-1">Fluxo de caixa e distribuição de lucros atualizados em tempo real.</p>
+                <p class="text-neutral-400 text-sm mt-1">Fluxo de caixa e distribuição de lucros do mês ativo em tempo real.</p>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -473,7 +473,7 @@
         <section id="secao-historico" class="secao-conteudo hidden space-y-6">
             <div class="bg-neutral-900 p-6 rounded-2xl border border-neutral-800">
                 <h2 class="text-2xl font-black text-yellow-400">Histórico de Fechamentos Mensais</h2>
-                <p class="text-neutral-400 text-sm mt-1">Relatórios e consolidação de meses encerrados.</p>
+                <p class="text-neutral-400 text-sm mt-1">Consulte todas as movimentações e relatórios de meses encerrados.</p>
             </div>
             <div class="bg-neutral-900 p-6 rounded-2xl border border-neutral-800 space-y-3" id="historico-fechamentos">
                 <p class="text-sm text-neutral-500">Nenhum mês fechado até o momento.</p>
@@ -483,6 +483,96 @@
     </main>
 
     <!-- ================= MODAIS ================= -->
+
+    <!-- MODAL DETALHES HISTÓRICO DO MÊS FECHADO -->
+    <div id="modal-detalhes-historico" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-neutral-900 border border-neutral-800 rounded-2xl max-w-5xl w-full p-6 space-y-5 shadow-2xl overflow-y-auto max-h-[90vh]">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-neutral-800 pb-4 gap-3">
+                <div>
+                    <h3 class="text-xl font-bold text-yellow-400 flex items-center gap-2" id="detalhe-hist-titulo">
+                        <i class="fa-solid fa-calendar-check"></i> Relatório de Fechamento
+                    </h3>
+                    <p class="text-xs text-neutral-400" id="detalhe-hist-subtitulo">Fechado em: --/--/----</p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button onclick="baixarCSVFechamentoAtual()" class="flex items-center gap-1.5 bg-neutral-800 hover:bg-neutral-700 text-neutral-200 border border-neutral-700 px-3.5 py-2 rounded-xl font-medium text-xs transition-all">
+                        <i class="fa-solid fa-file-csv text-yellow-400 text-sm"></i> Baixar CSV
+                    </button>
+                    <button onclick="imprimirModalHistorico()" class="flex items-center gap-1.5 bg-yellow-400 hover:bg-yellow-300 text-black font-bold px-3.5 py-2 rounded-xl text-xs transition-all">
+                        <i class="fa-solid fa-print"></i> Imprimir / PDF
+                    </button>
+                    <button onclick="fecharModalDetalhesHistorico()" class="text-neutral-400 hover:text-white text-lg ml-2"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+            </div>
+
+            <!-- KPIs do Mês Fechado -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                <div class="bg-neutral-800/60 p-3.5 rounded-xl border border-neutral-700/60">
+                    <p class="text-[10px] font-bold text-yellow-400 uppercase tracking-wider">Faturamento Total</p>
+                    <h4 class="text-lg font-black text-white mt-1" id="detalhe-hist-fat">R$ 0,00</h4>
+                </div>
+                <div class="bg-neutral-800/60 p-3.5 rounded-xl border border-neutral-700/60">
+                    <p class="text-[10px] font-bold text-rose-400 uppercase tracking-wider">Despesas Totais</p>
+                    <h4 class="text-lg font-black text-rose-400 mt-1" id="detalhe-hist-desp">R$ 0,00</h4>
+                </div>
+                <div class="bg-neutral-800/60 p-3.5 rounded-xl border border-neutral-700/60">
+                    <p class="text-[10px] font-bold text-emerald-400 uppercase tracking-wider">Lucro Líquido</p>
+                    <h4 class="text-lg font-black text-emerald-400 mt-1" id="detalhe-hist-lucro">R$ 0,00</h4>
+                </div>
+                <div class="bg-neutral-800/60 p-3.5 rounded-xl border border-neutral-700/60">
+                    <p class="text-[10px] font-bold text-blue-400 uppercase tracking-wider">Reserva (10%)</p>
+                    <h4 class="text-lg font-black text-blue-400 mt-1" id="detalhe-hist-reserva">R$ 0,00</h4>
+                </div>
+            </div>
+
+            <!-- TABELA DE PEDIDOS DO MÊS FECHADO -->
+            <div class="space-y-2">
+                <h4 class="text-xs font-bold text-yellow-400 uppercase tracking-wide flex items-center gap-1.5">
+                    <i class="fa-solid fa-cart-shopping"></i> Pedidos Realizados no Mês
+                </h4>
+                <div class="overflow-x-auto bg-neutral-900 border border-neutral-800 rounded-xl">
+                    <table class="w-full text-left text-xs text-neutral-300">
+                        <thead class="uppercase bg-neutral-800 text-yellow-400 border-b border-neutral-700">
+                            <tr>
+                                <th class="p-2.5">ID / Data</th>
+                                <th class="p-2.5">Cliente</th>
+                                <th class="p-2.5">Produtos / Serviços</th>
+                                <th class="p-2.5">Total (R$)</th>
+                                <th class="p-2.5">Despesa (R$)</th>
+                                <th class="p-2.5">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-neutral-800" id="detalhe-hist-pedidos-body">
+                            <!-- JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- TABELA DE DESPESAS DO MÊS FECHADO -->
+            <div class="space-y-2">
+                <h4 class="text-xs font-bold text-rose-400 uppercase tracking-wide flex items-center gap-1.5">
+                    <i class="fa-solid fa-file-invoice-dollar"></i> Despesas Avulsas do Mês
+                </h4>
+                <div class="overflow-x-auto bg-neutral-900 border border-neutral-800 rounded-xl">
+                    <table class="w-full text-left text-xs text-neutral-300">
+                        <thead class="uppercase bg-neutral-800 text-yellow-400 border-b border-neutral-700">
+                            <tr>
+                                <th class="p-2.5">Produto / Origem</th>
+                                <th class="p-2.5">Data Compra</th>
+                                <th class="p-2.5">Tipo Pagamento</th>
+                                <th class="p-2.5">Loja / Fornecedor</th>
+                                <th class="p-2.5">Total Gasto</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-neutral-800" id="detalhe-hist-despesas-body">
+                            <!-- JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- MODAL CLIENTE -->
     <div id="modal-cliente" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
@@ -568,7 +658,7 @@
             </div>
 
             <div class="flex justify-between items-center pt-3 border-t border-neutral-800 text-sm">
-                <span class="text-neutral-400 font-semibold">Total Acumulado Comprado:</span>
+                <span class="text-neutral-400 font-semibold">Total Acumulado Comprado (Geral):</span>
                 <span class="text-yellow-400 font-black text-lg" id="hist-cliente-total">R$ 0,00</span>
             </div>
         </div>
@@ -771,10 +861,9 @@
             abaPedidoFiltro: 'todos'
         };
 
-        // CORREÇÃO ERRO 4: Guarda o cliente do pedido em edição (mesmo que já tenha sido excluído da base)
         let clienteExtraSelect = null;
+        let fechamentoAtualModal = null;
 
-        // CORREÇÃO ERRO 2 e ERRO 9: Função para sanitizar valores e impedir que aspas duplas/simples ou código HTML quebrem a tela (XSS)
         function escapeAttr(str) {
             if (str === null || str === undefined) return '';
             return String(str)
@@ -829,7 +918,6 @@
                 btnAtivo.classList.add('active', 'text-yellow-400', 'bg-yellow-400/10', 'border-l-4', 'border-yellow-400', 'font-bold');
             }
 
-            // CORREÇÃO ERRO 1: Recarrega e ajusta os gráficos apenas se a aba ativa for o Dashboard
             if (secao === 'dashboard') {
                 atualizarGraficos();
             }
@@ -854,9 +942,6 @@
             let despesaOutrasGeral = 0;
 
             appData.pedidos.forEach(p => {
-                // CORREÇÃO ERRO 6: Se o pedido foi arquivado pelo fechamento de mês, não soma nas métricas ativas do mês atual
-                if (p.arquivado) return;
-
                 const pTotal = parseFloat(p.total || 0);
                 const pDespesa = parseFloat(p.despesa || 0);
 
@@ -874,7 +959,6 @@
                 if (p.status === 'AGUARDANDO') pendentesCount++;
             });
 
-            // CORREÇÃO ERRO 5: Contabiliza 'Entregues Hoje' se a data de entrega for hoje e o status for Entregue/Concluído (mesmo que venha de outro dia de criação)
             appData.pedidos.forEach(p => {
                 if (p.status !== 'Cancelado' && (p.status === 'Entregue' || p.status === 'Concluído')) {
                     if (p.dataEntrega === hojeStr || p.data === hojeStr) {
@@ -884,15 +968,12 @@
             });
 
             appData.despesasOutras.forEach(d => {
-                if (!d.arquivado) {
-                    despesaOutrasGeral += parseFloat(d.valor || 0);
-                }
+                despesaOutrasGeral += parseFloat(d.valor || 0);
             });
 
             const totalDespesaGeral = despesaPedidosGeral + despesaOutrasGeral;
             const lucroGeral = totalReceitaGeral - totalDespesaGeral;
             
-            // Cálculos Financeiros
             const dezPercentLucro = lucroGeral > 0 ? lucroGeral * 0.10 : 0;
             const lucroLiquidoFinal = lucroGeral > 0 ? lucroGeral - dezPercentLucro : lucroGeral;
 
@@ -938,13 +1019,25 @@
                 if (filtro && !textoBusca.includes(filtro)) return;
 
                 let totalComprado = 0;
+
+                // Somar pedidos do mês ativo
                 appData.pedidos.forEach(p => {
                     if (p.clienteId == c.id && p.status !== 'Cancelado') {
                         totalComprado += parseFloat(p.total || 0);
                     }
                 });
 
-                // CORREÇÃO ERRO 9: Sanitização com escapeAttr para evitar XSS
+                // Somar pedidos arquivados nos meses fechados
+                appData.historicoFechamentos.forEach(f => {
+                    if (f.pedidos && Array.isArray(f.pedidos)) {
+                        f.pedidos.forEach(p => {
+                            if (p.clienteId == c.id && p.status !== 'Cancelado') {
+                                totalComprado += parseFloat(p.total || 0);
+                            }
+                        });
+                    }
+                });
+
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td class="p-3 font-semibold text-white">${escapeAttr(c.nome)}</td>
@@ -1103,21 +1196,31 @@
             tbody.innerHTML = '';
             let acumulado = 0;
 
-            const pedidosCliente = appData.pedidos.filter(p => p.clienteId == clienteId);
+            let todosPedidosCliente = appData.pedidos.filter(p => p.clienteId == clienteId).map(p => ({ ...p, mesOrigem: 'Mês Ativo' }));
 
-            if (pedidosCliente.length === 0) {
+            // Busca pedidos em todos os meses fechados do histórico
+            appData.historicoFechamentos.forEach(f => {
+                if (f.pedidos && Array.isArray(f.pedidos)) {
+                    f.pedidos.forEach(p => {
+                        if (p.clienteId == clienteId) {
+                            todosPedidosCliente.push({ ...p, mesOrigem: f.mes });
+                        }
+                    });
+                }
+            });
+
+            if (todosPedidosCliente.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-neutral-500">Nenhuma compra cadastrada.</td></tr>`;
             } else {
-                pedidosCliente.forEach(p => {
+                todosPedidosCliente.forEach(p => {
                     const pTotal = parseFloat(p.total || 0);
                     if (p.status !== 'Cancelado') acumulado += pTotal;
 
                     let descItens = p.itens ? p.itens.map(i => `${i.servico || 'Item'} (${i.qtd || 1}x)`).join(', ') : 'Serviço Geral';
 
-                    // CORREÇÃO ERRO 9: Sanitização com escapeAttr para evitar XSS
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
-                        <td class="p-2.5 font-bold">#${p.id}<br><span class="text-neutral-500 font-normal">${escapeAttr(p.data)}</span></td>
+                        <td class="p-2.5 font-bold">#${p.id}<br><span class="text-neutral-500 font-normal">${escapeAttr(p.data)} (${escapeAttr(p.mesOrigem)})</span></td>
                         <td class="p-2.5">${escapeAttr(descItens)}</td>
                         <td class="p-2.5 font-bold text-yellow-400">R$ ${pTotal.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</td>
                         <td class="p-2.5"><span class="px-2 py-0.5 text-[10px] rounded-full font-bold ${p.status === 'Entregue' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-yellow-400/10 text-yellow-400'}">${escapeAttr(p.status)}</span></td>
@@ -1146,7 +1249,6 @@
             document.getElementById('form-pedido').reset();
             document.getElementById('ped-cliente-busca').value = '';
 
-            // CORREÇÃO ERRO 4: Limpa o cliente extra ao criar novo pedido
             clienteExtraSelect = null;
             popularSelectClientes();
             
@@ -1163,7 +1265,6 @@
 
             const clientesOrdenados = [...appData.clientes].sort((a, b) => a.nome.localeCompare(b.nome));
 
-            // CORREÇÃO ERRO 4: Se o cliente do pedido em edição tiver sido excluído da base, insere a opção temporária
             if (clienteExtraSelect && !appData.clientes.some(c => c.id == clienteExtraSelect.id)) {
                 const optExcluido = document.createElement('option');
                 optExcluido.value = clienteExtraSelect.id;
@@ -1196,7 +1297,6 @@
             document.getElementById('ped-id').value = p.id;
             document.getElementById('ped-cliente-busca').value = '';
 
-            // CORREÇÃO ERRO 4: Guarda os dados do cliente do pedido para incluir no select caso tenha sido excluído
             clienteExtraSelect = { id: p.clienteId, nome: p.clienteNome };
 
             popularSelectClientes();
@@ -1243,7 +1343,6 @@
             itensPedidoTemp.forEach((item, idx) => {
                 const div = document.createElement('div');
                 div.className = 'p-3 bg-neutral-900 rounded-xl border border-neutral-800 space-y-3 relative';
-                // CORREÇÃO ERRO 2: Aplicando escapeAttr(...) nos valores exibidos nos atributos value HTML
                 div.innerHTML = `
                     <div class="flex justify-between items-center text-xs font-bold text-yellow-400">
                         <span>Produto #${idx + 1}</span>
@@ -1330,7 +1429,6 @@
                 detalhePag = `Misto (Dinheiro: R$ ${din.toFixed(2)} | Pix: R$ ${pix.toFixed(2)})`;
             }
 
-            // CORREÇÃO ERRO 4: Se o cliente foi excluído da base, preserva o nome que estava registrado no pedido
             const nomeClienteFinal = cli ? cli.nome : (clienteExtraSelect && clienteExtraSelect.id == clienteId ? clienteExtraSelect.nome : 'Cliente Desconhecido');
 
             if (pedId) {
@@ -1361,8 +1459,7 @@
                     responsavel: document.getElementById('ped-responsavel').value || 'Atendente',
                     formaPagamento: detalhePag,
                     status: document.getElementById('ped-status').value,
-                    obs: document.getElementById('ped-obs').value,
-                    arquivado: false
+                    obs: document.getElementById('ped-obs').value
                 };
                 appData.pedidos.unshift(novoPedido);
                 mostrarToast("Novo pedido salvo!");
@@ -1402,7 +1499,6 @@
                 const buscaTexto = `${p.id} ${p.clienteNome} ${descProdutos} ${p.status}`.toLowerCase();
                 if (busca && !buscaTexto.includes(busca)) return;
 
-                // CORREÇÃO ERRO 9: Sanitização com escapeAttr para evitar XSS
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td class="p-3 font-bold text-white">#${p.id}<br><span class="text-xs text-neutral-500 font-normal">${escapeAttr(p.data)}</span></td>
@@ -1469,7 +1565,6 @@
             document.getElementById('modal-nova-despesa').classList.add('hidden');
         }
 
-        // FUNÇÃO DE EDIÇÃO DE DESPESA AVULSA
         function editarDespesa(id) {
             const d = appData.despesasOutras.find(x => x.id == id);
             if (!d) return;
@@ -1495,7 +1590,6 @@
             const valor = parseFloat(document.getElementById('desp-valor').value || 0);
 
             if (id) {
-                // Atualiza despesa existente
                 const d = appData.despesasOutras.find(x => x.id == id);
                 if (d) {
                     d.nome = nome;
@@ -1506,15 +1600,13 @@
                 }
                 mostrarToast("Despesa atualizada!");
             } else {
-                // Cadastra nova despesa
                 appData.despesasOutras.unshift({
                     id: Date.now(),
                     nome: nome,
                     data: data,
                     tipoPagamento: tipo,
                     loja: loja,
-                    valor: valor,
-                    arquivado: false
+                    valor: valor
                 });
                 mostrarToast("Nova despesa cadastrada!");
             }
@@ -1530,11 +1622,10 @@
             const filtro = document.getElementById('input-pesquisar-despesa').value.toLowerCase();
 
             appData.pedidos.forEach(p => {
-                if (!p.arquivado && p.despesa > 0 && p.status !== 'Cancelado') {
+                if (p.despesa > 0 && p.status !== 'Cancelado') {
                     const descProdutos = p.itens ? p.itens.map(i => i.servico).join(', ') : 'Insumos do Pedido';
                     const buscaTexto = `pedido #${p.id} ${p.clienteNome} ${descProdutos} custo producao`.toLowerCase();
                     if (!filtro || buscaTexto.includes(filtro)) {
-                        // CORREÇÃO ERRO 9: Sanitização com escapeAttr
                         const tr = document.createElement('tr');
                         tr.innerHTML = `
                             <td class="p-3 font-semibold text-white">Custo Pedido #${p.id} (${escapeAttr(p.clienteNome)} - ${escapeAttr(descProdutos)})</td>
@@ -1550,10 +1641,8 @@
             });
 
             appData.despesasOutras.forEach(d => {
-                if (d.arquivado) return;
                 const buscaTexto = `${d.nome} ${d.loja} ${d.tipoPagamento}`.toLowerCase();
                 if (!filtro || buscaTexto.includes(filtro)) {
-                    // CORREÇÃO ERRO 9: Sanitização com escapeAttr + Adicionado botão de editar
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
                         <td class="p-3 font-semibold text-white">${escapeAttr(d.nome)}</td>
@@ -1584,36 +1673,174 @@
             }
         }
 
-        // --- RENDERIZAR HISTÓRICO DE FECHAMENTOS ---
+        // --- RENDERIZAR E EXIBIR HISTÓRICO DE FECHAMENTOS ---
         function renderizarHistoricoFechamentos() {
             const container = document.getElementById('historico-fechamentos');
             container.innerHTML = '';
 
-            if (appData.historicoFechamentos.length === 0) {
+            if (!appData.historicoFechamentos || appData.historicoFechamentos.length === 0) {
                 container.innerHTML = `<p class="text-sm text-neutral-500">Nenhum mês fechado até o momento.</p>`;
                 return;
             }
 
-            appData.historicoFechamentos.forEach((item, index) => {
+            appData.historicoFechamentos.forEach((item) => {
+                const rf = item.resumoFinanceiro || {};
+                const fat = parseFloat(rf.faturamentoTotal !== undefined ? rf.faturamentoTotal : (item.faturamento || 0));
+                const lucro = parseFloat(rf.lucroLiquido !== undefined ? rf.lucroLiquido : 0);
+
                 const div = document.createElement('div');
-                div.className = 'flex justify-between items-center p-4 bg-neutral-800/60 rounded-xl border border-neutral-700';
+                div.className = 'flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 bg-neutral-800/60 rounded-xl border border-neutral-700 gap-3 hover:border-yellow-400/40 transition-all';
                 div.innerHTML = `
                     <div>
-                        <h4 class="font-bold text-yellow-400 capitalize">${escapeAttr(item.mes)}</h4>
-                        <p class="text-xs text-neutral-400">Fechamento arquivado</p>
+                        <h4 class="font-bold text-yellow-400 text-base flex items-center gap-2">
+                            <i class="fa-solid fa-calendar-days text-sm"></i> ${escapeAttr(item.mes)}
+                        </h4>
+                        <p class="text-xs text-neutral-400 mt-0.5">Fechado em: ${escapeAttr(item.dataFechamento || 'Data N/I')}</p>
                     </div>
-                    <div class="text-right">
-                        <span class="text-xs text-neutral-400 block">Faturamento Total</span>
-                        <strong class="text-emerald-400 font-black text-base">R$ ${parseFloat(item.faturamento||0).toLocaleString('pt-BR', {minimumFractionDigits: 2})}</strong>
+                    <div class="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-end">
+                        <div class="text-right">
+                            <span class="text-[10px] text-neutral-400 uppercase font-bold block">Faturamento</span>
+                            <strong class="text-emerald-400 font-black text-sm">R$ ${fat.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</strong>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-[10px] text-neutral-400 uppercase font-bold block">Lucro Líquido</span>
+                            <strong class="text-yellow-400 font-black text-sm">R$ ${lucro.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</strong>
+                        </div>
+                        <div class="flex items-center gap-1.5 ml-2">
+                            <button onclick="verDetalhesFechamento(${item.id})" class="bg-yellow-400/10 hover:bg-yellow-400 text-yellow-400 hover:text-black px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1">
+                                <i class="fa-solid fa-eye"></i> Ver Movimentações
+                            </button>
+                            <button onclick="baixarCSVFechamento(${item.id})" class="bg-neutral-800 hover:bg-neutral-700 text-neutral-200 p-1.5 rounded-lg text-xs border border-neutral-700" title="Baixar CSV do Mês">
+                                <i class="fa-solid fa-file-csv text-yellow-400"></i>
+                            </button>
+                        </div>
                     </div>
                 `;
                 container.appendChild(div);
             });
         }
 
+        function verDetalhesFechamento(fechamentoId) {
+            const item = appData.historicoFechamentos.find(f => f.id == fechamentoId);
+            if (!item) return;
+
+            fechamentoAtualModal = item;
+
+            document.getElementById('detalhe-hist-titulo').innerText = `Relatório de Fechamento - ${item.mes}`;
+            document.getElementById('detalhe-hist-subtitulo').innerText = `Fechado em: ${item.dataFechamento || 'N/I'}`;
+
+            const rf = item.resumoFinanceiro || {};
+            const fat = parseFloat(rf.faturamentoTotal || item.faturamento || 0);
+            const desp = parseFloat(rf.despesasTotais || 0);
+            const lucro = parseFloat(rf.lucroLiquido || 0);
+            const reserva = parseFloat(rf.reserva10 || 0);
+
+            document.getElementById('detalhe-hist-fat').innerText = `R$ ${fat.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+            document.getElementById('detalhe-hist-desp').innerText = `R$ ${desp.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+            document.getElementById('detalhe-hist-lucro').innerText = `R$ ${lucro.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+            document.getElementById('detalhe-hist-reserva').innerText = `R$ ${reserva.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+
+            // Tabela de Pedidos
+            const tbodyPed = document.getElementById('detalhe-hist-pedidos-body');
+            tbodyPed.innerHTML = '';
+            const pedidos = item.pedidos || [];
+
+            if (pedidos.length === 0) {
+                tbodyPed.innerHTML = `<tr><td colspan="6" class="p-3 text-center text-neutral-500">Nenhum pedido registrado neste mês.</td></tr>`;
+            } else {
+                pedidos.forEach(p => {
+                    const descProdutos = p.itens ? p.itens.map(i => `${i.servico || 'Item'} (${i.qtd}x)`).join(', ') : 'Serviço';
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td class="p-2.5 font-bold text-white">#${p.id}<br><span class="text-[10px] text-neutral-500 font-normal">${escapeAttr(p.data)}</span></td>
+                        <td class="p-2.5 font-semibold text-yellow-400">${escapeAttr(p.clienteNome)}</td>
+                        <td class="p-2.5 text-xs">${escapeAttr(descProdutos)}</td>
+                        <td class="p-2.5 font-black text-white">R$ ${parseFloat(p.total||0).toLocaleString('pt-BR', {minimumFractionDigits: 2})}</td>
+                        <td class="p-2.5 font-bold text-rose-400">R$ ${parseFloat(p.despesa||0).toLocaleString('pt-BR', {minimumFractionDigits: 2})}</td>
+                        <td class="p-2.5"><span class="px-2 py-0.5 text-[10px] rounded-full font-bold bg-neutral-800 border border-neutral-700 text-neutral-300">${escapeAttr(p.status)}</span></td>
+                    `;
+                    tbodyPed.appendChild(tr);
+                });
+            }
+
+            // Tabela de Despesas Avulsas
+            const tbodyDesp = document.getElementById('detalhe-hist-despesas-body');
+            tbodyDesp.innerHTML = '';
+            const despesas = item.despesas || [];
+
+            if (despesas.length === 0) {
+                tbodyDesp.innerHTML = `<tr><td colspan="5" class="p-3 text-center text-neutral-500">Nenhuma despesa avulsa registrada neste mês.</td></tr>`;
+            } else {
+                despesas.forEach(d => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td class="p-2.5 font-semibold text-white">${escapeAttr(d.nome)}</td>
+                        <td class="p-2.5 text-neutral-400">${escapeAttr(d.data)}</td>
+                        <td class="p-2.5 text-xs text-neutral-400">${escapeAttr(d.tipoPagamento)}</td>
+                        <td class="p-2.5 text-neutral-300">${escapeAttr(d.loja)}</td>
+                        <td class="p-2.5 font-bold text-rose-400">R$ ${parseFloat(d.valor||0).toLocaleString('pt-BR', {minimumFractionDigits: 2})}</td>
+                    `;
+                    tbodyDesp.appendChild(tr);
+                });
+            }
+
+            document.getElementById('modal-detalhes-historico').classList.remove('hidden');
+        }
+
+        function fecharModalDetalhesHistorico() {
+            document.getElementById('modal-detalhes-historico').classList.add('hidden');
+            fechamentoAtualModal = null;
+        }
+
+        function baixarCSVFechamento(fechamentoId) {
+            const item = appData.historicoFechamentos.find(f => f.id == fechamentoId);
+            if (!item) return;
+
+            let csv = `RELATORIO DE FECHAMENTO - ${item.mes.toUpperCase()}\n`;
+            csv += `Data de Fechamento;${item.dataFechamento || ''}\n`;
+            const rf = item.resumoFinanceiro || {};
+            csv += `Faturamento Total;R$ ${parseFloat(rf.faturamentoTotal||0).toFixed(2)}\n`;
+            csv += `Despesas Totais;R$ ${parseFloat(rf.despesasTotais||0).toFixed(2)}\n`;
+            csv += `Lucro Liquido;R$ ${parseFloat(rf.lucroLiquido||0).toFixed(2)}\n\n`;
+
+            csv += "--- PEDIDOS DO MES ---\n";
+            csv += "ID;Data;Cliente;Produtos;Total;Despesa;Status\n";
+            (item.pedidos || []).forEach(p => {
+                const desc = p.itens ? p.itens.map(i => `${i.servico}(${i.qtd}x)`).join(' / ') : '';
+                const clienteClean = String(p.clienteNome || '').replace(/;/g, ' ');
+                csv += `"${p.id}";"${p.data}";"${clienteClean}";"${desc.replace(/;/g, ' ')}";"${parseFloat(p.total||0).toFixed(2)}";"${parseFloat(p.despesa||0).toFixed(2)}";"${p.status}"\n`;
+            });
+
+            csv += "\n--- DESPESAS AVULSAS DO MES ---\n";
+            csv += "Nome;Data;Tipo Pagamento;Loja/Fornecedor;Valor\n";
+            (item.despesas || []).forEach(d => {
+                csv += `"${String(d.nome||'').replace(/;/g, ' ')}";"${d.data}";"${d.tipoPagamento}";"${String(d.loja||'').replace(/;/g, ' ')}";"${parseFloat(d.valor||0).toFixed(2)}"\n`;
+            });
+
+            const blob = new Blob(["\ufeff" + csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `relatorio_${item.mes.toLowerCase().replace(/\s+/g, '_')}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            mostrarToast("Relatório CSV baixado!");
+        }
+
+        function baixarCSVFechamentoAtual() {
+            if (fechamentoAtualModal) {
+                baixarCSVFechamento(fechamentoAtualModal.id);
+            }
+        }
+
+        function imprimirModalHistorico() {
+            window.print();
+        }
+
         // --- GRÁFICOS DINÂMICOS ---
         function atualizarGraficos() {
-            // CORREÇÃO ERRO 1: Verifica se a aba Dashboard está visível. Se estiver oculta, ignora para não quebrar o layout.
             const secaoDash = document.getElementById('secao-dashboard');
             if (secaoDash && secaoDash.classList.contains('hidden')) {
                 return;
@@ -1629,8 +1856,7 @@
             const vendasAcumuladas = new Array(totalDiasMes).fill(0);
 
             appData.pedidos.forEach(p => {
-                // Desconsidera pedidos arquivados no faturamento do mês atual
-                if (!p.arquivado && p.status !== 'Cancelado' && p.data) {
+                if (p.status !== 'Cancelado' && p.data) {
                     const [pAno, pMes, pDia] = p.data.split('-').map(Number);
                     if (pAno === anoAtual && pMes === (mesAtual + 1)) {
                         if (pDia >= 1 && pDia <= totalDiasMes) {
@@ -1678,7 +1904,7 @@
 
             const servicosMap = {};
             appData.pedidos.forEach(p => {
-                if (!p.arquivado && p.status !== 'Cancelado' && p.itens) {
+                if (p.status !== 'Cancelado' && p.itens) {
                     p.itens.forEach(i => {
                         const nomeS = i.servico || 'Outros';
                         servicosMap[nomeS] = (servicosMap[nomeS] || 0) + (parseInt(i.qtd) || 1);
@@ -1717,7 +1943,6 @@
         }
 
         // --- AÇÕES DO HEADER ---
-        // CORREÇÃO ERRO 7: Trata aspas duplas e remove pontos e vírgulas para não desalinhar a planilha no Excel
         function copiarCSV() {
             let csv = "ID;Data;Cliente;Total;Despesa;Status\n";
             appData.pedidos.forEach(p => {
@@ -1729,7 +1954,6 @@
         }
 
         function enviarWhatsApp() {
-            // CORREÇÃO ERRO 3: Removido o número fixado para permitir o envio livre para qualquer contato/grupo
             const fatDia = document.getElementById('dash-faturamento-dia').innerText;
             const pedDia = document.getElementById('dash-pedidos-dia').innerText;
             const lucro = document.getElementById('dash-lucro').innerText;
@@ -1746,25 +1970,68 @@
 
         function baixarPDF() { window.print(); }
 
-        // CORREÇÃO ERRO 6 e ERRO 8: Arquiva pedidos ativos ao fechar mês e utiliza parseFloat seguro no reduce
+        // FECHAMENTO MENSAL COM ARQUIVAMENTO COMPLETO
         function fecharMes() {
-            if (confirm("Deseja FECHAR O MÊS atual? Os totais serão arquivados em Histórico e o faturamento do novo mês recomeçará do zero.")) {
-                const pedidosAtivos = appData.pedidos.filter(p => !p.arquivado && p.status !== 'Cancelado');
-                const totalFat = pedidosAtivos.reduce((acc, p) => acc + parseFloat(p.total || 0), 0);
-                
-                appData.historicoFechamentos.unshift({
-                    mes: new Date().toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' }),
-                    faturamento: totalFat
-                });
-
-                // Marca pedidos e despesas do ciclo como arquivados
-                appData.pedidos.forEach(p => { p.arquivado = true; });
-                appData.despesasOutras.forEach(d => { d.arquivado = true; });
-
-                salvarStorage();
-                atualizarInterfaceCompleta();
-                mostrarToast("Mês fechado e arquivado com sucesso!");
+            if (!confirm("Deseja FECHAR O MÊS atual?\n\nOs pedidos e despesas do ciclo ativo serão arquivados com relatório completo no Histórico e o caixa do novo mês iniciará zerado.\n\nSua base de clientes e históricos de compras serão mantidos intactos.")) {
+                return;
             }
+
+            let totalFat = 0;
+            let despesaPed = 0;
+            let despesaOutras = 0;
+            let totalPedidosCount = 0;
+            let entreguesCount = 0;
+
+            appData.pedidos.forEach(p => {
+                if (p.status !== 'Cancelado') {
+                    totalFat += parseFloat(p.total || 0);
+                    despesaPed += parseFloat(p.despesa || 0);
+                }
+                totalPedidosCount++;
+                if (p.status === 'Entregue' || p.status === 'Concluído') {
+                    entreguesCount++;
+                }
+            });
+
+            appData.despesasOutras.forEach(d => {
+                despesaOutras += parseFloat(d.valor || 0);
+            });
+
+            const despesasTotais = despesaPed + despesaOutras;
+            const lucroBruto = totalFat - despesasTotais;
+            const reserva10 = lucroBruto > 0 ? lucroBruto * 0.10 : 0;
+            const lucroLiquido = lucroBruto > 0 ? lucroBruto - reserva10 : lucroBruto;
+
+            const dataHoje = new Date();
+            const dataFechamentoStr = `${String(dataHoje.getDate()).padStart(2, '0')}/${String(dataHoje.getMonth() + 1).padStart(2, '0')}/${dataHoje.getFullYear()}`;
+            const nomeMesAno = dataHoje.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
+
+            // Snapshot do mês fechado
+            const novoFechamento = {
+                id: Date.now(),
+                mes: nomeMesAno.charAt(0).toUpperCase() + nomeMesAno.slice(1),
+                dataFechamento: dataFechamentoStr,
+                resumoFinanceiro: {
+                    faturamentoTotal: totalFat,
+                    despesasTotais: despesasTotais,
+                    lucroLiquido: lucroLiquido,
+                    reserva10: reserva10,
+                    totalPedidos: totalPedidosCount,
+                    totalEntregues: entreguesCount
+                },
+                pedidos: JSON.parse(JSON.stringify(appData.pedidos)),
+                despesas: JSON.parse(JSON.stringify(appData.despesasOutras))
+            };
+
+            appData.historicoFechamentos.unshift(novoFechamento);
+
+            // Zera pedidos e despesas do ciclo ativo para o novo mês
+            appData.pedidos = [];
+            appData.despesasOutras = [];
+
+            salvarStorage();
+            atualizarInterfaceCompleta();
+            mostrarToast("Mês fechado e arquivado com sucesso no Histórico!");
         }
 
         function mostrarToast(msg) {
