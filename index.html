@@ -768,6 +768,9 @@
             abaPedidoFiltro: 'todos'
         };
 
+        // CORREÇÃO ERRO 4: Guarda o cliente do pedido em edição (mesmo que já tenha sido excluído da base)
+        let clienteExtraSelect = null;
+
         // CORREÇÃO ERRO 2: Função para sanitizar valores e impedir que aspas duplas/simples ou código HTML quebrem os inputs
         function escapeAttr(str) {
             if (str === null || str === undefined) return '';
@@ -1125,6 +1128,8 @@
             document.getElementById('form-pedido').reset();
             document.getElementById('ped-cliente-busca').value = '';
 
+            // CORREÇÃO ERRO 4: Limpa o cliente extra ao criar novo pedido
+            clienteExtraSelect = null;
             popularSelectClientes();
             
             itensPedidoTemp = [];
@@ -1139,6 +1144,14 @@
             selectCli.innerHTML = '';
 
             const clientesOrdenados = [...appData.clientes].sort((a, b) => a.nome.localeCompare(b.nome));
+
+            // CORREÇÃO ERRO 4: Se o cliente do pedido em edição tiver sido excluído da base, insere a opção temporária
+            if (clienteExtraSelect && !appData.clientes.some(c => c.id == clienteExtraSelect.id)) {
+                const optExcluido = document.createElement('option');
+                optExcluido.value = clienteExtraSelect.id;
+                optExcluido.innerText = `${clienteExtraSelect.nome || 'Cliente'} (Excluído)`;
+                selectCli.appendChild(optExcluido);
+            }
 
             clientesOrdenados.forEach(c => {
                 const texto = `${c.nome} ${c.cpf}`.toLowerCase();
@@ -1164,6 +1177,9 @@
             document.getElementById('modal-pedido-titulo').innerHTML = `<i class="fa-solid fa-pen"></i> Editar Pedido #${p.id}`;
             document.getElementById('ped-id').value = p.id;
             document.getElementById('ped-cliente-busca').value = '';
+
+            // CORREÇÃO ERRO 4: Guarda os dados do cliente do pedido para incluir no select caso tenha sido excluído
+            clienteExtraSelect = { id: p.clienteId, nome: p.clienteNome };
 
             popularSelectClientes();
             document.getElementById('ped-cliente-id').value = p.clienteId;
@@ -1296,11 +1312,14 @@
                 detalhePag = `Misto (Dinheiro: R$ ${din.toFixed(2)} | Pix: R$ ${pix.toFixed(2)})`;
             }
 
+            // CORREÇÃO ERRO 4: Se o cliente foi excluído da base, preserva o nome que estava registrado no pedido
+            const nomeClienteFinal = cli ? cli.nome : (clienteExtraSelect && clienteExtraSelect.id == clienteId ? clienteExtraSelect.nome : 'Cliente Desconhecido');
+
             if (pedId) {
                 const p = appData.pedidos.find(x => x.id == pedId);
                 if (p) {
                     p.clienteId = clienteId;
-                    p.clienteNome = cli ? cli.nome : 'Cliente Desconhecido';
+                    p.clienteNome = nomeClienteFinal;
                     p.itens = [...itensPedidoTemp];
                     p.total = total;
                     p.despesa = despesa;
@@ -1316,7 +1335,7 @@
                     id: Math.floor(1000 + Math.random() * 9000),
                     data: appData.dataAtual,
                     clienteId: clienteId,
-                    clienteNome: cli ? cli.nome : 'Cliente Desconhecido',
+                    clienteNome: nomeClienteFinal,
                     itens: [...itensPedidoTemp],
                     total: total,
                     despesa: despesa,
