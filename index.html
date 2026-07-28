@@ -1646,7 +1646,7 @@
         }
 
         function enviarWhatsApp() {
-            const num = "5521986147221";
+            // CORREÇÃO ERRO 3: Removido o número fixado para permitir o envio livre para qualquer contato/grupo
             const fatDia = document.getElementById('dash-faturamento-dia').innerText;
             const pedDia = document.getElementById('dash-pedidos-dia').innerText;
             const lucro = document.getElementById('dash-lucro').innerText;
@@ -1658,7 +1658,7 @@
                 `👥 *Clientes Totais:* ${appData.clientes.length}\n\n` +
                 `_Gerado por PHSUBLIME System._`;
 
-            window.open(`https://api.whatsapp.com/send?phone=${num}&text=${encodeURIComponent(msg)}`, '_blank');
+            window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
         function baixarPDF() { window.print(); }
