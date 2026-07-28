@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Black & Yellow</title>
+    <title>PHSUBLIME - Dashboard</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Chart.js -->
@@ -11,200 +11,399 @@
     <!-- Font Awesome (Ícones) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #000000; }
+        
+        /* Oculta sidebar na impressão */
         @media print {
             .no-print { display: none !important; }
             body { background: #000000 !important; color: #ffffff !important; }
             .print-card { border: 1px solid #333333 !important; }
+            aside { display: none !important; }
+            main { padding: 0 !important; }
         }
     </style>
 </head>
-<body class="bg-black text-slate-100 min-h-screen p-4 md:p-8">
+<body class="bg-black text-slate-100 min-h-screen flex flex-col md:flex-row">
 
-    <div class="max-w-7xl mx-auto space-y-6">
-
-        <!-- HEADER & AÇÕES -->
-        <header class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-neutral-900 p-6 rounded-2xl border border-neutral-800 shadow-2xl">
-            <div>
-                <div class="flex items-center gap-3">
-                    <h1 class="text-3xl font-extrabold text-yellow-400 tracking-tight">Dashboard</h1>
-                    <span class="bg-yellow-400/10 text-yellow-400 text-xs font-bold px-3.5 py-1.5 rounded-full border border-yellow-400/30 flex items-center gap-2">
-                        <i class="fa-regular fa-calendar text-yellow-400"></i>
-                        Visualizando: <strong id="periodoAtual" class="text-yellow-300">Jul/2026</strong>
-                    </span>
+    <!-- BARRA LATERAL (SIDEBAR) -->
+    <aside class="w-full md:w-64 bg-neutral-900 border-b md:border-b-0 md:border-r border-neutral-800 p-5 flex flex-col justify-between shrink-0 no-print">
+        <div>
+            <!-- LOGO / NOME DA PÁGINA -->
+            <div class="flex items-center gap-3 px-2 py-3 mb-6 border-b border-neutral-800">
+                <div class="p-2 bg-yellow-400 text-black rounded-xl font-black text-xl">
+                    <i class="fa-solid fa-crown"></i>
                 </div>
-                <p class="text-sm text-neutral-400 mt-1">Acompanhamento de desempenho e indicadores de vendas</p>
+                <div>
+                    <h1 class="text-xl font-black tracking-wider text-yellow-400">PHSUBLIME</h1>
+                    <span class="text-[10px] text-neutral-400 uppercase tracking-widest font-semibold">Painel de Gestão</span>
+                </div>
             </div>
 
-            <!-- Botões de Ação -->
-            <div class="flex flex-wrap gap-2.5 no-print">
-                <button onclick="copiarCSV()" class="flex items-center gap-2 bg-neutral-800 hover:bg-neutral-700 text-neutral-200 border border-neutral-700 px-4 py-2.5 rounded-xl font-medium text-sm transition-all">
-                    <i class="fa-solid fa-file-csv text-yellow-400"></i> Copiar Dados CSV
+            <!-- MENU DE NAVEGAÇÃO -->
+            <nav class="space-y-1.5" id="nav-menu">
+                <button onclick="navegar('dashboard')" id="btn-dashboard" class="nav-btn active flex items-center gap-3 w-full px-4 py-3 rounded-xl font-bold text-sm transition-all text-yellow-400 bg-yellow-400/10 border-l-4 border-yellow-400">
+                    <i class="fa-solid fa-chart-pie text-base"></i> Dashboard
                 </button>
 
-                <button onclick="enviarWhatsApp()" class="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2.5 rounded-xl font-medium text-sm transition-all shadow-lg shadow-emerald-950/50">
-                    <i class="fa-brands fa-whatsapp text-lg"></i> WhatsApp
+                <button onclick="navegar('clientes')" id="btn-clientes" class="nav-btn flex items-center gap-3 w-full px-4 py-3 rounded-xl font-semibold text-sm transition-all text-neutral-400 hover:text-white hover:bg-neutral-800">
+                    <i class="fa-solid fa-users text-base"></i> Clientes
                 </button>
 
-                <button onclick="baixarPDF()" class="flex items-center gap-2 bg-yellow-400 hover:bg-yellow-300 text-black font-bold px-4 py-2.5 rounded-xl text-sm transition-all shadow-lg shadow-yellow-950/30">
-                    <i class="fa-solid fa-file-pdf"></i> Baixar PDF
+                <button onclick="navegar('pedidos')" id="btn-pedidos" class="nav-btn flex items-center gap-3 w-full px-4 py-3 rounded-xl font-semibold text-sm transition-all text-neutral-400 hover:text-white hover:bg-neutral-800">
+                    <i class="fa-solid fa-cart-shopping text-base"></i> Pedidos
                 </button>
 
-                <button onclick="fecharMes()" class="flex items-center gap-2 bg-rose-950/40 hover:bg-rose-900/60 text-rose-400 border border-rose-800/50 px-4 py-2.5 rounded-xl font-medium text-sm transition-all">
-                    <i class="fa-solid fa-lock"></i> Fechar Mês
+                <button onclick="navegar('despesas')" id="btn-despesas" class="nav-btn flex items-center gap-3 w-full px-4 py-3 rounded-xl font-semibold text-sm transition-all text-neutral-400 hover:text-white hover:bg-neutral-800">
+                    <i class="fa-solid fa-file-invoice-dollar text-base"></i> Despesas
                 </button>
-            </div>
-        </header>
 
-        <!-- CARDS DE MÉTRICAS (KPIs) -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            
-            <!-- Faturamento Dia -->
-            <div class="bg-neutral-900 p-5 rounded-2xl border border-neutral-800 print-card hover:border-yellow-400/50 transition-all">
-                <div class="flex justify-between items-start">
-                    <div>
-                        <p class="text-xs font-bold text-yellow-400 uppercase tracking-wider">Faturamento Dia</p>
-                        <h3 class="text-2xl font-black text-white mt-1" id="kpi-faturamento">R$ 2.850,00</h3>
-                    </div>
-                    <div class="p-3 bg-neutral-800 text-yellow-400 border border-neutral-700 rounded-xl">
-                        <i class="fa-solid fa-sack-dollar text-xl"></i>
-                    </div>
-                </div>
-                <p class="text-xs text-emerald-400 font-medium mt-3 flex items-center gap-1">
-                    <i class="fa-solid fa-arrow-trend-up"></i> +12.5% em relação a ontem
-                </p>
-            </div>
+                <button onclick="navegar('financeiro')" id="btn-financeiro" class="nav-btn flex items-center gap-3 w-full px-4 py-3 rounded-xl font-semibold text-sm transition-all text-neutral-400 hover:text-white hover:bg-neutral-800">
+                    <i class="fa-solid fa-wallet text-base"></i> Financeiro
+                </button>
 
-            <!-- Pedidos Dia -->
-            <div class="bg-neutral-900 p-5 rounded-2xl border border-neutral-800 print-card hover:border-yellow-400/50 transition-all">
-                <div class="flex justify-between items-start">
-                    <div>
-                        <p class="text-xs font-bold text-yellow-400 uppercase tracking-wider">Pedidos Dia</p>
-                        <h3 class="text-2xl font-black text-white mt-1" id="kpi-pedidos-dia">18</h3>
-                    </div>
-                    <div class="p-3 bg-neutral-800 text-yellow-400 border border-neutral-700 rounded-xl">
-                        <i class="fa-solid fa-cart-shopping text-xl"></i>
-                    </div>
-                </div>
-                <p class="text-xs text-neutral-400 mt-3">Ticket Médio: R$ 158,33</p>
-            </div>
-
-            <!-- Em Produção -->
-            <div class="bg-neutral-900 p-5 rounded-2xl border border-neutral-800 print-card hover:border-yellow-400/50 transition-all">
-                <div class="flex justify-between items-start">
-                    <div>
-                        <p class="text-xs font-bold text-yellow-400 uppercase tracking-wider">Em Produção</p>
-                        <h3 class="text-2xl font-black text-white mt-1" id="kpi-producao">14</h3>
-                    </div>
-                    <div class="p-3 bg-neutral-800 text-yellow-400 border border-neutral-700 rounded-xl">
-                        <i class="fa-solid fa-gears text-xl"></i>
-                    </div>
-                </div>
-                <p class="text-xs text-amber-400 font-medium mt-3">Em andamento na fábrica</p>
-            </div>
-
-            <!-- Pedidos Pendentes -->
-            <div class="bg-neutral-900 p-5 rounded-2xl border border-neutral-800 print-card hover:border-yellow-400/50 transition-all">
-                <div class="flex justify-between items-start">
-                    <div>
-                        <p class="text-xs font-bold text-yellow-400 uppercase tracking-wider">Pedidos Pendentes</p>
-                        <h3 class="text-2xl font-black text-white mt-1" id="kpi-pendentes">5</h3>
-                    </div>
-                    <div class="p-3 bg-neutral-800 text-yellow-400 border border-neutral-700 rounded-xl">
-                        <i class="fa-solid fa-clock text-xl"></i>
-                    </div>
-                </div>
-                <p class="text-xs text-orange-400 font-medium mt-3">Aguardando aprovação</p>
-            </div>
-
-            <!-- Entregues -->
-            <div class="bg-neutral-900 p-5 rounded-2xl border border-neutral-800 print-card hover:border-yellow-400/50 transition-all">
-                <div class="flex justify-between items-start">
-                    <div>
-                        <p class="text-xs font-bold text-yellow-400 uppercase tracking-wider">Entregues</p>
-                        <h3 class="text-2xl font-black text-white mt-1" id="kpi-entregues">142</h3>
-                    </div>
-                    <div class="p-3 bg-neutral-800 text-yellow-400 border border-neutral-700 rounded-xl">
-                        <i class="fa-solid fa-truck-fast text-xl"></i>
-                    </div>
-                </div>
-                <p class="text-xs text-neutral-400 mt-3">Neste mês de Jul/2026</p>
-            </div>
-
-            <!-- Clientes -->
-            <div class="bg-neutral-900 p-5 rounded-2xl border border-neutral-800 print-card hover:border-yellow-400/50 transition-all">
-                <div class="flex justify-between items-start">
-                    <div>
-                        <p class="text-xs font-bold text-yellow-400 uppercase tracking-wider">Clientes</p>
-                        <h3 class="text-2xl font-black text-white mt-1" id="kpi-clientes">89</h3>
-                    </div>
-                    <div class="p-3 bg-neutral-800 text-yellow-400 border border-neutral-700 rounded-xl">
-                        <i class="fa-solid fa-users text-xl"></i>
-                    </div>
-                </div>
-                <p class="text-xs text-purple-400 font-medium mt-3">+8 novos este mês</p>
-            </div>
-
-            <!-- Investimento Total -->
-            <div class="bg-neutral-900 p-5 rounded-2xl border border-neutral-800 print-card hover:border-yellow-400/50 transition-all">
-                <div class="flex justify-between items-start">
-                    <div>
-                        <p class="text-xs font-bold text-yellow-400 uppercase tracking-wider">Investimento Total</p>
-                        <h3 class="text-2xl font-black text-white mt-1" id="kpi-investimento">R$ 8.500,00</h3>
-                    </div>
-                    <div class="p-3 bg-neutral-800 text-yellow-400 border border-neutral-700 rounded-xl">
-                        <i class="fa-solid fa-chart-line-down text-xl"></i>
-                    </div>
-                </div>
-                <p class="text-xs text-neutral-400 mt-3">Anúncios, infra e insumos</p>
-            </div>
-
-            <!-- Lucro -->
-            <div class="bg-neutral-900 p-5 rounded-2xl border border-neutral-800 print-card hover:border-yellow-400/50 transition-all">
-                <div class="flex justify-between items-start">
-                    <div>
-                        <p class="text-xs font-bold text-yellow-400 uppercase tracking-wider">Lucro Líquido</p>
-                        <h3 class="text-2xl font-black text-yellow-400 mt-1" id="kpi-lucro">R$ 18.240,00</h3>
-                    </div>
-                    <div class="p-3 bg-yellow-400/10 text-yellow-400 border border-yellow-400/30 rounded-xl">
-                        <i class="fa-solid fa-wallet text-xl"></i>
-                    </div>
-                </div>
-                <p class="text-xs text-emerald-400 font-medium mt-3">Margem estimada: 68%</p>
-            </div>
-
+                <button onclick="navegar('historico')" id="btn-historico" class="nav-btn flex items-center gap-3 w-full px-4 py-3 rounded-xl font-semibold text-sm transition-all text-neutral-400 hover:text-white hover:bg-neutral-800">
+                    <i class="fa-solid fa-clock-rotate-left text-base"></i> Histórico
+                </button>
+            </nav>
         </div>
 
-        <!-- GRÁFICOS -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            
-            <!-- Vendas — Últimos 31 dias/mês atual -->
-            <div class="lg:col-span-2 bg-neutral-900 p-6 rounded-2xl border border-neutral-800 print-card">
-                <div class="flex items-center justify-between mb-6">
-                    <h2 class="text-lg font-extrabold text-yellow-400 uppercase tracking-wide">Vendas — Últimos 31 dias / Mês Atual</h2>
-                    <span class="text-xs text-neutral-500">Atualizado diariamente</span>
-                </div>
-                <div class="relative h-72">
-                    <canvas id="vendasChart"></canvas>
-                </div>
-            </div>
-
-            <!-- Serviços Mais Vendidos -->
-            <div class="bg-neutral-900 p-6 rounded-2xl border border-neutral-800 print-card">
-                <div class="flex items-center justify-between mb-6">
-                    <h2 class="text-lg font-extrabold text-yellow-400 uppercase tracking-wide">Serviços Mais Vendidos</h2>
-                    <span class="text-xs text-neutral-500">Por volume</span>
-                </div>
-                <div class="relative h-72 flex items-center justify-center">
-                    <canvas id="servicosChart"></canvas>
-                </div>
-            </div>
-
+        <!-- FOOTER SIDEBAR -->
+        <div class="mt-8 pt-4 border-t border-neutral-800 px-2 text-xs text-neutral-500">
+            <p>© 2026 <strong class="text-yellow-400">PHSUBLIME</strong></p>
+            <p class="mt-0.5">Sistema de Vendas v2.4</p>
         </div>
+    </aside>
 
-    </div>
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main class="flex-1 p-4 md:p-8 overflow-y-auto space-y-6">
+
+        <!-- ================= SEÇÃO: DASHBOARD ================= -->
+        <section id="secao-dashboard" class="secao-conteudo space-y-6">
+            
+            <!-- HEADER & AÇÕES -->
+            <header class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-neutral-900 p-6 rounded-2xl border border-neutral-800 shadow-2xl">
+                <div>
+                    <div class="flex items-center gap-3">
+                        <h2 class="text-3xl font-extrabold text-yellow-400 tracking-tight">Dashboard</h2>
+                        <span class="bg-yellow-400/10 text-yellow-400 text-xs font-bold px-3.5 py-1.5 rounded-full border border-yellow-400/30 flex items-center gap-2">
+                            <i class="fa-regular fa-calendar text-yellow-400"></i>
+                            Visualizando: <strong id="periodoAtual" class="text-yellow-300">Jul/2026</strong>
+                        </span>
+                    </div>
+                    <p class="text-sm text-neutral-400 mt-1">Acompanhamento de desempenho e indicadores de vendas</p>
+                </div>
+
+                <!-- Botões de Ação -->
+                <div class="flex flex-wrap gap-2.5 no-print">
+                    <button onclick="copiarCSV()" class="flex items-center gap-2 bg-neutral-800 hover:bg-neutral-700 text-neutral-200 border border-neutral-700 px-4 py-2.5 rounded-xl font-medium text-sm transition-all">
+                        <i class="fa-solid fa-file-csv text-yellow-400"></i> Copiar Dados CSV
+                    </button>
+
+                    <button onclick="enviarWhatsApp()" class="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2.5 rounded-xl font-medium text-sm transition-all shadow-lg shadow-emerald-950/50">
+                        <i class="fa-brands fa-whatsapp text-lg"></i> WhatsApp
+                    </button>
+
+                    <button onclick="baixarPDF()" class="flex items-center gap-2 bg-yellow-400 hover:bg-yellow-300 text-black font-bold px-4 py-2.5 rounded-xl text-sm transition-all shadow-lg shadow-yellow-950/30">
+                        <i class="fa-solid fa-file-pdf"></i> Baixar PDF
+                    </button>
+
+                    <button onclick="fecharMes()" class="flex items-center gap-2 bg-rose-950/40 hover:bg-rose-900/60 text-rose-400 border border-rose-800/50 px-4 py-2.5 rounded-xl font-medium text-sm transition-all">
+                        <i class="fa-solid fa-lock"></i> Fechar Mês
+                    </button>
+                </div>
+            </header>
+
+            <!-- CARDS DE MÉTRICAS (KPIs) -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                
+                <!-- Faturamento Dia -->
+                <div class="bg-neutral-900 p-5 rounded-2xl border border-neutral-800 print-card hover:border-yellow-400/50 transition-all">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-xs font-bold text-yellow-400 uppercase tracking-wider">Faturamento Dia</p>
+                            <h3 class="text-2xl font-black text-white mt-1">R$ 2.850,00</h3>
+                        </div>
+                        <div class="p-3 bg-neutral-800 text-yellow-400 border border-neutral-700 rounded-xl">
+                            <i class="fa-solid fa-sack-dollar text-xl"></i>
+                        </div>
+                    </div>
+                    <p class="text-xs text-emerald-400 font-medium mt-3 flex items-center gap-1">
+                        <i class="fa-solid fa-arrow-trend-up"></i> +12.5% em relação a ontem
+                    </p>
+                </div>
+
+                <!-- Pedidos Dia -->
+                <div class="bg-neutral-900 p-5 rounded-2xl border border-neutral-800 print-card hover:border-yellow-400/50 transition-all">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-xs font-bold text-yellow-400 uppercase tracking-wider">Pedidos Dia</p>
+                            <h3 class="text-2xl font-black text-white mt-1">18</h3>
+                        </div>
+                        <div class="p-3 bg-neutral-800 text-yellow-400 border border-neutral-700 rounded-xl">
+                            <i class="fa-solid fa-cart-shopping text-xl"></i>
+                        </div>
+                    </div>
+                    <p class="text-xs text-neutral-400 mt-3">Ticket Médio: R$ 158,33</p>
+                </div>
+
+                <!-- Em Produção -->
+                <div class="bg-neutral-900 p-5 rounded-2xl border border-neutral-800 print-card hover:border-yellow-400/50 transition-all">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-xs font-bold text-yellow-400 uppercase tracking-wider">Em Produção</p>
+                            <h3 class="text-2xl font-black text-white mt-1">14</h3>
+                        </div>
+                        <div class="p-3 bg-neutral-800 text-yellow-400 border border-neutral-700 rounded-xl">
+                            <i class="fa-solid fa-gears text-xl"></i>
+                        </div>
+                    </div>
+                    <p class="text-xs text-amber-400 font-medium mt-3">Em andamento na fábrica</p>
+                </div>
+
+                <!-- Pedidos Pendentes -->
+                <div class="bg-neutral-900 p-5 rounded-2xl border border-neutral-800 print-card hover:border-yellow-400/50 transition-all">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-xs font-bold text-yellow-400 uppercase tracking-wider">Pedidos Pendentes</p>
+                            <h3 class="text-2xl font-black text-white mt-1">5</h3>
+                        </div>
+                        <div class="p-3 bg-neutral-800 text-yellow-400 border border-neutral-700 rounded-xl">
+                            <i class="fa-solid fa-clock text-xl"></i>
+                        </div>
+                    </div>
+                    <p class="text-xs text-orange-400 font-medium mt-3">Aguardando aprovação</p>
+                </div>
+
+                <!-- Entregues -->
+                <div class="bg-neutral-900 p-5 rounded-2xl border border-neutral-800 print-card hover:border-yellow-400/50 transition-all">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-xs font-bold text-yellow-400 uppercase tracking-wider">Entregues</p>
+                            <h3 class="text-2xl font-black text-white mt-1">142</h3>
+                        </div>
+                        <div class="p-3 bg-neutral-800 text-yellow-400 border border-neutral-700 rounded-xl">
+                            <i class="fa-solid fa-truck-fast text-xl"></i>
+                        </div>
+                    </div>
+                    <p class="text-xs text-neutral-400 mt-3">Neste mês de Jul/2026</p>
+                </div>
+
+                <!-- Clientes -->
+                <div class="bg-neutral-900 p-5 rounded-2xl border border-neutral-800 print-card hover:border-yellow-400/50 transition-all">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-xs font-bold text-yellow-400 uppercase tracking-wider">Clientes</p>
+                            <h3 class="text-2xl font-black text-white mt-1">89</h3>
+                        </div>
+                        <div class="p-3 bg-neutral-800 text-yellow-400 border border-neutral-700 rounded-xl">
+                            <i class="fa-solid fa-users text-xl"></i>
+                        </div>
+                    </div>
+                    <p class="text-xs text-purple-400 font-medium mt-3">+8 novos este mês</p>
+                </div>
+
+                <!-- Investimento Total -->
+                <div class="bg-neutral-900 p-5 rounded-2xl border border-neutral-800 print-card hover:border-yellow-400/50 transition-all">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-xs font-bold text-yellow-400 uppercase tracking-wider">Investimento Total</p>
+                            <h3 class="text-2xl font-black text-white mt-1">R$ 8.500,00</h3>
+                        </div>
+                        <div class="p-3 bg-neutral-800 text-yellow-400 border border-neutral-700 rounded-xl">
+                            <i class="fa-solid fa-chart-line-down text-xl"></i>
+                        </div>
+                    </div>
+                    <p class="text-xs text-neutral-400 mt-3">Anúncios, infra e insumos</p>
+                </div>
+
+                <!-- Lucro -->
+                <div class="bg-neutral-900 p-5 rounded-2xl border border-neutral-800 print-card hover:border-yellow-400/50 transition-all">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-xs font-bold text-yellow-400 uppercase tracking-wider">Lucro Líquido</p>
+                            <h3 class="text-2xl font-black text-yellow-400 mt-1">R$ 18.240,00</h3>
+                        </div>
+                        <div class="p-3 bg-yellow-400/10 text-yellow-400 border border-yellow-400/30 rounded-xl">
+                            <i class="fa-solid fa-wallet text-xl"></i>
+                        </div>
+                    </div>
+                    <p class="text-xs text-emerald-400 font-medium mt-3">Margem estimada: 68%</p>
+                </div>
+
+            </div>
+
+            <!-- GRÁFICOS -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                
+                <!-- Vendas — Últimos 31 dias/mês atual -->
+                <div class="lg:col-span-2 bg-neutral-900 p-6 rounded-2xl border border-neutral-800 print-card">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-lg font-extrabold text-yellow-400 uppercase tracking-wide">Vendas — Últimos 31 dias / Mês Atual</h3>
+                        <span class="text-xs text-neutral-500">Atualizado diariamente</span>
+                    </div>
+                    <div class="relative h-72">
+                        <canvas id="vendasChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Serviços Mais Vendidos -->
+                <div class="bg-neutral-900 p-6 rounded-2xl border border-neutral-800 print-card">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-lg font-extrabold text-yellow-400 uppercase tracking-wide">Serviços Mais Vendidos</h3>
+                        <span class="text-xs text-neutral-500">Por volume</span>
+                    </div>
+                    <div class="relative h-72 flex items-center justify-center">
+                        <canvas id="servicosChart"></canvas>
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- ================= SEÇÃO: CLIENTES ================= -->
+        <section id="secao-clientes" class="secao-conteudo hidden space-y-6">
+            <div class="bg-neutral-900 p-6 rounded-2xl border border-neutral-800">
+                <h2 class="text-2xl font-black text-yellow-400">Clientes PHSUBLIME</h2>
+                <p class="text-neutral-400 text-sm mt-1">Gerenciamento da carteira de clientes ativos.</p>
+            </div>
+            <div class="bg-neutral-900 p-6 rounded-2xl border border-neutral-800 overflow-x-auto">
+                <table class="w-full text-left text-sm text-neutral-300">
+                    <thead class="text-xs uppercase bg-neutral-800 text-yellow-400 border-b border-neutral-700">
+                        <tr>
+                            <th class="p-3">Nome</th>
+                            <th class="p-3">Contato</th>
+                            <th class="p-3">Total Pedidos</th>
+                            <th class="p-3">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-neutral-800">
+                        <tr>
+                            <td class="p-3 font-semibold text-white">Empresa Alfa Ltda</td>
+                            <td class="p-3">(21) 98888-0001</td>
+                            <td class="p-3">12 pedidos</td>
+                            <td class="p-3"><span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-xs px-2.5 py-1 rounded-full">Ativo</span></td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 font-semibold text-white">Studio Design RIO</td>
+                            <td class="p-3">(21) 97777-0002</td>
+                            <td class="p-3">8 pedidos</td>
+                            <td class="p-3"><span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-xs px-2.5 py-1 rounded-full">Ativo</span></td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 font-semibold text-white">Gráfica Express</td>
+                            <td class="p-3">(21) 96666-0003</td>
+                            <td class="p-3">25 pedidos</td>
+                            <td class="p-3"><span class="bg-yellow-400/10 text-yellow-400 border border-yellow-400/30 text-xs px-2.5 py-1 rounded-full">VIP</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- ================= SEÇÃO: PEDIDOS ================= -->
+        <section id="secao-pedidos" class="secao-conteudo hidden space-y-6">
+            <div class="bg-neutral-900 p-6 rounded-2xl border border-neutral-800">
+                <h2 class="text-2xl font-black text-yellow-400">Gerenciamento de Pedidos</h2>
+                <p class="text-neutral-400 text-sm mt-1">Acompanhe pedidos em fila, produção e entregues.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="bg-neutral-900 p-4 rounded-xl border border-neutral-800">
+                    <h3 class="font-bold text-yellow-400 mb-3 border-b border-neutral-800 pb-2">Pendentes (5)</h3>
+                    <div class="space-y-2 text-xs">
+                        <div class="bg-neutral-800 p-3 rounded-lg border border-neutral-700">#1092 - Banner 2x1m</div>
+                        <div class="bg-neutral-800 p-3 rounded-lg border border-neutral-700">#1093 - 1000 Cartões</div>
+                    </div>
+                </div>
+                <div class="bg-neutral-900 p-4 rounded-xl border border-neutral-800">
+                    <h3 class="font-bold text-amber-400 mb-3 border-b border-neutral-800 pb-2">Em Produção (14)</h3>
+                    <div class="space-y-2 text-xs">
+                        <div class="bg-neutral-800 p-3 rounded-lg border border-neutral-700">#1085 - Camisetas Sublimadas</div>
+                        <div class="bg-neutral-800 p-3 rounded-lg border border-neutral-700">#1088 - Fachada ACM</div>
+                    </div>
+                </div>
+                <div class="bg-neutral-900 p-4 rounded-xl border border-neutral-800">
+                    <h3 class="font-bold text-emerald-400 mb-3 border-b border-neutral-800 pb-2">Concluídos Hoje (18)</h3>
+                    <div class="space-y-2 text-xs">
+                        <div class="bg-neutral-800 p-3 rounded-lg border border-neutral-700">#1070 - Adesivos Vinil</div>
+                        <div class="bg-neutral-800 p-3 rounded-lg border border-neutral-700">#1072 - Canecas Personalizadas</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= SEÇÃO: DESPESAS ================= -->
+        <section id="secao-despesas" class="secao-conteudo hidden space-y-6">
+            <div class="bg-neutral-900 p-6 rounded-2xl border border-neutral-800">
+                <h2 class="text-2xl font-black text-yellow-400">Controle de Despesas</h2>
+                <p class="text-neutral-400 text-sm mt-1">Registros de custos operacionais e compra de insumos.</p>
+            </div>
+            <div class="bg-neutral-900 p-6 rounded-2xl border border-neutral-800 space-y-3">
+                <div class="flex justify-between items-center p-3 bg-neutral-800 rounded-xl border border-neutral-700">
+                    <div>
+                        <p class="font-bold text-white text-sm">Tinta Sublimática & Papel</p>
+                        <p class="text-xs text-neutral-400">Insumos de Produção</p>
+                    </div>
+                    <span class="text-rose-400 font-bold">R$ 2.400,00</span>
+                </div>
+                <div class="flex justify-between items-center p-3 bg-neutral-800 rounded-xl border border-neutral-700">
+                    <div>
+                        <p class="font-bold text-white text-sm">Tráfego Pago (Meta Ads)</p>
+                        <p class="text-xs text-neutral-400">Marketing & Vendas</p>
+                    </div>
+                    <span class="text-rose-400 font-bold">R$ 1.500,00</span>
+                </div>
+                <div class="flex justify-between items-center p-3 bg-neutral-800 rounded-xl border border-neutral-700">
+                    <div>
+                        <p class="font-bold text-white text-sm">Energia Elétrica & Net</p>
+                        <p class="text-xs text-neutral-400">Infraestrutura</p>
+                    </div>
+                    <span class="text-rose-400 font-bold">R$ 1.100,00</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= SEÇÃO: FINANCEIRO ================= -->
+        <section id="secao-financeiro" class="secao-conteudo hidden space-y-6">
+            <div class="bg-neutral-900 p-6 rounded-2xl border border-neutral-800">
+                <h2 class="text-2xl font-black text-yellow-400">Visão Financeira</h2>
+                <p class="text-neutral-400 text-sm mt-1">Resumo do fluxo de caixa e entradas.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="bg-neutral-900 p-5 rounded-2xl border border-neutral-800">
+                    <p class="text-xs text-neutral-400 uppercase font-bold">Entradas Brutas (Mês)</p>
+                    <h3 class="text-3xl font-black text-emerald-400 mt-2">R$ 26.740,00</h3>
+                </div>
+                <div class="bg-neutral-900 p-5 rounded-2xl border border-neutral-800">
+                    <p class="text-xs text-neutral-400 uppercase font-bold">Saídas / Custos (Mês)</p>
+                    <h3 class="text-3xl font-black text-rose-400 mt-2">R$ 8.500,00</h3>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= SEÇÃO: HISTÓRICO ================= -->
+        <section id="secao-historico" class="secao-conteudo hidden space-y-6">
+            <div class="bg-neutral-900 p-6 rounded-2xl border border-neutral-800">
+                <h2 class="text-2xl font-black text-yellow-400">Histórico de Fechamentos</h2>
+                <p class="text-neutral-400 text-sm mt-1">Relatórios e dados consolidados dos meses anteriores.</p>
+            </div>
+            <div class="bg-neutral-900 p-6 rounded-2xl border border-neutral-800 space-y-3">
+                <div class="flex justify-between items-center p-3 bg-neutral-800 rounded-xl border border-neutral-700 text-sm">
+                    <span class="font-bold text-yellow-400">Junho / 2026</span>
+                    <span class="text-neutral-300">Faturamento: R$ 68.400,00</span>
+                    <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-xs px-2.5 py-1 rounded-full">Fechado</span>
+                </div>
+                <div class="flex justify-between items-center p-3 bg-neutral-800 rounded-xl border border-neutral-700 text-sm">
+                    <span class="font-bold text-yellow-400">Maio / 2026</span>
+                    <span class="text-neutral-300">Faturamento: R$ 62.100,00</span>
+                    <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-xs px-2.5 py-1 rounded-full">Fechado</span>
+                </div>
+            </div>
+        </section>
+
+    </main>
 
     <!-- TOAST / NOTIFICAÇÃO -->
     <div id="toast" class="fixed bottom-5 right-5 bg-neutral-800 text-white border border-yellow-400 px-5 py-3 rounded-xl shadow-2xl transform translate-y-20 opacity-0 transition-all duration-300 flex items-center gap-3 z-50">
@@ -226,17 +425,40 @@
             lucro: "R$ 18.240,00"
         };
 
+        // --- SISTEMA DE NAVEGAÇÃO ENTRE ABAS ---
+        function navegar(secao) {
+            // Esconde todas as seções
+            document.querySelectorAll('.secao-conteudo').forEach(el => el.classList.add('hidden'));
+
+            // Mostra a seção selecionada
+            const secaoAlvo = document.getElementById(`secao-${secao}`);
+            if (secaoAlvo) {
+                secaoAlvo.classList.remove('hidden');
+            }
+
+            // Atualiza o visual dos botões no menu lateral
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active', 'text-yellow-400', 'bg-yellow-400/10', 'border-l-4', 'border-yellow-400', 'font-bold');
+                btn.classList.add('text-neutral-400', 'hover:text-white', 'hover:bg-neutral-800', 'font-semibold');
+            });
+
+            const btnAtivo = document.getElementById(`btn-${secao}`);
+            if (btnAtivo) {
+                btnAtivo.classList.remove('text-neutral-400', 'hover:text-white', 'hover:bg-neutral-800', 'font-semibold');
+                btnAtivo.classList.add('active', 'text-yellow-400', 'bg-yellow-400/10', 'border-l-4', 'border-yellow-400', 'font-bold');
+            }
+        }
+
         // --- INICIALIZAÇÃO DOS GRÁFICOS ---
         document.addEventListener('DOMContentLoaded', () => {
             
-            // Ajustar cores globais do Chart.js para o tema escuro
             Chart.defaults.color = '#a1a1aa';
             Chart.defaults.borderColor = '#27272a';
 
-            // 1. Gráfico de Vendas (Linha Amarela)
+            // 1. Gráfico de Vendas
             const ctxVendas = document.getElementById('vendasChart').getContext('2d');
             const gradient = ctxVendas.createLinearGradient(0, 0, 0, 300);
-            gradient.addColorStop(0, 'rgba(250, 204, 21, 0.35)'); // Amarelo
+            gradient.addColorStop(0, 'rgba(250, 204, 21, 0.35)');
             gradient.addColorStop(1, 'rgba(250, 204, 21, 0.0)');
 
             const diasJulho = Array.from({length: 31}, (_, i) => `${i + 1}/07`);
@@ -254,7 +476,7 @@
                     datasets: [{
                         label: 'Vendas (R$)',
                         data: vendasValores,
-                        borderColor: '#facc15', // Amarelo
+                        borderColor: '#facc15',
                         borderWidth: 3,
                         backgroundColor: gradient,
                         fill: true,
@@ -281,7 +503,7 @@
                 }
             });
 
-            // 2. Gráfico de Serviços Mais Vendidos (Doughnut Amarelo e Escala de Tons)
+            // 2. Gráfico de Serviços Mais Vendidos
             const ctxServicos = document.getElementById('servicosChart').getContext('2d');
             new Chart(ctxServicos, {
                 type: 'doughnut',
@@ -290,11 +512,11 @@
                     datasets: [{
                         data: [40, 25, 15, 12, 8],
                         backgroundColor: [
-                            '#facc15', // Amarelo vibrante
-                            '#eab308', // Amarelo médio
-                            '#ca8a04', // Amarelo escuro
-                            '#a16207', // Bronze/Castanho
-                            '#52525b'  // Cinza escuro
+                            '#facc15',
+                            '#eab308',
+                            '#ca8a04',
+                            '#a16207',
+                            '#52525b'
                         ],
                         borderWidth: 2,
                         borderColor: '#18181b'
@@ -318,9 +540,8 @@
             });
         });
 
-        // --- FUNÇÕES DOS BOTÕES DE AÇÃO ---
+        // --- AÇÕES DOS BOTÕES ---
 
-        // 1. Copiar CSV
         function copiarCSV() {
             const csvContent = `Indicador;Valor\n` +
                 `Visualizando;${dados.periodo}\n` +
@@ -340,10 +561,9 @@
             });
         }
 
-        // 2. Enviar para WhatsApp
         function enviarWhatsApp() {
             const numero = "5521986147221";
-            const mensagem = `📊 *RESUMO DO DASHBOARD (${dados.periodo})*\n\n` +
+            const mensagem = `📊 *PHSUBLIME - DASHBOARD (${dados.periodo})*\n\n` +
                 `💰 *Faturamento Dia:* ${dados.faturamentoDia}\n` +
                 `📦 *Pedidos Dia:* ${dados.pedidosDia}\n` +
                 `⚙️ *Em Produção:* ${dados.emProducao}\n` +
@@ -352,26 +572,23 @@
                 `👥 *Clientes:* ${dados.clientes}\n` +
                 `📉 *Investimento Total:* ${dados.investimentoTotal}\n` +
                 `💵 *Lucro:* ${dados.lucro}\n\n` +
-                `_Relatório gerado automaticamente._`;
+                `_Relatório gerado automaticamente por PHSUBLIME._`;
 
             const url = `https://api.whatsapp.com/send?phone=${numero}&text=${encodeURIComponent(mensagem)}`;
             window.open(url, '_blank');
         }
 
-        // 3. Baixar em PDF
         function baixarPDF() {
             window.print();
         }
 
-        // 4. Fechar Mês
         function fecharMes() {
-            const confirmacao = confirm("Deseja realmente FECHAR O MÊS de Jul/2026?\nOs dados serão consolidados e salvos no histórico.");
+            const confirmacao = confirm("Deseja realmente FECHAR O MÊS de Jul/2026?\nOs dados serão consolidados no Histórico.");
             if (confirmacao) {
                 mostrarToast("Mês de Jul/2026 fechado e consolidado!");
             }
         }
 
-        // Helper para Notificação Toast
         function mostrarToast(mensagem) {
             const toast = document.getElementById('toast');
             const toastMsg = document.getElementById('toast-message');
