@@ -35,7 +35,6 @@
     <div id="tela-login" class="fixed inset-0 bg-black z-[999] flex items-center justify-center p-4">
         <div class="bg-neutral-900 border border-neutral-800 p-8 rounded-2xl max-w-md w-full space-y-6 shadow-2xl text-center">
             <div class="flex justify-center mb-2">
-                <!-- LOGO PNG SEM BORDA OU CAIXA -->
                 <div class="w-20 h-20 flex items-center justify-center">
                     <img src="FIVICOM.png" alt="PHSUBLIME" class="w-full h-full object-contain" onerror="this.outerHTML='<i class=\'fa-solid fa-crown text-yellow-400 text-3xl\'></i>'">
                 </div>
@@ -67,7 +66,6 @@
     <!-- BARRA LATERAL (SIDEBAR) -->
     <aside class="w-full md:w-64 bg-neutral-900 border-b md:border-b-0 md:border-r border-neutral-800 p-5 flex flex-col justify-between shrink-0 no-print">
         <div>
-            <!-- LOGO / NOME DA PÁGINA -->
             <div class="flex items-center gap-3 px-2 py-3 mb-6 border-b border-neutral-800">
                 <div class="w-12 h-12 shrink-0 flex items-center justify-center">
                     <img src="FIVICOM.png" alt="PHSUBLIME" class="w-full h-full object-contain" onerror="this.outerHTML='<i class=\'fa-solid fa-crown text-yellow-400 text-2xl\'></i>'">
@@ -75,7 +73,6 @@
                 <div>
                     <h1 class="text-xl font-black tracking-wider text-yellow-400">PHSUBLIME</h1>
                     <span class="text-[10px] text-neutral-400 uppercase tracking-widest font-semibold block">Painel de Gestão</span>
-                    <!-- SAUDAÇÃO COM NOME DO USUÁRIO LOGADO -->
                     <span id="usuario-saudacao" class="text-xs text-emerald-400 font-bold mt-1.5 flex items-center gap-1"></span>
                 </div>
             </div>
@@ -86,7 +83,6 @@
                     <i class="fa-solid fa-chart-pie text-base"></i> Dashboard
                 </button>
 
-                <!-- ABA: ENTREGAS DE HOJE -->
                 <button onclick="navegar('entregas')" id="btn-entregas" class="nav-btn flex items-center justify-between w-full px-4 py-3 rounded-xl font-semibold text-sm transition-all text-neutral-400 hover:text-white hover:bg-neutral-800">
                     <span class="flex items-center gap-3">
                         <i class="fa-solid fa-truck-ramp-box text-base"></i> Entregas de Hoje
@@ -114,7 +110,6 @@
                     <i class="fa-solid fa-clock-rotate-left text-base"></i> Histórico
                 </button>
 
-                <!-- BOTÃO SAIR -->
                 <button onclick="fazerLogout()" class="nav-btn flex items-center gap-3 w-full px-4 py-3 rounded-xl font-semibold text-sm transition-all text-rose-500 hover:bg-rose-950/40 mt-4 border border-rose-900/40">
                     <i class="fa-solid fa-right-from-bracket text-base"></i> Sair do Sistema
                 </button>
@@ -140,7 +135,7 @@
                             Hoje: <strong id="dataAtualExtenso" class="text-yellow-300">--/--/----</strong>
                         </span>
                     </div>
-                    <p class="text-sm text-neutral-400 mt-1">Métrica das vendas e caixa do mês ativo atualizados em tempo real.</p>
+                    <p class="text-sm text-neutral-400 mt-1">Métrica das vendas e caixa em tempo real sincronizado entre usuários.</p>
                 </div>
 
                 <div class="flex flex-wrap gap-2.5 no-print">
@@ -162,9 +157,8 @@
                 </div>
             </header>
 
-            <!-- CARDS DE MÉTRICAS (KPIs) -->
+            <!-- CARDS DE MÉTRICAS -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                
                 <div class="bg-neutral-900 p-5 rounded-2xl border border-neutral-800 print-card hover:border-yellow-400/50 transition-all">
                     <div class="flex justify-between items-start">
                         <div>
@@ -271,13 +265,13 @@
 
             </div>
 
-            <!-- GRÁFICOS HISTÓRICOS -->
+            <!-- GRÁFICOS -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div class="lg:col-span-2 bg-neutral-900 p-6 rounded-2xl border border-neutral-800 print-card">
                     <div class="flex items-center justify-between mb-6">
                         <div>
                             <h3 class="text-lg font-extrabold text-yellow-400 uppercase tracking-wide">Vendas — Mês Atual</h3>
-                            <p class="text-xs text-neutral-500">Atualizado diariamente (Mês Ativo)</p>
+                            <p class="text-xs text-neutral-500">Atualizado diariamente em tempo real</p>
                         </div>
                     </div>
                     <div class="relative h-72">
@@ -315,24 +309,20 @@
                 </div>
             </div>
 
-            <!-- BLOCO DE PEDIDOS ATRASADOS (ALERTA MÁXIMO VERMELHO) -->
+            <!-- BLOCO DE PEDIDOS ATRASADOS -->
             <div id="container-pedidos-atrasados" class="hidden space-y-3">
                 <div class="bg-rose-950/80 border-2 border-rose-500 p-4 rounded-2xl flex items-center gap-3 animate-pulse shadow-lg shadow-rose-950/50">
                     <i class="fa-solid fa-triangle-exclamation text-rose-400 text-2xl"></i>
                     <div>
                         <h3 class="text-sm font-black text-rose-400 uppercase tracking-wide">🚨 ATENÇÃO: PEDIDOS COM ENTREGA ATRASADA!</h3>
-                        <p class="text-xs text-neutral-200 mt-0.5">Os pedidos abaixo têm data de entrega passada e ainda não foram marcados como Entregue. Atualize o status!</p>
+                        <p class="text-xs text-neutral-200 mt-0.5">Os pedidos abaixo têm data de entrega passada e ainda não foram marcados como Entregue.</p>
                     </div>
                 </div>
-                <div id="lista-atrasados-container" class="grid grid-cols-1 gap-4">
-                    <!-- JS inserido aqui -->
-                </div>
+                <div id="lista-atrasados-container" class="grid grid-cols-1 gap-4"></div>
             </div>
 
             <!-- CONTAINER DE CARDS DAS ENTREGAS DO DIA -->
-            <div class="grid grid-cols-1 gap-4" id="lista-entregas-hoje-container">
-                <!-- Inserido dinamicamente via JS -->
-            </div>
+            <div class="grid grid-cols-1 gap-4" id="lista-entregas-hoje-container"></div>
         </section>
 
         <!-- ================= SEÇÃO: CLIENTES ================= -->
@@ -375,16 +365,13 @@
                             <th class="p-3 text-right">Ações</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-neutral-800" id="tabela-clientes-body">
-                        <!-- Inserido via JS -->
-                    </tbody>
+                    <tbody class="divide-y divide-neutral-800" id="tabela-clientes-body"></tbody>
                 </table>
             </div>
         </section>
 
         <!-- ================= SEÇÃO: PEDIDOS ================= -->
         <section id="secao-pedidos" class="secao-conteudo hidden space-y-6">
-            
             <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-neutral-900 p-6 rounded-2xl border border-neutral-800">
                 <div>
                     <h2 class="text-2xl font-black text-yellow-400 flex items-center gap-2">
@@ -398,7 +385,6 @@
                 </button>
             </div>
 
-            <!-- CARDS KPI DE PEDIDOS -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div class="bg-neutral-900 p-5 rounded-2xl border border-neutral-800">
                     <p class="text-xs font-bold text-yellow-400 uppercase">Pedidos Novos (Aguardando)</p>
@@ -414,7 +400,6 @@
                 </div>
             </div>
 
-            <!-- FILTROS E PESQUISA DE PEDIDOS -->
             <div class="bg-neutral-900 p-4 rounded-2xl border border-neutral-800 flex flex-col md:flex-row gap-4 items-center justify-between">
                 <div class="flex items-center gap-2 w-full md:w-auto">
                     <button onclick="filtrarPedidosAba('todos')" id="btn-filtro-todos" class="px-4 py-2 rounded-xl text-xs font-bold bg-yellow-400 text-black">Todos</button>
@@ -431,7 +416,6 @@
                 </div>
             </div>
 
-            <!-- TABELA HISTÓRICO DE PEDIDOS -->
             <div class="bg-neutral-900 p-6 rounded-2xl border border-neutral-800 overflow-x-auto">
                 <h3 class="text-base font-bold text-yellow-400 mb-4 uppercase tracking-wide">Lista de Pedidos do Mês Ativo</h3>
                 <table class="w-full text-left text-sm text-neutral-300">
@@ -448,12 +432,9 @@
                             <th class="p-3 text-right">Ações</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-neutral-800" id="tabela-pedidos-body">
-                        <!-- Inserido via JS -->
-                    </tbody>
+                    <tbody class="divide-y divide-neutral-800" id="tabela-pedidos-body"></tbody>
                 </table>
             </div>
-
         </section>
 
         <!-- ================= SEÇÃO: CONTROLE DE DESPESAS ================= -->
@@ -471,7 +452,6 @@
                 </button>
             </div>
 
-            <!-- CARDS DE RESUMO DE DESPESAS -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div class="bg-neutral-900 p-5 rounded-2xl border border-neutral-800">
                     <p class="text-xs font-bold text-yellow-400 uppercase">Despesas / Outros</p>
@@ -490,13 +470,11 @@
                 </div>
             </div>
 
-            <!-- BUSCA DE DESPESAS -->
             <div class="bg-neutral-900 p-4 rounded-2xl border border-neutral-800 flex items-center gap-3">
                 <i class="fa-solid fa-magnifying-glass text-yellow-400 text-lg ml-2"></i>
                 <input type="text" id="input-pesquisar-despesa" onkeyup="renderizarDespesas()" placeholder="Pesquisar despesas por produto, loja, cadastrado por..." class="w-full bg-transparent text-white focus:outline-none text-sm placeholder-neutral-500">
             </div>
 
-            <!-- TABELA DE DESPESAS CONSOLIDADA -->
             <div class="bg-neutral-900 p-6 rounded-2xl border border-neutral-800 overflow-x-auto">
                 <table class="w-full text-left text-sm text-neutral-300">
                     <thead class="text-xs uppercase bg-neutral-800 text-yellow-400 border-b border-neutral-700">
@@ -510,9 +488,7 @@
                             <th class="p-3 text-right">Ações</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-neutral-800" id="tabela-despesas-body">
-                        <!-- Inserido via JS -->
-                    </tbody>
+                    <tbody class="divide-y divide-neutral-800" id="tabela-despesas-body"></tbody>
                 </table>
             </div>
         </section>
@@ -526,7 +502,6 @@
                 <p class="text-neutral-400 text-sm mt-1">Fluxo de caixa e distribuição de lucros do mês ativo em tempo real.</p>
             </div>
 
-            <!-- CARDS FINANCEIROS -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 <div class="bg-neutral-900 p-5 rounded-2xl border border-neutral-800 hover:border-yellow-400/30 transition-all">
                     <p class="text-xs text-neutral-400 uppercase font-bold">Total Receitas (Entradas)</p>
@@ -559,7 +534,6 @@
                 </div>
             </div>
 
-            <!-- HISTÓRICO GERAL DE MOVIMENTAÇÕES FINANCEIRAS -->
             <div class="bg-neutral-900 p-6 rounded-2xl border border-neutral-800 space-y-4">
                 <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div>
@@ -569,14 +543,12 @@
                         <p class="text-xs text-neutral-400 mt-0.5">Consolidado de entradas (vendas) e saídas (custos e despesas).</p>
                     </div>
 
-                    <!-- BARRA DE PESQUISA FINANCEIRO -->
                     <div class="w-full md:w-80 bg-neutral-800 px-3 py-2 rounded-xl border border-neutral-700 flex items-center gap-2">
                         <i class="fa-solid fa-magnifying-glass text-yellow-400"></i>
                         <input type="text" id="input-pesquisar-financeiro" onkeyup="renderizarMovimentacoesFinanceiras()" placeholder="Pesquisar categoria, descrição, tipo..." class="bg-transparent text-white focus:outline-none text-xs w-full placeholder-neutral-500">
                     </div>
                 </div>
 
-                <!-- TABELA FINANCEIRA -->
                 <div class="overflow-x-auto">
                     <table class="w-full text-left text-sm text-neutral-300">
                         <thead class="text-xs uppercase bg-neutral-800 text-yellow-400 border-b border-neutral-700">
@@ -590,9 +562,7 @@
                                 <th class="p-3 text-right">Ações</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-neutral-800" id="tabela-financeiro-body">
-                            <!-- Inserido via JS -->
-                        </tbody>
+                        <tbody class="divide-y divide-neutral-800" id="tabela-financeiro-body"></tbody>
                     </table>
                 </div>
             </div>
@@ -613,7 +583,7 @@
 
     <!-- ================= MODAIS ================= -->
 
-    <!-- MODAL AUTOMÁTICO: RADAR DE ENTREGAS DO DIA -->
+    <!-- MODAL RADAR DE ENTREGAS -->
     <div id="modal-radar-entregas" class="fixed inset-0 bg-black/85 backdrop-blur-md z-[900] hidden flex items-center justify-center p-4">
         <div class="bg-neutral-900 border border-neutral-800 rounded-2xl max-w-3xl w-full p-6 space-y-5 shadow-2xl overflow-y-auto max-h-[85vh]">
             <div class="flex justify-between items-center border-b border-neutral-800 pb-3">
@@ -623,28 +593,22 @@
                 <button onclick="fecharModalRadarEntregas()" class="text-neutral-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
             </div>
 
-            <!-- BLOCO DE PEDIDOS ATRASADOS (ALERTA EM DESTAQUE SE HOUVER) -->
             <div id="radar-atrasados-container" class="hidden space-y-3">
                 <div class="bg-rose-950/80 border-2 border-rose-500 p-3.5 rounded-xl flex items-center gap-3 animate-pulse shadow-lg shadow-rose-950/40">
                     <i class="fa-solid fa-triangle-exclamation text-rose-400 text-2xl"></i>
                     <div>
                         <h4 class="text-xs font-black uppercase text-rose-400 tracking-wider">Atenção: Existem Entregas Atrasadas!</h4>
-                        <p class="text-[11px] text-neutral-200">Os pedidos abaixo já passaram da data de entrega prevista e precisam de atenção urgente.</p>
+                        <p class="text-[11px] text-neutral-200">Os pedidos abaixo já passaram da data de entrega prevista.</p>
                     </div>
                 </div>
-                <div id="radar-atrasados-lista" class="space-y-2">
-                    <!-- JS inserido aqui -->
-                </div>
+                <div id="radar-atrasados-lista" class="space-y-2"></div>
             </div>
 
-            <!-- LISTA DE ENTREGAS DE HOJE -->
             <div class="space-y-2">
                 <h4 class="text-xs font-bold uppercase tracking-wider text-yellow-400 flex items-center gap-1.5">
                     <i class="fa-solid fa-calendar-day"></i> Entregas Agendadas para Hoje
                 </h4>
-                <div id="radar-hoje-lista" class="space-y-2">
-                    <!-- JS inserido aqui -->
-                </div>
+                <div id="radar-hoje-lista" class="space-y-2"></div>
             </div>
 
             <div class="flex justify-end pt-3 border-t border-neutral-800">
@@ -700,7 +664,6 @@
                 </div>
             </div>
 
-            <!-- KPIs do Mês Fechado -->
             <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
                 <div class="bg-neutral-800/60 p-3.5 rounded-xl border border-neutral-700/60">
                     <p class="text-[10px] font-bold text-yellow-400 uppercase tracking-wider">Faturamento Total</p>
@@ -720,7 +683,6 @@
                 </div>
             </div>
 
-            <!-- TABELA DE PEDIDOS DO MÊS FECHADO -->
             <div class="space-y-2">
                 <h4 class="text-xs font-bold text-yellow-400 uppercase tracking-wide flex items-center gap-1.5">
                     <i class="fa-solid fa-cart-shopping"></i> Pedidos Realizados no Mês
@@ -738,14 +700,11 @@
                                 <th class="p-2.5">Status</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-neutral-800" id="detalhe-hist-pedidos-body">
-                            <!-- JS -->
-                        </tbody>
+                        <tbody class="divide-y divide-neutral-800" id="detalhe-hist-pedidos-body"></tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- TABELA DE DESPESAS DO MÊS FECHADO -->
             <div class="space-y-2">
                 <h4 class="text-xs font-bold text-rose-400 uppercase tracking-wide flex items-center gap-1.5">
                     <i class="fa-solid fa-file-invoice-dollar"></i> Despesas Avulsas do Mês
@@ -762,9 +721,7 @@
                                 <th class="p-2.5">Total Gasto</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-neutral-800" id="detalhe-hist-despesas-body">
-                            <!-- JS -->
-                        </tbody>
+                        <tbody class="divide-y divide-neutral-800" id="detalhe-hist-despesas-body"></tbody>
                     </table>
                 </div>
             </div>
@@ -848,9 +805,7 @@
                             <th class="p-2.5">Status</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-neutral-800" id="hist-cliente-tabela">
-                        <!-- Inserido via JS -->
-                    </tbody>
+                    <tbody class="divide-y divide-neutral-800" id="hist-cliente-tabela"></tbody>
                 </table>
             </div>
 
@@ -861,7 +816,7 @@
         </div>
     </div>
 
-    <!-- MODAL PEDIDO (NOVO / EDITAR) -->
+    <!-- MODAL PEDIDO -->
     <div id="modal-pedido" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-neutral-900 border border-neutral-800 rounded-2xl max-w-4xl w-full p-6 space-y-5 shadow-2xl overflow-y-auto max-h-[90vh]">
             <div class="flex justify-between items-center border-b border-neutral-800 pb-3">
@@ -874,7 +829,6 @@
             <form id="form-pedido" onsubmit="salvarPedido(event, false)" class="space-y-4 text-sm">
                 <input type="hidden" id="ped-id">
                 
-                <!-- BUSCA E SELEÇÃO DE CLIENTE -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <div>
                         <label class="block text-yellow-400 text-xs font-bold uppercase mb-1">Buscar Cliente (Nome/CPF)</label>
@@ -882,16 +836,11 @@
                     </div>
                     <div>
                         <label class="block text-yellow-400 text-xs font-bold uppercase mb-1">Cliente Selecionado</label>
-                        <select id="ped-cliente-id" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400 text-xs">
-                            <!-- Preenchido via JS -->
-                        </select>
+                        <select id="ped-cliente-id" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400 text-xs"></select>
                     </div>
                 </div>
 
-                <!-- ÁREA DE INCLUSÃO DE PRODUTOS DO PEDIDO -->
                 <div class="border border-neutral-800 bg-black/40 p-4 rounded-xl space-y-4">
-                    
-                    <!-- FORMULÁRIO DE DIGITAÇÃO DE ITEM -->
                     <div class="bg-neutral-950/80 border border-neutral-800 p-3.5 rounded-xl space-y-3">
                         <div class="flex justify-between items-center pb-2 border-b border-neutral-800/80">
                             <h4 class="text-xs font-bold uppercase tracking-wider text-yellow-400 flex items-center gap-1.5" id="titulo-form-item">
@@ -947,7 +896,6 @@
                         </div>
                     </div>
 
-                    <!-- TABELA COMPACTA DE ITENS INCLUÍDOS -->
                     <div class="space-y-2">
                         <div class="flex justify-between items-center px-1">
                             <span class="text-xs font-bold uppercase tracking-wide text-neutral-400">Itens Incluídos no Pedido (<span id="count-itens-pedido">0</span>)</span>
@@ -964,16 +912,12 @@
                                         <th class="p-2.5 text-right">Ações</th>
                                     </tr>
                                 </thead>
-                                <tbody class="divide-y divide-neutral-800" id="tabela-itens-pedido-body">
-                                    <!-- Renderizado via JS -->
-                                </tbody>
+                                <tbody class="divide-y divide-neutral-800" id="tabela-itens-pedido-body"></tbody>
                             </table>
                         </div>
                     </div>
-
                 </div>
 
-                <!-- PAINEL DE RESUMO FINANCEIRO DOS TOTAIS -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-3 p-3 bg-neutral-950 border border-neutral-800 rounded-xl">
                     <div class="p-2.5 bg-neutral-900 border border-neutral-800 rounded-lg">
                         <span class="text-[10px] text-neutral-400 font-bold uppercase block">Total do Pedido</span>
@@ -1022,7 +966,6 @@
                     </div>
                 </div>
 
-                <!-- CAMPO PAGAMENTO MISTO -->
                 <div id="campo-pagamento-misto" class="hidden grid grid-cols-1 md:grid-cols-2 gap-4 p-3 bg-neutral-800/50 rounded-xl border border-neutral-700">
                     <div>
                         <label class="block text-xs text-yellow-400 font-semibold mb-1">Valor em Dinheiro (R$)</label>
@@ -1054,7 +997,7 @@
         </div>
     </div>
 
-    <!-- MODAL NOVA / EDITAR DESPESA AVULSA -->
+    <!-- MODAL DESPESA -->
     <div id="modal-nova-despesa" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-neutral-900 border border-neutral-800 rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl">
             <div class="flex justify-between items-center border-b border-neutral-800 pb-3">
@@ -1065,7 +1008,6 @@
             </div>
 
             <form id="form-nova-despesa" onsubmit="salvarNovaDespesa(event)" class="space-y-3 text-sm">
-                <!-- Campo oculto para ID da despesa em edição -->
                 <input type="hidden" id="desp-id">
                 
                 <div>
@@ -1119,7 +1061,7 @@
         </div>
     </div>
 
-    <!-- TOAST DE NOTIFICAÇÃO DO SISTEMA -->
+    <!-- TOAST DE NOTIFICAÇÃO -->
     <div id="toast" class="fixed bottom-5 right-5 bg-neutral-900 text-white border border-yellow-400 px-5 py-3 rounded-xl shadow-2xl transform translate-y-20 opacity-0 transition-all duration-300 flex items-center gap-3 z-[1001]">
         <i id="toast-icon" class="fa-solid fa-circle-check text-yellow-400 text-lg"></i>
         <span id="toast-message" class="font-medium text-sm">Ação realizada!</span>
@@ -1135,7 +1077,6 @@
 
         let usuarioAtualNome = "Atendente";
 
-        // CAIXA DE CONFIRMAÇÃO PERSONALIZADA
         function confirmarAcao(titulo, mensagem, textoBotao = "Sim, Excluir", icone = "fa-trash-can", corOk = "rose") {
             return new Promise((resolve) => {
                 const modal = document.getElementById('modal-confirmacao');
@@ -1179,7 +1120,6 @@
             });
         }
 
-        // MOSTRAR TOAST (SUPORTA SUCESSO E ERROS/AVISOS)
         function mostrarToast(msg, tipo = 'sucesso') {
             const toast = document.getElementById('toast');
             const icon = document.getElementById('toast-icon');
@@ -1199,7 +1139,6 @@
             setTimeout(() => toast.classList.add('translate-y-20', 'opacity-0'), 3500);
         }
 
-        // ATUALIZA A SAUDAÇÃO E O NOME DO USUÁRIO LOGADO
         function definirUsuarioLogado(email) {
             if (!email) return;
             let nomeRaw = email.split('@')[0];
@@ -1211,7 +1150,6 @@
             }
         }
 
-        // FUNÇÃO DE LOGIN
         async function fazerLogin(e) {
             e.preventDefault();
             let usuarioInput = document.getElementById('login-usuario').value.trim();
@@ -1238,26 +1176,26 @@
             } else {
                 document.getElementById('tela-login').classList.add('hidden');
                 definirUsuarioLogado(emailFinal);
-                carregarDados();
+                await carregarDados();
+                iniciarInscricaoRealtime();
                 setTimeout(abrirRadarEntregasAuto, 600);
             }
         }
 
-        // FUNÇÃO DE VERIFICAR SESSÃO
         async function verificarSessao() {
             const { data: { session } } = await supabaseClient.auth.getSession();
             
             if (session && session.user) {
                 document.getElementById('tela-login').classList.add('hidden');
                 definirUsuarioLogado(session.user.email);
-                carregarDados();
+                await carregarDados();
+                iniciarInscricaoRealtime();
                 setTimeout(abrirRadarEntregasAuto, 800);
             } else {
                 document.getElementById('tela-login').classList.remove('hidden');
             }
         }
 
-        // FUNÇÃO DE LOGOUT
         async function fazerLogout() {
             const confirmou = await confirmarAcao("Sair do Sistema", "Deseja realmente sair do sistema da PHSUBLIME?", "Sim, Sair", "fa-right-from-bracket", "yellow");
             if (confirmou) {
@@ -1266,18 +1204,13 @@
             }
         }
 
-        // ================= DADOS DA APLICAÇÃO =================
+        // ================= DADOS DA APLICAÇÃO (SUPABASE) =================
         let appData = {
             dataAtual: new Date().toISOString().split('T')[0],
-            clientes: [
-                { id: 1, nome: "Empresa Alfa Ltda", cpf: "12.345.678/0001-90", telefone: "(21) 98888-0001", email: "contato@alfa.com", cidade: "Rio de Janeiro", estado: "RJ", endereco: "Av. Brasil, 1500", obs: "VIP" },
-                { id: 2, nome: "Studio Design RIO", cpf: "987.654.321-00", telefone: "(21) 97777-0002", email: "rio@studio.com", cidade: "Niterói", estado: "RJ", endereco: "Rua das Flores, 45", obs: "" },
-                { id: 3, nome: "Gráfica Express", cpf: "45.678.910/0001-22", telefone: "(21) 96666-0003", email: "contato@express.com", cidade: "Duque de Caxias", estado: "RJ", endereco: "Rua São José, 102", obs: "" }
-            ],
+            clientes: [],
             pedidos: [],
             despesasOutras: [],
             historicoFechamentos: [],
-            pedidosArquivadosPermanentes: [],
             vendasChart: null,
             servicosChart: null,
             abaPedidoFiltro: 'todos'
@@ -1296,34 +1229,37 @@
                 .replace(/>/g, '&gt;');
         }
 
-        function carregarDados() {
-            const salvos = localStorage.getItem('PHSUBLIME_DATA_V3_5');
-            if (salvos) {
-                try {
-                    const parsed = JSON.parse(salvos);
-                    appData.clientes = parsed.clientes || appData.clientes;
-                    appData.pedidos = parsed.pedidos || [];
-                    appData.despesasOutras = parsed.despesasOutras || [];
-                    appData.historicoFechamentos = parsed.historicoFechamentos || [];
-                    appData.pedidosArquivadosPermanentes = parsed.pedidosArquivadosPermanentes || [];
-                } catch(e) {}
+        // CARREGAR DADOS DO SUPABASE
+        async function carregarDados() {
+            try {
+                const [resCli, resPed, resDesp, resFech] = await Promise.all([
+                    supabaseClient.from('clientes').select('*'),
+                    supabaseClient.from('pedidos').select('*').order('id', { ascending: false }),
+                    supabaseClient.from('despesas').select('*').order('id', { ascending: false }),
+                    supabaseClient.from('fechamentos').select('*').order('id', { ascending: false })
+                ]);
+
+                if (resCli.data) appData.clientes = resCli.data;
+                if (resPed.data) appData.pedidos = resPed.data;
+                if (resDesp.data) appData.despesasOutras = resDesp.data;
+                if (resFech.data) appData.historicoFechamentos = resFech.data;
+
+            } catch(e) {
+                console.error("Erro ao carregar dados do Supabase:", e);
             }
 
-            const hojeStr = new Date().toISOString().split('T')[0];
-            appData.dataAtual = hojeStr;
-
-            salvarStorage();
+            appData.dataAtual = new Date().toISOString().split('T')[0];
             atualizarInterfaceCompleta();
         }
 
-        function salvarStorage() {
-            localStorage.setItem('PHSUBLIME_DATA_V3_5', JSON.stringify({
-                clientes: appData.clientes,
-                pedidos: appData.pedidos,
-                despesasOutras: appData.despesasOutras,
-                historicoFechamentos: appData.historicoFechamentos,
-                pedidosArquivadosPermanentes: appData.pedidosArquivadosPermanentes || []
-            }));
+        // ESCUTA EM TEMPO REAL (REALTIME PARA TODOS OS COMPUTADORES)
+        function iniciarInscricaoRealtime() {
+            supabaseClient
+                .channel('mudancas-sistema')
+                .on('postgres_changes', { event: '*', schema: 'public' }, (payload) => {
+                    carregarDados();
+                })
+                .subscribe();
         }
 
         function navegar(secao) {
@@ -1401,7 +1337,6 @@
             const dezPercentLucro = lucroGeral > 0 ? lucroGeral * 0.10 : 0;
             const lucroLiquidoFinal = lucroGeral > 0 ? lucroGeral - dezPercentLucro : lucroGeral;
 
-            // Renderizar Dashboard
             document.getElementById('dash-faturamento-dia').innerText = `R$ ${fatDia.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
             document.getElementById('dash-pedidos-dia').innerText = pedDiaCount;
             document.getElementById('dash-em-producao').innerText = producaoCount;
@@ -1411,12 +1346,10 @@
             document.getElementById('dash-investimento').innerText = `R$ ${totalDespesaGeral.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
             document.getElementById('dash-lucro').innerText = `R$ ${lucroGeral.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
 
-            // Renderizar Despesas KPIs
             document.getElementById('desp-kpi-outros').innerText = `R$ ${despesaOutrasGeral.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
             document.getElementById('desp-kpi-pedidos').innerText = `R$ ${despesaPedidosGeral.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
             document.getElementById('desp-kpi-total').innerText = `R$ ${totalDespesaGeral.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
 
-            // Renderizar Financeiro
             document.getElementById('fin-entradas').innerText = `R$ ${totalReceitaGeral.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
             document.getElementById('fin-saidas').innerText = `R$ ${totalDespesaGeral.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
             document.getElementById('fin-saldo').innerText = `R$ ${lucroGeral.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
@@ -1432,19 +1365,14 @@
             atualizarGraficos();
         }
 
-        // --- POP-UP AUTOMÁTICO: RADAR DE ENTREGAS DO DIA ---
         function abrirRadarEntregasAuto() {
             const hojeStr = appData.dataAtual;
             
-            // Entregas de Hoje
             const entregasHoje = appData.pedidos.filter(p => p.dataEntrega === hojeStr && p.status !== 'Cancelado');
-            
-            // Entregas Atrasadas
             const atrasados = appData.pedidos.filter(p => p.dataEntrega && p.dataEntrega < hojeStr && p.status !== 'Entregue' && p.status !== 'Cancelado');
 
             if (entregasHoje.length === 0 && atrasados.length === 0) return;
 
-            // Preenche Lista de Atrasados no Pop-up
             const containerAtrasados = document.getElementById('radar-atrasados-container');
             const listaAtrasados = document.getElementById('radar-atrasados-lista');
             listaAtrasados.innerHTML = '';
@@ -1475,7 +1403,6 @@
                 containerAtrasados.classList.add('hidden');
             }
 
-            // Preenche Lista de Entregas de Hoje no Pop-up
             const listaHoje = document.getElementById('radar-hoje-lista');
             listaHoje.innerHTML = '';
 
@@ -1515,7 +1442,6 @@
             document.getElementById('modal-radar-entregas').classList.add('hidden');
         }
 
-        // --- RENDERIZAR ENTREGAS DE HOJE E ATRASADOS NA ABA ENTREGAS ---
         function renderizarEntreguesHoje() {
             const container = document.getElementById('lista-entregas-hoje-container');
             const kpiCount = document.getElementById('kpi-entregas-hoje-count');
@@ -1530,7 +1456,6 @@
 
             const hojeStr = appData.dataAtual;
 
-            // Filtra Pedidos Atrasados
             const atrasados = appData.pedidos.filter(p => p.dataEntrega && p.dataEntrega < hojeStr && p.status !== 'Entregue' && p.status !== 'Cancelado');
 
             if (atrasados.length > 0) {
@@ -1584,7 +1509,6 @@
                 containerAtrasados.classList.add('hidden');
             }
 
-            // Filtra pedidos ativos cuja dataEntrega é HOJE e não está cancelado
             const entregasHoje = appData.pedidos.filter(p => p.dataEntrega === hojeStr && p.status !== 'Cancelado');
 
             const totalEntregas = entregasHoje.length;
@@ -1668,7 +1592,6 @@
             });
         }
 
-        // DISPARA MENSAGEM DO WHATSAPP COM AINDA MAIS PERSONALIZAÇÃO
         function enviarMensagemWhatsAppEntrega(pedidoId) {
             const p = appData.pedidos.find(x => x.id == pedidoId);
             if (!p) return;
@@ -1676,7 +1599,6 @@
             const cli = appData.clientes.find(c => c.id == p.clienteId);
             const descProdutos = p.itens ? p.itens.map(i => `${i.servico || 'Item'} (${i.qtd}x)`).join(', ') : 'seu pedido';
             
-            // Pega Apenas o Primeiro Nome do Cliente
             const nomeCompleto = p.clienteNome || 'Cliente';
             const primeiroNome = nomeCompleto.trim().split(' ')[0];
 
@@ -1689,7 +1611,6 @@
                 }
             }
 
-            // Mensagem Profissional com Nome de quem está logado e primeiro nome do cliente
             const msg = `*Atendimento PHSUBLIME (${usuarioAtualNome})*\n\n` +
                         `Olá, *${primeiroNome}*! Tudo bem?\n\n` +
                         `Passando para avisar que o seu pedido *#${p.id}* (*${descProdutos}*) da PHSUBLIME está agendado para ser entregue hoje! 🚚✨\n\n` +
@@ -1702,13 +1623,10 @@
             window.open(url, '_blank');
         }
 
-        // MARCA O PEDIDO COMO ENTREGUE DIRETO
-        function concluirEntregaRapida(pedidoId) {
-            const p = appData.pedidos.find(x => x.id == pedidoId);
-            if (p) {
-                p.status = 'Entregue';
-                salvarStorage();
-                atualizarInterfaceCompleta();
+        async function concluirEntregaRapida(pedidoId) {
+            const { error } = await supabaseClient.from('pedidos').update({ status: 'Entregue' }).eq('id', pedidoId);
+            if (!error) {
+                await carregarDados();
                 mostrarToast(`Pedido #${pedidoId} marcado como Entregue!`);
             }
         }
@@ -1727,14 +1645,12 @@
 
                 let totalComprado = 0;
 
-                // 1. Pedidos do Mês Ativo
                 appData.pedidos.forEach(p => {
                     if (p.clienteId == c.id && p.status !== 'Cancelado') {
                         totalComprado += parseFloat(p.total || 0);
                     }
                 });
 
-                // 2. Pedidos dos Meses Fechados no Histórico
                 appData.historicoFechamentos.forEach(f => {
                     if (f.pedidos && Array.isArray(f.pedidos)) {
                         f.pedidos.forEach(p => {
@@ -1744,15 +1660,6 @@
                         });
                     }
                 });
-
-                // 3. Pedidos Arquivados Permanentemente (de meses já excluídos do Histórico)
-                if (appData.pedidosArquivadosPermanentes && Array.isArray(appData.pedidosArquivadosPermanentes)) {
-                    appData.pedidosArquivadosPermanentes.forEach(p => {
-                        if (p.clienteId == c.id && p.status !== 'Cancelado') {
-                            totalComprado += parseFloat(p.total || 0);
-                        }
-                    });
-                }
 
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
@@ -1805,54 +1712,43 @@
             document.getElementById('modal-cliente').classList.remove('hidden');
         }
 
-        function salvarCliente(e) {
+        async function salvarCliente(e) {
             e.preventDefault();
             const id = document.getElementById('cli-id').value;
             const nome = document.getElementById('cli-nome').value.trim() || 'Cliente sem nome';
 
-            if (id) {
-                const cli = appData.clientes.find(c => c.id == id);
-                if (cli) {
-                    cli.nome = nome;
-                    cli.cpf = document.getElementById('cli-cpf').value;
-                    cli.telefone = document.getElementById('cli-telefone').value;
-                    cli.whatsapp = document.getElementById('cli-whatsapp').value;
-                    cli.email = document.getElementById('cli-email').value;
-                    cli.cidade = document.getElementById('cli-cidade').value;
-                    cli.estado = document.getElementById('cli-estado').value;
-                    cli.endereco = document.getElementById('cli-endereco').value;
-                    cli.obs = document.getElementById('cli-obs').value;
-                }
-                mostrarToast("Cliente atualizado!");
-            } else {
-                const novoCli = {
-                    id: Date.now(),
-                    nome: nome,
-                    cpf: document.getElementById('cli-cpf').value,
-                    telefone: document.getElementById('cli-telefone').value,
-                    whatsapp: document.getElementById('cli-whatsapp').value,
-                    email: document.getElementById('cli-email').value,
-                    cidade: document.getElementById('cli-cidade').value,
-                    estado: document.getElementById('cli-estado').value,
-                    endereco: document.getElementById('cli-endereco').value,
-                    obs: document.getElementById('cli-obs').value
-                };
-                appData.clientes.push(novoCli);
-                mostrarToast("Novo cliente cadastrado!");
-            }
+            const cliData = {
+                id: id ? parseInt(id) : Date.now(),
+                nome: nome,
+                cpf: document.getElementById('cli-cpf').value,
+                telefone: document.getElementById('cli-telefone').value,
+                whatsapp: document.getElementById('cli-whatsapp').value,
+                email: document.getElementById('cli-email').value,
+                cidade: document.getElementById('cli-cidade').value,
+                estado: document.getElementById('cli-estado').value,
+                endereco: document.getElementById('cli-endereco').value,
+                obs: document.getElementById('cli-obs').value
+            };
 
-            salvarStorage();
-            fecharModalCliente();
-            atualizarInterfaceCompleta();
+            const { error } = await supabaseClient.from('clientes').upsert(cliData);
+
+            if (!error) {
+                mostrarToast(id ? "Cliente atualizado!" : "Novo cliente cadastrado!");
+                fecharModalCliente();
+                await carregarDados();
+            } else {
+                mostrarToast("Erro ao salvar cliente no banco.", "erro");
+            }
         }
 
         async function excluirCliente(id) {
             const confirmou = await confirmarAcao("Excluir Cliente", "Deseja realmente excluir este cliente do sistema?", "Sim, Excluir");
             if (confirmou) {
-                appData.clientes = appData.clientes.filter(c => c.id != id);
-                salvarStorage();
-                atualizarInterfaceCompleta();
-                mostrarToast("Cliente removido.");
+                const { error } = await supabaseClient.from('clientes').delete().eq('id', id);
+                if (!error) {
+                    await carregarDados();
+                    mostrarToast("Cliente removido.");
+                }
             }
         }
 
@@ -1866,7 +1762,7 @@
             document.getElementById('modal-massa').classList.add('hidden');
         }
 
-        function processarMassa() {
+        async function processarMassa() {
             const texto = document.getElementById('input-massa-texto').value.trim();
             if (!texto) {
                 mostrarToast("Cole o texto da planilha antes de importar.", "erro");
@@ -1874,14 +1770,14 @@
             }
 
             const linhas = texto.split('\n');
-            let importados = 0;
+            let novosClientes = [];
 
             linhas.forEach((linha, index) => {
                 if (!linha.trim()) return;
                 const partes = linha.split(';').map(p => p.trim());
                 
                 if (partes[0]) {
-                    appData.clientes.push({
+                    novosClientes.push({
                         id: Date.now() + index,
                         nome: partes[0] || 'Cliente Importado',
                         cpf: partes[1] || '',
@@ -1892,14 +1788,17 @@
                         endereco: '',
                         obs: 'Importado em massa'
                     });
-                    importados++;
                 }
             });
 
-            salvarStorage();
-            fecharModalMassa();
-            atualizarInterfaceCompleta();
-            mostrarToast(`${importados} cliente(s) importado(s)!`);
+            if (novosClientes.length > 0) {
+                const { error } = await supabaseClient.from('clientes').insert(novosClientes);
+                if (!error) {
+                    fecharModalMassa();
+                    await carregarDados();
+                    mostrarToast(`${novosClientes.length} cliente(s) importado(s)!`);
+                }
+            }
         }
 
         function abrirHistoricoCompras(clienteId) {
@@ -1915,7 +1814,6 @@
 
             let todosPedidosCliente = appData.pedidos.filter(p => p.clienteId == clienteId).map(p => ({ ...p, mesOrigem: 'Mês Ativo' }));
 
-            // 1. Pedidos nos Fechamentos Mensais
             appData.historicoFechamentos.forEach(f => {
                 if (f.pedidos && Array.isArray(f.pedidos)) {
                     f.pedidos.forEach(p => {
@@ -1925,17 +1823,6 @@
                     });
                 }
             });
-
-            // 2. Pedidos no Arquivo Permanente (de meses cujos relatórios foram apagados)
-            if (appData.pedidosArquivadosPermanentes && Array.isArray(appData.pedidosArquivadosPermanentes)) {
-                appData.pedidosArquivadosPermanentes.forEach(p => {
-                    if (p.clienteId == clienteId) {
-                        if (!todosPedidosCliente.some(x => x.id == p.id)) {
-                            todosPedidosCliente.push({ ...p, mesOrigem: p.mesOrigem || 'Arquivado' });
-                        }
-                    }
-                });
-            }
 
             if (todosPedidosCliente.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-neutral-500">Nenhuma compra cadastrada.</td></tr>`;
@@ -1963,7 +1850,7 @@
 
         function fecharModalHistoricoCliente() { document.getElementById('modal-historico-cliente').classList.add('hidden'); }
 
-        // --- PEDIDOS (GERENCIAMENTO LIMPO DE ITENS) ---
+        // --- PEDIDOS ---
         let itensPedidoTemp = [];
         let indexItemEdicao = null;
 
@@ -2056,7 +1943,6 @@
             document.getElementById('modal-pedido').classList.remove('hidden');
         }
 
-        // LIMPA OS CAMPOS DE DIGITAÇÃO DE ITEM
         function limparFormProdutoItem() {
             indexItemEdicao = null;
             document.getElementById('item-servico').value = '';
@@ -2074,7 +1960,6 @@
             document.getElementById('btn-cancelar-edicao-item').classList.add('hidden');
         }
 
-        // ADICIONA OU ATUALIZA ITEM NA LISTA COM VALIDAÇÃO AMIGÁVEL
         function adicionarOuAtualizarItemProduto() {
             const inputServico = document.getElementById('item-servico');
             const servico = inputServico.value.trim();
@@ -2145,7 +2030,6 @@
             mostrarToast("Item removido da lista.");
         }
 
-        // RENDERIZA A TABELA COMPACTA LEITURA (IMPOSSÍVEL EDITAR POR ENGANO)
         function renderizarTabelaItensPedido() {
             const tbody = document.getElementById('tabela-itens-pedido-body');
             const countEl = document.getElementById('count-itens-pedido');
@@ -2226,10 +2110,9 @@
             }
         }
 
-        function salvarPedido(e, criarOutro = false) {
+        async function salvarPedido(e, criarOutro = false) {
             if (e && e.preventDefault) e.preventDefault();
 
-            // SE HOUVER ALGO DIGITADO NO FORMULÁRIO DE ITEM NÃO SALVO, INCLUI AUTOMATICAMENTE
             const servicoPend = document.getElementById('item-servico').value.trim();
             if (servicoPend) {
                 adicionarOuAtualizarItemProduto();
@@ -2263,47 +2146,33 @@
 
             const nomeClienteFinal = cli ? cli.nome : (clienteExtraSelect && clienteExtraSelect.id == clienteId ? clienteExtraSelect.nome : 'Cliente Desconhecido');
 
-            if (pedId) {
-                const p = appData.pedidos.find(x => x.id == pedId);
-                if (p) {
-                    p.clienteId = clienteId;
-                    p.clienteNome = nomeClienteFinal;
-                    p.itens = [...itensPedidoTemp];
-                    p.total = total;
-                    p.despesa = despesa;
-                    p.dataEntrega = document.getElementById('ped-data-entrega').value || appData.dataAtual;
-                    p.responsavel = document.getElementById('ped-responsavel').value || usuarioAtualNome;
-                    p.formaPagamento = detalhePag;
-                    p.status = document.getElementById('ped-status').value;
-                    p.obs = document.getElementById('ped-obs').value;
+            const pedData = {
+                id: pedId ? parseInt(pedId) : Math.floor(1000 + Math.random() * 9000),
+                data: appData.dataAtual,
+                clienteId: clienteId,
+                clienteNome: nomeClienteFinal,
+                itens: [...itensPedidoTemp],
+                total: total,
+                despesa: despesa,
+                dataEntrega: document.getElementById('ped-data-entrega').value || appData.dataAtual,
+                responsavel: document.getElementById('ped-responsavel').value || usuarioAtualNome,
+                formaPagamento: detalhePag,
+                status: document.getElementById('ped-status').value,
+                obs: document.getElementById('ped-obs').value
+            };
+
+            const { error } = await supabaseClient.from('pedidos').upsert(pedData);
+
+            if (!error) {
+                mostrarToast(pedId ? "Pedido alterado e atualizado!" : "Novo pedido salvo!");
+                await carregarDados();
+                if (criarOutro) {
+                    abrirModalPedido();
+                } else {
+                    fecharModalPedido();
                 }
-                mostrarToast("Pedido alterado e atualizado!");
             } else {
-                const novoPedido = {
-                    id: Math.floor(1000 + Math.random() * 9000),
-                    data: appData.dataAtual,
-                    clienteId: clienteId,
-                    clienteNome: nomeClienteFinal,
-                    itens: [...itensPedidoTemp],
-                    total: total,
-                    despesa: despesa,
-                    dataEntrega: document.getElementById('ped-data-entrega').value || appData.dataAtual,
-                    responsavel: usuarioAtualNome,
-                    formaPagamento: detalhePag,
-                    status: document.getElementById('ped-status').value,
-                    obs: document.getElementById('ped-obs').value
-                };
-                appData.pedidos.unshift(novoPedido);
-                mostrarToast("Novo pedido salvo!");
-            }
-
-            salvarStorage();
-            atualizarInterfaceCompleta();
-
-            if (criarOutro) {
-                abrirModalPedido();
-            } else {
-                fecharModalPedido();
+                mostrarToast("Erro ao salvar pedido.", "erro");
             }
         }
 
@@ -2372,12 +2241,10 @@
             document.getElementById('kpi-pedidos-total').innerText = countTotal;
         }
 
-        function alterarStatusPedido(id, novoStatus) {
-            const p = appData.pedidos.find(x => x.id == id);
-            if (p) {
-                p.status = novoStatus;
-                salvarStorage();
-                atualizarInterfaceCompleta();
+        async function alterarStatusPedido(id, novoStatus) {
+            const { error } = await supabaseClient.from('pedidos').update({ status: novoStatus }).eq('id', id);
+            if (!error) {
+                await carregarDados();
                 mostrarToast(`Status do pedido #${id} alterado por ${usuarioAtualNome}!`);
             }
         }
@@ -2385,10 +2252,11 @@
         async function excluirPedido(id) {
             const confirmou = await confirmarAcao("Excluir Pedido", `Deseja excluir o pedido #${id}? Seus valores serão deduzidos do caixa.`, "Sim, Excluir");
             if (confirmou) {
-                appData.pedidos = appData.pedidos.filter(p => p.id != id);
-                salvarStorage();
-                atualizarInterfaceCompleta();
-                mostrarToast("Pedido removido.");
+                const { error } = await supabaseClient.from('pedidos').delete().eq('id', id);
+                if (!error) {
+                    await carregarDados();
+                    mostrarToast("Pedido removido.");
+                }
             }
         }
 
@@ -2420,7 +2288,7 @@
             document.getElementById('modal-nova-despesa').classList.remove('hidden');
         }
 
-        function salvarNovaDespesa(e) {
+        async function salvarNovaDespesa(e) {
             e.preventDefault();
             const id = document.getElementById('desp-id').value;
             const nome = document.getElementById('desp-nome').value.trim() || 'Despesa Diversa';
@@ -2429,32 +2297,25 @@
             const loja = document.getElementById('desp-onde-comprou').value || 'Loja/Fornecedor';
             const valor = parseFloat(document.getElementById('desp-valor').value || 0);
 
-            if (id) {
-                const d = appData.despesasOutras.find(x => x.id == id);
-                if (d) {
-                    d.nome = nome;
-                    d.data = data;
-                    d.tipoPagamento = tipo;
-                    d.loja = loja;
-                    d.valor = valor;
-                }
-                mostrarToast("Despesa atualizada!");
-            } else {
-                appData.despesasOutras.unshift({
-                    id: Date.now(),
-                    nome: nome,
-                    data: data,
-                    tipoPagamento: tipo,
-                    loja: loja,
-                    valor: valor,
-                    registradoPor: usuarioAtualNome
-                });
-                mostrarToast(`Nova despesa cadastrada por ${usuarioAtualNome}!`);
-            }
+            const despData = {
+                id: id ? parseInt(id) : Date.now(),
+                nome: nome,
+                data: data,
+                tipoPagamento: tipo,
+                loja: loja,
+                valor: valor,
+                registradoPor: usuarioAtualNome
+            };
 
-            salvarStorage();
-            fecharModalNovaDespesa();
-            atualizarInterfaceCompleta();
+            const { error } = await supabaseClient.from('despesas').upsert(despData);
+
+            if (!error) {
+                mostrarToast(id ? "Despesa atualizada!" : `Nova despesa cadastrada por ${usuarioAtualNome}!`);
+                fecharModalNovaDespesa();
+                await carregarDados();
+            } else {
+                mostrarToast("Erro ao salvar despesa.", "erro");
+            }
         }
 
         function renderizarDespesas() {
@@ -2512,14 +2373,14 @@
         async function excluirDespesaAvulsa(id) {
             const confirmou = await confirmarAcao("Excluir Despesa", "Deseja realmente excluir esta despesa?", "Sim, Excluir");
             if (confirmou) {
-                appData.despesasOutras = appData.despesasOutras.filter(d => d.id != id);
-                salvarStorage();
-                atualizarInterfaceCompleta();
-                mostrarToast("Despesa removida.");
+                const { error } = await supabaseClient.from('despesas').delete().eq('id', id);
+                if (!error) {
+                    await carregarDados();
+                    mostrarToast("Despesa removida.");
+                }
             }
         }
 
-        // --- RENDERIZAR MOVIMENTAÇÕES FINANCEIRAS (ABA FINANCEIRO) ---
         function renderizarMovimentacoesFinanceiras() {
             const tbody = document.getElementById('tabela-financeiro-body');
             if (!tbody) return;
@@ -2661,37 +2522,19 @@
         }
 
         async function excluirFechamento(id) {
-            const confirmou = await confirmarAcao(
-                "Excluir Mês do Histórico", 
-                "Tem certeza de que deseja excluir o relatório financeiro deste mês? Os históricos de compras dos clientes serão preservados permanentemente.", 
-                "Sim, Excluir"
-            );
-            
+            const confirmou = await confirmarAcao("Excluir Mês do Histórico", "Tem certeza de que deseja excluir o relatório financeiro deste mês?", "Sim, Excluir");
             if (confirmou) {
-                const fEncontrado = appData.historicoFechamentos.find(f => f.id == id);
-                if (fEncontrado && fEncontrado.pedidos && Array.isArray(fEncontrado.pedidos)) {
-                    if (!appData.pedidosArquivadosPermanentes) appData.pedidosArquivadosPermanentes = [];
-                    fEncontrado.pedidos.forEach(p => {
-                        if (!appData.pedidosArquivadosPermanentes.some(x => x.id == p.id)) {
-                            appData.pedidosArquivadosPermanentes.push({ ...p, mesOrigem: fEncontrado.mes });
-                        }
-                    });
+                const { error } = await supabaseClient.from('fechamentos').delete().eq('id', id);
+                if (!error) {
+                    await carregarDados();
+                    if (fechamentoAtualModal && fechamentoAtualModal.id == id) fecharModalDetalhesHistorico();
+                    mostrarToast("Relatório excluído!");
                 }
-
-                appData.historicoFechamentos = appData.historicoFechamentos.filter(f => f.id != id);
-                salvarStorage();
-                atualizarInterfaceCompleta();
-                if (fechamentoAtualModal && fechamentoAtualModal.id == id) {
-                    fecharModalDetalhesHistorico();
-                }
-                mostrarToast("Relatório excluído! Compras do cliente mantidas.");
             }
         }
 
         function excluirFechamentoAtualModal() {
-            if (fechamentoAtualModal) {
-                excluirFechamento(fechamentoAtualModal.id);
-            }
+            if (fechamentoAtualModal) excluirFechamento(fechamentoAtualModal.id);
         }
 
         function verDetalhesFechamento(fechamentoId) {
@@ -2804,21 +2647,15 @@
         }
 
         function baixarCSVFechamentoAtual() {
-            if (fechamentoAtualModal) {
-                baixarCSVFechamento(fechamentoAtualModal.id);
-            }
+            if (fechamentoAtualModal) baixarCSVFechamento(fechamentoAtualModal.id);
         }
 
-        function imprimirModalHistorico() {
-            window.print();
-        }
+        function imprimirModalHistorico() { window.print(); }
 
         // --- GRÁFICOS DINÂMICOS ---
         function atualizarGraficos() {
             const secaoDash = document.getElementById('secao-dashboard');
-            if (secaoDash && secaoDash.classList.contains('hidden')) {
-                return;
-            }
+            if (secaoDash && secaoDash.classList.contains('hidden')) return;
 
             const hoje = new Date();
             const anoAtual = hoje.getFullYear();
@@ -2916,7 +2753,6 @@
             }
         }
 
-        // --- AÇÕES DO HEADER ---
         function copiarCSV() {
             let csv = "ID;Data;Cliente;Total;Despesa;Responsavel;Status\n";
             appData.pedidos.forEach(p => {
@@ -2948,7 +2784,7 @@
         async function fecharMes() {
             const confirmou = await confirmarAcao(
                 "FECHAR O MÊS ATUAL", 
-                "Os pedidos e despesas do ciclo ativo serão arquivados no Histórico e o caixa do novo mês iniciará zerado. Clientes e históricos de compras continuarão salvos. Deseja continuar?", 
+                "Os pedidos e despesas do ciclo ativo serão arquivados no Histórico e o caixa do novo mês iniciará zerado. Deseja continuar?", 
                 "Sim, Fechar Mês", 
                 "fa-lock", 
                 "yellow"
@@ -2998,21 +2834,27 @@
                     totalPedidos: totalPedidosCount,
                     totalEntregues: entreguesCount
                 },
-                pedidos: JSON.parse(JSON.stringify(appData.pedidos)),
-                despesas: JSON.parse(JSON.stringify(appData.despesasOutras))
+                pedidos: appData.pedidos,
+                despesas: appData.despesasOutras
             };
 
-            appData.historicoFechamentos.unshift(novoFechamento);
+            // Insere fechamento
+            await supabaseClient.from('fechamentos').insert(novoFechamento);
 
-            appData.pedidos = [];
-            appData.despesasOutras = [];
+            // Deleta pedidos e despesas do mês ativo do banco
+            if (appData.pedidos.length > 0) {
+                const idsP = appData.pedidos.map(p => p.id);
+                await supabaseClient.from('pedidos').delete().in('id', idsP);
+            }
+            if (appData.despesasOutras.length > 0) {
+                const idsD = appData.despesasOutras.map(d => d.id);
+                await supabaseClient.from('despesas').delete().in('id', idsD);
+            }
 
-            salvarStorage();
-            atualizarInterfaceCompleta();
+            await carregarDados();
             mostrarToast("Mês fechado e arquivado com sucesso no Histórico!");
         }
 
-        // INICIALIZA VERIFICANDO SE O USUÁRIO JÁ ESTÁ LOGADO
         window.onload = verificarSessao;
     </script>
 </body>
