@@ -1052,8 +1052,8 @@
                 <h3 class="text-xl font-bold text-yellow-400"><i class="fa-solid fa-file-import"></i> Adicionar em Massa</h3>
                 <button onclick="fecharModalMassa()" class="text-neutral-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <p class="text-xs text-neutral-400">Cole as linhas da planilha (Nome; CPF; Telefone; Email; Cidade):</p>
-            <textarea id="input-massa-texto" rows="7" placeholder="João Silva; 111.222.333-44; (21) 99999-8888; joao@email.com; Rio de Janeiro" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl p-3 text-white text-xs font-mono focus:outline-none focus:border-yellow-400"></textarea>
+            <p class="text-xs text-neutral-400">Cole em tabela (Nome; CPF; Telefone...) ou em lista/bloco do outro sistema (Nome, CPF, Whats, Endereço, etc.):</p>
+            <textarea id="input-massa-texto" rows="8" placeholder="Formatos aceitos:&#10;&#10;1) Em Bloco:&#10;Nome&#10;Rosangela Soares&#10;CPF/CNPJ&#10;82232342700&#10;Telefone&#10;(21)979275067&#10;Endereço&#10;Estrada Real casa 39&#10;&#10;2) Em Tabela (Ponto e vírgula):&#10;João Silva; 111.222.333-44; (21) 99999-8888; joao@email.com; Rio de Janeiro" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl p-3 text-white text-xs font-mono focus:outline-none focus:border-yellow-400"></textarea>
             <div class="flex justify-end gap-3 border-t border-neutral-800 pt-3">
                 <button onclick="fecharModalMassa()" class="px-4 py-2 bg-neutral-800 text-neutral-300 rounded-xl text-sm">Cancelar</button>
                 <button onclick="processarMassa()" class="px-5 py-2 bg-yellow-400 text-black font-bold rounded-xl text-sm">Importar</button>
@@ -1757,7 +1757,7 @@
             }
         }
 
-        // --- IMPORTAÇÃO EM MASSA ---
+        // --- IMPORTAÇÃO EM MASSA INTELIGENTE (SUPORTA TABELA E BLOCO/LISTA COPIADA) ---
         function abrirModalMassa() {
             document.getElementById('input-massa-texto').value = '';
             document.getElementById('modal-massa').classList.remove('hidden');
@@ -1770,41 +1770,114 @@
         async function processarMassa() {
             const texto = document.getElementById('input-massa-texto').value.trim();
             if (!texto) {
-                mostrarToast("Cole o texto da planilha antes de importar.", "erro");
+                mostrarToast("Cole o texto da planilha ou do outro sistema antes de importar.", "erro");
                 return;
             }
 
-            const linhas = texto.split('\n');
             let novosClientes = [];
 
-            linhas.forEach((linha, index) => {
-                if (!linha.trim()) return;
-                const partes = linha.split(';').map(p => p.trim());
+            // 1. FORMATO 1: Tabela por ponto e vírgula (ex: Nome; CPF; Telefone...)
+            if (texto.includes(';') && !texto.toLowerCase().includes('nome\n')) {
+                const linhas = texto.split('\n');
+                linhas.forEach((linha, index) => {
+                    if (!linha.trim()) return;
+                    const partes = linha.split(';').map(p => p.trim());
+                    if (partes[0]) {
+                        novosClientes.push({
+                            id: Date.now() + index,
+                            nome: partes[0] || 'Cliente Importado',
+                            cpf: partes[1] || '',
+                            telefone: partes[2] || '',
+                            email: partes[3] || '',
+                            cidade: partes[4] || '',
+                            estado: '',
+                            endereco: '',
+                            obs: 'Importado em massa'
+                        });
+                    }
+                });
+            } else {
+                // 2. FORMATO 2: Bloco/Lista do outro sistema (Rótulo na linha de cima, Valor na de baixo)
+                const linhas = texto.split('\n').map(l => l.trim()).filter(l => l.length > 0);
                 
-                if (partes[0]) {
-                    novosClientes.push({
-                        id: Date.now() + index,
-                        nome: partes[0] || 'Cliente Importado',
-                        cpf: partes[1] || '',
-                        telefone: partes[2] || '',
-                        email: partes[3] || '',
-                        cidade: partes[4] || '',
-                        estado: '',
-                        endereco: '',
-                        obs: 'Importado em massa'
-                    });
-                }
-            });
+                let clienteAtual = null;
+                let proximaChave = null;
 
-            if (novosClientes.length > 0) {
-                const { error } = await supabaseClient.from('clientes').insert(novosClientes);
-                if (!error) {
-                    fecharModalMassa();
-                    await carregarDados();
-                    mostrarToast(`${novosClientes.length} cliente(s) importado(s)!`);
-                } else {
-                    mostrarToast(`Erro: ${error.message}`, "erro");
+                const normalizarChave = (str) => {
+                    const s = str.toLowerCase().replace(/[^a-z0-9]/g, '');
+                    if (s === 'nome' || s === 'cliente') return 'nome';
+                    if (s.includes('cpf') || s.includes('cnpj')) return 'cpf';
+                    if (s.includes('telef') || s === 'tel') return 'telefone';
+                    if (s.includes('whats') || s.includes('wpp')) return 'whatsapp';
+                    if (s.includes('email') || s.includes('mail')) return 'email';
+                    if (s.includes('cidad')) return 'cidade';
+                    if (s.includes('estad') || s === 'uf') return 'estado';
+                    if (s.includes('enderec') || s.includes('rua') || s.includes('logradouro')) return 'endereco';
+                    if (s.includes('observa') || s.includes('obs')) return 'obs';
+                    return null;
+                };
+
+                for (let i = 0; i < linhas.length; i++) {
+                    const linha = linhas[i];
+
+                    // Verifica se a linha contém "Rótulo: Valor" (ex: "Nome: Rosangela")
+                    if (linha.includes(':')) {
+                        const partes = linha.split(':');
+                        const k = normalizarChave(partes[0]);
+                        if (k) {
+                            const valorInline = partes.slice(1).join(':').trim();
+                            if (k === 'nome' && clienteAtual && clienteAtual.nome) {
+                                novosClientes.push(clienteAtual);
+                                clienteAtual = null;
+                            }
+                            if (!clienteAtual) {
+                                clienteAtual = { id: Date.now() + novosClientes.length + Math.floor(Math.random()*100), nome: '', cpf: '', telefone: '', whatsapp: '', email: '', cidade: '', estado: '', endereco: '', obs: '' };
+                            }
+                            clienteAtual[k] = valorInline;
+                            proximaChave = null;
+                            continue;
+                        }
+                    }
+
+                    const chaveDetectada = normalizarChave(linha);
+
+                    if (chaveDetectada) {
+                        if (chaveDetectada === 'nome' && clienteAtual && clienteAtual.nome) {
+                            novosClientes.push(clienteAtual);
+                            clienteAtual = null;
+                        }
+
+                        if (!clienteAtual) {
+                            clienteAtual = { id: Date.now() + novosClientes.length + Math.floor(Math.random()*100), nome: '', cpf: '', telefone: '', whatsapp: '', email: '', cidade: '', estado: '', endereco: '', obs: '' };
+                        }
+
+                        proximaChave = chaveDetectada;
+                    } else if (proximaChave && clienteAtual) {
+                        clienteAtual[proximaChave] = linha;
+                        proximaChave = null;
+                    } else if (clienteAtual && !clienteAtual.nome) {
+                        clienteAtual.nome = linha;
+                    }
                 }
+
+                if (clienteAtual && (clienteAtual.nome || clienteAtual.cpf || clienteAtual.telefone)) {
+                    novosClientes.push(clienteAtual);
+                }
+            }
+
+            if (novosClientes.length === 0) {
+                mostrarToast("Nenhum cliente válido foi identificado no texto colado.", "erro");
+                return;
+            }
+
+            const { error } = await supabaseClient.from('clientes').insert(novosClientes);
+            if (!error) {
+                fecharModalMassa();
+                await carregarDados();
+                mostrarToast(`${novosClientes.length} cliente(s) importado(s) com sucesso!`);
+            } else {
+                console.error("Erro ao importar em massa:", error);
+                mostrarToast(`Erro ao importar: ${error.message}`, "erro");
             }
         }
 
