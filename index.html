@@ -67,7 +67,7 @@
     <!-- BARRA LATERAL (SIDEBAR) -->
     <aside class="w-full md:w-64 bg-neutral-900 border-b md:border-b-0 md:border-r border-neutral-800 p-5 flex flex-col justify-between shrink-0 no-print">
         <div>
-            <!-- LOGO / NOME DA PÁGINA (SEM BORDA / LIMPO) -->
+            <!-- LOGO / NOME DA PÁGINA -->
             <div class="flex items-center gap-3 px-2 py-3 mb-6 border-b border-neutral-800">
                 <div class="w-12 h-12 shrink-0 flex items-center justify-center">
                     <img src="FIVICOM.png" alt="PHSUBLIME" class="w-full h-full object-contain" onerror="this.outerHTML='<i class=\'fa-solid fa-crown text-yellow-400 text-2xl\'></i>'">
@@ -570,6 +570,27 @@
 
     <!-- ================= MODAIS ================= -->
 
+    <!-- MODAL CONFIRMAÇÃO PERSONALIZADO (SUBSTITUI CAIXA DO NAVEGADOR) -->
+    <div id="modal-confirmacao" class="fixed inset-0 bg-black/85 backdrop-blur-md z-[1000] hidden flex items-center justify-center p-4">
+        <div id="modal-confirmacao-box" class="bg-neutral-900 border border-neutral-800 rounded-2xl max-w-sm w-full p-6 text-center space-y-4 shadow-2xl scale-95 opacity-0 transition-all duration-200">
+            <div id="modal-confirmacao-icone" class="w-16 h-16 bg-rose-500/10 border border-rose-500/20 text-rose-500 rounded-full flex items-center justify-center mx-auto text-2xl shadow-lg shadow-rose-950/30">
+                <i class="fa-solid fa-trash-can"></i>
+            </div>
+            <div>
+                <h3 class="text-lg font-black text-white" id="modal-confirmacao-titulo">Confirmar Ação</h3>
+                <p class="text-xs text-neutral-400 mt-1.5 leading-relaxed" id="modal-confirmacao-mensagem">Deseja realmente excluir este item?</p>
+            </div>
+            <div class="flex gap-3 pt-2">
+                <button id="btn-confirmar-cancelar" class="w-1/2 bg-neutral-800 hover:bg-neutral-700 text-neutral-300 font-bold py-2.5 rounded-xl text-xs transition-all border border-neutral-700">
+                    Cancelar
+                </button>
+                <button id="btn-confirmar-ok" class="w-1/2 bg-rose-600 hover:bg-rose-500 text-white font-bold py-2.5 rounded-xl text-xs transition-all shadow-lg shadow-rose-950/50">
+                    Sim, Excluir
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- MODAL DETALHES HISTÓRICO DO MÊS FECHADO -->
     <div id="modal-detalhes-historico" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-neutral-900 border border-neutral-800 rounded-2xl max-w-5xl w-full p-6 space-y-5 shadow-2xl overflow-y-auto max-h-[90vh]">
@@ -936,7 +957,7 @@
         </div>
     </div>
 
-    <!-- TOAST -->
+    <!-- TOAST DE NOTIFICAÇÃO -->
     <div id="toast" class="fixed bottom-5 right-5 bg-neutral-800 text-white border border-yellow-400 px-5 py-3 rounded-xl shadow-2xl transform translate-y-20 opacity-0 transition-all duration-300 flex items-center gap-3 z-50">
         <i class="fa-solid fa-circle-check text-yellow-400 text-lg"></i>
         <span id="toast-message" class="font-medium text-sm">Ação realizada!</span>
@@ -951,6 +972,50 @@
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         let usuarioAtualNome = "Atendente";
+
+        // CAIXA DE CONFIRMAÇÃO PERSONALIZADA (SUBSTITUI O CONFIRM NATIVO)
+        function confirmarAcao(titulo, mensagem, textoBotao = "Sim, Excluir", icone = "fa-trash-can", corOk = "rose") {
+            return new Promise((resolve) => {
+                const modal = document.getElementById('modal-confirmacao');
+                const box = document.getElementById('modal-confirmacao-box');
+                const titleEl = document.getElementById('modal-confirmacao-titulo');
+                const msgEl = document.getElementById('modal-confirmacao-mensagem');
+                const btnOk = document.getElementById('btn-confirmar-ok');
+                const btnCancel = document.getElementById('btn-confirmar-cancelar');
+                const iconContainer = document.getElementById('modal-confirmacao-icone');
+
+                titleEl.innerText = titulo;
+                msgEl.innerText = mensagem;
+                btnOk.innerText = textoBotao;
+                iconContainer.innerHTML = `<i class="fa-solid ${icone}"></i>`;
+
+                if (corOk === 'rose') {
+                    btnOk.className = "w-1/2 bg-rose-600 hover:bg-rose-500 text-white font-bold py-2.5 rounded-xl text-xs transition-all shadow-lg shadow-rose-950/50";
+                    iconContainer.className = "w-16 h-16 bg-rose-500/10 border border-rose-500/20 text-rose-500 rounded-full flex items-center justify-center mx-auto text-2xl shadow-lg shadow-rose-950/30";
+                } else {
+                    btnOk.className = "w-1/2 bg-yellow-400 hover:bg-yellow-300 text-black font-bold py-2.5 rounded-xl text-xs transition-all shadow-lg shadow-yellow-950/30";
+                    iconContainer.className = "w-16 h-16 bg-yellow-400/10 border border-yellow-400/20 text-yellow-400 rounded-full flex items-center justify-center mx-auto text-2xl shadow-lg shadow-yellow-950/30";
+                }
+
+                modal.classList.remove('hidden');
+                setTimeout(() => {
+                    box.classList.remove('scale-95', 'opacity-0');
+                    box.classList.add('scale-100', 'opacity-100');
+                }, 10);
+
+                const fechar = (resposta) => {
+                    box.classList.remove('scale-100', 'opacity-100');
+                    box.classList.add('scale-95', 'opacity-0');
+                    setTimeout(() => {
+                        modal.classList.add('hidden');
+                        resolve(resposta);
+                    }, 150);
+                };
+
+                btnOk.onclick = () => fechar(true);
+                btnCancel.onclick = () => fechar(false);
+            });
+        }
 
         // ATUALIZA A SAUDAÇÃO E O NOME DO USUÁRIO LOGADO
         function definirUsuarioLogado(email) {
@@ -1010,7 +1075,8 @@
 
         // FUNÇÃO DE LOGOUT
         async function fazerLogout() {
-            if(confirm("Deseja realmente sair do sistema?")) {
+            const confirmou = await confirmarAcao("Sair do Sistema", "Deseja realmente sair do sistema da PHSUBLIME?", "Sim, Sair", "fa-right-from-bracket", "yellow");
+            if (confirmou) {
                 await supabaseClient.auth.signOut();
                 window.location.reload();
             }
@@ -1300,8 +1366,9 @@
             atualizarInterfaceCompleta();
         }
 
-        function excluirCliente(id) {
-            if (confirm("Deseja excluir este cliente?")) {
+        async function excluirCliente(id) {
+            const confirmou = await confirmarAcao("Excluir Cliente", "Deseja realmente excluir este cliente do sistema?", "Sim, Excluir");
+            if (confirmou) {
                 appData.clientes = appData.clientes.filter(c => c.id != id);
                 salvarStorage();
                 atualizarInterfaceCompleta();
@@ -1418,7 +1485,6 @@
             document.getElementById('form-pedido').reset();
             document.getElementById('ped-cliente-busca').value = '';
 
-            // REGISTRA AUTOMATICAMENTE O NOME DE QUEM ESTÁ LOGADO
             document.getElementById('ped-responsavel').value = usuarioAtualNome;
 
             clienteExtraSelect = null;
@@ -1732,8 +1798,9 @@
             }
         }
 
-        function excluirPedido(id) {
-            if (confirm("Deseja excluir este pedido? Seus valores serão deduzidos do caixa.")) {
+        async function excluirPedido(id) {
+            const confirmou = await confirmarAcao("Excluir Pedido", `Deseja excluir o pedido #${id}? Seus valores serão deduzidos do caixa.`, "Sim, Excluir");
+            if (confirmou) {
                 appData.pedidos = appData.pedidos.filter(p => p.id != id);
                 salvarStorage();
                 atualizarInterfaceCompleta();
@@ -1858,8 +1925,9 @@
             });
         }
 
-        function excluirDespesaAvulsa(id) {
-            if (confirm("Deseja excluir esta despesa?")) {
+        async function excluirDespesaAvulsa(id) {
+            const confirmou = await confirmarAcao("Excluir Despesa", "Deseja realmente excluir esta despesa?", "Sim, Excluir");
+            if (confirmou) {
                 appData.despesasOutras = appData.despesasOutras.filter(d => d.id != id);
                 salvarStorage();
                 atualizarInterfaceCompleta();
@@ -2008,8 +2076,9 @@
             });
         }
 
-        function excluirFechamento(id) {
-            if (confirm("Tem certeza de que deseja excluir permanentemente o registro deste mês do Histórico?")) {
+        async function excluirFechamento(id) {
+            const confirmou = await confirmarAcao("Excluir Mês do Histórico", "Tem certeza de que deseja excluir permanentemente o registro deste mês do Histórico?", "Sim, Excluir");
+            if (confirmou) {
                 appData.historicoFechamentos = appData.historicoFechamentos.filter(f => f.id != id);
                 salvarStorage();
                 atualizarInterfaceCompleta();
@@ -2277,10 +2346,16 @@
 
         function baixarPDF() { window.print(); }
 
-        function fecharMes() {
-            if (!confirm("Deseja FECHAR O MÊS atual?\n\nOs pedidos e despesas do ciclo ativo serão arquivados com relatório completo no Histórico e o caixa do novo mês iniciará zerado.\n\nSua base de clientes e históricos de compras serão mantidos intactos.")) {
-                return;
-            }
+        async function fecharMes() {
+            const confirmou = await confirmarAcao(
+                "FECHAR O MÊS ATUAL", 
+                "Os pedidos e despesas do ciclo ativo serão arquivados no Histórico e o caixa do novo mês iniciará zerado. Clientes e históricos de compras continuarão salvos. Deseja continuar?", 
+                "Sim, Fechar Mês", 
+                "fa-lock", 
+                "yellow"
+            );
+
+            if (!confirmou) return;
 
             let totalFat = 0;
             let despesaPed = 0;
