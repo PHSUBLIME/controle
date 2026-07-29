@@ -86,6 +86,14 @@
                     <i class="fa-solid fa-chart-pie text-base"></i> Dashboard
                 </button>
 
+                <!-- NOVA ABA: ENTREGAS DE HOJE -->
+                <button onclick="navegar('entregas')" id="btn-entregas" class="nav-btn flex items-center justify-between w-full px-4 py-3 rounded-xl font-semibold text-sm transition-all text-neutral-400 hover:text-white hover:bg-neutral-800">
+                    <span class="flex items-center gap-3">
+                        <i class="fa-solid fa-truck-ramp-box text-base"></i> Entregas de Hoje
+                    </span>
+                    <span id="badge-entregas-hoje" class="bg-yellow-400 text-black text-[10px] font-black px-2 py-0.5 rounded-full hidden">0</span>
+                </button>
+
                 <button onclick="navegar('clientes')" id="btn-clientes" class="nav-btn flex items-center gap-3 w-full px-4 py-3 rounded-xl font-semibold text-sm transition-all text-neutral-400 hover:text-white hover:bg-neutral-800">
                     <i class="fa-solid fa-users text-base"></i> Clientes
                 </button>
@@ -290,6 +298,27 @@
                 </div>
             </div>
 
+        </section>
+
+        <!-- ================= SEÇÃO: ENTREGAS DE HOJE ================= -->
+        <section id="secao-entregas" class="secao-conteudo hidden space-y-6">
+            <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-neutral-900 p-6 rounded-2xl border border-neutral-800 shadow-2xl">
+                <div>
+                    <h2 class="text-2xl font-black text-yellow-400 flex items-center gap-2">
+                        <i class="fa-solid fa-truck-ramp-box text-yellow-400"></i> Pedidos Agendados para Entrega Hoje
+                    </h2>
+                    <p class="text-neutral-400 text-sm mt-1">Acompanhe e notifique os clientes com pedidos com entrega prevista para hoje.</p>
+                </div>
+                <div class="flex items-center gap-3 bg-neutral-800 px-4 py-2.5 rounded-xl border border-neutral-700">
+                    <span class="text-xs text-neutral-400 font-bold uppercase">Total Agendado Hoje:</span>
+                    <span class="text-xl font-black text-yellow-400" id="kpi-entregas-hoje-count">0</span>
+                </div>
+            </div>
+
+            <!-- CONTAINER DE CARDS DAS ENTREGAS DO DIA -->
+            <div class="grid grid-cols-1 gap-4" id="lista-entregas-hoje-container">
+                <!-- Inserido dinamicamente via JS -->
+            </div>
         </section>
 
         <!-- ================= SEÇÃO: CLIENTES ================= -->
@@ -1190,7 +1219,7 @@
             pedidos: [],
             despesasOutras: [],
             historicoFechamentos: [],
-            pedidosArquivadosPermanentes: [], // GUARDA COMPRAS DE MESES EXCLUÍDOS DO HISTÓRICO
+            pedidosArquivadosPermanentes: [],
             vendasChart: null,
             servicosChart: null,
             abaPedidoFiltro: 'todos'
@@ -1336,12 +1365,147 @@
             document.getElementById('fin-lucro-10').innerText = `R$ ${dezPercentLucro.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
             document.getElementById('fin-lucro-liquido').innerText = `R$ ${lucroLiquidoFinal.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
 
+            renderizarEntreguesHoje();
             renderizarClientes();
             renderizarPedidos();
             renderizarDespesas();
             renderizarMovimentacoesFinanceiras();
             renderizarHistoricoFechamentos();
             atualizarGraficos();
+        }
+
+        // --- RENDERIZAR ENTREGAS DE HOJE ---
+        function renderizarEntreguesHoje() {
+            const container = document.getElementById('lista-entregas-hoje-container');
+            const kpiCount = document.getElementById('kpi-entregas-hoje-count');
+            const badgeEl = document.getElementById('badge-entregas-hoje');
+            
+            if (!container) return;
+            container.innerHTML = '';
+
+            const hojeStr = appData.dataAtual;
+
+            // Filtra pedidos ativos cuja dataEntrega é HOJE e não está cancelado
+            const entregasHoje = appData.pedidos.filter(p => p.dataEntrega === hojeStr && p.status !== 'Cancelado');
+
+            const totalEntregas = entregasHoje.length;
+
+            if (kpiCount) kpiCount.innerText = totalEntregas;
+            if (badgeEl) {
+                if (totalEntregas > 0) {
+                    badgeEl.innerText = totalEntregas;
+                    badgeEl.classList.remove('hidden');
+                } else {
+                    badgeEl.classList.add('hidden');
+                }
+            }
+
+            if (totalEntregas === 0) {
+                container.innerHTML = `
+                    <div class="bg-neutral-900 border border-neutral-800 p-8 rounded-2xl text-center space-y-2">
+                        <i class="fa-solid fa-circle-check text-4xl text-emerald-400 mb-2 block"></i>
+                        <h3 class="text-lg font-bold text-white">Nenhum pedido agendado para entrega hoje!</h3>
+                        <p class="text-xs text-neutral-400">Todos os pedidos agendados para a data de hoje já foram finalizados ou não existem novos agendamentos.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            entregasHoje.forEach(p => {
+                const cli = appData.clientes.find(c => c.id == p.clienteId);
+                const descProdutos = p.itens ? p.itens.map(i => `${i.servico || 'Item'} (${i.qtd}x)`).join(', ') : 'Serviço';
+                const telefoneCli = cli ? (cli.whatsapp || cli.telefone || '') : '';
+                const jaEntregue = p.status === 'Entregue';
+
+                const card = document.createElement('div');
+                card.className = `bg-neutral-900 border ${jaEntregue ? 'border-emerald-500/40 bg-emerald-950/10' : 'border-neutral-800 hover:border-yellow-400/40'} p-5 rounded-2xl transition-all flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4`;
+                
+                card.innerHTML = `
+                    <div class="space-y-1.5 flex-1">
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs font-bold text-yellow-400">Pedido #${p.id}</span>
+                            <span class="px-2.5 py-0.5 text-[10px] rounded-full font-bold uppercase ${jaEntregue ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30' : 'bg-amber-500/10 text-amber-400 border border-amber-500/30'}">
+                                ${escapeAttr(p.status)}
+                            </span>
+                        </div>
+                        <h3 class="text-lg font-black text-white flex items-center gap-2">
+                            <i class="fa-solid fa-user text-xs text-yellow-400"></i> ${escapeAttr(p.clienteNome)}
+                        </h3>
+                        <p class="text-xs text-neutral-300">
+                            <strong class="text-neutral-400">Itens:</strong> ${escapeAttr(descProdutos)}
+                        </p>
+                        <div class="flex flex-wrap items-center gap-4 text-xs text-neutral-400 pt-1">
+                            <span><i class="fa-solid fa-user-gear text-yellow-400"></i> Resp: <strong class="text-neutral-200">${escapeAttr(p.responsavel || 'N/I')}</strong></span>
+                            <span><i class="fa-solid fa-money-bill-wave text-emerald-400"></i> Pagamento: <strong class="text-neutral-200">${escapeAttr(p.formaPagamento)}</strong></span>
+                            <span><i class="fa-solid fa-phone text-blue-400"></i> Tel/Whats: <strong class="text-neutral-200">${escapeAttr(telefoneCli || 'Não informado')}</strong></span>
+                        </div>
+                    </div>
+
+                    <div class="text-right flex flex-col sm:flex-row items-end sm:items-center gap-3 w-full lg:w-auto border-t lg:border-t-0 border-neutral-800 pt-3 lg:pt-0">
+                        <div class="text-left sm:text-right pr-2">
+                            <span class="text-[10px] text-neutral-400 uppercase font-bold block">Valor Total</span>
+                            <strong class="text-lg font-black text-yellow-400">R$ ${parseFloat(p.total||0).toLocaleString('pt-BR', {minimumFractionDigits: 2})}</strong>
+                        </div>
+
+                        <div class="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+                            <button onclick="enviarMensagemWhatsAppEntrega(${p.id})" class="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2.5 rounded-xl text-xs shadow-lg shadow-emerald-950/40 transition-all">
+                                <i class="fa-brands fa-whatsapp text-base"></i> Avisar no WhatsApp
+                            </button>
+
+                            ${!jaEntregue ? `
+                                <button onclick="concluirEntregaRapida(${p.id})" class="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-yellow-400 hover:bg-yellow-300 text-black font-bold px-4 py-2.5 rounded-xl text-xs shadow-lg shadow-yellow-950/30 transition-all">
+                                    <i class="fa-solid fa-circle-check"></i> Marcar Entregue
+                                </button>
+                            ` : `
+                                <span class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 font-bold px-3 py-2 rounded-xl text-xs flex items-center gap-1.5">
+                                    <i class="fa-solid fa-check-double"></i> Concluído
+                                </span>
+                            `}
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // DISPARA MENSAGEM DO WHATSAPP FORMATADA
+        function enviarMensagemWhatsAppEntrega(pedidoId) {
+            const p = appData.pedidos.find(x => x.id == pedidoId);
+            if (!p) return;
+
+            const cli = appData.clientes.find(c => c.id == p.clienteId);
+            const descProdutos = p.itens ? p.itens.map(i => `${i.servico || 'Item'} (${i.qtd}x)`).join(', ') : 'seu pedido';
+            const nomeCliente = p.clienteNome || 'Cliente';
+
+            let telClean = '';
+            if (cli) {
+                const telRaw = cli.whatsapp || cli.telefone || '';
+                telClean = telRaw.replace(/\D/g, '');
+                if (telClean.length === 10 || telClean.length === 11) {
+                    telClean = '55' + telClean;
+                }
+            }
+
+            const msg = `Olá, *${nomeCliente}*! Tudo bem?\n\n` +
+                        `Passando para avisar que o seu pedido *#${p.id}* (*${descProdutos}*) da *PHSUBLIME* está agendado para ser entregue hoje! 🚚✨\n\n` +
+                        `Qualquer dúvida estamos à disposição. Obrigado! - *PHSUBLIME*`;
+
+            const url = telClean ? 
+                `https://api.whatsapp.com/send?phone=${telClean}&text=${encodeURIComponent(msg)}` : 
+                `https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`;
+
+            window.open(url, '_blank');
+        }
+
+        // MARCA O PEDIDO COMO ENTREGUE DIRETO DA ABA DE ENTREGAS
+        function concluirEntregaRapida(pedidoId) {
+            const p = appData.pedidos.find(x => x.id == pedidoId);
+            if (p) {
+                p.status = 'Entregue';
+                salvarStorage();
+                atualizarInterfaceCompleta();
+                mostrarToast(`Pedido #${pedidoId} marcado como Entregue!`);
+            }
         }
 
         // --- CLIENTES ---
