@@ -1628,6 +1628,8 @@
             if (!error) {
                 await carregarDados();
                 mostrarToast(`Pedido #${pedidoId} marcado como Entregue!`);
+            } else {
+                mostrarToast(`Erro: ${error.message}`, "erro");
             }
         }
 
@@ -1714,30 +1716,31 @@
 
         async function salvarCliente(e) {
             e.preventDefault();
-            const id = document.getElementById('cli-id').value;
+            const idInput = document.getElementById('cli-id').value;
             const nome = document.getElementById('cli-nome').value.trim() || 'Cliente sem nome';
 
             const cliData = {
-                id: id ? parseInt(id) : Date.now(),
+                id: idInput ? parseInt(idInput) : Date.now(),
                 nome: nome,
-                cpf: document.getElementById('cli-cpf').value,
-                telefone: document.getElementById('cli-telefone').value,
-                whatsapp: document.getElementById('cli-whatsapp').value,
-                email: document.getElementById('cli-email').value,
-                cidade: document.getElementById('cli-cidade').value,
-                estado: document.getElementById('cli-estado').value,
-                endereco: document.getElementById('cli-endereco').value,
-                obs: document.getElementById('cli-obs').value
+                cpf: document.getElementById('cli-cpf').value || '',
+                telefone: document.getElementById('cli-telefone').value || '',
+                whatsapp: document.getElementById('cli-whatsapp').value || '',
+                email: document.getElementById('cli-email').value || '',
+                cidade: document.getElementById('cli-cidade').value || '',
+                estado: document.getElementById('cli-estado').value || '',
+                endereco: document.getElementById('cli-endereco').value || '',
+                obs: document.getElementById('cli-obs').value || ''
             };
 
-            const { error } = await supabaseClient.from('clientes').upsert(cliData);
+            const { data, error } = await supabaseClient.from('clientes').upsert([cliData]);
 
             if (!error) {
-                mostrarToast(id ? "Cliente atualizado!" : "Novo cliente cadastrado!");
+                mostrarToast(idInput ? "Cliente atualizado!" : "Novo cliente cadastrado!");
                 fecharModalCliente();
                 await carregarDados();
             } else {
-                mostrarToast("Erro ao salvar cliente no banco.", "erro");
+                console.error("Erro Supabase:", error);
+                mostrarToast(`Erro: ${error.message || 'Falha ao salvar no banco'}`, "erro");
             }
         }
 
@@ -1748,6 +1751,8 @@
                 if (!error) {
                     await carregarDados();
                     mostrarToast("Cliente removido.");
+                } else {
+                    mostrarToast(`Erro: ${error.message}`, "erro");
                 }
             }
         }
@@ -1797,6 +1802,8 @@
                     fecharModalMassa();
                     await carregarDados();
                     mostrarToast(`${novosClientes.length} cliente(s) importado(s)!`);
+                } else {
+                    mostrarToast(`Erro: ${error.message}`, "erro");
                 }
             }
         }
@@ -2161,7 +2168,7 @@
                 obs: document.getElementById('ped-obs').value
             };
 
-            const { error } = await supabaseClient.from('pedidos').upsert(pedData);
+            const { data, error } = await supabaseClient.from('pedidos').upsert([pedData]);
 
             if (!error) {
                 mostrarToast(pedId ? "Pedido alterado e atualizado!" : "Novo pedido salvo!");
@@ -2172,7 +2179,8 @@
                     fecharModalPedido();
                 }
             } else {
-                mostrarToast("Erro ao salvar pedido.", "erro");
+                console.error("Erro Supabase:", error);
+                mostrarToast(`Erro: ${error.message || 'Falha ao salvar pedido'}`, "erro");
             }
         }
 
@@ -2246,6 +2254,8 @@
             if (!error) {
                 await carregarDados();
                 mostrarToast(`Status do pedido #${id} alterado por ${usuarioAtualNome}!`);
+            } else {
+                mostrarToast(`Erro: ${error.message}`, "erro");
             }
         }
 
@@ -2256,6 +2266,8 @@
                 if (!error) {
                     await carregarDados();
                     mostrarToast("Pedido removido.");
+                } else {
+                    mostrarToast(`Erro: ${error.message}`, "erro");
                 }
             }
         }
@@ -2307,14 +2319,15 @@
                 registradoPor: usuarioAtualNome
             };
 
-            const { error } = await supabaseClient.from('despesas').upsert(despData);
+            const { data: resData, error } = await supabaseClient.from('despesas').upsert([despData]);
 
             if (!error) {
                 mostrarToast(id ? "Despesa atualizada!" : `Nova despesa cadastrada por ${usuarioAtualNome}!`);
                 fecharModalNovaDespesa();
                 await carregarDados();
             } else {
-                mostrarToast("Erro ao salvar despesa.", "erro");
+                console.error("Erro Supabase:", error);
+                mostrarToast(`Erro: ${error.message || 'Falha ao salvar despesa'}`, "erro");
             }
         }
 
@@ -2377,6 +2390,8 @@
                 if (!error) {
                     await carregarDados();
                     mostrarToast("Despesa removida.");
+                } else {
+                    mostrarToast(`Erro: ${error.message}`, "erro");
                 }
             }
         }
@@ -2529,6 +2544,8 @@
                     await carregarDados();
                     if (fechamentoAtualModal && fechamentoAtualModal.id == id) fecharModalDetalhesHistorico();
                     mostrarToast("Relatório excluído!");
+                } else {
+                    mostrarToast(`Erro: ${error.message}`, "erro");
                 }
             }
         }
@@ -2838,10 +2855,13 @@
                 despesas: appData.despesasOutras
             };
 
-            // Insere fechamento
-            await supabaseClient.from('fechamentos').insert(novoFechamento);
+            const { error: errFech } = await supabaseClient.from('fechamentos').insert([novoFechamento]);
 
-            // Deleta pedidos e despesas do mês ativo do banco
+            if (errFech) {
+                mostrarToast(`Erro ao fechar mês: ${errFech.message}`, "erro");
+                return;
+            }
+
             if (appData.pedidos.length > 0) {
                 const idsP = appData.pedidos.map(p => p.id);
                 await supabaseClient.from('pedidos').delete().in('id', idsP);
