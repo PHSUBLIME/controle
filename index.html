@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Supabase JS Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #000000; }
         @media print {
@@ -25,14 +27,44 @@
 </head>
 <body class="bg-black text-slate-100 min-h-screen flex flex-col md:flex-row">
 
+    <!-- TELA DE LOGIN BLOQUEANTE -->
+    <div id="tela-login" class="fixed inset-0 bg-black z-[999] flex items-center justify-center p-4">
+        <div class="bg-neutral-900 border border-neutral-800 p-8 rounded-2xl max-w-md w-full space-y-6 shadow-2xl text-center">
+            <div class="flex justify-center mb-2">
+                <div class="p-3 bg-yellow-400 text-black rounded-2xl font-black text-2xl flex items-center justify-center w-14 h-14">
+                    <i class="fa-solid fa-crown"></i>
+                </div>
+            </div>
+            <div>
+                <h2 class="text-2xl font-black text-yellow-400">PHSUBLIME</h2>
+                <p class="text-xs text-neutral-400 mt-1">Digite seu usuário e senha para acessar</p>
+            </div>
+
+            <form onsubmit="fazerLogin(event)" class="space-y-4 text-left">
+                <div>
+                    <label class="block text-xs font-bold text-neutral-400 mb-1">Usuário</label>
+                    <input type="text" id="login-usuario" required placeholder="Digite seu nome (ex: admin)" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-yellow-400">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-neutral-400 mb-1">Senha</label>
+                    <input type="password" id="login-senha" required placeholder="••••••••" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-yellow-400">
+                </div>
+
+                <p id="login-erro" class="text-rose-500 text-xs text-center font-semibold hidden">Usuário ou senha incorretos!</p>
+
+                <button type="submit" id="btn-entrar" class="w-full bg-yellow-400 hover:bg-yellow-300 text-black font-black py-3 rounded-xl text-sm transition-all shadow-lg shadow-yellow-950/40">
+                    ENTRAR NO SISTEMA
+                </button>
+            </form>
+        </div>
+    </div>
+
     <!-- BARRA LATERAL (SIDEBAR) -->
     <aside class="w-full md:w-64 bg-neutral-900 border-b md:border-b-0 md:border-r border-neutral-800 p-5 flex flex-col justify-between shrink-0 no-print">
         <div>
-            <!-- LOGO / NOME DA PÁGINA COM SUPORTE A LOGOMARCA DE IMAGEM -->
+            <!-- LOGO / NOME DA PÁGINA -->
             <div class="flex items-center gap-3 px-2 py-3 mb-6 border-b border-neutral-800">
                 <div class="p-2 bg-yellow-400 text-black rounded-xl font-black text-xl flex items-center justify-center w-11 h-11 shrink-0 overflow-hidden">
-                    <!-- Para usar a imagem da sua logo, descomente a linha abaixo e coloque o caminho/link da imagem: -->
-                    <!-- <img src="SUA_LOGO.png" alt="PHSUBLIME Logo" class="w-full h-full object-cover"> -->
                     <i class="fa-solid fa-crown"></i>
                 </div>
                 <div>
@@ -65,6 +97,11 @@
 
                 <button onclick="navegar('historico')" id="btn-historico" class="nav-btn flex items-center gap-3 w-full px-4 py-3 rounded-xl font-semibold text-sm transition-all text-neutral-400 hover:text-white hover:bg-neutral-800">
                     <i class="fa-solid fa-clock-rotate-left text-base"></i> Histórico
+                </button>
+
+                <!-- BOTÃO SAIR -->
+                <button onclick="fazerLogout()" class="nav-btn flex items-center gap-3 w-full px-4 py-3 rounded-xl font-semibold text-sm transition-all text-rose-500 hover:bg-rose-950/40 mt-4 border border-rose-900/40">
+                    <i class="fa-solid fa-right-from-bracket text-base"></i> Sair do Sistema
                 </button>
             </nav>
         </div>
@@ -896,6 +933,65 @@
 
     <!-- SCRIPT PRINCIPAL -->
     <script>
+        // ================= CONFIGURAÇÃO DO SUPABASE =================
+        const SUPABASE_URL = 'https://qkcrimqakjsokdztzqxe.supabase.co';
+        
+        // ⚠️ SUBSTITUA A FRASE ABAIXO PELA SUA CHAVE PUBLICÁVEL (sb_publishable_...)
+        const SUPABASE_ANON_KEY = 'sb_publishable_mF--YXTFkjyjbQ7Uw7Qq1w_ODzsJPA1'; 
+
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // FUNÇÃO DE LOGIN
+        async function fazerLogin(e) {
+            e.preventDefault();
+            let usuarioInput = document.getElementById('login-usuario').value.trim();
+            const senha = document.getElementById('login-senha').value;
+            const btn = document.getElementById('btn-entrar');
+            const msgErro = document.getElementById('login-erro');
+
+            let emailFinal = usuarioInput.includes('@') ? usuarioInput : `${usuarioInput}@phsublime.com`;
+
+            btn.innerText = "Verificando...";
+            btn.disabled = true;
+            msgErro.classList.add('hidden');
+
+            const { data, error } = await supabaseClient.auth.signInWithPassword({
+                email: emailFinal,
+                password: senha
+            });
+
+            if (error) {
+                msgErro.innerText = "Usuário ou senha incorretos!";
+                msgErro.classList.remove('hidden');
+                btn.innerText = "ENTRAR NO SISTEMA";
+                btn.disabled = false;
+            } else {
+                document.getElementById('tela-login').classList.add('hidden');
+                carregarDados();
+            }
+        }
+
+        // FUNÇÃO DE VERIFICAR SESSÃO
+        async function verificarSessao() {
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            
+            if (session) {
+                document.getElementById('tela-login').classList.add('hidden');
+                carregarDados();
+            } else {
+                document.getElementById('tela-login').classList.remove('hidden');
+            }
+        }
+
+        // FUNÇÃO DE LOGOUT
+        async function fazerLogout() {
+            if(confirm("Deseja realmente sair do sistema?")) {
+                await supabaseClient.auth.signOut();
+                window.location.reload();
+            }
+        }
+
+        // ================= DADOS DA APLICAÇÃO =================
         let appData = {
             dataAtual: new Date().toISOString().split('T')[0],
             clientes: [
@@ -1071,14 +1167,12 @@
 
                 let totalComprado = 0;
 
-                // Somar pedidos do mês ativo
                 appData.pedidos.forEach(p => {
                     if (p.clienteId == c.id && p.status !== 'Cancelado') {
                         totalComprado += parseFloat(p.total || 0);
                     }
                 });
 
-                // Somar pedidos arquivados nos meses fechados
                 appData.historicoFechamentos.forEach(f => {
                     if (f.pedidos && Array.isArray(f.pedidos)) {
                         f.pedidos.forEach(p => {
@@ -1249,7 +1343,6 @@
 
             let todosPedidosCliente = appData.pedidos.filter(p => p.clienteId == clienteId).map(p => ({ ...p, mesOrigem: 'Mês Ativo' }));
 
-            // Busca pedidos em todos os meses fechados do histórico
             appData.historicoFechamentos.forEach(f => {
                 if (f.pedidos && Array.isArray(f.pedidos)) {
                     f.pedidos.forEach(p => {
@@ -1375,7 +1468,6 @@
             document.getElementById('modal-pedido').classList.remove('hidden');
         }
 
-        // ADICIONA NOVO ITEM NO TOPO (UNSHIFT) E COM VALORES VAZIOS POR PADRÃO
         function adicionarItemProduto() {
             itensPedidoTemp.unshift({ servico: '', material: '', qtd: 1, largura: '', altura: '', acabamento: '', valor: '', despesa: '' });
             renderizarItensFormPedido();
@@ -1750,7 +1842,6 @@
 
             let movimentacoes = [];
 
-            // 1. Entradas e Custos de Pedidos Ativos
             appData.pedidos.forEach(p => {
                 if (p.status !== 'Cancelado') {
                     const descProdutos = p.itens ? p.itens.map(i => `${i.servico || 'Item'} (${i.qtd}x)`).join(', ') : 'Serviço';
@@ -1780,7 +1871,6 @@
                 }
             });
 
-            // 2. Despesas Avulsas do Mês Ativo
             appData.despesasOutras.forEach(d => {
                 movimentacoes.push({
                     data: d.data,
@@ -1794,7 +1884,6 @@
                 });
             });
 
-            // Ordena mais recentes no topo
             movimentacoes.sort((a, b) => new Date(b.data) - new Date(a.data));
 
             let exibidos = 0;
@@ -1834,7 +1923,7 @@
             }
         }
 
-        // --- RENDERIZAR E EXIBIR HISTÓRICO DE FECHAMENTOS ---
+        // --- HISTÓRICO FECHAMENTOS ---
         function renderizarHistoricoFechamentos() {
             const container = document.getElementById('historico-fechamentos');
             container.innerHTML = '';
@@ -1922,7 +2011,6 @@
             document.getElementById('detalhe-hist-lucro').innerText = `R$ ${lucro.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
             document.getElementById('detalhe-hist-reserva').innerText = `R$ ${reserva.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
 
-            // Tabela de Pedidos
             const tbodyPed = document.getElementById('detalhe-hist-pedidos-body');
             tbodyPed.innerHTML = '';
             const pedidos = item.pedidos || [];
@@ -1945,7 +2033,6 @@
                 });
             }
 
-            // Tabela de Despesas Avulsas
             const tbodyDesp = document.getElementById('detalhe-hist-despesas-body');
             tbodyDesp.innerHTML = '';
             const despesas = item.despesas || [];
@@ -2152,7 +2239,6 @@
 
         function baixarPDF() { window.print(); }
 
-        // FECHAMENTO MENSAL COM ARQUIVAMENTO COMPLETO
         function fecharMes() {
             if (!confirm("Deseja FECHAR O MÊS atual?\n\nOs pedidos e despesas do ciclo ativo serão arquivados com relatório completo no Histórico e o caixa do novo mês iniciará zerado.\n\nSua base de clientes e históricos de compras serão mantidos intactos.")) {
                 return;
@@ -2188,7 +2274,6 @@
             const dataFechamentoStr = `${String(dataHoje.getDate()).padStart(2, '0')}/${String(dataHoje.getMonth() + 1).padStart(2, '0')}/${dataHoje.getFullYear()}`;
             const nomeMesAno = dataHoje.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
 
-            // Snapshot do mês fechado
             const novoFechamento = {
                 id: Date.now(),
                 mes: nomeMesAno.charAt(0).toUpperCase() + nomeMesAno.slice(1),
@@ -2207,7 +2292,6 @@
 
             appData.historicoFechamentos.unshift(novoFechamento);
 
-            // Zera pedidos e despesas do ciclo ativo para o novo mês
             appData.pedidos = [];
             appData.despesasOutras = [];
 
@@ -2223,7 +2307,8 @@
             setTimeout(() => toast.classList.add('translate-y-20', 'opacity-0'), 3000);
         }
 
-        window.onload = carregarDados;
+        // INICIALIZA VERIFICANDO SE O USUÁRIO JÁ ESTÁ LOGADO
+        window.onload = verificarSessao;
     </script>
 </body>
 </html>
