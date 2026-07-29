@@ -570,7 +570,7 @@
 
     <!-- ================= MODAIS ================= -->
 
-    <!-- MODAL CONFIRMAÇÃO PERSONALIZADO (SUBSTITUI CAIXA DO NAVEGADOR) -->
+    <!-- MODAL CONFIRMAÇÃO PERSONALIZADO -->
     <div id="modal-confirmacao" class="fixed inset-0 bg-black/85 backdrop-blur-md z-[1000] hidden flex items-center justify-center p-4">
         <div id="modal-confirmacao-box" class="bg-neutral-900 border border-neutral-800 rounded-2xl max-w-sm w-full p-6 text-center space-y-4 shadow-2xl scale-95 opacity-0 transition-all duration-200">
             <div id="modal-confirmacao-icone" class="w-16 h-16 bg-rose-500/10 border border-rose-500/20 text-rose-500 rounded-full flex items-center justify-center mx-auto text-2xl shadow-lg shadow-rose-950/30">
@@ -776,7 +776,7 @@
         </div>
     </div>
 
-    <!-- MODAL PEDIDO (NOVO / EDITAR) -->
+    <!-- MODAL PEDIDO (NOVO / EDITAR) - REFORMULADO E LIMPO -->
     <div id="modal-pedido" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-neutral-900 border border-neutral-800 rounded-2xl max-w-4xl w-full p-6 space-y-5 shadow-2xl overflow-y-auto max-h-[90vh]">
             <div class="flex justify-between items-center border-b border-neutral-800 pb-3">
@@ -792,55 +792,132 @@
                 <!-- BUSCA E SELEÇÃO DE CLIENTE -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <div>
-                        <label class="block text-yellow-400 text-xs font-bold uppercase mb-1">Buscar Cliente (Digite Nome ou CPF)</label>
-                        <input type="text" id="ped-cliente-busca" onkeyup="filtrarSelectClientes(this.value)" placeholder="Digite para filtrar..." class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400">
+                        <label class="block text-yellow-400 text-xs font-bold uppercase mb-1">Buscar Cliente (Nome/CPF)</label>
+                        <input type="text" id="ped-cliente-busca" onkeyup="filtrarSelectClientes(this.value)" placeholder="Digite para filtrar..." class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400 text-xs">
                     </div>
                     <div>
-                        <label class="block text-yellow-400 text-xs font-bold uppercase mb-1">Cliente Selecionado (Ordem Alfabética)</label>
-                        <select id="ped-cliente-id" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400">
+                        <label class="block text-yellow-400 text-xs font-bold uppercase mb-1">Cliente Selecionado</label>
+                        <select id="ped-cliente-id" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400 text-xs">
                             <!-- Preenchido via JS -->
                         </select>
                     </div>
                 </div>
 
-                <!-- CONTÊINER DE PRODUTOS DO PEDIDO -->
-                <div class="border border-neutral-800 bg-black/50 p-4 rounded-xl space-y-4">
-                    <div class="flex justify-between items-center border-b border-neutral-800 pb-2">
-                        <h4 class="text-xs font-bold uppercase text-yellow-400">Produtos / Serviços do Pedido</h4>
-                        <button type="button" onclick="adicionarItemProduto()" class="text-xs bg-yellow-400 text-black px-3 py-1.5 rounded-lg font-bold hover:bg-yellow-300">
-                            + Adicionar Outro Produto
-                        </button>
+                <!-- ÁREA DE INCLUSÃO DE PRODUTOS DO PEDIDO -->
+                <div class="border border-neutral-800 bg-black/40 p-4 rounded-xl space-y-4">
+                    
+                    <!-- FORMULÁRIO DE DIGITAÇÃO DE ITEM -->
+                    <div class="bg-neutral-950/80 border border-neutral-800 p-3.5 rounded-xl space-y-3">
+                        <div class="flex justify-between items-center pb-2 border-b border-neutral-800/80">
+                            <h4 class="text-xs font-bold uppercase tracking-wider text-yellow-400 flex items-center gap-1.5" id="titulo-form-item">
+                                <i class="fa-solid fa-plus-circle"></i> Adicionar Item ao Pedido
+                            </h4>
+                            <button type="button" id="btn-cancelar-edicao-item" onclick="cancelarEdicaoItem()" class="hidden text-[11px] text-neutral-400 hover:text-white underline">
+                                Cancelar Edição
+                            </button>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-2.5 text-xs">
+                            <div>
+                                <label class="block text-neutral-400 font-medium mb-1">Serviço / Item <span class="text-rose-400">*</span></label>
+                                <input type="text" id="item-servico" placeholder="Ex: Banner, Camiseta, Cartão" class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-white focus:outline-none focus:border-yellow-400">
+                            </div>
+                            <div>
+                                <label class="block text-neutral-400 font-medium mb-1">Material</label>
+                                <input type="text" id="item-material" placeholder="Ex: Lona 440g, Algodão" class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-white focus:outline-none focus:border-yellow-400">
+                            </div>
+                            <div>
+                                <label class="block text-neutral-400 font-medium mb-1">Quantidade</label>
+                                <input type="number" min="1" id="item-qtd" value="1" class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-white focus:outline-none focus:border-yellow-400">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-2.5 text-xs">
+                            <div>
+                                <label class="block text-neutral-400 font-medium mb-1">Largura (cm)</label>
+                                <input type="number" id="item-largura" placeholder="100" class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-white focus:outline-none focus:border-yellow-400">
+                            </div>
+                            <div>
+                                <label class="block text-neutral-400 font-medium mb-1">Altura (cm)</label>
+                                <input type="number" id="item-altura" placeholder="150" class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-white focus:outline-none focus:border-yellow-400">
+                            </div>
+                            <div>
+                                <label class="block text-neutral-400 font-medium mb-1">Acabamento</label>
+                                <input type="text" id="item-acabamento" placeholder="Ilhós, Bainha" class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-white focus:outline-none focus:border-yellow-400">
+                            </div>
+                            <div>
+                                <label class="block text-neutral-400 font-medium mb-1">Valor Venda (R$)</label>
+                                <input type="number" step="0.01" id="item-valor" placeholder="0.00" class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-yellow-400 font-bold focus:outline-none focus:border-yellow-400">
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col md:flex-row items-end justify-between gap-3 pt-1">
+                            <div class="w-full md:w-1/2 text-xs">
+                                <label class="block text-rose-400 font-semibold mb-1">Custo / Despesa do Item (R$)</label>
+                                <input type="number" step="0.01" id="item-despesa" placeholder="0.00" class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-rose-400 font-bold focus:outline-none focus:border-rose-400">
+                            </div>
+                            <button type="button" id="btn-add-item-prod" onclick="adicionarOuAtualizarItemProduto()" class="w-full md:w-auto px-5 py-2.5 bg-yellow-400 hover:bg-yellow-300 text-black font-bold text-xs rounded-xl transition-all shadow-md flex items-center justify-center gap-1.5">
+                                <i class="fa-solid fa-plus"></i> <span id="lbl-btn-add-item">Incluir Item no Pedido</span>
+                            </button>
+                        </div>
                     </div>
 
-                    <div id="lista-produtos-pedido" class="space-y-4">
-                        <!-- Renderizado via JS -->
+                    <!-- TABELA COMPACTA DE ITENS INCLUÍDOS -->
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-center px-1">
+                            <span class="text-xs font-bold uppercase tracking-wide text-neutral-400">Itens Incluídos no Pedido (<span id="count-itens-pedido">0</span>)</span>
+                        </div>
+                        <div class="overflow-x-auto border border-neutral-800 rounded-xl bg-neutral-900/90">
+                            <table class="w-full text-left text-xs text-neutral-300">
+                                <thead class="uppercase bg-neutral-800/80 text-yellow-400 border-b border-neutral-700">
+                                    <tr>
+                                        <th class="p-2.5">Item / Material</th>
+                                        <th class="p-2.5">Medidas / Acabamento</th>
+                                        <th class="p-2.5 text-center">Qtd</th>
+                                        <th class="p-2.5">Valor Venda</th>
+                                        <th class="p-2.5">Custo Item</th>
+                                        <th class="p-2.5 text-right">Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-neutral-800" id="tabela-itens-pedido-body">
+                                    <!-- Renderizado via JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- PAINEL DE RESUMO FINANCEIRO DOS TOTAIS -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3 p-3 bg-neutral-950 border border-neutral-800 rounded-xl">
+                    <div class="p-2.5 bg-neutral-900 border border-neutral-800 rounded-lg">
+                        <span class="text-[10px] text-neutral-400 font-bold uppercase block">Total do Pedido</span>
+                        <span class="text-xl font-black text-yellow-400" id="txt-resumo-total">R$ 0,00</span>
+                        <input type="hidden" id="ped-total">
+                    </div>
+                    <div class="p-2.5 bg-neutral-900 border border-neutral-800 rounded-lg">
+                        <span class="text-[10px] text-neutral-400 font-bold uppercase block">Custo Total (Despesa)</span>
+                        <span class="text-xl font-black text-rose-400" id="txt-resumo-custo">R$ 0,00</span>
+                        <input type="hidden" id="ped-despesa">
+                    </div>
+                    <div class="p-2.5 bg-neutral-900 border border-neutral-800 rounded-lg">
+                        <span class="text-[10px] text-neutral-400 font-bold uppercase block">Lucro Estimado</span>
+                        <span class="text-xl font-black text-emerald-400" id="txt-resumo-lucro">R$ 0,00</span>
                     </div>
                 </div>
 
-                <!-- DETALHES DE VALORES, CUSTOS, PAGAMENTO -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div>
-                        <label class="block text-neutral-400 text-xs font-semibold mb-1">Total do Pedido (R$)</label>
-                        <input type="number" step="0.01" id="ped-total" placeholder="0.00" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-yellow-400 font-bold focus:outline-none focus:border-yellow-400">
-                    </div>
-                    <div>
-                        <label class="block text-neutral-400 text-xs font-semibold mb-1">Despesa / Custo Total Pedido (R$)</label>
-                        <input type="number" step="0.01" id="ped-despesa" placeholder="Soma automática dos custos" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-rose-400 font-bold focus:outline-none focus:border-yellow-400">
-                    </div>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
                     <div>
                         <label class="block text-neutral-400 text-xs font-semibold mb-1">Data de Entrega</label>
-                        <input type="date" id="ped-data-entrega" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400">
+                        <input type="date" id="ped-data-entrega" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400 text-xs">
                     </div>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
-                        <label class="block text-neutral-400 text-xs font-semibold mb-1">Responsável pelo Pedido</label>
-                        <input type="text" id="ped-responsavel" readonly placeholder="Atendente Logado" class="w-full bg-neutral-800/60 border border-neutral-700 rounded-xl px-3 py-2 text-yellow-400 font-bold focus:outline-none cursor-not-allowed">
+                        <label class="block text-neutral-400 text-xs font-semibold mb-1">Responsável</label>
+                        <input type="text" id="ped-responsavel" readonly placeholder="Atendente" class="w-full bg-neutral-800/60 border border-neutral-700 rounded-xl px-3 py-2 text-yellow-400 font-bold focus:outline-none cursor-not-allowed text-xs">
                     </div>
                     <div>
                         <label class="block text-neutral-400 text-xs font-semibold mb-1">Forma de Pagamento</label>
-                        <select id="ped-forma-pagamento" onchange="verificarFormaPagamento()" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400">
+                        <select id="ped-forma-pagamento" onchange="verificarFormaPagamento()" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400 text-xs">
                             <option value="Dinheiro">Dinheiro</option>
                             <option value="Pix">Pix</option>
                             <option value="Cartão de Crédito">Cartão de Crédito</option>
@@ -850,7 +927,7 @@
                     </div>
                     <div>
                         <label class="block text-neutral-400 text-xs font-semibold mb-1">Status do Pedido</label>
-                        <select id="ped-status" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400">
+                        <select id="ped-status" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400 text-xs">
                             <option value="AGUARDANDO">AGUARDANDO</option>
                             <option value="Em Produção">Em Produção</option>
                             <option value="Concluído">Concluído</option>
@@ -874,7 +951,7 @@
 
                 <div>
                     <label class="block text-neutral-400 text-xs font-semibold mb-1">Observações</label>
-                    <textarea id="ped-obs" rows="2" placeholder="Observações do pedido..." class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400"></textarea>
+                    <textarea id="ped-obs" rows="2" placeholder="Observações do pedido..." class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400 text-xs"></textarea>
                 </div>
 
                 <div class="flex flex-col sm:flex-row justify-end gap-3 pt-3 border-t border-neutral-800">
@@ -973,7 +1050,7 @@
 
         let usuarioAtualNome = "Atendente";
 
-        // CAIXA DE CONFIRMAÇÃO PERSONALIZADA (SUBSTITUI O CONFIRM NATIVO)
+        // CAIXA DE CONFIRMAÇÃO PERSONALIZADA
         function confirmarAcao(titulo, mensagem, textoBotao = "Sim, Excluir", icone = "fa-trash-can", corOk = "rose") {
             return new Promise((resolve) => {
                 const modal = document.getElementById('modal-confirmacao');
@@ -1471,8 +1548,9 @@
 
         function fecharModalHistoricoCliente() { document.getElementById('modal-historico-cliente').classList.add('hidden'); }
 
-        // --- PEDIDOS ---
+        // --- PEDIDOS (GERENCIAMENTO LIMPO DE ITENS) ---
         let itensPedidoTemp = [];
+        let indexItemEdicao = null;
 
         function abrirModalPedido() {
             if (appData.clientes.length === 0) {
@@ -1491,7 +1569,9 @@
             popularSelectClientes();
             
             itensPedidoTemp = [];
-            adicionarItemProduto();
+            limparFormProdutoItem();
+            renderizarTabelaItensPedido();
+            calcularTotalPedidoAutomatico();
             
             document.getElementById('ped-data-entrega').value = appData.dataAtual;
             document.getElementById('modal-pedido').classList.remove('hidden');
@@ -1541,11 +1621,10 @@
             document.getElementById('ped-cliente-id').value = p.clienteId;
 
             itensPedidoTemp = p.itens ? JSON.parse(JSON.stringify(p.itens)) : [];
-            if (itensPedidoTemp.length === 0) adicionarItemProduto();
-            else renderizarItensFormPedido();
+            limparFormProdutoItem();
+            renderizarTabelaItensPedido();
+            calcularTotalPedidoAutomatico();
 
-            document.getElementById('ped-total').value = p.total || '';
-            document.getElementById('ped-despesa').value = p.despesa || '';
             document.getElementById('ped-data-entrega').value = p.dataEntrega || appData.dataAtual;
             document.getElementById('ped-responsavel').value = p.responsavel || usuarioAtualNome;
             
@@ -1562,68 +1641,133 @@
             document.getElementById('modal-pedido').classList.remove('hidden');
         }
 
-        function adicionarItemProduto() {
-            itensPedidoTemp.unshift({ servico: '', material: '', qtd: 1, largura: '', altura: '', acabamento: '', valor: '', despesa: '' });
-            renderizarItensFormPedido();
+        // LIMPA OS CAMPOS DE DIGITAÇÃO DE ITEM
+        function limparFormProdutoItem() {
+            indexItemEdicao = null;
+            document.getElementById('item-servico').value = '';
+            document.getElementById('item-material').value = '';
+            document.getElementById('item-qtd').value = '1';
+            document.getElementById('item-largura').value = '';
+            document.getElementById('item-altura').value = '';
+            document.getElementById('item-acabamento').value = '';
+            document.getElementById('item-valor').value = '';
+            document.getElementById('item-despesa').value = '';
+
+            document.getElementById('titulo-form-item').innerHTML = `<i class="fa-solid fa-plus-circle"></i> Adicionar Item ao Pedido`;
+            document.getElementById('lbl-btn-add-item').innerText = "Incluir Item no Pedido";
+            document.getElementById('btn-add-item-prod').className = "w-full md:w-auto px-5 py-2.5 bg-yellow-400 hover:bg-yellow-300 text-black font-bold text-xs rounded-xl transition-all shadow-md flex items-center justify-center gap-1.5";
+            document.getElementById('btn-cancelar-edicao-item').classList.add('hidden');
         }
 
-        function removerItemProduto(idx) {
-            if (itensPedidoTemp.length <= 1) return;
-            itensPedidoTemp.splice(idx, 1);
-            renderizarItensFormPedido();
+        // ADICIONA OU ATUALIZA ITEM NA LISTA
+        function adicionarOuAtualizarItemProduto() {
+            const servico = document.getElementById('item-servico').value.trim();
+            if (!servico) {
+                alert("Por favor, digite o nome do Serviço / Item antes de incluir!");
+                document.getElementById('item-servico').focus();
+                return;
+            }
+
+            const itemObj = {
+                servico: servico,
+                material: document.getElementById('item-material').value.trim(),
+                qtd: parseFloat(document.getElementById('item-qtd').value) || 1,
+                largura: document.getElementById('item-largura').value.trim(),
+                altura: document.getElementById('item-altura').value.trim(),
+                acabamento: document.getElementById('item-acabamento').value.trim(),
+                valor: parseFloat(document.getElementById('item-valor').value) || 0,
+                despesa: parseFloat(document.getElementById('item-despesa').value) || 0
+            };
+
+            if (indexItemEdicao !== null) {
+                itensPedidoTemp[indexItemEdicao] = itemObj;
+                mostrarToast("Item atualizado na lista!");
+            } else {
+                itensPedidoTemp.push(itemObj);
+                mostrarToast("Item incluído!");
+            }
+
+            limparFormProdutoItem();
+            renderizarTabelaItensPedido();
             calcularTotalPedidoAutomatico();
         }
 
-        function renderizarItensFormPedido() {
-            const container = document.getElementById('lista-produtos-pedido');
-            container.innerHTML = '';
+        function editarItemProduto(idx) {
+            const item = itensPedidoTemp[idx];
+            if (!item) return;
+
+            indexItemEdicao = idx;
+            document.getElementById('item-servico').value = item.servico || '';
+            document.getElementById('item-material').value = item.material || '';
+            document.getElementById('item-qtd').value = item.qtd || 1;
+            document.getElementById('item-largura').value = item.largura || '';
+            document.getElementById('item-altura').value = item.altura || '';
+            document.getElementById('item-acabamento').value = item.acabamento || '';
+            document.getElementById('item-valor').value = item.valor ? item.valor : '';
+            document.getElementById('item-despesa').value = item.despesa ? item.despesa : '';
+
+            document.getElementById('titulo-form-item').innerHTML = `<i class="fa-solid fa-pen-to-square"></i> Editando Item #${idx + 1}`;
+            document.getElementById('lbl-btn-add-item').innerText = "Salvar Alterações do Item";
+            document.getElementById('btn-add-item-prod').className = "w-full md:w-auto px-5 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-black font-bold text-xs rounded-xl transition-all shadow-md flex items-center justify-center gap-1.5";
+            document.getElementById('btn-cancelar-edicao-item').classList.remove('hidden');
+
+            document.getElementById('item-servico').focus();
+        }
+
+        function cancelarEdicaoItem() {
+            limparFormProdutoItem();
+        }
+
+        function removerItemProduto(idx) {
+            itensPedidoTemp.splice(idx, 1);
+            if (indexItemEdicao === idx) limparFormProdutoItem();
+            renderizarTabelaItensPedido();
+            calcularTotalPedidoAutomatico();
+            mostrarToast("Item removido da lista.");
+        }
+
+        // RENDERIZA A TABELA COMPACTA LEITURA (IMPOSSÍVEL EDITAR POR ENGANO)
+        function renderizarTabelaItensPedido() {
+            const tbody = document.getElementById('tabela-itens-pedido-body');
+            const countEl = document.getElementById('count-itens-pedido');
+            tbody.innerHTML = '';
+            
+            if (countEl) countEl.innerText = itensPedidoTemp.length;
+
+            if (itensPedidoTemp.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-neutral-500 text-xs italic">Nenhum item adicionado a este pedido ainda. Use o formulário acima.</td></tr>`;
+                return;
+            }
 
             itensPedidoTemp.forEach((item, idx) => {
-                const div = document.createElement('div');
-                div.className = 'p-3 bg-neutral-900 rounded-xl border border-neutral-800 space-y-3 relative';
-                div.innerHTML = `
-                    <div class="flex justify-between items-center text-xs font-bold text-yellow-400">
-                        <span>Produto #${idx + 1} ${idx === 0 && itensPedidoTemp.length > 1 ? '<span class="text-[10px] text-emerald-400 font-semibold">(Novo Item)</span>' : ''}</span>
-                        ${itensPedidoTemp.length > 1 ? `<button type="button" onclick="removerItemProduto(${idx})" class="text-rose-400 hover:text-rose-300 text-xs"><i class="fa-solid fa-trash"></i> Remover Produto</button>` : ''}
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
-                        <div>
-                            <label class="block text-neutral-400 mb-1">Serviço / Item</label>
-                            <input type="text" value="${escapeAttr(item.servico)}" onchange="itensPedidoTemp[${idx}].servico = this.value" placeholder="Ex: Banner, Camiseta..." class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-white">
-                        </div>
-                        <div>
-                            <label class="block text-neutral-400 mb-1">Material</label>
-                            <input type="text" value="${escapeAttr(item.material)}" onchange="itensPedidoTemp[${idx}].material = this.value" placeholder="Ex: Lona 440g, Algodão..." class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-white">
-                        </div>
-                        <div>
-                            <label class="block text-neutral-400 mb-1">Quantidade</label>
-                            <input type="number" min="1" value="${escapeAttr(item.qtd || 1)}" onchange="itensPedidoTemp[${idx}].qtd = parseFloat(this.value)||1; calcularTotalPedidoAutomatico()" class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-white">
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-4 gap-3 text-xs">
-                        <div>
-                            <label class="block text-neutral-400 mb-1">Largura (cm)</label>
-                            <input type="number" value="${escapeAttr(item.largura)}" onchange="itensPedidoTemp[${idx}].largura = this.value" placeholder="100" class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-white">
-                        </div>
-                        <div>
-                            <label class="block text-neutral-400 mb-1">Altura (cm)</label>
-                            <input type="number" value="${escapeAttr(item.altura)}" onchange="itensPedidoTemp[${idx}].altura = this.value" placeholder="150" class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-white">
-                        </div>
-                        <div>
-                            <label class="block text-neutral-400 mb-1">Acabamento</label>
-                            <input type="text" value="${escapeAttr(item.acabamento)}" onchange="itensPedidoTemp[${idx}].acabamento = this.value" placeholder="Ilhós, Bainha..." class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-white">
-                        </div>
-                        <div>
-                            <label class="block text-neutral-400 mb-1">Valor Venda (R$)</label>
-                            <input type="number" step="0.01" value="${escapeAttr(item.valor)}" oninput="itensPedidoTemp[${idx}].valor = this.value; calcularTotalPedidoAutomatico()" placeholder="0.00" class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-yellow-400 font-bold">
-                        </div>
-                    </div>
-                    <div class="pt-1 border-t border-neutral-800/60">
-                        <label class="block text-rose-400 text-xs font-semibold mb-1">Despesa / Custo (R$) deste Produto</label>
-                        <input type="number" step="0.01" value="${escapeAttr(item.despesa)}" oninput="itensPedidoTemp[${idx}].despesa = this.value; calcularTotalPedidoAutomatico()" placeholder="0.00" class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-rose-400 font-bold">
-                    </div>
+                const medidas = (item.largura || item.altura) ? `${item.largura || 0}x${item.altura || 0} cm` : '-';
+                const acabamento = item.acabamento ? ` (${item.acabamento})` : '';
+                const totalVendaItem = (parseFloat(item.valor || 0) * 1).toLocaleString('pt-BR', {minimumFractionDigits: 2});
+                const totalCustoItem = (parseFloat(item.despesa || 0) * 1).toLocaleString('pt-BR', {minimumFractionDigits: 2});
+
+                const tr = document.createElement('tr');
+                tr.className = indexItemEdicao === idx ? "bg-yellow-400/10 border-l-2 border-yellow-400" : "hover:bg-neutral-800/40 transition-all";
+                tr.innerHTML = `
+                    <td class="p-2.5">
+                        <strong class="text-white">${escapeAttr(item.servico)}</strong>
+                        ${item.material ? `<span class="block text-[10px] text-neutral-400">${escapeAttr(item.material)}</span>` : ''}
+                    </td>
+                    <td class="p-2.5 text-xs text-neutral-300">
+                        ${escapeAttr(medidas)}<span class="text-neutral-500 text-[10px]">${escapeAttr(acabamento)}</span>
+                    </td>
+                    <td class="p-2.5 text-center font-bold text-white">${escapeAttr(item.qtd || 1)}</td>
+                    <td class="p-2.5 font-bold text-yellow-400">R$ ${totalVendaItem}</td>
+                    <td class="p-2.5 font-semibold text-rose-400">R$ ${totalCustoItem}</td>
+                    <td class="p-2.5 text-right space-x-1">
+                        <button type="button" onclick="editarItemProduto(${idx})" class="bg-neutral-800 hover:bg-neutral-700 text-yellow-400 px-2 py-1 rounded-lg text-xs" title="Editar Item">
+                            <i class="fa-solid fa-pen"></i>
+                        </button>
+                        <button type="button" onclick="removerItemProduto(${idx})" class="bg-rose-950/50 hover:bg-rose-900 text-rose-400 px-2 py-1 rounded-lg text-xs" title="Remover Item">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </td>
                 `;
-                container.appendChild(div);
+                tbody.appendChild(tr);
             });
         }
 
@@ -1640,8 +1784,17 @@
                 }
             });
 
-            document.getElementById('ped-total').value = somaTotal > 0 ? somaTotal.toFixed(2) : '';
-            document.getElementById('ped-despesa').value = somaDespesa > 0 ? somaDespesa.toFixed(2) : '';
+            const lucro = somaTotal - somaDespesa;
+
+            document.getElementById('ped-total').value = somaTotal.toFixed(2);
+            document.getElementById('ped-despesa').value = somaDespesa.toFixed(2);
+
+            document.getElementById('txt-resumo-total').innerText = `R$ ${somaTotal.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+            document.getElementById('txt-resumo-custo').innerText = `R$ ${somaDespesa.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+            
+            const txtLucro = document.getElementById('txt-resumo-lucro');
+            txtLucro.innerText = `R$ ${lucro.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+            txtLucro.className = lucro >= 0 ? "text-xl font-black text-emerald-400" : "text-xl font-black text-rose-500";
         }
 
         function verificarFormaPagamento() {
@@ -1656,6 +1809,18 @@
 
         function salvarPedido(e, criarOutro = false) {
             if (e && e.preventDefault) e.preventDefault();
+
+            // SE HOUVER ALGO DIGITADO NO FORMULÁRIO DE ITEM NÃO SALVO, PERGUNTA/INCLUI AUTOMATICAMENTE
+            const servicoPend = document.getElementById('item-servico').value.trim();
+            if (servicoPend) {
+                adicionarOuAtualizarItemProduto();
+            }
+
+            if (itensPedidoTemp.length === 0) {
+                alert("Adicione pelo menos um produto/serviço ao pedido antes de salvar!");
+                document.getElementById('item-servico').focus();
+                return;
+            }
 
             const pedId = document.getElementById('ped-id').value;
             const clienteId = document.getElementById('ped-cliente-id').value;
