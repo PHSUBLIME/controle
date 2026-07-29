@@ -1190,6 +1190,7 @@
             pedidos: [],
             despesasOutras: [],
             historicoFechamentos: [],
+            pedidosArquivadosPermanentes: [], // GUARDA COMPRAS DE MESES EXCLUÍDOS DO HISTÓRICO
             vendasChart: null,
             servicosChart: null,
             abaPedidoFiltro: 'todos'
@@ -1217,6 +1218,7 @@
                     appData.pedidos = parsed.pedidos || [];
                     appData.despesasOutras = parsed.despesasOutras || [];
                     appData.historicoFechamentos = parsed.historicoFechamentos || [];
+                    appData.pedidosArquivadosPermanentes = parsed.pedidosArquivadosPermanentes || [];
                 } catch(e) {}
             }
 
@@ -1232,7 +1234,8 @@
                 clientes: appData.clientes,
                 pedidos: appData.pedidos,
                 despesasOutras: appData.despesasOutras,
-                historicoFechamentos: appData.historicoFechamentos
+                historicoFechamentos: appData.historicoFechamentos,
+                pedidosArquivadosPermanentes: appData.pedidosArquivadosPermanentes || []
             }));
         }
 
@@ -1355,12 +1358,14 @@
 
                 let totalComprado = 0;
 
+                // 1. Pedidos do Mês Ativo
                 appData.pedidos.forEach(p => {
                     if (p.clienteId == c.id && p.status !== 'Cancelado') {
                         totalComprado += parseFloat(p.total || 0);
                     }
                 });
 
+                // 2. Pedidos dos Meses Fechados no Histórico
                 appData.historicoFechamentos.forEach(f => {
                     if (f.pedidos && Array.isArray(f.pedidos)) {
                         f.pedidos.forEach(p => {
@@ -1370,6 +1375,15 @@
                         });
                     }
                 });
+
+                // 3. Pedidos Arquivados Permanentemente (de meses já excluídos do Histórico)
+                if (appData.pedidosArquivadosPermanentes && Array.isArray(appData.pedidosArquivadosPermanentes)) {
+                    appData.pedidosArquivadosPermanentes.forEach(p => {
+                        if (p.clienteId == c.id && p.status !== 'Cancelado') {
+                            totalComprado += parseFloat(p.total || 0);
+                        }
+                    });
+                }
 
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
@@ -1532,6 +1546,7 @@
 
             let todosPedidosCliente = appData.pedidos.filter(p => p.clienteId == clienteId).map(p => ({ ...p, mesOrigem: 'Mês Ativo' }));
 
+            // 1. Pedidos nos Fechamentos Mensais
             appData.historicoFechamentos.forEach(f => {
                 if (f.pedidos && Array.isArray(f.pedidos)) {
                     f.pedidos.forEach(p => {
@@ -1541,6 +1556,17 @@
                     });
                 }
             });
+
+            // 2. Pedidos no Arquivo Permanente (de meses cujos relatórios foram apagados)
+            if (appData.pedidosArquivadosPermanentes && Array.isArray(appData.pedidosArquivadosPermanentes)) {
+                appData.pedidosArquivadosPermanentes.forEach(p => {
+                    if (p.clienteId == clienteId) {
+                        if (!todosPedidosCliente.some(x => x.id == p.id)) {
+                            todosPedidosCliente.push({ ...p, mesOrigem: p.mesOrigem || 'Arquivado' });
+                        }
+                    }
+                });
+            }
 
             if (todosPedidosCliente.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-neutral-500">Nenhuma compra cadastrada.</td></tr>`;
@@ -2266,15 +2292,30 @@
         }
 
         async function excluirFechamento(id) {
-            const confirmou = await confirmarAcao("Excluir Mês do Histórico", "Tem certeza de que deseja excluir permanentemente o registro deste mês do Histórico?", "Sim, Excluir");
+            const confirmou = await confirmarAcao(
+                "Excluir Mês do Histórico", 
+                "Tem certeza de que deseja excluir o relatório financeiro deste mês? Os históricos de compras dos clientes serão preservados permanentemente.", 
+                "Sim, Excluir"
+            );
+            
             if (confirmou) {
+                const fEncontrado = appData.historicoFechamentos.find(f => f.id == id);
+                if (fEncontrado && fEncontrado.pedidos && Array.isArray(fEncontrado.pedidos)) {
+                    if (!appData.pedidosArquivadosPermanentes) appData.pedidosArquivadosPermanentes = [];
+                    fEncontrado.pedidos.forEach(p => {
+                        if (!appData.pedidosArquivadosPermanentes.some(x => x.id == p.id)) {
+                            appData.pedidosArquivadosPermanentes.push({ ...p, mesOrigem: fEncontrado.mes });
+                        }
+                    });
+                }
+
                 appData.historicoFechamentos = appData.historicoFechamentos.filter(f => f.id != id);
                 salvarStorage();
                 atualizarInterfaceCompleta();
                 if (fechamentoAtualModal && fechamentoAtualModal.id == id) {
                     fecharModalDetalhesHistorico();
                 }
-                mostrarToast("Registro do mês excluído com sucesso!");
+                mostrarToast("Relatório excluído! Compras do cliente mantidas.");
             }
         }
 
