@@ -776,7 +776,7 @@
         </div>
     </div>
 
-    <!-- MODAL PEDIDO (NOVO / EDITAR) - REFORMULADO E LIMPO -->
+    <!-- MODAL PEDIDO (NOVO / EDITAR) -->
     <div id="modal-pedido" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-neutral-900 border border-neutral-800 rounded-2xl max-w-4xl w-full p-6 space-y-5 shadow-2xl overflow-y-auto max-h-[90vh]">
             <div class="flex justify-between items-center border-b border-neutral-800 pb-3">
@@ -820,7 +820,7 @@
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-2.5 text-xs">
                             <div>
                                 <label class="block text-neutral-400 font-medium mb-1">Serviço / Item <span class="text-rose-400">*</span></label>
-                                <input type="text" id="item-servico" placeholder="Ex: Banner, Camiseta, Cartão" class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-white focus:outline-none focus:border-yellow-400">
+                                <input type="text" id="item-servico" placeholder="Ex: Banner, Camiseta, Cartão" class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-white focus:outline-none focus:border-yellow-400 transition-all">
                             </div>
                             <div>
                                 <label class="block text-neutral-400 font-medium mb-1">Material</label>
@@ -1034,9 +1034,9 @@
         </div>
     </div>
 
-    <!-- TOAST DE NOTIFICAÇÃO -->
-    <div id="toast" class="fixed bottom-5 right-5 bg-neutral-800 text-white border border-yellow-400 px-5 py-3 rounded-xl shadow-2xl transform translate-y-20 opacity-0 transition-all duration-300 flex items-center gap-3 z-50">
-        <i class="fa-solid fa-circle-check text-yellow-400 text-lg"></i>
+    <!-- TOAST DE NOTIFICAÇÃO DO SISTEMA -->
+    <div id="toast" class="fixed bottom-5 right-5 bg-neutral-900 text-white border border-yellow-400 px-5 py-3 rounded-xl shadow-2xl transform translate-y-20 opacity-0 transition-all duration-300 flex items-center gap-3 z-[1001]">
+        <i id="toast-icon" class="fa-solid fa-circle-check text-yellow-400 text-lg"></i>
         <span id="toast-message" class="font-medium text-sm">Ação realizada!</span>
     </div>
 
@@ -1092,6 +1092,26 @@
                 btnOk.onclick = () => fechar(true);
                 btnCancel.onclick = () => fechar(false);
             });
+        }
+
+        // MOSTRAR TOAST (SUPORTA SUCESSO E ERROS/AVISOS)
+        function mostrarToast(msg, tipo = 'sucesso') {
+            const toast = document.getElementById('toast');
+            const icon = document.getElementById('toast-icon');
+            const msgEl = document.getElementById('toast-message');
+
+            msgEl.innerText = msg;
+
+            if (tipo === 'erro' || tipo === 'alerta') {
+                toast.className = "fixed bottom-5 right-5 bg-neutral-900 text-white border border-rose-500 px-5 py-3 rounded-xl shadow-2xl transform translate-y-20 opacity-0 transition-all duration-300 flex items-center gap-3 z-[1001]";
+                if (icon) icon.className = "fa-solid fa-triangle-exclamation text-rose-500 text-lg";
+            } else {
+                toast.className = "fixed bottom-5 right-5 bg-neutral-900 text-white border border-yellow-400 px-5 py-3 rounded-xl shadow-2xl transform translate-y-20 opacity-0 transition-all duration-300 flex items-center gap-3 z-[1001]";
+                if (icon) icon.className = "fa-solid fa-circle-check text-yellow-400 text-lg";
+            }
+
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => toast.classList.add('translate-y-20', 'opacity-0'), 3500);
         }
 
         // ATUALIZA A SAUDAÇÃO E O NOME DO USUÁRIO LOGADO
@@ -1466,7 +1486,7 @@
         function processarMassa() {
             const texto = document.getElementById('input-massa-texto').value.trim();
             if (!texto) {
-                alert("Cole o texto da planilha antes de importar.");
+                mostrarToast("Cole o texto da planilha antes de importar.", "erro");
                 return;
             }
 
@@ -1554,7 +1574,7 @@
 
         function abrirModalPedido() {
             if (appData.clientes.length === 0) {
-                alert("Cadastre pelo menos um cliente antes!");
+                mostrarToast("Cadastre pelo menos um cliente antes!", "erro");
                 return;
             }
 
@@ -1659,12 +1679,16 @@
             document.getElementById('btn-cancelar-edicao-item').classList.add('hidden');
         }
 
-        // ADICIONA OU ATUALIZA ITEM NA LISTA
+        // ADICIONA OU ATUALIZA ITEM NA LISTA COM VALIDAÇÃO AMIGÁVEL
         function adicionarOuAtualizarItemProduto() {
-            const servico = document.getElementById('item-servico').value.trim();
+            const inputServico = document.getElementById('item-servico');
+            const servico = inputServico.value.trim();
+
             if (!servico) {
-                alert("Por favor, digite o nome do Serviço / Item antes de incluir!");
-                document.getElementById('item-servico').focus();
+                mostrarToast("Por favor, digite o nome do Serviço / Item antes de incluir!", "erro");
+                inputServico.classList.add('border-rose-500', 'bg-rose-950/30');
+                inputServico.focus();
+                setTimeout(() => inputServico.classList.remove('border-rose-500', 'bg-rose-950/30'), 2500);
                 return;
             }
 
@@ -1810,14 +1834,14 @@
         function salvarPedido(e, criarOutro = false) {
             if (e && e.preventDefault) e.preventDefault();
 
-            // SE HOUVER ALGO DIGITADO NO FORMULÁRIO DE ITEM NÃO SALVO, PERGUNTA/INCLUI AUTOMATICAMENTE
+            // SE HOUVER ALGO DIGITADO NO FORMULÁRIO DE ITEM NÃO SALVO, INCLUI AUTOMATICAMENTE
             const servicoPend = document.getElementById('item-servico').value.trim();
             if (servicoPend) {
                 adicionarOuAtualizarItemProduto();
             }
 
             if (itensPedidoTemp.length === 0) {
-                alert("Adicione pelo menos um produto/serviço ao pedido antes de salvar!");
+                mostrarToast("Adicione pelo menos um produto/serviço ao pedido antes de salvar!", "erro");
                 document.getElementById('item-servico').focus();
                 return;
             }
@@ -1826,7 +1850,7 @@
             const clienteId = document.getElementById('ped-cliente-id').value;
 
             if (!clienteId) {
-                alert("Selecione um cliente para o pedido!");
+                mostrarToast("Selecione um cliente para o pedido!", "erro");
                 return;
             }
 
@@ -2576,13 +2600,6 @@
             salvarStorage();
             atualizarInterfaceCompleta();
             mostrarToast("Mês fechado e arquivado com sucesso no Histórico!");
-        }
-
-        function mostrarToast(msg) {
-            const toast = document.getElementById('toast');
-            document.getElementById('toast-message').innerText = msg;
-            toast.classList.remove('translate-y-20', 'opacity-0');
-            setTimeout(() => toast.classList.add('translate-y-20', 'opacity-0'), 3000);
         }
 
         // INICIALIZA VERIFICANDO SE O USUÁRIO JÁ ESTÁ LOGADO
