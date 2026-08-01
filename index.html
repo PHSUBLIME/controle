@@ -106,6 +106,14 @@
                     <i class="fa-solid fa-wallet text-base"></i> Financeiro
                 </button>
 
+                <!-- BOTÃO REPOSICIONADO: ESTOQUE E INSUMOS -->
+                <button onclick="navegar('estoque')" id="btn-estoque" class="nav-btn flex items-center justify-between w-full px-4 py-3 rounded-xl font-semibold text-sm transition-all text-neutral-400 hover:text-white hover:bg-neutral-800">
+                    <span class="flex items-center gap-3">
+                        <i class="fa-solid fa-boxes-stacked text-base text-yellow-400"></i> Estoque & Insumos
+                    </span>
+                    <span id="badge-estoque-alerta" class="bg-rose-500 text-white text-[10px] font-black px-2 py-0.5 rounded-full hidden">0</span>
+                </button>
+
                 <button onclick="navegar('historico')" id="btn-historico" class="nav-btn flex items-center gap-3 w-full px-4 py-3 rounded-xl font-semibold text-sm transition-all text-neutral-400 hover:text-white hover:bg-neutral-800">
                     <i class="fa-solid fa-clock-rotate-left text-base"></i> Histórico
                 </button>
@@ -437,6 +445,77 @@
             </div>
         </section>
 
+        <!-- ================= SEÇÃO: ESTOQUE E INSUMOS ================= -->
+        <section id="secao-estoque" class="secao-conteudo hidden space-y-6">
+            <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-neutral-900 p-6 rounded-2xl border border-neutral-800 shadow-2xl">
+                <div>
+                    <h2 class="text-2xl font-black text-yellow-400 flex items-center gap-2">
+                        <i class="fa-solid fa-boxes-stacked text-yellow-400"></i> Controle de Estoque & Lista de Compras
+                    </h2>
+                    <p class="text-neutral-400 text-sm mt-1">Gerencie matérias-primas e insumos de produção. Veja o que está acabando para comprar a tempo.</p>
+                </div>
+
+                <div class="flex flex-wrap gap-2.5">
+                    <button onclick="abrirModalListaCompras()" class="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2.5 rounded-xl text-sm transition-all shadow-lg shadow-emerald-950/40">
+                        <i class="fa-solid fa-clipboard-list text-lg"></i> 📋 Gerar Lista de Compras
+                    </button>
+
+                    <button onclick="alternarFiltroEstoqueComprar()" id="btn-filtro-comprar-apenas" class="flex items-center gap-2 bg-neutral-800 hover:bg-neutral-700 text-neutral-200 border border-neutral-700 px-4 py-2.5 rounded-xl font-medium text-sm transition-all">
+                        <i class="fa-solid fa-cart-shopping text-yellow-400"></i> <span>🛒 Ver Apenas O Que Comprar</span>
+                    </button>
+
+                    <button onclick="abrirModalEstoque()" class="flex items-center gap-2 bg-yellow-400 hover:bg-yellow-300 text-black font-bold px-4 py-2.5 rounded-xl text-sm transition-all shadow-lg shadow-yellow-950/30">
+                        <i class="fa-solid fa-plus"></i> + Novo Item de Estoque
+                    </button>
+                </div>
+            </div>
+
+            <!-- CARDS DE MÉTRICAS DO ESTOQUE -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="bg-neutral-900 p-5 rounded-2xl border border-neutral-800">
+                    <p class="text-xs font-bold text-yellow-400 uppercase">Total de Itens Cadastrados</p>
+                    <h3 class="text-3xl font-black text-white mt-1" id="est-kpi-total-itens">0</h3>
+                    <p class="text-xs text-neutral-500 mt-1">Insumos e materiais</p>
+                </div>
+
+                <div class="bg-neutral-900 p-5 rounded-2xl border border-neutral-800">
+                    <p class="text-xs font-bold text-rose-400 uppercase">Comprar Urgente (Abaixo do Mínimo)</p>
+                    <h3 class="text-3xl font-black text-rose-400 mt-1" id="est-kpi-alerta-count">0</h3>
+                    <p class="text-xs text-rose-400/80 mt-1">Necessitam reposição</p>
+                </div>
+
+                <div class="bg-neutral-900 p-5 rounded-2xl border border-neutral-800">
+                    <p class="text-xs font-bold text-emerald-400 uppercase">Valor Estimado em Estoque</p>
+                    <h3 class="text-3xl font-black text-emerald-400 mt-1" id="est-kpi-valor-total">R$ 0,00</h3>
+                    <p class="text-xs text-neutral-500 mt-1">Patrimônio acumulado em materiais</p>
+                </div>
+            </div>
+
+            <!-- BARRA DE PESQUISA ESTOQUE -->
+            <div class="bg-neutral-900 p-4 rounded-2xl border border-neutral-800 flex items-center gap-3">
+                <i class="fa-solid fa-magnifying-glass text-yellow-400 text-lg ml-2"></i>
+                <input type="text" id="input-pesquisar-estoque" onkeyup="renderizarEstoque()" placeholder="Pesquisar material, categoria, fornecedor..." class="w-full bg-transparent text-white focus:outline-none text-sm placeholder-neutral-500">
+            </div>
+
+            <!-- TABELA DE ESTOQUE -->
+            <div class="bg-neutral-900 p-6 rounded-2xl border border-neutral-800 overflow-x-auto">
+                <table class="w-full text-left text-sm text-neutral-300">
+                    <thead class="text-xs uppercase bg-neutral-800 text-yellow-400 border-b border-neutral-700">
+                        <tr>
+                            <th class="p-3">Material / Insumo</th>
+                            <th class="p-3">Categoria</th>
+                            <th class="p-3 text-center">Qtd Atual</th>
+                            <th class="p-3 text-center">Estoque Mínimo</th>
+                            <th class="p-3">Status</th>
+                            <th class="p-3">Preço Unitário</th>
+                            <th class="p-3 text-right">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-neutral-800" id="tabela-estoque-body"></tbody>
+                </table>
+            </div>
+        </section>
+
         <!-- ================= SEÇÃO: CONTROLE DE DESPESAS ================= -->
         <section id="secao-despesas" class="secao-conteudo hidden space-y-6">
             <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-neutral-900 p-6 rounded-2xl border border-neutral-800">
@@ -580,8 +659,104 @@
         </section>
 
     </main>
+    <!-- MODAL LISTA DE COMPRAS EXPRESSA -->
+    <div id="modal-lista-compras" class="fixed inset-0 bg-black/85 backdrop-blur-md z-[950] hidden flex items-center justify-center p-4">
+        <div class="bg-neutral-900 border border-neutral-800 rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl overflow-y-auto max-h-[85vh]">
+            <div class="flex justify-between items-center border-b border-neutral-800 pb-3">
+                <h3 class="text-xl font-black text-yellow-400 flex items-center gap-2">
+                    <i class="fa-solid fa-clipboard-list text-yellow-400"></i> 🛒 Lista de Compras Expressa
+                </h3>
+                <button onclick="fecharModalListaCompras()" class="text-neutral-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+            </div>
 
-    <!-- ================= MODAIS ================= -->
+            <p class="text-xs text-neutral-400">Abaixo estão apenas os materiais que atingiram o estoque mínimo e precisam de reposição:</p>
+
+            <div id="lista-compras-container" class="space-y-2.5"></div>
+
+            <div class="flex flex-wrap justify-end gap-2.5 pt-4 border-t border-neutral-800">
+                <button type="button" onclick="fecharModalListaCompras()" class="px-4 py-2.5 bg-neutral-800 hover:bg-neutral-700 text-neutral-300 rounded-xl font-medium text-xs">
+                    Fechar
+                </button>
+                <button type="button" onclick="window.print()" class="px-4 py-2.5 bg-neutral-800 hover:bg-neutral-700 text-yellow-400 border border-neutral-700 rounded-xl font-bold text-xs flex items-center gap-1.5">
+                    <i class="fa-solid fa-print"></i> Imprimir
+                </button>
+                <button type="button" id="btn-enviar-whats-lista" onclick="enviarListaComprasWhatsApp()" class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs flex items-center gap-2 shadow-lg shadow-emerald-950/40">
+                    <i class="fa-brands fa-whatsapp text-base"></i> Enviar Lista p/ WhatsApp
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL ITEM DE ESTOQUE -->
+    <div id="modal-estoque" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-neutral-900 border border-neutral-800 rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl">
+            <div class="flex justify-between items-center border-b border-neutral-800 pb-3">
+                <h3 class="text-xl font-bold text-yellow-400 flex items-center gap-2" id="modal-estoque-titulo">
+                    <i class="fa-solid fa-boxes-stacked"></i> Novo Item no Estoque
+                </h3>
+                <button onclick="fecharModalEstoque()" class="text-neutral-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <form id="form-estoque" onsubmit="salvarItemEstoque(event)" class="space-y-3 text-sm">
+                <input type="hidden" id="est-id">
+                
+                <div>
+                    <label class="block text-neutral-400 text-xs font-semibold mb-1">Nome do Material / Insumo <span class="text-rose-400">*</span></label>
+                    <input type="text" id="est-nome" required placeholder="Ex: Caneca Branca, Lona 440g, Tinta Sublimática" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400">
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-neutral-400 text-xs font-semibold mb-1">Categoria</label>
+                        <input type="text" id="est-categoria" placeholder="Ex: Brindes, Mídia, Tintas" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400">
+                    </div>
+                    <div>
+                        <label class="block text-neutral-400 text-xs font-semibold mb-1">Unidade de Medida</label>
+                        <select id="est-unidade" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400">
+                            <option value="Unidades">Unidades (Un)</option>
+                            <option value="Metros">Metros (m)</option>
+                            <option value="Litros">Litros (L)</option>
+                            <option value="Caixas">Caixas (Cx)</option>
+                            <option value="Pacotes">Pacotes (Pct)</option>
+                            <option value="Kilos">Kilos (Kg)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-yellow-400 text-xs font-bold mb-1">Qtd Atual em Estoque</label>
+                        <input type="number" step="0.01" id="est-qtd" required placeholder="0" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white font-bold focus:outline-none focus:border-yellow-400">
+                    </div>
+                    <div>
+                        <label class="block text-rose-400 text-xs font-bold mb-1">Estoque Mínimo (Alerta)</label>
+                        <input type="number" step="0.01" id="est-qtd-minima" required placeholder="5" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white font-bold focus:outline-none focus:border-rose-400">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-neutral-400 text-xs font-semibold mb-1">Preço Custo Unitário (R$)</label>
+                        <input type="number" step="0.01" id="est-preco-custo" placeholder="0.00" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-emerald-400 font-bold focus:outline-none focus:border-yellow-400">
+                    </div>
+                    <div>
+                        <label class="block text-neutral-400 text-xs font-semibold mb-1">Fornecedor / Loja</label>
+                        <input type="text" id="est-fornecedor" placeholder="Ex: Mercado Livre, Kalunga" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-neutral-400 text-xs font-semibold mb-1">Observações / Detalhes</label>
+                    <textarea id="est-obs" rows="2" placeholder="Informações extras..." class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400"></textarea>
+                </div>
+
+                <div class="flex justify-end gap-3 pt-3 border-t border-neutral-800">
+                    <button type="button" onclick="fecharModalEstoque()" class="px-4 py-2.5 bg-neutral-800 hover:bg-neutral-700 text-neutral-300 rounded-xl font-medium text-sm">Cancelar</button>
+                    <button type="submit" class="px-5 py-2.5 bg-yellow-400 hover:bg-yellow-300 text-black font-bold rounded-xl text-sm">Salvar Item</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <!-- MODAL RADAR DE ENTREGAS -->
     <div id="modal-radar-entregas" class="fixed inset-0 bg-black/85 backdrop-blur-md z-[900] hidden flex items-center justify-center p-4">
@@ -1210,10 +1385,12 @@
             clientes: [],
             pedidos: [],
             despesasOutras: [],
+            estoque: [],
             historicoFechamentos: [],
             vendasChart: null,
             servicosChart: null,
-            abaPedidoFiltro: 'todos'
+            abaPedidoFiltro: 'todos',
+            filtroApenasComprarEstoque: false
         };
 
         let clienteExtraSelect = null;
@@ -1232,17 +1409,19 @@
         // CARREGAR DADOS DO SUPABASE
         async function carregarDados() {
             try {
-                const [resCli, resPed, resDesp, resFech] = await Promise.all([
+                const [resCli, resPed, resDesp, resFech, resEst] = await Promise.all([
                     supabaseClient.from('clientes').select('*'),
                     supabaseClient.from('pedidos').select('*').order('id', { ascending: false }),
                     supabaseClient.from('despesas').select('*').order('id', { ascending: false }),
-                    supabaseClient.from('fechamentos').select('*').order('id', { ascending: false })
+                    supabaseClient.from('fechamentos').select('*').order('id', { ascending: false }),
+                    supabaseClient.from('estoque').select('*').order('id', { ascending: false })
                 ]);
 
                 if (resCli.data) appData.clientes = resCli.data;
                 if (resPed.data) appData.pedidos = resPed.data;
                 if (resDesp.data) appData.despesasOutras = resDesp.data;
                 if (resFech.data) appData.historicoFechamentos = resFech.data;
+                if (resEst.data) appData.estoque = resEst.data;
 
             } catch(e) {
                 console.error("Erro ao carregar dados do Supabase:", e);
@@ -1359,11 +1538,286 @@
             renderizarEntreguesHoje();
             renderizarClientes();
             renderizarPedidos();
+            renderizarEstoque();
             renderizarDespesas();
             renderizarMovimentacoesFinanceiras();
             renderizarHistoricoFechamentos();
             atualizarGraficos();
         }
+
+        // ================= FUNÇÕES DO NOVO MÓDULO: ESTOQUE =================
+        function renderizarEstoque() {
+            const tbody = document.getElementById('tabela-estoque-body');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            const filtroText = (document.getElementById('input-pesquisar-estoque')?.value || '').toLowerCase();
+            
+            let countTotal = appData.estoque.length;
+            let countAlerta = 0;
+            let valorPatrimonio = 0;
+
+            appData.estoque.forEach(item => {
+                const qtdAtual = parseFloat(item.qtd || 0);
+                const qtdMin = parseFloat(item.qtdMinima || 0);
+                const custo = parseFloat(item.precoCusto || 0);
+
+                if (qtdAtual <= qtdMin) {
+                    countAlerta++;
+                }
+
+                valorPatrimonio += (qtdAtual * custo);
+            });
+
+            // Badge no menu lateral
+            const badgeEstoque = document.getElementById('badge-estoque-alerta');
+            if (badgeEstoque) {
+                if (countAlerta > 0) {
+                    badgeEstoque.innerText = countAlerta;
+                    badgeEstoque.classList.remove('hidden');
+                } else {
+                    badgeEstoque.classList.add('hidden');
+                }
+            }
+
+            // Atualiza os Cards da Seção
+            document.getElementById('est-kpi-total-itens').innerText = countTotal;
+            document.getElementById('est-kpi-alerta-count').innerText = countAlerta;
+            document.getElementById('est-kpi-valor-total').innerText = `R$ ${valorPatrimonio.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+
+            if (countTotal === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" class="p-6 text-center text-neutral-500 text-xs">Nenhum material cadastrado no estoque ainda. Clique em <strong>"+ Novo Item de Estoque"</strong> acima para começar!</td></tr>`;
+                return;
+            }
+
+            appData.estoque.forEach(item => {
+                const buscaTexto = `${item.nome} ${item.categoria} ${item.fornecedor}`.toLowerCase();
+                if (filtroText && !buscaTexto.includes(filtroText)) return;
+
+                const qtdAtual = parseFloat(item.qtd || 0);
+                const qtdMin = parseFloat(item.qtdMinima || 0);
+                const custo = parseFloat(item.precoCusto || 0);
+                const precisaComprar = qtdAtual <= qtdMin;
+
+                if (appData.filtroApenasComprarEstoque && !precisaComprar) return;
+
+                const tr = document.createElement('tr');
+                tr.className = precisaComprar ? "bg-rose-950/20 border-l-2 border-rose-500" : "hover:bg-neutral-800/40 transition-all";
+                
+                tr.innerHTML = `
+                    <td class="p-3">
+                        <strong class="text-white text-sm block">${escapeAttr(item.nome)}</strong>
+                        ${item.fornecedor ? `<span class="text-[11px] text-neutral-400"><i class="fa-solid fa-store text-[10px]"></i> ${escapeAttr(item.fornecedor)}</span>` : ''}
+                    </td>
+                    <td class="p-3 text-xs text-neutral-300 font-medium">${escapeAttr(item.categoria || 'Geral')}</td>
+                    <td class="p-3 text-center">
+                        <div class="flex items-center justify-center gap-2">
+                            <button onclick="ajustarQtdRapidaEstoque(${item.id}, -1)" class="w-6 h-6 bg-neutral-800 hover:bg-rose-900/60 text-rose-400 rounded-lg text-xs font-black border border-neutral-700 flex items-center justify-center">-</button>
+                            <span class="text-base font-black ${precisaComprar ? 'text-rose-400' : 'text-white'}">${qtdAtual} <span class="text-[10px] font-normal text-neutral-400">${escapeAttr(item.unidade || 'Un')}</span></span>
+                            <button onclick="ajustarQtdRapidaEstoque(${item.id}, 1)" class="w-6 h-6 bg-neutral-800 hover:bg-emerald-900/60 text-emerald-400 rounded-lg text-xs font-black border border-neutral-700 flex items-center justify-center">+</button>
+                        </div>
+                    </td>
+                    <td class="p-3 text-center font-bold text-neutral-400 text-xs">${qtdMin} ${escapeAttr(item.unidade || 'Un')}</td>
+                    <td class="p-3">
+                        ${precisaComprar ? `
+                            <span class="bg-rose-500/20 text-rose-400 border border-rose-500/40 px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider flex items-center gap-1.5 w-fit">
+                                <i class="fa-solid fa-triangle-exclamation"></i> COMPRAR URGENTE
+                            </span>
+                        ` : `
+                            <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider flex items-center gap-1.5 w-fit">
+                                <i class="fa-solid fa-check"></i> Estoque OK
+                            </span>
+                        `}
+                    </td>
+                    <td class="p-3 font-bold text-emerald-400">R$ ${custo.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</td>
+                    <td class="p-3 text-right space-x-1">
+                        <button onclick="editarItemEstoque(${item.id})" class="bg-neutral-800 hover:bg-neutral-700 text-yellow-400 p-2 rounded-lg text-xs" title="Editar Item">
+                            <i class="fa-solid fa-pen"></i>
+                        </button>
+                        <button onclick="excluirItemEstoque(${item.id})" class="bg-rose-950/50 hover:bg-rose-900 text-rose-400 p-2 rounded-lg text-xs" title="Excluir Item">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function alternarFiltroEstoqueComprar() {
+            appData.filtroApenasComprarEstoque = !appData.filtroApenasComprarEstoque;
+            const btn = document.getElementById('btn-filtro-comprar-apenas');
+            if (appData.filtroApenasComprarEstoque) {
+                btn.className = "flex items-center gap-2 bg-yellow-400 text-black font-bold px-4 py-2.5 rounded-xl text-sm transition-all shadow-md";
+            } else {
+                btn.className = "flex items-center gap-2 bg-neutral-800 hover:bg-neutral-700 text-neutral-200 border border-neutral-700 px-4 py-2.5 rounded-xl font-medium text-sm transition-all";
+            }
+            renderizarEstoque();
+        }
+
+        function abrirModalEstoque() {
+            document.getElementById('modal-estoque-titulo').innerHTML = `<i class="fa-solid fa-boxes-stacked"></i> Novo Item no Estoque`;
+            document.getElementById('form-estoque').reset();
+            document.getElementById('est-id').value = '';
+            document.getElementById('modal-estoque').classList.remove('hidden');
+        }
+
+        function fecharModalEstoque() {
+            document.getElementById('modal-estoque').classList.add('hidden');
+        }
+
+        function editarItemEstoque(id) {
+            const item = appData.estoque.find(x => x.id == id);
+            if (!item) return;
+
+            document.getElementById('modal-estoque-titulo').innerHTML = `<i class="fa-solid fa-pen"></i> Editar Material no Estoque`;
+            document.getElementById('est-id').value = item.id;
+            document.getElementById('est-nome').value = item.nome || '';
+            document.getElementById('est-categoria').value = item.categoria || '';
+            document.getElementById('est-unidade').value = item.unidade || 'Unidades';
+            document.getElementById('est-qtd').value = item.qtd || 0;
+            document.getElementById('est-qtd-minima').value = item.qtdMinima || 0;
+            document.getElementById('est-preco-custo').value = item.precoCusto || 0;
+            document.getElementById('est-fornecedor').value = item.fornecedor || '';
+            document.getElementById('est-obs').value = item.obs || '';
+
+            document.getElementById('modal-estoque').classList.remove('hidden');
+        }
+
+        async function salvarItemEstoque(e) {
+            e.preventDefault();
+            const idInput = document.getElementById('est-id').value;
+            const nome = document.getElementById('est-nome').value.trim();
+
+            if (!nome) {
+                mostrarToast("Digite o nome do material!", "erro");
+                return;
+            }
+
+            const itemData = {
+                id: idInput ? parseInt(idInput) : Date.now(),
+                nome: nome,
+                categoria: document.getElementById('est-categoria').value.trim() || 'Geral',
+                unidade: document.getElementById('est-unidade').value,
+                qtd: parseFloat(document.getElementById('est-qtd').value || 0),
+                qtdMinima: parseFloat(document.getElementById('est-qtd-minima').value || 0),
+                precoCusto: parseFloat(document.getElementById('est-preco-custo').value || 0),
+                fornecedor: document.getElementById('est-fornecedor').value.trim() || '',
+                obs: document.getElementById('est-obs').value.trim() || ''
+            };
+
+            const { data, error } = await supabaseClient.from('estoque').upsert([itemData]);
+
+            if (!error) {
+                mostrarToast(idInput ? "Material atualizado!" : "Novo material salvo no estoque!");
+                fecharModalEstoque();
+                await carregarDados();
+            } else {
+                console.error("Erro Supabase:", error);
+                mostrarToast(`Erro ao salvar no banco: ${error.message}`, "erro");
+            }
+        }
+
+        async function ajustarQtdRapidaEstoque(id, delta) {
+            const item = appData.estoque.find(x => x.id == id);
+            if (!item) return;
+
+            const novaQtd = Math.max(0, parseFloat(item.qtd || 0) + delta);
+            const { error } = await supabaseClient.from('estoque').update({ qtd: novaQtd }).eq('id', id);
+
+            if (!error) {
+                await carregarDados();
+                mostrarToast(`Estoque de "${item.nome}" atualizado para ${novaQtd} ${item.unidade || 'Un'}.`);
+            } else {
+                mostrarToast(`Erro: ${error.message}`, "erro");
+            }
+        }
+
+        async function excluirItemEstoque(id) {
+            const confirmou = await confirmarAcao("Excluir do Estoque", "Deseja realmente excluir este material do seu estoque?", "Sim, Excluir");
+            if (confirmou) {
+                const { error } = await supabaseClient.from('estoque').delete().eq('id', id);
+                if (!error) {
+                    await carregarDados();
+                    mostrarToast("Material removido do estoque.");
+                } else {
+                    mostrarToast(`Erro: ${error.message}`, "erro");
+                }
+            }
+        }
+
+        // --- FUNÇÕES DA JANELA LISTA DE COMPRAS EXPRESSA ---
+        function abrirModalListaCompras() {
+            const container = document.getElementById('lista-compras-container');
+            container.innerHTML = '';
+
+            const itensParaComprar = appData.estoque.filter(item => {
+                const qtdAtual = parseFloat(item.qtd || 0);
+                const qtdMin = parseFloat(item.qtdMinima || 0);
+                return qtdAtual <= qtdMin;
+            });
+
+            if (itensParaComprar.length === 0) {
+                container.innerHTML = `
+                    <div class="p-6 text-center text-neutral-400 text-xs italic">
+                        <i class="fa-solid fa-circle-check text-emerald-400 text-4xl mb-2 block"></i>
+                        Seu estoque está em dia! Nenhum item precisa ser comprado no momento.
+                    </div>`;
+                document.getElementById('btn-enviar-whats-lista').classList.add('hidden');
+                document.getElementById('modal-lista-compras').classList.remove('hidden');
+                return;
+            }
+
+            document.getElementById('btn-enviar-whats-lista').classList.remove('hidden');
+
+            itensParaComprar.forEach(item => {
+                const qtdAtual = parseFloat(item.qtd || 0);
+                const qtdMin = parseFloat(item.qtdMinima || 0);
+                const sugestaoComprar = Math.max(1, Math.ceil(qtdMin - qtdAtual));
+
+                const div = document.createElement('div');
+                div.className = "flex justify-between items-center bg-neutral-800/80 p-3.5 rounded-xl border border-neutral-700 text-xs";
+                div.innerHTML = `
+                    <div>
+                        <strong class="text-white block text-sm">${escapeAttr(item.nome)}</strong>
+                        <span class="text-neutral-400 text-[11px]">Estoque Atual: <strong class="text-rose-400">${qtdAtual} ${escapeAttr(item.unidade || 'Un')}</strong> (Mínimo: ${qtdMin})</span>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-[10px] text-yellow-400 uppercase font-bold block">Comprar Mínimo</span>
+                        <span class="text-base font-black text-emerald-400">+${sugestaoComprar} ${escapeAttr(item.unidade || 'Un')}</span>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+
+            document.getElementById('modal-lista-compras').classList.remove('hidden');
+        }
+
+        function fecharModalListaCompras() {
+            document.getElementById('modal-lista-compras').classList.add('hidden');
+        }
+
+        function enviarListaComprasWhatsApp() {
+            const itensParaComprar = appData.estoque.filter(item => {
+                const qtdAtual = parseFloat(item.qtd || 0);
+                const qtdMin = parseFloat(item.qtdMinima || 0);
+                return qtdAtual <= qtdMin;
+            });
+
+            if (itensParaComprar.length === 0) return;
+
+            let msg = `🛒 *LISTA DE COMPRAS - PHSUBLIME*\n\n`;
+            itensParaComprar.forEach(item => {
+                const qtdAtual = parseFloat(item.qtd || 0);
+                const qtdMin = parseFloat(item.qtdMinima || 0);
+                const sugestaoComprar = Math.max(1, Math.ceil(qtdMin - qtdAtual));
+                msg += `• *${item.nome}*: Comprar +${sugestaoComprar} ${item.unidade || 'Un'} (Atual: ${qtdAtual})\n`;
+            });
+            msg += `\n_Gerado pelo PHSUBLIME System._`;
+
+            window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`, '_blank');
+        }
+
+        // ================= FIM DAS FUNÇÕES DO ESTOQUE =================
 
         function abrirRadarEntregasAuto() {
             const hojeStr = appData.dataAtual;
