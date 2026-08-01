@@ -106,7 +106,7 @@
                     <i class="fa-solid fa-wallet text-base"></i> Financeiro
                 </button>
 
-                <!-- BOTÃO REPOSICIONADO: ESTOQUE E INSUMOS -->
+                <!-- BOTÃO ESTOQUE E INSUMOS -->
                 <button onclick="navegar('estoque')" id="btn-estoque" class="nav-btn flex items-center justify-between w-full px-4 py-3 rounded-xl font-semibold text-sm transition-all text-neutral-400 hover:text-white hover:bg-neutral-800">
                     <span class="flex items-center gap-3">
                         <i class="fa-solid fa-boxes-stacked text-base text-yellow-400"></i> Estoque & Insumos
@@ -377,7 +377,6 @@
                 </table>
             </div>
         </section>
-
         <!-- ================= SEÇÃO: PEDIDOS ================= -->
         <section id="secao-pedidos" class="secao-conteudo hidden space-y-6">
             <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-neutral-900 p-6 rounded-2xl border border-neutral-800">
@@ -409,9 +408,12 @@
             </div>
 
             <div class="bg-neutral-900 p-4 rounded-2xl border border-neutral-800 flex flex-col md:flex-row gap-4 items-center justify-between">
-                <div class="flex items-center gap-2 w-full md:w-auto">
+                <div class="flex flex-wrap items-center gap-2 w-full md:w-auto">
                     <button onclick="filtrarPedidosAba('todos')" id="btn-filtro-todos" class="px-4 py-2 rounded-xl text-xs font-bold bg-yellow-400 text-black">Todos</button>
                     <button onclick="filtrarPedidosAba('hoje')" id="btn-filtro-hoje" class="px-4 py-2 rounded-xl text-xs font-bold bg-neutral-800 text-neutral-300 hover:text-white">Hoje</button>
+                    <button onclick="filtrarPedidosAba('prontos')" id="btn-filtro-prontos" class="px-4 py-2 rounded-xl text-xs font-bold bg-neutral-800 text-neutral-300 hover:text-white flex items-center gap-1.5">
+                        <i class="fa-solid fa-boxes-packing text-yellow-400"></i> 📦 Prontos p/ Retirada
+                    </button>
                     <div class="flex items-center gap-1 bg-neutral-800 px-3 py-1.5 rounded-xl border border-neutral-700">
                         <span class="text-xs text-neutral-400">Data:</span>
                         <input type="date" id="filtro-data-especifica" onchange="renderizarPedidos()" class="bg-transparent text-xs text-white focus:outline-none">
@@ -420,7 +422,7 @@
 
                 <div class="w-full md:w-80 bg-neutral-800 px-3 py-2 rounded-xl border border-neutral-700 flex items-center gap-2">
                     <i class="fa-solid fa-magnifying-glass text-yellow-400"></i>
-                    <input type="text" id="input-pesquisar-pedido" onkeyup="renderizarPedidos()" placeholder="Pesquisar pedido, cliente, responsável..." class="bg-transparent text-white focus:outline-none text-xs w-full">
+                    <input type="text" id="input-pesquisar-pedido" onkeyup="renderizarPedidos()" placeholder="Pesquisar pedido, código externo, cliente..." class="bg-transparent text-white focus:outline-none text-xs w-full">
                 </div>
             </div>
 
@@ -429,14 +431,15 @@
                 <table class="w-full text-left text-sm text-neutral-300">
                     <thead class="text-xs uppercase bg-neutral-800 text-yellow-400 border-b border-neutral-700">
                         <tr>
-                            <th class="p-3">ID / Data</th>
+                            <th class="p-3">ID / Pedido</th>
                             <th class="p-3">Cliente</th>
                             <th class="p-3">Produtos / Descrição</th>
                             <th class="p-3">Responsável</th>
                             <th class="p-3">Total (R$)</th>
                             <th class="p-3">Despesa (R$)</th>
                             <th class="p-3">Pagamento</th>
-                            <th class="p-3">Status</th>
+                            <th class="p-3">Status Produção</th>
+                            <th class="p-3">Status Pagamento</th>
                             <th class="p-3 text-right">Ações</th>
                         </tr>
                     </thead>
@@ -583,9 +586,15 @@
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 <div class="bg-neutral-900 p-5 rounded-2xl border border-neutral-800 hover:border-yellow-400/30 transition-all">
-                    <p class="text-xs text-neutral-400 uppercase font-bold">Total Receitas (Entradas)</p>
+                    <p class="text-xs text-neutral-400 uppercase font-bold">Total Receitas (Entradas Realizadas)</p>
                     <h3 class="text-3xl font-black text-emerald-400 mt-2" id="fin-entradas">R$ 0,00</h3>
-                    <p class="text-xs text-neutral-500 mt-2">Soma de todas as vendas</p>
+                    <p class="text-xs text-neutral-500 mt-2">Soma dos pagamentos e sinais recebidos</p>
+                </div>
+
+                <div class="bg-neutral-900 p-5 rounded-2xl border border-neutral-800 hover:border-yellow-400/30 transition-all">
+                    <p class="text-xs text-amber-400 uppercase font-bold">Saldo Pendente a Receber</p>
+                    <h3 class="text-3xl font-black text-amber-400 mt-2" id="fin-pendente-receber">R$ 0,00</h3>
+                    <p class="text-xs text-neutral-500 mt-2">Valores de pedidos a serem quitados na entrega</p>
                 </div>
 
                 <div class="bg-neutral-900 p-5 rounded-2xl border border-neutral-800 hover:border-yellow-400/30 transition-all">
@@ -595,21 +604,21 @@
                 </div>
 
                 <div class="bg-neutral-900 p-5 rounded-2xl border border-neutral-800 hover:border-yellow-400/30 transition-all">
-                    <p class="text-xs text-neutral-400 uppercase font-bold">Lucro Total</p>
+                    <p class="text-xs text-neutral-400 uppercase font-bold">Lucro Total Realizado</p>
                     <h3 class="text-3xl font-black text-yellow-400 mt-2" id="fin-saldo">R$ 0,00</h3>
-                    <p class="text-xs text-neutral-500 mt-2">Receitas - Despesas</p>
+                    <p class="text-xs text-neutral-500 mt-2">Entradas Realizadas - Despesas</p>
                 </div>
 
                 <div class="bg-neutral-900 p-5 rounded-2xl border border-neutral-800 hover:border-yellow-400/30 transition-all">
                     <p class="text-xs text-blue-400 uppercase font-bold">10% Lucro (Reserva / Investimento)</p>
                     <h3 class="text-3xl font-black text-blue-400 mt-2" id="fin-lucro-10">R$ 0,00</h3>
-                    <p class="text-xs text-neutral-500 mt-2">10% retidos do Lucro Total</p>
+                    <p class="text-xs text-neutral-500 mt-2">10% retidos do Lucro Realizado</p>
                 </div>
 
-                <div class="bg-neutral-900 p-5 rounded-2xl border border-neutral-800 hover:border-yellow-400/30 transition-all sm:col-span-2 lg:col-span-2">
+                <div class="bg-neutral-900 p-5 rounded-2xl border border-neutral-800 hover:border-yellow-400/30 transition-all">
                     <p class="text-xs text-emerald-400 uppercase font-bold">Lucro Líquido Disponível</p>
                     <h3 class="text-3xl font-black text-emerald-400 mt-2" id="fin-lucro-liquido">R$ 0,00</h3>
-                    <p class="text-xs text-neutral-500 mt-2">Lucro Total - 10% de Reserva</p>
+                    <p class="text-xs text-neutral-500 mt-2">Lucro Realizado - 10% de Reserva</p>
                 </div>
             </div>
 
@@ -619,7 +628,7 @@
                         <h3 class="text-lg font-bold text-yellow-400 flex items-center gap-2">
                             <i class="fa-solid fa-list-check text-yellow-400"></i> Histórico Geral de Movimentações (Mês Ativo)
                         </h3>
-                        <p class="text-xs text-neutral-400 mt-0.5">Consolidado de entradas (vendas) e saídas (custos e despesas).</p>
+                        <p class="text-xs text-neutral-400 mt-0.5">Consolidado de entradas (vendas/sinais) e saídas (custos e despesas).</p>
                     </div>
 
                     <div class="w-full md:w-80 bg-neutral-800 px-3 py-2 rounded-xl border border-neutral-700 flex items-center gap-2">
@@ -659,21 +668,128 @@
         </section>
 
     </main>
+    <!-- ================= MODAIS ================= -->
+
+    <!-- MODAL RECIBO / COMPROVANTE DO PEDIDO -->
+    <div id="modal-comprovante-pedido" class="fixed inset-0 bg-black/85 backdrop-blur-md z-[960] hidden flex items-center justify-center p-4">
+        <div class="bg-neutral-900 border border-neutral-800 rounded-2xl max-w-xl w-full p-6 space-y-5 shadow-2xl overflow-y-auto max-h-[90vh]">
+            <div class="flex justify-between items-center border-b border-neutral-800 pb-3 no-print">
+                <h3 class="text-xl font-black text-yellow-400 flex items-center gap-2">
+                    <i class="fa-solid fa-file-invoice text-yellow-400"></i> Comprovante do Pedido
+                </h3>
+                <button onclick="fecharModalComprovante()" class="text-neutral-400 hover:text-white text-lg no-print"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <div id="comprovante-print-area" class="bg-neutral-950 p-5 rounded-2xl border border-neutral-800 space-y-4 text-xs">
+                <div class="flex justify-between items-center border-b border-neutral-800 pb-3">
+                    <div class="flex items-center gap-3">
+                        <img src="FIVICOM.png" alt="PHSUBLIME" class="w-16 h-16 object-contain shrink-0" onerror="this.outerHTML='<i class=\'fa-solid fa-crown text-yellow-400 text-3xl\'></i>'">
+                        <div>
+                            <h4 class="text-lg font-black text-yellow-400 tracking-wider">PHSUBLIME</h4>
+                            <span class="text-[10px] text-neutral-400 uppercase tracking-widest font-semibold block">Gestão e Personalizados</span>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <span class="font-bold text-white text-sm block" id="recibo-ped-id">#0000</span>
+                        <span class="text-[10px] text-neutral-400" id="recibo-ped-data">Data: --/--/----</span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2 text-xs border-b border-neutral-800 pb-3">
+                    <div>
+                        <span class="text-[10px] text-neutral-500 uppercase font-bold block">Cliente</span>
+                        <strong class="text-white text-sm" id="recibo-cli-nome">--</strong>
+                    </div>
+                    <div>
+                        <span class="text-[10px] text-neutral-500 uppercase font-bold block">Telefone/Whats</span>
+                        <span class="text-neutral-300" id="recibo-cli-tel">--</span>
+                    </div>
+                    <div>
+                        <span class="text-[10px] text-neutral-500 uppercase font-bold block">Data Prevista Entrega</span>
+                        <strong class="text-yellow-400" id="recibo-ped-entrega">--/--/----</strong>
+                    </div>
+                    <div>
+                        <span class="text-[10px] text-neutral-500 uppercase font-bold block">Atendente/Resp.</span>
+                        <span class="text-neutral-300" id="recibo-ped-resp">--</span>
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                    <span class="text-[10px] text-yellow-400 uppercase font-bold block">Itens do Pedido</span>
+                    <div class="overflow-x-auto border border-neutral-800 rounded-xl">
+                        <table class="w-full text-left text-xs text-neutral-300">
+                            <thead class="bg-neutral-800 text-yellow-400 uppercase text-[10px]">
+                                <tr>
+                                    <th class="p-2">Item / Serviço</th>
+                                    <th class="p-2 text-center">Qtd</th>
+                                    <th class="p-2 text-right">Valor Total</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recibo-itens-body" class="divide-y divide-neutral-800"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="bg-neutral-900 p-3 rounded-xl border border-neutral-800 space-y-1.5 text-xs">
+                    <div class="flex justify-between" id="recibo-linha-arte">
+                        <span class="text-neutral-400">Taxa de Criação de Arte:</span>
+                        <strong class="text-white font-bold" id="recibo-valor-arte">R$ 0,00</strong>
+                    </div>
+                    <div class="flex justify-between" id="recibo-linha-entrega">
+                        <span class="text-neutral-400">Taxa de Entrega / Frete:</span>
+                        <strong class="text-white font-bold" id="recibo-valor-entrega">R$ 0,00</strong>
+                    </div>
+                    <div class="flex justify-between border-t border-neutral-800/80 pt-1.5">
+                        <span class="text-neutral-300 font-bold">Valor Total do Pedido:</span>
+                        <strong class="text-white font-bold text-sm" id="recibo-total">R$ 0,00</strong>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-emerald-400">Valor Pago / Sinal:</span>
+                        <strong class="text-emerald-400 font-bold" id="recibo-pago">R$ 0,00</strong>
+                    </div>
+                    <div class="flex justify-between border-t border-neutral-800 pt-1.5">
+                        <span class="text-amber-400 font-bold">Saldo Pendente a Pagar:</span>
+                        <strong class="text-amber-400 font-black text-sm" id="recibo-pendente">R$ 0,00</strong>
+                    </div>
+                    <div class="flex justify-between pt-1">
+                        <span class="text-neutral-400">Status do Pagamento:</span>
+                        <span class="font-bold uppercase" id="recibo-status-pag">--</span>
+                    </div>
+                </div>
+
+                <p class="text-[10px] text-neutral-500 text-center italic">Obrigado pela preferência! - PHSUBLIME</p>
+            </div>
+
+            <!-- BOTÕES ESCONDIDOS NA IMPRESSÃO -->
+            <div class="flex flex-wrap justify-end gap-2.5 pt-3 border-t border-neutral-800 no-print">
+                <button type="button" onclick="fecharModalComprovante()" class="px-4 py-2.5 bg-neutral-800 hover:bg-neutral-700 text-neutral-300 rounded-xl font-medium text-xs">
+                    Fechar
+                </button>
+                <button type="button" onclick="window.print()" class="px-4 py-2.5 bg-neutral-800 hover:bg-neutral-700 text-yellow-400 border border-neutral-700 rounded-xl font-bold text-xs flex items-center gap-1.5">
+                    <i class="fa-solid fa-print"></i> Imprimir / PDF
+                </button>
+                <button type="button" onclick="enviarComprovanteWhatsAppModal()" class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs flex items-center gap-2 shadow-lg shadow-emerald-950/40">
+                    <i class="fa-brands fa-whatsapp text-base"></i> Enviar p/ WhatsApp
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- MODAL LISTA DE COMPRAS EXPRESSA -->
     <div id="modal-lista-compras" class="fixed inset-0 bg-black/85 backdrop-blur-md z-[950] hidden flex items-center justify-center p-4">
         <div class="bg-neutral-900 border border-neutral-800 rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl overflow-y-auto max-h-[85vh]">
-            <div class="flex justify-between items-center border-b border-neutral-800 pb-3">
+            <div class="flex justify-between items-center border-b border-neutral-800 pb-3 no-print">
                 <h3 class="text-xl font-black text-yellow-400 flex items-center gap-2">
                     <i class="fa-solid fa-clipboard-list text-yellow-400"></i> 🛒 Lista de Compras Expressa
                 </h3>
-                <button onclick="fecharModalListaCompras()" class="text-neutral-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+                <button onclick="fecharModalListaCompras()" class="text-neutral-400 hover:text-white text-lg no-print"><i class="fa-solid fa-xmark"></i></button>
             </div>
 
-            <p class="text-xs text-neutral-400">Abaixo estão apenas os materiais que atingiram o estoque mínimo e precisam de reposição:</p>
+            <p class="text-xs text-neutral-400 no-print">Abaixo estão apenas os materiais que atingiram o estoque mínimo e precisam de reposição:</p>
 
             <div id="lista-compras-container" class="space-y-2.5"></div>
 
-            <div class="flex flex-wrap justify-end gap-2.5 pt-4 border-t border-neutral-800">
+            <div class="flex flex-wrap justify-end gap-2.5 pt-4 border-t border-neutral-800 no-print">
                 <button type="button" onclick="fecharModalListaCompras()" class="px-4 py-2.5 bg-neutral-800 hover:bg-neutral-700 text-neutral-300 rounded-xl font-medium text-xs">
                     Fechar
                 </button>
@@ -736,7 +852,7 @@
 
                 <div class="grid grid-cols-2 gap-3">
                     <div>
-                        <label class="block text-neutral-400 text-xs font-semibold mb-1">Preço Custo Unitário (R$)</label>
+                        <label class="block text-neutral-400 text-xs font-semibold mb-1">Preço Custo Unitário / M² (R$)</label>
                         <input type="number" step="0.01" id="est-preco-custo" placeholder="0.00" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-emerald-400 font-bold focus:outline-none focus:border-yellow-400">
                     </div>
                     <div>
@@ -1005,13 +1121,17 @@
                 <input type="hidden" id="ped-id">
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <!-- CLIENTE COM DIGITAÇÃO DIRETA NO CAMPO -->
                     <div>
-                        <label class="block text-yellow-400 text-xs font-bold uppercase mb-1">Buscar Cliente (Nome/CPF)</label>
-                        <input type="text" id="ped-cliente-busca" onkeyup="filtrarSelectClientes(this.value)" placeholder="Digite para filtrar..." class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400 text-xs">
+                        <label class="block text-yellow-400 text-xs font-bold uppercase mb-1">Cliente Selecionado (Digite Nome ou CPF)</label>
+                        <input type="text" id="ped-cliente-input" list="dl-clientes" onchange="selecionarClientePorInput(this.value)" placeholder="Digite para buscar o cliente..." class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400 text-xs">
+                        <datalist id="dl-clientes"></datalist>
+                        <input type="hidden" id="ped-cliente-id">
                     </div>
+                    <!-- CÓDIGO DO PEDIDO EXTERNO / DROPSHIP -->
                     <div>
-                        <label class="block text-yellow-400 text-xs font-bold uppercase mb-1">Cliente Selecionado</label>
-                        <select id="ped-cliente-id" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400 text-xs"></select>
+                        <label class="block text-yellow-400 text-xs font-bold uppercase mb-1">Nº / Cód. Pedido Externo (Dropship)</label>
+                        <input type="text" id="ped-codigo-externo" placeholder="Ex: 677198DWCRH5 (Opcional)" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400 text-xs font-mono">
                     </div>
                 </div>
 
@@ -1026,7 +1146,14 @@
                             </button>
                         </div>
 
+                        <!-- PUXAR DO ESTOQUE COM DIGITAÇÃO DIRETA NO CAMPO -->
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-2.5 text-xs">
+                            <div>
+                                <label class="block text-yellow-400 font-bold mb-1">Puxar do Estoque (Digite o Nome)</label>
+                                <input type="text" id="item-estoque-input" list="dl-estoque" onchange="selecionarMaterialDoEstoque(this.value)" placeholder="Digite para buscar no estoque..." class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-white focus:outline-none focus:border-yellow-400 transition-all text-xs">
+                                <datalist id="dl-estoque"></datalist>
+                                <input type="hidden" id="item-estoque-id">
+                            </div>
                             <div>
                                 <label class="block text-neutral-400 font-medium mb-1">Serviço / Item <span class="text-rose-400">*</span></label>
                                 <input type="text" id="item-servico" placeholder="Ex: Banner, Camiseta, Cartão" class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-white focus:outline-none focus:border-yellow-400 transition-all">
@@ -1035,36 +1162,48 @@
                                 <label class="block text-neutral-400 font-medium mb-1">Material</label>
                                 <input type="text" id="item-material" placeholder="Ex: Lona 440g, Algodão" class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-white focus:outline-none focus:border-yellow-400">
                             </div>
-                            <div>
-                                <label class="block text-neutral-400 font-medium mb-1">Quantidade</label>
-                                <input type="number" min="1" id="item-qtd" value="1" class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-white focus:outline-none focus:border-yellow-400">
-                            </div>
                         </div>
 
                         <div class="grid grid-cols-2 md:grid-cols-4 gap-2.5 text-xs">
                             <div>
+                                <label class="block text-neutral-400 font-medium mb-1">Quantidade</label>
+                                <input type="number" min="1" id="item-qtd" value="1" oninput="recalcularDespesaEValorItem()" class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-white focus:outline-none focus:border-yellow-400">
+                            </div>
+                            <div>
                                 <label class="block text-neutral-400 font-medium mb-1">Largura (cm)</label>
-                                <input type="number" id="item-largura" placeholder="100" class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-white focus:outline-none focus:border-yellow-400">
+                                <input type="number" id="item-largura" oninput="recalcularDespesaEValorItem()" placeholder="100" class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-white focus:outline-none focus:border-yellow-400">
                             </div>
                             <div>
                                 <label class="block text-neutral-400 font-medium mb-1">Altura (cm)</label>
-                                <input type="number" id="item-altura" placeholder="150" class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-white focus:outline-none focus:border-yellow-400">
+                                <input type="number" id="item-altura" oninput="recalcularDespesaEValorItem()" placeholder="150" class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-white focus:outline-none focus:border-yellow-400">
                             </div>
                             <div>
                                 <label class="block text-neutral-400 font-medium mb-1">Acabamento</label>
                                 <input type="text" id="item-acabamento" placeholder="Ilhós, Bainha" class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-white focus:outline-none focus:border-yellow-400">
                             </div>
+                        </div>
+
+                        <!-- CÁLCULO AUTOMÁTICO DE CUSTO, VENDA E M² -->
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-2.5 text-xs pt-1">
                             <div>
-                                <label class="block text-neutral-400 font-medium mb-1">Valor Venda (R$)</label>
-                                <input type="number" step="0.01" id="item-valor" placeholder="0.00" class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-yellow-400 font-bold focus:outline-none focus:border-yellow-400">
+                                <label class="block text-neutral-400 font-medium mb-1">Custo / M² (R$)</label>
+                                <input type="number" step="0.01" id="item-custo-unitario" oninput="recalcularDespesaEValorItem()" placeholder="27.00" class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-rose-300 font-medium focus:outline-none focus:border-yellow-400">
+                            </div>
+                            <div>
+                                <label class="block text-yellow-400 font-bold mb-1">Preço Venda / M² (R$)</label>
+                                <input type="number" step="0.01" id="item-venda-unitario" oninput="recalcularDespesaEValorItem()" placeholder="65.00" class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-yellow-300 font-bold focus:outline-none focus:border-yellow-400">
+                            </div>
+                            <div>
+                                <label class="block text-rose-400 font-semibold mb-1">Despesa Total Item (R$)</label>
+                                <input type="number" step="0.01" id="item-despesa" placeholder="0.00" class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-rose-400 font-bold focus:outline-none focus:border-rose-400">
+                            </div>
+                            <div>
+                                <label class="block text-yellow-400 font-bold mb-1">Valor Venda Total (R$)</label>
+                                <input type="number" step="0.01" id="item-valor" placeholder="0.00" class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-yellow-400 font-black focus:outline-none focus:border-yellow-400">
                             </div>
                         </div>
 
-                        <div class="flex flex-col md:flex-row items-end justify-between gap-3 pt-1">
-                            <div class="w-full md:w-1/2 text-xs">
-                                <label class="block text-rose-400 font-semibold mb-1">Custo / Despesa do Item (R$)</label>
-                                <input type="number" step="0.01" id="item-despesa" placeholder="0.00" class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-rose-400 font-bold focus:outline-none focus:border-rose-400">
-                            </div>
+                        <div class="flex justify-end pt-2">
                             <button type="button" id="btn-add-item-prod" onclick="adicionarOuAtualizarItemProduto()" class="w-full md:w-auto px-5 py-2.5 bg-yellow-400 hover:bg-yellow-300 text-black font-bold text-xs rounded-xl transition-all shadow-md flex items-center justify-center gap-1.5">
                                 <i class="fa-solid fa-plus"></i> <span id="lbl-btn-add-item">Incluir Item no Pedido</span>
                             </button>
@@ -1093,9 +1232,21 @@
                     </div>
                 </div>
 
+                <!-- DADOS EXTRAS DE ARTE E ENTREGA -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3 bg-neutral-950 border border-neutral-800 rounded-xl">
+                    <div>
+                        <label class="block text-yellow-400 font-bold text-xs mb-1">🎨 Taxa / Valor da Arte (R$)</label>
+                        <input type="number" step="0.01" id="ped-valor-arte" value="0.00" oninput="calcularTotalPedidoAutomatico()" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white text-xs font-bold focus:outline-none focus:border-yellow-400">
+                    </div>
+                    <div>
+                        <label class="block text-yellow-400 font-bold text-xs mb-1">🚚 Taxa / Valor da Entrega (R$)</label>
+                        <input type="number" step="0.01" id="ped-valor-entrega" value="0.00" oninput="calcularTotalPedidoAutomatico()" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white text-xs font-bold focus:outline-none focus:border-yellow-400">
+                    </div>
+                </div>
+
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-3 p-3 bg-neutral-950 border border-neutral-800 rounded-xl">
                     <div class="p-2.5 bg-neutral-900 border border-neutral-800 rounded-lg">
-                        <span class="text-[10px] text-neutral-400 font-bold uppercase block">Total do Pedido</span>
+                        <span class="text-[10px] text-neutral-400 font-bold uppercase block">Total do Pedido (Itens + Arte + Entrega)</span>
                         <span class="text-xl font-black text-yellow-400" id="txt-resumo-total">R$ 0,00</span>
                         <input type="hidden" id="ped-total">
                     </div>
@@ -1110,7 +1261,8 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+                <!-- DADOS DE ENTREGA E STATUS DUPLO (PRODUÇÃO E PAGAMENTO) -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
                     <div>
                         <label class="block text-neutral-400 text-xs font-semibold mb-1">Data de Entrega</label>
                         <input type="date" id="ped-data-entrega" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400 text-xs">
@@ -1130,13 +1282,22 @@
                         </select>
                     </div>
                     <div>
-                        <label class="block text-neutral-400 text-xs font-semibold mb-1">Status do Pedido</label>
-                        <select id="ped-status" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400 text-xs">
+                        <label class="block text-yellow-400 text-xs font-bold uppercase mb-1">Status Produção</label>
+                        <select id="ped-status" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400 text-xs font-bold">
                             <option value="AGUARDANDO">AGUARDANDO</option>
                             <option value="Em Produção">Em Produção</option>
+                            <option value="Pronto p/ Retirada">Pronto p/ Retirada</option>
                             <option value="Concluído">Concluído</option>
                             <option value="Entregue">Entregue</option>
                             <option value="Cancelado">Cancelado</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-emerald-400 text-xs font-bold uppercase mb-1">Status Pagamento</label>
+                        <select id="ped-status-pagamento" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-emerald-400 text-xs font-bold">
+                            <option value="Pendente">🔴 Pendente (0%)</option>
+                            <option value="Sinal 50%">🟡 Sinal (50% Pago)</option>
+                            <option value="Pago 100%">🟢 Pago (100% Quitado)</option>
                         </select>
                     </div>
                 </div>
@@ -1251,6 +1412,8 @@
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         let usuarioAtualNome = "Atendente";
+        let radarJaExibidoSessao = false; // TRAVA DO POP-UP DO RADAR (Abre só 1x por sessão)
+        let pedidoReciboAtual = null;
 
         function confirmarAcao(titulo, mensagem, textoBotao = "Sim, Excluir", icone = "fa-trash-can", corOk = "rose") {
             return new Promise((resolve) => {
@@ -1351,6 +1514,7 @@
             } else {
                 document.getElementById('tela-login').classList.add('hidden');
                 definirUsuarioLogado(emailFinal);
+                radarJaExibidoSessao = false;
                 await carregarDados();
                 iniciarInscricaoRealtime();
                 setTimeout(abrirRadarEntregasAuto, 600);
@@ -1374,6 +1538,7 @@
         async function fazerLogout() {
             const confirmou = await confirmarAcao("Sair do Sistema", "Deseja realmente sair do sistema da PHSUBLIME?", "Sim, Sair", "fa-right-from-bracket", "yellow");
             if (confirmou) {
+                radarJaExibidoSessao = false;
                 await supabaseClient.auth.signOut();
                 window.location.reload();
             }
@@ -1476,21 +1641,25 @@
             let pendentesCount = 0;
             let entreguesDiaCount = 0;
 
-            let totalReceitaGeral = 0;
+            let totalReceitaRealizada = 0;
+            let totalPendenteReceber = 0;
             let despesaPedidosGeral = 0;
             let despesaOutrasGeral = 0;
 
             appData.pedidos.forEach(p => {
                 const pTotal = parseFloat(p.total || 0);
                 const pDespesa = parseFloat(p.despesa || 0);
+                const pPago = parseFloat(p.valorPago !== undefined ? p.valorPago : (p.statusPagamento === 'Pago 100%' ? pTotal : (p.statusPagamento === 'Sinal 50%' ? pTotal * 0.5 : 0)));
+                const pPendente = Math.max(0, pTotal - pPago);
 
                 if (p.status !== 'Cancelado') {
-                    totalReceitaGeral += pTotal;
+                    totalReceitaRealizada += pPago;
+                    totalPendenteReceber += pPendente;
                     despesaPedidosGeral += pDespesa;
                 }
 
                 if (p.data === hojeStr && p.status !== 'Cancelado') {
-                    fatDia += pTotal;
+                    fatDia += pPago;
                     pedDiaCount++;
                 }
 
@@ -1511,10 +1680,10 @@
             });
 
             const totalDespesaGeral = despesaPedidosGeral + despesaOutrasGeral;
-            const lucroGeral = totalReceitaGeral - totalDespesaGeral;
+            const lucroRealizado = totalReceitaRealizada - totalDespesaGeral;
             
-            const dezPercentLucro = lucroGeral > 0 ? lucroGeral * 0.10 : 0;
-            const lucroLiquidoFinal = lucroGeral > 0 ? lucroGeral - dezPercentLucro : lucroGeral;
+            const dezPercentLucro = lucroRealizado > 0 ? lucroRealizado * 0.10 : 0;
+            const lucroLiquidoFinal = lucroRealizado > 0 ? lucroRealizado - dezPercentLucro : lucroRealizado;
 
             document.getElementById('dash-faturamento-dia').innerText = `R$ ${fatDia.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
             document.getElementById('dash-pedidos-dia').innerText = pedDiaCount;
@@ -1523,15 +1692,16 @@
             document.getElementById('dash-entregues').innerText = entreguesDiaCount;
             document.getElementById('dash-clientes-count').innerText = appData.clientes.length;
             document.getElementById('dash-investimento').innerText = `R$ ${totalDespesaGeral.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
-            document.getElementById('dash-lucro').innerText = `R$ ${lucroGeral.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+            document.getElementById('dash-lucro').innerText = `R$ ${lucroRealizado.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
 
             document.getElementById('desp-kpi-outros').innerText = `R$ ${despesaOutrasGeral.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
             document.getElementById('desp-kpi-pedidos').innerText = `R$ ${despesaPedidosGeral.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
             document.getElementById('desp-kpi-total').innerText = `R$ ${totalDespesaGeral.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
 
-            document.getElementById('fin-entradas').innerText = `R$ ${totalReceitaGeral.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+            document.getElementById('fin-entradas').innerText = `R$ ${totalReceitaRealizada.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+            document.getElementById('fin-pendente-receber').innerText = `R$ ${totalPendenteReceber.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
             document.getElementById('fin-saidas').innerText = `R$ ${totalDespesaGeral.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
-            document.getElementById('fin-saldo').innerText = `R$ ${lucroGeral.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+            document.getElementById('fin-saldo').innerText = `R$ ${lucroRealizado.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
             document.getElementById('fin-lucro-10').innerText = `R$ ${dezPercentLucro.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
             document.getElementById('fin-lucro-liquido').innerText = `R$ ${lucroLiquidoFinal.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
 
@@ -1544,8 +1714,7 @@
             renderizarHistoricoFechamentos();
             atualizarGraficos();
         }
-
-        // ================= FUNÇÕES DO NOVO MÓDULO: ESTOQUE =================
+               // ================= FUNÇÕES DO NOVO MÓDULO: ESTOQUE =================
         function renderizarEstoque() {
             const tbody = document.getElementById('tabela-estoque-body');
             if (!tbody) return;
@@ -1557,7 +1726,10 @@
             let countAlerta = 0;
             let valorPatrimonio = 0;
 
-            appData.estoque.forEach(item => {
+            // ORDENADO DE A a Z
+            const estoqueOrdenado = [...appData.estoque].sort((a, b) => (a.nome || '').localeCompare(b.nome || ''));
+
+            estoqueOrdenado.forEach(item => {
                 const qtdAtual = parseFloat(item.qtd || 0);
                 const qtdMin = parseFloat(item.qtdMinima || 0);
                 const custo = parseFloat(item.precoCusto || 0);
@@ -1590,7 +1762,7 @@
                 return;
             }
 
-            appData.estoque.forEach(item => {
+            estoqueOrdenado.forEach(item => {
                 const buscaTexto = `${item.nome} ${item.categoria} ${item.fornecedor}`.toLowerCase();
                 if (filtroText && !buscaTexto.includes(filtroText)) return;
 
@@ -1754,7 +1926,7 @@
                 const qtdAtual = parseFloat(item.qtd || 0);
                 const qtdMin = parseFloat(item.qtdMinima || 0);
                 return qtdAtual <= qtdMin;
-            });
+            }).sort((a, b) => (a.nome || '').localeCompare(b.nome || ''));
 
             if (itensParaComprar.length === 0) {
                 container.innerHTML = `
@@ -1801,7 +1973,7 @@
                 const qtdAtual = parseFloat(item.qtd || 0);
                 const qtdMin = parseFloat(item.qtdMinima || 0);
                 return qtdAtual <= qtdMin;
-            });
+            }).sort((a, b) => (a.nome || '').localeCompare(b.nome || ''));
 
             if (itensParaComprar.length === 0) return;
 
@@ -1817,9 +1989,132 @@
             window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
+        // --- DATALIST CLIENTES (ORDENADO A-Z) ---
+        function popularDataListClientes() {
+            const dl = document.getElementById('dl-clientes');
+            if (!dl) return;
+            dl.innerHTML = '';
+            const clientesOrdenados = [...appData.clientes].sort((a, b) => (a.nome || '').localeCompare(b.nome || ''));
+            clientesOrdenados.forEach(c => {
+                const opt = document.createElement('option');
+                opt.value = `${c.nome} ${c.cpf ? `(${c.cpf})` : ''} [ID:${c.id}]`;
+                dl.appendChild(opt);
+            });
+        }
+
+        function selecionarClientePorInput(valor) {
+            if (!valor) return;
+            const matchId = valor.match(/\[ID:(\d+)\]/);
+            if (matchId && matchId[1]) {
+                document.getElementById('ped-cliente-id').value = matchId[1];
+            } else {
+                const cli = appData.clientes.find(c => c.nome.toLowerCase() === valor.toLowerCase() || (c.cpf && c.cpf === valor));
+                if (cli) document.getElementById('ped-cliente-id').value = cli.id;
+            }
+        }
+
+        // --- DATALIST ESTOQUE MATERIAIS & SELEÇÃO DIRETA (ORDENADO A-Z) ---
+        function popularDataListEstoque() {
+            const dl = document.getElementById('dl-estoque');
+            if (!dl) return;
+            dl.innerHTML = '';
+
+            const estoqueOrdenado = [...appData.estoque].sort((a, b) => (a.nome || '').localeCompare(b.nome || ''));
+
+            estoqueOrdenado.forEach(item => {
+                const opt = document.createElement('option');
+                opt.value = `${item.nome} [Estoque: ${item.qtd} ${item.unidade||'Un'}] [ID:${item.id}]`;
+                dl.appendChild(opt);
+            });
+        }
+
+        function selecionarMaterialDoEstoque(valor) {
+            if (!valor) return;
+
+            let item = null;
+            const matchId = valor.match(/\[ID:(\d+)\]/);
+            if (matchId && matchId[1]) {
+                item = appData.estoque.find(e => e.id == matchId[1]);
+            }
+
+            if (!item) {
+                item = appData.estoque.find(e => 
+                    valor.toLowerCase().includes(e.nome.toLowerCase()) || 
+                    e.nome.toLowerCase() === valor.toLowerCase()
+                );
+            }
+
+            if (item) {
+                document.getElementById('item-estoque-id').value = item.id;
+                document.getElementById('item-servico').value = item.nome;
+                document.getElementById('item-material').value = item.nome;
+                const custoUnit = parseFloat(item.precoCusto || 0);
+                document.getElementById('item-custo-unitario').value = custoUnit > 0 ? custoUnit.toFixed(2) : '';
+                recalcularDespesaEValorItem();
+            } else {
+                document.getElementById('item-estoque-id').value = '';
+            }
+        }
+
+        // --- CÁLCULO AUTOMÁTICO DE CUSTO, VENDA E M² ---
+        function recalcularDespesaEValorItem() {
+            const qtd = parseFloat(document.getElementById('item-qtd').value) || 1;
+            const larg = parseFloat(document.getElementById('item-largura').value) || 0;
+            const alt = parseFloat(document.getElementById('item-altura').value) || 0;
+            const custoUnit = parseFloat(document.getElementById('item-custo-unitario').value) || 0;
+            const vendaUnit = parseFloat(document.getElementById('item-venda-unitario').value) || 0;
+
+            const temMedidas = (larg > 0 && alt > 0);
+            const areaM2 = temMedidas ? ((larg / 100) * (alt / 100)) : 1;
+
+            if (custoUnit > 0) {
+                const totalDespesa = areaM2 * custoUnit * qtd;
+                document.getElementById('item-despesa').value = totalDespesa.toFixed(2);
+            }
+
+            if (vendaUnit > 0) {
+                const totalVenda = areaM2 * vendaUnit * qtd;
+                document.getElementById('item-valor').value = totalVenda.toFixed(2);
+            }
+        }
+
+        // --- FUNÇÃO DE BAIXA AUTOMÁTICA DE ESTOQUE AO SALVAR NOVO PEDIDO ---
+        async function abaterEstoquePorPedido(itens) {
+            if (!itens || !Array.isArray(itens) || appData.estoque.length === 0) return;
+
+            for (const item of itens) {
+                let estoqueMatch = null;
+
+                if (item.estoqueId) {
+                    estoqueMatch = appData.estoque.find(e => e.id == item.estoqueId);
+                }
+
+                if (!estoqueMatch) {
+                    const nomeMaterial = (item.material || item.servico || '').trim().toLowerCase();
+                    if (nomeMaterial) {
+                        estoqueMatch = appData.estoque.find(e => 
+                            e.nome.trim().toLowerCase() === nomeMaterial ||
+                            (item.material && e.nome.trim().toLowerCase() === item.material.trim().toLowerCase())
+                        );
+                    }
+                }
+
+                if (estoqueMatch) {
+                    const qtdConsumida = parseFloat(item.qtd || 1);
+                    const qtdAtual = parseFloat(estoqueMatch.qtd || 0);
+                    const novaQtd = Math.max(0, qtdAtual - qtdConsumida);
+
+                    estoqueMatch.qtd = novaQtd;
+                    await supabaseClient.from('estoque').update({ qtd: novaQtd }).eq('id', estoqueMatch.id);
+                }
+            }
+        }
+
         // ================= FIM DAS FUNÇÕES DO ESTOQUE =================
 
         function abrirRadarEntregasAuto() {
+            if (radarJaExibidoSessao) return; // Pop-up abre apenas UMA VEZ por sessão!
+
             const hojeStr = appData.dataAtual;
             
             const entregasHoje = appData.pedidos.filter(p => p.dataEntrega === hojeStr && p.status !== 'Cancelado');
@@ -1889,6 +2184,7 @@
                 });
             }
 
+            radarJaExibidoSessao = true;
             document.getElementById('modal-radar-entregas').classList.remove('hidden');
         }
 
@@ -2230,7 +2526,6 @@
 
             let novosClientes = [];
 
-            // 1. FORMATO 1: Tabela por ponto e vírgula (ex: Nome; CPF; Telefone...)
             if (texto.includes(';') && !texto.toLowerCase().includes('nome\n')) {
                 const linhas = texto.split('\n');
                 linhas.forEach((linha, index) => {
@@ -2251,7 +2546,6 @@
                     }
                 });
             } else {
-                // 2. FORMATO 2: Bloco/Lista do outro sistema (Rótulo na linha de cima, Valor na de baixo)
                 const linhas = texto.split('\n').map(l => l.trim()).filter(l => l.length > 0);
                 
                 let clienteAtual = null;
@@ -2274,7 +2568,6 @@
                 for (let i = 0; i < linhas.length; i++) {
                     const linha = linhas[i];
 
-                    // Verifica se a linha contém "Rótulo: Valor" (ex: "Nome: Rosangela")
                     if (linha.includes(':')) {
                         const partes = linha.split(':');
                         const k = normalizarChave(partes[0]);
@@ -2397,12 +2690,18 @@
             document.getElementById('modal-pedido-titulo').innerHTML = `<i class="fa-solid fa-cart-plus"></i> Novo Pedido`;
             document.getElementById('ped-id').value = '';
             document.getElementById('form-pedido').reset();
-            document.getElementById('ped-cliente-busca').value = '';
+            document.getElementById('ped-cliente-input').value = '';
+            document.getElementById('ped-cliente-id').value = '';
+            document.getElementById('ped-codigo-externo').value = '';
+            document.getElementById('ped-valor-arte').value = '0.00';
+            document.getElementById('ped-valor-entrega').value = '0.00';
+            document.getElementById('ped-status-pagamento').value = 'Pendente';
 
             document.getElementById('ped-responsavel').value = usuarioAtualNome;
 
             clienteExtraSelect = null;
-            popularSelectClientes();
+            popularDataListClientes();
+            popularDataListEstoque();
             
             itensPedidoTemp = [];
             limparFormProdutoItem();
@@ -2413,34 +2712,6 @@
             document.getElementById('modal-pedido').classList.remove('hidden');
         }
 
-        function popularSelectClientes(termoBusca = '') {
-            const selectCli = document.getElementById('ped-cliente-id');
-            selectCli.innerHTML = '';
-
-            const clientesOrdenados = [...appData.clientes].sort((a, b) => a.nome.localeCompare(b.nome));
-
-            if (clienteExtraSelect && !appData.clientes.some(c => c.id == clienteExtraSelect.id)) {
-                const optExcluido = document.createElement('option');
-                optExcluido.value = clienteExtraSelect.id;
-                optExcluido.innerText = `${clienteExtraSelect.nome || 'Cliente'} (Excluído)`;
-                selectCli.appendChild(optExcluido);
-            }
-
-            clientesOrdenados.forEach(c => {
-                const texto = `${c.nome} ${c.cpf}`.toLowerCase();
-                if (termoBusca && !texto.includes(termoBusca.toLowerCase())) return;
-
-                const opt = document.createElement('option');
-                opt.value = c.id;
-                opt.innerText = `${c.nome} ${c.cpf ? `(CPF/CNPJ: ${c.cpf})` : ''}`;
-                selectCli.appendChild(opt);
-            });
-        }
-
-        function filtrarSelectClientes(valor) {
-            popularSelectClientes(valor);
-        }
-
         function fecharModalPedido() { document.getElementById('modal-pedido').classList.add('hidden'); }
 
         function editarPedido(id) {
@@ -2449,12 +2720,24 @@
 
             document.getElementById('modal-pedido-titulo').innerHTML = `<i class="fa-solid fa-pen"></i> Editar Pedido #${p.id}`;
             document.getElementById('ped-id').value = p.id;
-            document.getElementById('ped-cliente-busca').value = '';
+            document.getElementById('ped-codigo-externo').value = p.codigoExterno || '';
+            document.getElementById('ped-valor-arte').value = parseFloat(p.valorArte || 0).toFixed(2);
+            document.getElementById('ped-valor-entrega').value = parseFloat(p.valorEntrega || 0).toFixed(2);
+            document.getElementById('ped-status-pagamento').value = p.statusPagamento || 'Pendente';
 
             clienteExtraSelect = { id: p.clienteId, nome: p.clienteNome };
 
-            popularSelectClientes();
-            document.getElementById('ped-cliente-id').value = p.clienteId;
+            popularDataListClientes();
+            popularDataListEstoque();
+
+            const cli = appData.clientes.find(c => c.id == p.clienteId);
+            if (cli) {
+                document.getElementById('ped-cliente-input').value = `${cli.nome} ${cli.cpf ? `(${cli.cpf})` : ''} [ID:${cli.id}]`;
+                document.getElementById('ped-cliente-id').value = cli.id;
+            } else {
+                document.getElementById('ped-cliente-input').value = p.clienteNome || '';
+                document.getElementById('ped-cliente-id').value = p.clienteId;
+            }
 
             itensPedidoTemp = p.itens ? JSON.parse(JSON.stringify(p.itens)) : [];
             limparFormProdutoItem();
@@ -2479,12 +2762,16 @@
 
         function limparFormProdutoItem() {
             indexItemEdicao = null;
+            document.getElementById('item-estoque-input').value = '';
+            document.getElementById('item-estoque-id').value = '';
             document.getElementById('item-servico').value = '';
             document.getElementById('item-material').value = '';
             document.getElementById('item-qtd').value = '1';
             document.getElementById('item-largura').value = '';
             document.getElementById('item-altura').value = '';
             document.getElementById('item-acabamento').value = '';
+            document.getElementById('item-custo-unitario').value = '';
+            document.getElementById('item-venda-unitario').value = '';
             document.getElementById('item-valor').value = '';
             document.getElementById('item-despesa').value = '';
 
@@ -2494,25 +2781,53 @@
             document.getElementById('btn-cancelar-edicao-item').classList.add('hidden');
         }
 
-        function adicionarOuAtualizarItemProduto() {
+        async function adicionarOuAtualizarItemProduto() {
             const inputServico = document.getElementById('item-servico');
             const servico = inputServico.value.trim();
 
             if (!servico) {
-                mostrarToast("Por favor, digite o nome do Serviço / Item antes de incluir!", "erro");
+                mostrarToast("Por favor, digite ou selecione o nome do Serviço / Item antes de incluir!", "erro");
                 inputServico.classList.add('border-rose-500', 'bg-rose-950/30');
                 inputServico.focus();
                 setTimeout(() => inputServico.classList.remove('border-rose-500', 'bg-rose-950/30'), 2500);
                 return;
             }
 
+            const estoqueSelId = document.getElementById('item-estoque-id').value;
+            const qtdSolicitada = parseFloat(document.getElementById('item-qtd').value) || 1;
+
+            // ALERTA DE ESTOQUE INSUFICIENTE COM LIBERAÇÃO PARA VENDER MESMO ASSIM
+            let estoqueMatch = null;
+            if (estoqueSelId) {
+                estoqueMatch = appData.estoque.find(e => e.id == estoqueSelId);
+            } else if (servico) {
+                estoqueMatch = appData.estoque.find(e => e.nome.trim().toLowerCase() === servico.toLowerCase());
+            }
+
+            if (estoqueMatch) {
+                const qtdAtual = parseFloat(estoqueMatch.qtd || 0);
+                if (qtdSolicitada > qtdAtual) {
+                    const confirmou = await confirmarAcao(
+                        "🚨 ESTOQUE INSUFICIENTE",
+                        `Você solicitou ${qtdSolicitada} unidade(s) de "${estoqueMatch.nome}", mas possui apenas ${qtdAtual} no estoque.\n\nDeseja incluir no pedido mesmo assim?`,
+                        "Sim, Incluir Mesmo Assim",
+                        "fa-triangle-exclamation",
+                        "yellow"
+                    );
+                    if (!confirmou) return;
+                }
+            }
+
             const itemObj = {
+                estoqueId: estoqueSelId || (estoqueMatch ? estoqueMatch.id : null),
                 servico: servico,
-                material: document.getElementById('item-material').value.trim(),
-                qtd: parseFloat(document.getElementById('item-qtd').value) || 1,
+                material: document.getElementById('item-material').value.trim() || servico,
+                qtd: qtdSolicitada,
                 largura: document.getElementById('item-largura').value.trim(),
                 altura: document.getElementById('item-altura').value.trim(),
                 acabamento: document.getElementById('item-acabamento').value.trim(),
+                custoUnitario: parseFloat(document.getElementById('item-custo-unitario').value) || 0,
+                vendaUnitario: parseFloat(document.getElementById('item-venda-unitario').value) || 0,
                 valor: parseFloat(document.getElementById('item-valor').value) || 0,
                 despesa: parseFloat(document.getElementById('item-despesa').value) || 0
             };
@@ -2535,12 +2850,15 @@
             if (!item) return;
 
             indexItemEdicao = idx;
+            document.getElementById('item-estoque-id').value = item.estoqueId || '';
             document.getElementById('item-servico').value = item.servico || '';
             document.getElementById('item-material').value = item.material || '';
             document.getElementById('item-qtd').value = item.qtd || 1;
             document.getElementById('item-largura').value = item.largura || '';
             document.getElementById('item-altura').value = item.altura || '';
             document.getElementById('item-acabamento').value = item.acabamento || '';
+            document.getElementById('item-custo-unitario').value = item.custoUnitario ? item.custoUnitario : '';
+            document.getElementById('item-venda-unitario').value = item.vendaUnitario ? item.vendaUnitario : '';
             document.getElementById('item-valor').value = item.valor ? item.valor : '';
             document.getElementById('item-despesa').value = item.despesa ? item.despesa : '';
 
@@ -2609,25 +2927,29 @@
         }
 
         function calcularTotalPedidoAutomatico() {
-            let somaTotal = 0;
-            let somaDespesa = 0;
+            let somaItensVenda = 0;
+            let somaItensDespesa = 0;
 
             itensPedidoTemp.forEach(i => {
                 if (i.valor && !isNaN(parseFloat(i.valor))) {
-                    somaTotal += parseFloat(i.valor);
+                    somaItensVenda += parseFloat(i.valor);
                 }
                 if (i.despesa && !isNaN(parseFloat(i.despesa))) {
-                    somaDespesa += parseFloat(i.despesa);
+                    somaItensDespesa += parseFloat(i.despesa);
                 }
             });
 
-            const lucro = somaTotal - somaDespesa;
+            const valArte = parseFloat(document.getElementById('ped-valor-arte')?.value || 0);
+            const valEntrega = parseFloat(document.getElementById('ped-valor-entrega')?.value || 0);
+
+            const somaTotal = somaItensVenda + valArte + valEntrega;
+            const lucro = somaTotal - somaItensDespesa;
 
             document.getElementById('ped-total').value = somaTotal.toFixed(2);
-            document.getElementById('ped-despesa').value = somaDespesa.toFixed(2);
+            document.getElementById('ped-despesa').value = somaItensDespesa.toFixed(2);
 
             document.getElementById('txt-resumo-total').innerText = `R$ ${somaTotal.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
-            document.getElementById('txt-resumo-custo').innerText = `R$ ${somaDespesa.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+            document.getElementById('txt-resumo-custo').innerText = `R$ ${somaItensDespesa.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
             
             const txtLucro = document.getElementById('txt-resumo-lucro');
             txtLucro.innerText = `R$ ${lucro.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
@@ -2649,7 +2971,7 @@
 
             const servicoPend = document.getElementById('item-servico').value.trim();
             if (servicoPend) {
-                adicionarOuAtualizarItemProduto();
+                await adicionarOuAtualizarItemProduto();
             }
 
             if (itensPedidoTemp.length === 0) {
@@ -2659,17 +2981,31 @@
             }
 
             const pedId = document.getElementById('ped-id').value;
-            const clienteId = document.getElementById('ped-cliente-id').value;
+            let clienteId = document.getElementById('ped-cliente-id').value;
+            const clienteInputVal = document.getElementById('ped-cliente-input').value.trim();
+
+            if (!clienteId && clienteInputVal) {
+                selecionarClientePorInput(clienteInputVal);
+                clienteId = document.getElementById('ped-cliente-id').value;
+            }
 
             if (!clienteId) {
-                mostrarToast("Selecione um cliente para o pedido!", "erro");
+                mostrarToast("Selecione ou digite o nome de um cliente para o pedido!", "erro");
+                document.getElementById('ped-cliente-input').focus();
                 return;
             }
 
             const cli = appData.clientes.find(c => c.id == clienteId);
             const total = parseFloat(document.getElementById('ped-total').value || 0);
             const despesa = parseFloat(document.getElementById('ped-despesa').value || 0);
+            const valArte = parseFloat(document.getElementById('ped-valor-arte').value || 0);
+            const valEntrega = parseFloat(document.getElementById('ped-valor-entrega').value || 0);
             const formaPag = document.getElementById('ped-forma-pagamento').value;
+
+            const stPag = document.getElementById('ped-status-pagamento').value || 'Pendente';
+            let valorPagoCalc = 0;
+            if (stPag === 'Pago 100%') valorPagoCalc = total;
+            else if (stPag === 'Sinal 50%') valorPagoCalc = total * 0.5;
 
             let detalhePag = formaPag;
             if (formaPag === 'Parte Dinheiro / Parte Pix') {
@@ -2678,16 +3014,21 @@
                 detalhePag = `Misto (Dinheiro: R$ ${din.toFixed(2)} | Pix: R$ ${pix.toFixed(2)})`;
             }
 
-            const nomeClienteFinal = cli ? cli.nome : (clienteExtraSelect && clienteExtraSelect.id == clienteId ? clienteExtraSelect.nome : 'Cliente Desconhecido');
+            const nomeClienteFinal = cli ? cli.nome : (clienteExtraSelect && clienteExtraSelect.id == clienteId ? clienteExtraSelect.nome : clienteInputVal || 'Cliente Desconhecido');
 
             const pedData = {
                 id: pedId ? parseInt(pedId) : Math.floor(1000 + Math.random() * 9000),
                 data: appData.dataAtual,
                 clienteId: clienteId,
                 clienteNome: nomeClienteFinal,
+                codigoExterno: document.getElementById('ped-codigo-externo').value.trim(),
                 itens: [...itensPedidoTemp],
                 total: total,
                 despesa: despesa,
+                valorArte: valArte,
+                valorEntrega: valEntrega,
+                statusPagamento: stPag,
+                valorPago: valorPagoCalc,
                 dataEntrega: document.getElementById('ped-data-entrega').value || appData.dataAtual,
                 responsavel: document.getElementById('ped-responsavel').value || usuarioAtualNome,
                 formaPagamento: detalhePag,
@@ -2698,7 +3039,11 @@
             const { data, error } = await supabaseClient.from('pedidos').upsert([pedData]);
 
             if (!error) {
-                mostrarToast(pedId ? "Pedido alterado e atualizado!" : "Novo pedido salvo!");
+                if (!pedId) {
+                    await abaterEstoquePorPedido(pedData.itens);
+                }
+
+                mostrarToast(pedId ? "Pedido alterado e atualizado!" : "Novo pedido salvo e estoque atualizado!");
                 await carregarDados();
                 if (criarOutro) {
                     abrirModalPedido();
@@ -2715,6 +3060,7 @@
             appData.abaPedidoFiltro = aba;
             document.getElementById('btn-filtro-todos').className = aba === 'todos' ? 'px-4 py-2 rounded-xl text-xs font-bold bg-yellow-400 text-black' : 'px-4 py-2 rounded-xl text-xs font-bold bg-neutral-800 text-neutral-300 hover:text-white';
             document.getElementById('btn-filtro-hoje').className = aba === 'hoje' ? 'px-4 py-2 rounded-xl text-xs font-bold bg-yellow-400 text-black' : 'px-4 py-2 rounded-xl text-xs font-bold bg-neutral-800 text-neutral-300 hover:text-white';
+            document.getElementById('btn-filtro-prontos').className = aba === 'prontos' ? 'px-4 py-2 rounded-xl text-xs font-bold bg-yellow-400 text-black' : 'px-4 py-2 rounded-xl text-xs font-bold bg-neutral-800 text-neutral-300 hover:text-white';
             renderizarPedidos();
         }
 
@@ -2734,16 +3080,28 @@
                 if (p.status === 'Em Produção') countProducao++;
 
                 if (appData.abaPedidoFiltro === 'hoje' && p.data !== appData.dataAtual) return;
+                if (appData.abaPedidoFiltro === 'prontos' && !(p.status === 'Pronto p/ Retirada' || p.status === 'Concluído')) return;
                 if (dataEspec && p.data !== dataEspec) return;
 
                 const descProdutos = p.itens ? p.itens.map(i => `${i.servico || 'Item'} (${i.qtd}x)`).join(', ') : 'Serviço';
                 const resp = p.responsavel || 'N/I';
-                const buscaTexto = `${p.id} ${p.clienteNome} ${descProdutos} ${resp} ${p.status}`.toLowerCase();
+                const codExt = p.codigoExterno || '';
+                const stPag = p.statusPagamento || 'Pendente';
+
+                let badgePag = 'bg-rose-500/20 text-rose-400 border-rose-500/40';
+                if (stPag === 'Pago 100%') badgePag = 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40';
+                else if (stPag === 'Sinal 50%') badgePag = 'bg-yellow-500/20 text-yellow-400 border-yellow-500/40';
+
+                const buscaTexto = `${p.id} ${codExt} ${p.clienteNome} ${descProdutos} ${resp} ${p.status} ${stPag}`.toLowerCase();
                 if (busca && !buscaTexto.includes(busca)) return;
 
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td class="p-3 font-bold text-white">#${p.id}<br><span class="text-xs text-neutral-500 font-normal">${escapeAttr(p.data)}</span></td>
+                    <td class="p-3 font-bold text-white">
+                        #${p.id}
+                        ${codExt ? `<br><span class="text-[10px] bg-yellow-400/10 text-yellow-400 border border-yellow-400/30 px-1.5 py-0.5 rounded font-mono">📦 Ext: ${escapeAttr(codExt)}</span>` : ''}
+                        <br><span class="text-xs text-neutral-500 font-normal">${escapeAttr(p.data)}</span>
+                    </td>
                     <td class="p-3 font-semibold text-yellow-400">${escapeAttr(p.clienteNome)}</td>
                     <td class="p-3 text-xs">${escapeAttr(descProdutos)}</td>
                     <td class="p-3 text-xs font-bold text-neutral-300"><i class="fa-solid fa-user-gear text-[10px] text-yellow-400"></i> ${escapeAttr(resp)}</td>
@@ -2754,12 +3112,28 @@
                         <select onchange="alterarStatusPedido(${p.id}, this.value)" class="bg-neutral-800 text-xs text-white border border-neutral-700 rounded-lg p-1 font-bold focus:outline-none">
                             <option value="AGUARDANDO" ${p.status==='AGUARDANDO'?'selected':''}>AGUARDANDO</option>
                             <option value="Em Produção" ${p.status==='Em Produção'?'selected':''}>Em Produção</option>
+                            <option value="Pronto p/ Retirada" ${p.status==='Pronto p/ Retirada'?'selected':''}>Pronto p/ Retirada</option>
                             <option value="Concluído" ${p.status==='Concluído'?'selected':''}>Concluído</option>
                             <option value="Entregue" ${p.status==='Entregue'?'selected':''}>Entregue</option>
                             <option value="Cancelado" ${p.status==='Cancelado'?'selected':''}>Cancelado</option>
                         </select>
                     </td>
+                    <td class="p-3">
+                        <select onchange="alterarStatusPagamentoPedido(${p.id}, this.value)" class="bg-neutral-800 text-xs border border-neutral-700 rounded-lg p-1 font-bold focus:outline-none ${badgePag}">
+                            <option value="Pendente" ${stPag==='Pendente'?'selected':''}>🔴 Pendente</option>
+                            <option value="Sinal 50%" ${stPag==='Sinal 50%'?'selected':''}>🟡 Sinal 50%</option>
+                            <option value="Pago 100%" ${stPag==='Pago 100%'?'selected':''}>🟢 Pago 100%</option>
+                        </select>
+                    </td>
                     <td class="p-3 text-right space-x-1">
+                        ${stPag !== 'Pago 100%' ? `
+                            <button onclick="quitarSaldoRapido(${p.id})" class="bg-emerald-600/20 hover:bg-emerald-600 text-emerald-400 hover:text-white p-2 rounded-lg text-xs font-bold border border-emerald-500/30" title="💵 Quitar Saldo em 1 Clique">
+                                <i class="fa-solid fa-dollar-sign"></i>
+                            </button>
+                        ` : ''}
+                        <button onclick="abrirModalComprovante(${p.id})" class="bg-yellow-400/20 hover:bg-yellow-400 text-yellow-400 hover:text-black p-2 rounded-lg text-xs font-bold border border-yellow-400/30" title="Gerar Comprovante / Recibo">
+                            <i class="fa-solid fa-file-invoice"></i>
+                        </button>
                         <button onclick="editarPedido(${p.id})" class="bg-neutral-800 hover:bg-neutral-700 text-neutral-200 p-2 rounded-lg text-xs" title="Editar Pedido">
                             <i class="fa-solid fa-pen"></i>
                         </button>
@@ -2784,6 +3158,165 @@
             } else {
                 mostrarToast(`Erro: ${error.message}`, "erro");
             }
+        }
+
+        async function alterarStatusPagamentoPedido(id, novoStatusPag) {
+            const p = appData.pedidos.find(x => x.id == id);
+            let novoValorPago = 0;
+            if (p) {
+                const totalP = parseFloat(p.total || 0);
+                if (novoStatusPag === 'Pago 100%') novoValorPago = totalP;
+                else if (novoStatusPag === 'Sinal 50%') novoValorPago = totalP * 0.5;
+            }
+
+            const { error } = await supabaseClient.from('pedidos').update({ 
+                statusPagamento: novoStatusPag,
+                valorPago: novoValorPago
+            }).eq('id', id);
+
+            if (!error) {
+                await carregarDados();
+                mostrarToast(`Pagamento do pedido #${id} alterado para ${novoStatusPag}!`);
+            } else {
+                mostrarToast(`Erro: ${error.message}`, "erro");
+            }
+        }
+
+        async function quitarSaldoRapido(pedidoId) {
+            const p = appData.pedidos.find(x => x.id == pedidoId);
+            if (!p) return;
+
+            const confirmou = await confirmarAcao(
+                "💵 QUITAR SALDO DO PEDIDO",
+                `Deseja registrar que o saldo do pedido #${pedidoId} foi 100% quitado?`,
+                "Sim, Quitar Agora",
+                "fa-dollar-sign",
+                "yellow"
+            );
+
+            if (confirmou) {
+                const total = parseFloat(p.total || 0);
+                const { error } = await supabaseClient.from('pedidos').update({
+                    statusPagamento: 'Pago 100%',
+                    valorPago: total
+                }).eq('id', pedidoId);
+
+                if (!error) {
+                    await carregarDados();
+                    mostrarToast(`Pedido #${pedidoId} quitado com sucesso!`);
+                } else {
+                    mostrarToast(`Erro: ${error.message}`, "erro");
+                }
+            }
+        }
+
+        // --- GERADOR DE COMPROVANTE DE PEDIDO / RECIBO ---
+        function abrirModalComprovante(pedidoId) {
+            const p = appData.pedidos.find(x => x.id == pedidoId);
+            if (!p) return;
+
+            pedidoReciboAtual = p;
+            const cli = appData.clientes.find(c => c.id == p.clienteId);
+
+            document.getElementById('recibo-ped-id').innerText = `#${p.id}`;
+            document.getElementById('recibo-ped-data').innerText = `Data: ${p.data || '--/--/----'}`;
+            document.getElementById('recibo-cli-nome').innerText = p.clienteNome || 'Cliente';
+            document.getElementById('recibo-cli-tel').innerText = cli ? (cli.whatsapp || cli.telefone || '-') : '-';
+            document.getElementById('recibo-ped-entrega').innerText = p.dataEntrega || '--/--/----';
+            document.getElementById('recibo-ped-resp').innerText = p.responsavel || usuarioAtualNome;
+
+            const tbody = document.getElementById('recibo-itens-body');
+            tbody.innerHTML = '';
+            
+            if (p.itens && Array.isArray(p.itens)) {
+                p.itens.forEach(item => {
+                    const totalVenda = parseFloat(item.valor || 0).toLocaleString('pt-BR', {minimumFractionDigits: 2});
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td class="p-2 font-bold text-white">${escapeAttr(item.servico)} ${item.material ? `<span class="text-[10px] text-neutral-400 font-normal">(${escapeAttr(item.material)})</span>` : ''}</td>
+                        <td class="p-2 text-center font-bold text-white">${escapeAttr(item.qtd || 1)}</td>
+                        <td class="p-2 text-right font-bold text-yellow-400">R$ ${totalVenda}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            }
+
+            const total = parseFloat(p.total || 0);
+            const vArte = parseFloat(p.valorArte || 0);
+            const vEntrega = parseFloat(p.valorEntrega || 0);
+
+            const rowArte = document.getElementById('recibo-linha-arte');
+            if (vArte > 0) {
+                rowArte.classList.remove('hidden');
+                document.getElementById('recibo-valor-arte').innerText = `R$ ${vArte.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+            } else {
+                rowArte.classList.add('hidden');
+            }
+
+            const rowEntrega = document.getElementById('recibo-linha-entrega');
+            if (vEntrega > 0) {
+                rowEntrega.classList.remove('hidden');
+                document.getElementById('recibo-valor-entrega').innerText = `R$ ${vEntrega.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+            } else {
+                rowEntrega.classList.add('hidden');
+            }
+
+            const stPag = p.statusPagamento || 'Pendente';
+            let pago = parseFloat(p.valorPago !== undefined ? p.valorPago : (stPag === 'Pago 100%' ? total : (stPag === 'Sinal 50%' ? total * 0.5 : 0)));
+            let pendente = Math.max(0, total - pago);
+
+            document.getElementById('recibo-total').innerText = `R$ ${total.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+            document.getElementById('recibo-pago').innerText = `R$ ${pago.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+            document.getElementById('recibo-pendente').innerText = `R$ ${pendente.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+            
+            const elSt = document.getElementById('recibo-status-pag');
+            elSt.innerText = stPag;
+            elSt.className = stPag === 'Pago 100%' ? 'font-bold uppercase text-emerald-400' : (stPag === 'Sinal 50%' ? 'font-bold uppercase text-yellow-400' : 'font-bold uppercase text-rose-400');
+
+            document.getElementById('modal-comprovante-pedido').classList.remove('hidden');
+        }
+
+        function fecharModalComprovante() {
+            document.getElementById('modal-comprovante-pedido').classList.add('hidden');
+            pedidoReciboAtual = null;
+        }
+
+        function enviarComprovanteWhatsAppModal() {
+            if (!pedidoReciboAtual) return;
+            const p = pedidoReciboAtual;
+            const cli = appData.clientes.find(c => c.id == p.clienteId);
+
+            const total = parseFloat(p.total || 0);
+            const stPag = p.statusPagamento || 'Pendente';
+            let pago = parseFloat(p.valorPago !== undefined ? p.valorPago : (stPag === 'Pago 100%' ? total : (stPag === 'Sinal 50%' ? total * 0.5 : 0)));
+            let pendente = Math.max(0, total - pago);
+
+            let descItens = p.itens ? p.itens.map(i => `• *${i.servico}* (${i.qtd}x) - R$ ${parseFloat(i.valor||0).toFixed(2)}`).join('\n') : 'Serviço';
+
+            let telClean = '';
+            if (cli) {
+                const telRaw = cli.whatsapp || cli.telefone || '';
+                telClean = telRaw.replace(/\D/g, '');
+                if (telClean.length === 10 || telClean.length === 11) telClean = '55' + telClean;
+            }
+
+            const msg = `🧾 *COMPROVANTE DE PEDIDO - PHSUBLIME*\n\n` +
+                        `*Pedido:* #${p.id}\n` +
+                        `*Cliente:* ${p.clienteNome}\n` +
+                        `*Data Prevista de Entrega:* ${p.dataEntrega}\n\n` +
+                        `📦 *ITENS:*\n${descItens}\n\n` +
+                        `💰 *RESUMO FINANCEIRO:*\n` +
+                        `• Total Pedido: *R$ ${total.toFixed(2)}*\n` +
+                        `• Valor Pago / Sinal: *R$ ${pago.toFixed(2)}*\n` +
+                        `• Saldo Pendente: *R$ ${pendente.toFixed(2)}*\n` +
+                        `• Status Pagamento: *${stPag.toUpperCase()}*\n\n` +
+                        `Qualquer dúvida estamos à disposição! - *PHSUBLIME*`;
+
+            const url = telClean ? 
+                `https://api.whatsapp.com/send?phone=${telClean}&text=${encodeURIComponent(msg)}` : 
+                `https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`;
+
+            window.open(url, '_blank');
         }
 
         async function excluirPedido(id) {
@@ -2935,16 +3468,22 @@
             appData.pedidos.forEach(p => {
                 if (p.status !== 'Cancelado') {
                     const descProdutos = p.itens ? p.itens.map(i => `${i.servico || 'Item'} (${i.qtd}x)`).join(', ') : 'Serviço';
-                    movimentacoes.push({
-                        data: p.data,
-                        tipo: 'Entrada',
-                        categoria: 'Venda de Pedido',
-                        descricao: `Pedido #${p.id} - ${p.clienteNome} (${descProdutos}) - Resp: ${p.responsavel || 'N/I'}`,
-                        valor: parseFloat(p.total || 0),
-                        metodo: p.formaPagamento || 'Dinheiro',
-                        origemTipo: 'pedido',
-                        origemId: p.id
-                    });
+                    const totalP = parseFloat(p.total || 0);
+                    const stPag = p.statusPagamento || 'Pendente';
+                    let valorEntradaReal = parseFloat(p.valorPago !== undefined ? p.valorPago : (stPag === 'Pago 100%' ? totalP : (stPag === 'Sinal 50%' ? totalP * 0.5 : 0)));
+
+                    if (valorEntradaReal > 0) {
+                        movimentacoes.push({
+                            data: p.data,
+                            tipo: 'Entrada',
+                            categoria: `Venda (${stPag})`,
+                            descricao: `Pedido #${p.id} - ${p.clienteNome} (${descProdutos}) - Resp: ${p.responsavel || 'N/I'}`,
+                            valor: valorEntradaReal,
+                            metodo: p.formaPagamento || 'Dinheiro',
+                            origemTipo: 'pedido',
+                            origemId: p.id
+                        });
+                    }
 
                     if (parseFloat(p.despesa || 0) > 0) {
                         movimentacoes.push({
@@ -3215,7 +3754,10 @@
                     const [pAno, pMes, pDia] = p.data.split('-').map(Number);
                     if (pAno === anoAtual && pMes === (mesAtual + 1)) {
                         if (pDia >= 1 && pDia <= totalDiasMes) {
-                            vendasAcumuladas[pDia - 1] += parseFloat(p.total || 0);
+                            const totalP = parseFloat(p.total || 0);
+                            const stPag = p.statusPagamento || 'Pendente';
+                            const valorEntrada = parseFloat(p.valorPago !== undefined ? p.valorPago : (stPag === 'Pago 100%' ? totalP : (stPag === 'Sinal 50%' ? totalP * 0.5 : 0)));
+                            vendasAcumuladas[pDia - 1] += valorEntrada;
                         }
                     }
                 }
@@ -3232,7 +3774,7 @@
                     data: {
                         labels: diasMes,
                         datasets: [{
-                            label: 'Vendas (R$)',
+                            label: 'Entradas de Caixa (R$)',
                             data: vendasAcumuladas,
                             borderColor: '#facc15',
                             borderWidth: 3,
@@ -3298,11 +3840,11 @@
         }
 
         function copiarCSV() {
-            let csv = "ID;Data;Cliente;Total;Despesa;Responsavel;Status\n";
+            let csv = "ID;Data;Cliente;Total;Despesa;StatusPagamento;Responsavel;Status\n";
             appData.pedidos.forEach(p => {
                 const clienteClean = String(p.clienteNome || '').replace(/;/g, ' ').replace(/"/g, '""');
                 const statusClean = String(p.status || '').replace(/;/g, ' ').replace(/"/g, '""');
-                csv += `"${p.id}";"${p.data}";"${clienteClean}";"${parseFloat(p.total||0).toFixed(2)}";"${parseFloat(p.despesa||0).toFixed(2)}";"${p.responsavel||''}";"${statusClean}"\n`;
+                csv += `"${p.id}";"${p.data}";"${clienteClean}";"${parseFloat(p.total||0).toFixed(2)}";"${parseFloat(p.despesa||0).toFixed(2)}";"${p.statusPagamento||'Pendente'}";"${p.responsavel||''}";"${statusClean}"\n`;
             });
             navigator.clipboard.writeText(csv).then(() => mostrarToast("Dados CSV copiados com sucesso!"));
         }
@@ -3336,7 +3878,7 @@
 
             if (!confirmou) return;
 
-            let totalFat = 0;
+            let totalFatReal = 0;
             let despesaPed = 0;
             let despesaOutras = 0;
             let totalPedidosCount = 0;
@@ -3344,7 +3886,10 @@
 
             appData.pedidos.forEach(p => {
                 if (p.status !== 'Cancelado') {
-                    totalFat += parseFloat(p.total || 0);
+                    const totalP = parseFloat(p.total || 0);
+                    const stPag = p.statusPagamento || 'Pendente';
+                    const valorPagoCalc = parseFloat(p.valorPago !== undefined ? p.valorPago : (stPag === 'Pago 100%' ? totalP : (stPag === 'Sinal 50%' ? totalP * 0.5 : 0)));
+                    totalFatReal += valorPagoCalc;
                     despesaPed += parseFloat(p.despesa || 0);
                 }
                 totalPedidosCount++;
@@ -3358,7 +3903,7 @@
             });
 
             const despesasTotais = despesaPed + despesaOutras;
-            const lucroBruto = totalFat - despesasTotais;
+            const lucroBruto = totalFatReal - despesasTotais;
             const reserva10 = lucroBruto > 0 ? lucroBruto * 0.10 : 0;
             const lucroLiquido = lucroBruto > 0 ? lucroBruto - reserva10 : lucroBruto;
 
@@ -3371,7 +3916,7 @@
                 mes: nomeMesAno.charAt(0).toUpperCase() + nomeMesAno.slice(1),
                 dataFechamento: dataFechamentoStr,
                 resumoFinanceiro: {
-                    faturamentoTotal: totalFat,
+                    faturamentoTotal: totalFatReal,
                     despesasTotais: despesasTotais,
                     lucroLiquido: lucroLiquido,
                     reserva10: reserva10,
@@ -3405,4 +3950,4 @@
         window.onload = verificarSessao;
     </script>
 </body>
-</html>
+</html>   
