@@ -3650,7 +3650,13 @@
             const p = appData.pedidos.find(x => x.id == id);
             const nomeCli = p ? p.clienteNome : '';
 
-            const confirmou = confirm(`🚨 ATENÇÃO: Tem certeza que deseja EXCLUIR o pedido #${id} (${nomeCli})?\n\nEsta ação irá remover o pedido do banco de dados e recalcular o caixa.`);
+            const confirmou = await confirmarAcao(
+                `🚨 EXCLUIR PEDIDO #${id}`,
+                `Tem certeza que deseja apagar o pedido #${id} de "${nomeCli}"?\n\nEsta ação não poderá ser desfeita e os valores serão removidos do caixa.`,
+                "Sim, Apagar Pedido",
+                "fa-trash-can",
+                "rose"
+            );
 
             if (confirmou) {
                 const { error } = await supabaseClient.from('pedidos').delete().eq('id', id);
