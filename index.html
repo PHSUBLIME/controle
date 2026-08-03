@@ -98,6 +98,13 @@
                     <i class="fa-solid fa-cart-shopping text-base"></i> Pedidos
                 </button>
 
+                <button onclick="navegar('orcamentos')" id="btn-orcamentos" class="nav-btn flex items-center justify-between w-full px-4 py-3 rounded-xl font-semibold text-sm transition-all text-neutral-400 hover:text-white hover:bg-neutral-800">
+                    <span class="flex items-center gap-3">
+                        <i class="fa-solid fa-file-signature text-base text-yellow-400"></i> Orçamentos
+                    </span>
+                    <span id="badge-orcamentos-count" class="bg-yellow-400 text-black text-[10px] font-black px-2 py-0.5 rounded-full hidden">0</span>
+                </button>
+
                 <button onclick="navegar('despesas')" id="btn-despesas" class="nav-btn flex items-center gap-3 w-full px-4 py-3 rounded-xl font-semibold text-sm transition-all text-neutral-400 hover:text-white hover:bg-neutral-800">
                     <i class="fa-solid fa-file-invoice-dollar text-base"></i> Despesas
                 </button>
@@ -106,7 +113,6 @@
                     <i class="fa-solid fa-wallet text-base"></i> Financeiro
                 </button>
 
-                <!-- BOTÃO ESTOQUE E INSUMOS -->
                 <button onclick="navegar('estoque')" id="btn-estoque" class="nav-btn flex items-center justify-between w-full px-4 py-3 rounded-xl font-semibold text-sm transition-all text-neutral-400 hover:text-white hover:bg-neutral-800">
                     <span class="flex items-center gap-3">
                         <i class="fa-solid fa-boxes-stacked text-base text-yellow-400"></i> Estoque & Insumos
@@ -377,6 +383,7 @@
                 </table>
             </div>
         </section>
+
         <!-- ================= SEÇÃO: PEDIDOS ================= -->
         <section id="secao-pedidos" class="secao-conteudo hidden space-y-6">
             <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-neutral-900 p-6 rounded-2xl border border-neutral-800">
@@ -447,74 +454,57 @@
                 </table>
             </div>
         </section>
-
-        <!-- ================= SEÇÃO: ESTOQUE E INSUMOS ================= -->
-        <section id="secao-estoque" class="secao-conteudo hidden space-y-6">
-            <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-neutral-900 p-6 rounded-2xl border border-neutral-800 shadow-2xl">
+        <!-- ================= SEÇÃO: ORÇAMENTOS ================= -->
+        <section id="secao-orcamentos" class="secao-conteudo hidden space-y-6">
+            <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-neutral-900 p-6 rounded-2xl border border-neutral-800">
                 <div>
                     <h2 class="text-2xl font-black text-yellow-400 flex items-center gap-2">
-                        <i class="fa-solid fa-boxes-stacked text-yellow-400"></i> Controle de Estoque & Lista de Compras
+                        <i class="fa-solid fa-file-signature text-yellow-400"></i> Gerenciamento de Orçamentos & Propostas
                     </h2>
-                    <p class="text-neutral-400 text-sm mt-1">Gerencie matérias-primas e insumos de produção. Veja o que está acabando para comprar a tempo.</p>
+                    <p class="text-neutral-400 text-sm mt-1">Crie orçamentos rápidos para clientes cadastrados ou avulsos do WhatsApp.</p>
                 </div>
 
-                <div class="flex flex-wrap gap-2.5">
-                    <button onclick="abrirModalListaCompras()" class="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2.5 rounded-xl text-sm transition-all shadow-lg shadow-emerald-950/40">
-                        <i class="fa-solid fa-clipboard-list text-lg"></i> 📋 Gerar Lista de Compras
-                    </button>
-
-                    <button onclick="alternarFiltroEstoqueComprar()" id="btn-filtro-comprar-apenas" class="flex items-center gap-2 bg-neutral-800 hover:bg-neutral-700 text-neutral-200 border border-neutral-700 px-4 py-2.5 rounded-xl font-medium text-sm transition-all">
-                        <i class="fa-solid fa-cart-shopping text-yellow-400"></i> <span>🛒 Ver Apenas O Que Comprar</span>
-                    </button>
-
-                    <button onclick="abrirModalEstoque()" class="flex items-center gap-2 bg-yellow-400 hover:bg-yellow-300 text-black font-bold px-4 py-2.5 rounded-xl text-sm transition-all shadow-lg shadow-yellow-950/30">
-                        <i class="fa-solid fa-plus"></i> + Novo Item de Estoque
-                    </button>
-                </div>
+                <button onclick="abrirModalOrcamento()" class="flex items-center gap-2 bg-yellow-400 hover:bg-yellow-300 text-black font-bold px-5 py-3 rounded-xl text-sm transition-all shadow-lg shadow-yellow-950/30">
+                    <i class="fa-solid fa-plus text-base"></i> + Novo Orçamento
+                </button>
             </div>
 
-            <!-- CARDS DE MÉTRICAS DO ESTOQUE -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div class="bg-neutral-900 p-5 rounded-2xl border border-neutral-800">
-                    <p class="text-xs font-bold text-yellow-400 uppercase">Total de Itens Cadastrados</p>
-                    <h3 class="text-3xl font-black text-white mt-1" id="est-kpi-total-itens">0</h3>
-                    <p class="text-xs text-neutral-500 mt-1">Insumos e materiais</p>
+                    <p class="text-xs font-bold text-yellow-400 uppercase">Orçamentos Pendentes</p>
+                    <h3 class="text-3xl font-black text-white mt-1" id="kpi-orcamentos-pendentes">0</h3>
                 </div>
-
                 <div class="bg-neutral-900 p-5 rounded-2xl border border-neutral-800">
-                    <p class="text-xs font-bold text-rose-400 uppercase">Comprar Urgente (Abaixo do Mínimo)</p>
-                    <h3 class="text-3xl font-black text-rose-400 mt-1" id="est-kpi-alerta-count">0</h3>
-                    <p class="text-xs text-rose-400/80 mt-1">Necessitam reposição</p>
+                    <p class="text-xs font-bold text-emerald-400 uppercase">Convertidos em Pedido</p>
+                    <h3 class="text-3xl font-black text-emerald-400 mt-1" id="kpi-orcamentos-convertidos">0</h3>
                 </div>
-
                 <div class="bg-neutral-900 p-5 rounded-2xl border border-neutral-800">
-                    <p class="text-xs font-bold text-emerald-400 uppercase">Valor Estimado em Estoque</p>
-                    <h3 class="text-3xl font-black text-emerald-400 mt-1" id="est-kpi-valor-total">R$ 0,00</h3>
-                    <p class="text-xs text-neutral-500 mt-1">Patrimônio acumulado em materiais</p>
+                    <p class="text-xs font-bold text-amber-400 uppercase">Total Orçado no Mês</p>
+                    <h3 class="text-3xl font-black text-white mt-1" id="kpi-orcamentos-total-valor">R$ 0,00</h3>
                 </div>
             </div>
 
-            <!-- BARRA DE PESQUISA ESTOQUE -->
-            <div class="bg-neutral-900 p-4 rounded-2xl border border-neutral-800 flex items-center gap-3">
-                <i class="fa-solid fa-magnifying-glass text-yellow-400 text-lg ml-2"></i>
-                <input type="text" id="input-pesquisar-estoque" onkeyup="renderizarEstoque()" placeholder="Pesquisar material, categoria, fornecedor..." class="w-full bg-transparent text-white focus:outline-none text-sm placeholder-neutral-500">
+            <div class="bg-neutral-900 p-4 rounded-2xl border border-neutral-800 flex flex-col md:flex-row gap-4 items-center justify-between">
+                <div class="w-full md:w-80 bg-neutral-800 px-3 py-2 rounded-xl border border-neutral-700 flex items-center gap-2">
+                    <i class="fa-solid fa-magnifying-glass text-yellow-400"></i>
+                    <input type="text" id="input-pesquisar-orcamento" onkeyup="renderizarOrcamentos()" placeholder="Pesquisar orçamento, cliente, whats..." class="bg-transparent text-white focus:outline-none text-xs w-full">
+                </div>
             </div>
 
-            <!-- TABELA DE ESTOQUE -->
             <div class="bg-neutral-900 p-6 rounded-2xl border border-neutral-800 overflow-x-auto">
                 <table class="w-full text-left text-sm text-neutral-300">
                     <thead class="text-xs uppercase bg-neutral-800 text-yellow-400 border-b border-neutral-700">
                         <tr>
-                            <th class="p-3">Material / Insumo</th>
-                            <th class="p-3">Categoria</th>
-                            <th class="p-3 text-center">Qtd Atual</th>
-                            <th class="p-3 text-center">Estoque Mínimo</th>
+                            <th class="p-3">ID / Data</th>
+                            <th class="p-3">Cliente</th>
+                            <th class="p-3">WhatsApp</th>
+                            <th class="p-3">Itens Orçados</th>
+                            <th class="p-3">Total (R$)</th>
                             <th class="p-3">Status</th>
-                            <th class="p-3">Preço Unitário</th>
                             <th class="p-3 text-right">Ações</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-neutral-800" id="tabela-estoque-body"></tbody>
+                    <tbody class="divide-y divide-neutral-800" id="tabela-orcamentos-body"></tbody>
                 </table>
             </div>
         </section>
@@ -656,6 +646,77 @@
             </div>
         </section>
 
+        <!-- ================= SEÇÃO: ESTOQUE E INSUMOS ================= -->
+        <section id="secao-estoque" class="secao-conteudo hidden space-y-6">
+            <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-neutral-900 p-6 rounded-2xl border border-neutral-800 shadow-2xl">
+                <div>
+                    <h2 class="text-2xl font-black text-yellow-400 flex items-center gap-2">
+                        <i class="fa-solid fa-boxes-stacked text-yellow-400"></i> Controle de Estoque & Lista de Compras
+                    </h2>
+                    <p class="text-neutral-400 text-sm mt-1">Gerencie matérias-primas e insumos de produção. Veja o que está acabando para comprar a tempo.</p>
+                </div>
+
+                <div class="flex flex-wrap gap-2.5">
+                    <button onclick="abrirModalListaCompras()" class="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2.5 rounded-xl text-sm transition-all shadow-lg shadow-emerald-950/40">
+                        <i class="fa-solid fa-clipboard-list text-lg"></i> 📋 Gerar Lista de Compras
+                    </button>
+
+                    <button onclick="alternarFiltroEstoqueComprar()" id="btn-filtro-comprar-apenas" class="flex items-center gap-2 bg-neutral-800 hover:bg-neutral-700 text-neutral-200 border border-neutral-700 px-4 py-2.5 rounded-xl font-medium text-sm transition-all">
+                        <i class="fa-solid fa-cart-shopping text-yellow-400"></i> <span>🛒 Ver Apenas O Que Comprar</span>
+                    </button>
+
+                    <button onclick="abrirModalEstoque()" class="flex items-center gap-2 bg-yellow-400 hover:bg-yellow-300 text-black font-bold px-4 py-2.5 rounded-xl text-sm transition-all shadow-lg shadow-yellow-950/30">
+                        <i class="fa-solid fa-plus"></i> + Novo Item de Estoque
+                    </button>
+                </div>
+            </div>
+
+            <!-- CARDS DE MÉTRICAS DO ESTOQUE -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="bg-neutral-900 p-5 rounded-2xl border border-neutral-800">
+                    <p class="text-xs font-bold text-yellow-400 uppercase">Total de Itens Cadastrados</p>
+                    <h3 class="text-3xl font-black text-white mt-1" id="est-kpi-total-itens">0</h3>
+                    <p class="text-xs text-neutral-500 mt-1">Insumos e materiais</p>
+                </div>
+
+                <div class="bg-neutral-900 p-5 rounded-2xl border border-neutral-800">
+                    <p class="text-xs font-bold text-rose-400 uppercase">Comprar Urgente (Abaixo do Mínimo)</p>
+                    <h3 class="text-3xl font-black text-rose-400 mt-1" id="est-kpi-alerta-count">0</h3>
+                    <p class="text-xs text-rose-400/80 mt-1">Necessitam reposição</p>
+                </div>
+
+                <div class="bg-neutral-900 p-5 rounded-2xl border border-neutral-800">
+                    <p class="text-xs font-bold text-emerald-400 uppercase">Valor Estimado em Estoque</p>
+                    <h3 class="text-3xl font-black text-emerald-400 mt-1" id="est-kpi-valor-total">R$ 0,00</h3>
+                    <p class="text-xs text-neutral-500 mt-1">Patrimônio acumulado em materiais</p>
+                </div>
+            </div>
+
+            <!-- BARRA DE PESQUISA ESTOQUE -->
+            <div class="bg-neutral-900 p-4 rounded-2xl border border-neutral-800 flex items-center gap-3">
+                <i class="fa-solid fa-magnifying-glass text-yellow-400 text-lg ml-2"></i>
+                <input type="text" id="input-pesquisar-estoque" onkeyup="renderizarEstoque()" placeholder="Pesquisar material, categoria, fornecedor..." class="w-full bg-transparent text-white focus:outline-none text-sm placeholder-neutral-500">
+            </div>
+
+            <!-- TABELA DE ESTOQUE -->
+            <div class="bg-neutral-900 p-6 rounded-2xl border border-neutral-800 overflow-x-auto">
+                <table class="w-full text-left text-sm text-neutral-300">
+                    <thead class="text-xs uppercase bg-neutral-800 text-yellow-400 border-b border-neutral-700">
+                        <tr>
+                            <th class="p-3">Material / Insumo</th>
+                            <th class="p-3">Categoria</th>
+                            <th class="p-3 text-center">Qtd Atual</th>
+                            <th class="p-3 text-center">Estoque Mínimo</th>
+                            <th class="p-3">Status</th>
+                            <th class="p-3">Preço Unitário</th>
+                            <th class="p-3 text-right">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-neutral-800" id="tabela-estoque-body"></tbody>
+                </table>
+            </div>
+        </section>
+
         <!-- ================= SEÇÃO: HISTÓRICO ================= -->
         <section id="secao-historico" class="secao-conteudo hidden space-y-6">
             <div class="bg-neutral-900 p-6 rounded-2xl border border-neutral-800">
@@ -668,6 +729,7 @@
         </section>
 
     </main>
+
     <!-- ================= MODAIS ================= -->
 
     <!-- MODAL RECIBO / COMPROVANTE DO PEDIDO -->
@@ -760,7 +822,6 @@
                 <p class="text-[10px] text-neutral-500 text-center italic">Obrigado pela preferência! - PHSUBLIME</p>
             </div>
 
-            <!-- BOTÕES ESCONDIDOS NA IMPRESSÃO -->
             <div class="flex flex-wrap justify-end gap-2.5 pt-3 border-t border-neutral-800 no-print">
                 <button type="button" onclick="fecharModalComprovante()" class="px-4 py-2.5 bg-neutral-800 hover:bg-neutral-700 text-neutral-300 rounded-xl font-medium text-xs">
                     Fechar
@@ -850,17 +911,28 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-2 gap-3">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     <div>
-                        <label class="block text-neutral-400 text-xs font-semibold mb-1">Preço Custo Unitário / M² (R$)</label>
-                        <input type="number" step="0.01" id="est-preco-custo" placeholder="0.00" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-emerald-400 font-bold focus:outline-none focus:border-yellow-400">
+                        <label class="block text-rose-400 text-xs font-bold mb-1">Preço Custo (R$)</label>
+                        <input type="number" step="0.01" id="est-preco-custo" placeholder="0.00" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-rose-300 font-bold focus:outline-none focus:border-yellow-400">
                     </div>
                     <div>
-                        <label class="block text-neutral-400 text-xs font-semibold mb-1">Fornecedor / Loja</label>
-                        <input type="text" id="est-fornecedor" placeholder="Ex: Mercado Livre, Kalunga" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400">
+                        <label class="block text-yellow-400 text-xs font-bold mb-1">Preço Venda (R$)</label>
+                        <input type="number" step="0.01" id="est-preco-venda" placeholder="0.00" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-yellow-400 font-bold focus:outline-none focus:border-yellow-400">
+                    </div>
+                    <div>
+                        <label class="block text-neutral-400 text-xs font-semibold mb-1">Cobrança</label>
+                        <select id="est-tipo-cobranca" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white text-xs focus:outline-none focus:border-yellow-400">
+                            <option value="Unidade">Por Unidade (Un)</option>
+                            <option value="MetroQuadrado">Por Metro² (M²)</option>
+                        </select>
                     </div>
                 </div>
 
+                <div>
+                    <label class="block text-neutral-400 text-xs font-semibold mb-1">Fornecedor / Loja</label>
+                    <input type="text" id="est-fornecedor" placeholder="Ex: Mercado Livre, Kalunga" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400">
+                </div>
                 <div>
                     <label class="block text-neutral-400 text-xs font-semibold mb-1">Observações / Detalhes</label>
                     <textarea id="est-obs" rows="2" placeholder="Informações extras..." class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400"></textarea>
@@ -931,6 +1003,276 @@
         </div>
     </div>
 
+    <!-- MODAL NOVO/EDITAR ORÇAMENTO -->
+    <div id="modal-orcamento" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-neutral-900 border border-neutral-800 rounded-2xl max-w-4xl w-full p-6 space-y-5 shadow-2xl overflow-y-auto max-h-[90vh]">
+            <div class="flex justify-between items-center border-b border-neutral-800 pb-3">
+                <h3 class="text-xl font-bold text-yellow-400 flex items-center gap-2" id="modal-orcamento-titulo">
+                    <i class="fa-solid fa-file-signature"></i> Novo Orçamento
+                </h3>
+                <button onclick="fecharModalOrcamento()" class="text-neutral-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <form id="form-orcamento" onsubmit="salvarOrcamento(event, false)" class="space-y-4 text-sm">
+                <input type="hidden" id="orc-id">
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 p-3 bg-neutral-950 border border-neutral-800 rounded-xl">
+                    <div>
+                        <label class="block text-yellow-400 text-xs font-bold uppercase mb-1">Nome do Cliente (Cadastrado ou Avulso) <span class="text-rose-400">*</span></label>
+                        <input type="text" id="orc-cliente-nome" list="dl-clientes" onchange="selecionarClienteOrcamento(this.value)" required placeholder="Digite o nome do cliente..." class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400 text-xs font-bold">
+                        <input type="hidden" id="orc-cliente-id">
+                    </div>
+                    <div>
+                        <label class="block text-emerald-400 text-xs font-bold uppercase mb-1">WhatsApp do Cliente (DDD + Número)</label>
+                        <input type="text" id="orc-cliente-whatsapp" placeholder="Ex: (21) 98888-7777" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-emerald-400 text-xs font-bold">
+                    </div>
+                </div>
+
+                <div class="border border-neutral-800 bg-black/40 p-4 rounded-xl space-y-4">
+                    <div class="bg-neutral-950/80 border border-neutral-800 p-3.5 rounded-xl space-y-3">
+                        <div class="flex justify-between items-center pb-2 border-b border-neutral-800/80">
+                            <h4 class="text-xs font-bold uppercase tracking-wider text-yellow-400 flex items-center gap-1.5" id="titulo-form-item-orc">
+                                <i class="fa-solid fa-plus-circle"></i> Adicionar Item ao Orçamento
+                            </h4>
+                            <button type="button" id="btn-cancelar-edicao-item-orc" onclick="cancelarEdicaoItemOrcamento()" class="hidden text-[11px] text-neutral-400 hover:text-white underline">
+                                Cancelar Edição
+                            </button>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-2.5 text-xs">
+                            <div>
+                                <label class="block text-yellow-400 font-bold mb-1">Puxar do Estoque / Produtos</label>
+                                <input type="text" id="orc-item-estoque-input" list="dl-estoque" onchange="selecionarMaterialOrcamento(this.value)" placeholder="Digite para buscar..." class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-white focus:outline-none focus:border-yellow-400 transition-all text-xs">
+                                <input type="hidden" id="orc-item-estoque-id">
+                            </div>
+                            <div>
+                                <label class="block text-neutral-400 font-medium mb-1">Serviço / Item <span class="text-rose-400">*</span></label>
+                                <input type="text" id="orc-item-servico" placeholder="Ex: Banner, Caneca, Cartão" class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-white focus:outline-none focus:border-yellow-400 transition-all">
+                            </div>
+                            <div>
+                                <label class="block text-neutral-400 font-medium mb-1">Material</label>
+                                <input type="text" id="orc-item-material" placeholder="Ex: Porcelana, Lona 440g" class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-white focus:outline-none focus:border-yellow-400">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-2.5 text-xs">
+                            <div>
+                                <label class="block text-neutral-400 font-medium mb-1">Quantidade</label>
+                                <input type="number" min="1" id="orc-item-qtd" value="1" oninput="recalcularOrcamentoItem()" class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-white focus:outline-none focus:border-yellow-400">
+                            </div>
+                            <div>
+                                <label class="block text-neutral-400 font-medium mb-1">Largura (cm)</label>
+                                <input type="number" id="orc-item-largura" oninput="recalcularOrcamentoItem()" placeholder="100" class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-white focus:outline-none focus:border-yellow-400">
+                            </div>
+                            <div>
+                                <label class="block text-neutral-400 font-medium mb-1">Altura (cm)</label>
+                                <input type="number" id="orc-item-altura" oninput="recalcularOrcamentoItem()" placeholder="150" class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-white focus:outline-none focus:border-yellow-400">
+                            </div>
+                            <div>
+                                <label class="block text-neutral-400 font-medium mb-1">Acabamento</label>
+                                <input type="text" id="orc-item-acabamento" placeholder="Ilhós, Bainha" class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-white focus:outline-none focus:border-yellow-400">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-2.5 text-xs pt-1">
+                            <div>
+                                <label class="block text-neutral-400 font-medium mb-1">Custo / M² (R$)</label>
+                                <input type="number" step="0.01" id="orc-item-custo-unitario" oninput="recalcularOrcamentoItem()" placeholder="0.00" class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-rose-300 font-medium focus:outline-none focus:border-yellow-400">
+                            </div>
+                            <div>
+                                <label class="block text-yellow-400 font-bold mb-1">Preço Venda / M² (R$)</label>
+                                <input type="number" step="0.01" id="orc-item-venda-unitario" oninput="recalcularOrcamentoItem()" placeholder="0.00" class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-yellow-300 font-bold focus:outline-none focus:border-yellow-400">
+                            </div>
+                            <div>
+                                <label class="block text-rose-400 font-semibold mb-1">Despesa Total (R$)</label>
+                                <input type="number" step="0.01" id="orc-item-despesa" placeholder="0.00" class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-rose-400 font-bold focus:outline-none focus:border-rose-400">
+                            </div>
+                            <div>
+                                <label class="block text-yellow-400 font-bold mb-1">Valor Venda Total (R$)</label>
+                                <input type="number" step="0.01" id="orc-item-valor" placeholder="0.00" class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-yellow-400 font-black focus:outline-none focus:border-yellow-400">
+                            </div>
+                        </div>
+
+                        <div class="flex justify-end pt-2">
+                            <button type="button" id="btn-add-item-orc" onclick="adicionarOuAtualizarItemOrcamento()" class="w-full md:w-auto px-5 py-2.5 bg-yellow-400 hover:bg-yellow-300 text-black font-bold text-xs rounded-xl transition-all shadow-md flex items-center justify-center gap-1.5">
+                                <i class="fa-solid fa-plus"></i> <span id="lbl-btn-add-item-orc">Incluir Item no Orçamento</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-center px-1">
+                            <span class="text-xs font-bold uppercase tracking-wide text-neutral-400">Itens no Orçamento (<span id="count-itens-orcamento">0</span>)</span>
+                        </div>
+                        <div class="overflow-x-auto border border-neutral-800 rounded-xl bg-neutral-900/90">
+                            <table class="w-full text-left text-xs text-neutral-300">
+                                <thead class="uppercase bg-neutral-800/80 text-yellow-400 border-b border-neutral-700">
+                                    <tr>
+                                        <th class="p-2.5">Item / Material</th>
+                                        <th class="p-2.5">Medidas / Acabamento</th>
+                                        <th class="p-2.5 text-center">Qtd</th>
+                                        <th class="p-2.5">Valor Venda</th>
+                                        <th class="p-2.5 text-right">Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-neutral-800" id="tabela-itens-orcamento-body"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 p-3 bg-neutral-950 border border-neutral-800 rounded-xl text-xs">
+                    <div>
+                        <label class="block text-yellow-400 font-bold mb-1">🎨 Taxa da Arte (R$)</label>
+                        <input type="number" step="0.01" id="orc-valor-arte" value="0.00" oninput="calcularTotalOrcamentoAutomatico()" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white font-bold focus:outline-none focus:border-yellow-400">
+                    </div>
+                    <div>
+                        <label class="block text-yellow-400 font-bold mb-1">🚚 Taxa de Entrega / Frete (R$)</label>
+                        <input type="number" step="0.01" id="orc-valor-entrega" value="0.00" oninput="calcularTotalOrcamentoAutomatico()" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white font-bold focus:outline-none focus:border-yellow-400">
+                    </div>
+                    <div>
+                        <label class="block text-rose-400 font-bold mb-1">🏷️ Desconto (R$)</label>
+                        <input type="number" step="0.01" id="orc-desconto" value="0.00" oninput="calcularTotalOrcamentoAutomatico()" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-rose-300 font-bold focus:outline-none focus:border-rose-400">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3 p-3 bg-neutral-950 border border-neutral-800 rounded-xl">
+                    <div class="p-2.5 bg-neutral-900 border border-neutral-800 rounded-lg">
+                        <span class="text-[10px] text-neutral-400 font-bold uppercase block">Total do Orçamento</span>
+                        <span class="text-2xl font-black text-yellow-400" id="txt-orc-resumo-total">R$ 0,00</span>
+                        <input type="hidden" id="orc-total">
+                    </div>
+                    <div class="p-2.5 bg-neutral-900 border border-neutral-800 rounded-lg">
+                        <span class="text-[10px] text-neutral-400 font-bold uppercase block">Custo Estimado</span>
+                        <span class="text-2xl font-black text-rose-400" id="txt-orc-resumo-custo">R$ 0,00</span>
+                        <input type="hidden" id="orc-despesa">
+                    </div>
+                    <div class="p-2.5 bg-neutral-900 border border-neutral-800 rounded-lg">
+                        <span class="text-[10px] text-neutral-400 font-bold uppercase block">Lucro Estimado</span>
+                        <span class="text-2xl font-black text-emerald-400" id="txt-orc-resumo-lucro">R$ 0,00</span>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-neutral-400 text-xs font-semibold mb-1">Observações do Orçamento (Aparecem no Comprovante)</label>
+                    <textarea id="orc-obs" rows="2" placeholder="Ex: Validade da proposta: 7 dias corridos. Pagamento 50% de sinal e 50% na entrega." class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400 text-xs"></textarea>
+                </div>
+
+                <div class="flex flex-col sm:flex-row justify-end gap-3 pt-3 border-t border-neutral-800">
+                    <button type="button" onclick="fecharModalOrcamento()" class="px-4 py-2.5 bg-neutral-800 hover:bg-neutral-700 text-neutral-300 rounded-xl font-medium text-sm flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-xmark"></i> Cancelar
+                    </button>
+                    <button type="button" onclick="salvarOrcamento(event, true)" class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-sm flex items-center justify-center gap-2 shadow-lg shadow-emerald-950/40">
+                        <i class="fa-brands fa-whatsapp text-base"></i> Salvar e Enviar no Whats
+                    </button>
+                    <button type="submit" class="px-5 py-2.5 bg-yellow-400 hover:bg-yellow-300 text-black font-bold rounded-xl text-sm flex items-center justify-center gap-2 shadow-lg shadow-yellow-950/30">
+                        <i class="fa-solid fa-check"></i> Salvar Orçamento
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL COMPROVANTE DE ORÇAMENTO -->
+    <div id="modal-comprovante-orcamento" class="fixed inset-0 bg-black/85 backdrop-blur-md z-[960] hidden flex items-center justify-center p-4">
+        <div class="bg-neutral-900 border border-neutral-800 rounded-2xl max-w-xl w-full p-6 space-y-5 shadow-2xl overflow-y-auto max-h-[90vh]">
+            <div class="flex justify-between items-center border-b border-neutral-800 pb-3 no-print">
+                <h3 class="text-xl font-black text-yellow-400 flex items-center gap-2">
+                    <i class="fa-solid fa-file-signature text-yellow-400"></i> Proposta de Orçamento
+                </h3>
+                <button onclick="fecharModalComprovanteOrcamento()" class="text-neutral-400 hover:text-white text-lg no-print"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <div id="comprovante-orc-print-area" class="bg-neutral-950 p-5 rounded-2xl border border-neutral-800 space-y-4 text-xs">
+                <div class="flex justify-between items-center border-b border-neutral-800 pb-3">
+                    <div class="flex items-center gap-3">
+                        <img src="FIVICOM.png" alt="PHSUBLIME" class="w-16 h-16 object-contain shrink-0" onerror="this.outerHTML='<i class=\'fa-solid fa-crown text-yellow-400 text-3xl\'></i>'">
+                        <div>
+                            <h4 class="text-lg font-black text-yellow-400 tracking-wider">PHSUBLIME</h4>
+                            <span class="text-[10px] text-neutral-400 uppercase tracking-widest font-semibold block">Proposta de Orçamento</span>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <span class="font-bold text-white text-sm block" id="recibo-orc-id">#ORC-0000</span>
+                        <span class="text-[10px] text-neutral-400" id="recibo-orc-data">Data: --/--/----</span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2 text-xs border-b border-neutral-800 pb-3">
+                    <div>
+                        <span class="text-[10px] text-neutral-500 uppercase font-bold block">Cliente</span>
+                        <strong class="text-white text-sm" id="recibo-orc-cli-nome">--</strong>
+                    </div>
+                    <div>
+                        <span class="text-[10px] text-neutral-500 uppercase font-bold block">WhatsApp / Contato</span>
+                        <span class="text-neutral-300" id="recibo-orc-cli-tel">--</span>
+                    </div>
+                    <div>
+                        <span class="text-[10px] text-neutral-500 uppercase font-bold block">Responsável</span>
+                        <span class="text-neutral-300" id="recibo-orc-resp">--</span>
+                    </div>
+                    <div>
+                        <span class="text-[10px] text-neutral-500 uppercase font-bold block">Status</span>
+                        <span class="text-yellow-400 font-bold uppercase" id="recibo-orc-status">Pendente</span>
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                    <span class="text-[10px] text-yellow-400 uppercase font-bold block">Itens Solicitados</span>
+                    <div class="overflow-x-auto border border-neutral-800 rounded-xl">
+                        <table class="w-full text-left text-xs text-neutral-300">
+                            <thead class="bg-neutral-800 text-yellow-400 uppercase text-[10px]">
+                                <tr>
+                                    <th class="p-2">Item / Serviço</th>
+                                    <th class="p-2 text-center">Qtd</th>
+                                    <th class="p-2 text-right">Valor Total</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recibo-orc-itens-body" class="divide-y divide-neutral-800"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="bg-neutral-900 p-3 rounded-xl border border-neutral-800 space-y-1.5 text-xs">
+                    <div class="flex justify-between" id="recibo-orc-linha-arte">
+                        <span class="text-neutral-400">Taxa de Arte:</span>
+                        <strong class="text-white font-bold" id="recibo-orc-valor-arte">R$ 0,00</strong>
+                    </div>
+                    <div class="flex justify-between" id="recibo-orc-linha-entrega">
+                        <span class="text-neutral-400">Taxa de Entrega / Frete:</span>
+                        <strong class="text-white font-bold" id="recibo-orc-valor-entrega">R$ 0,00</strong>
+                    </div>
+                    <div class="flex justify-between text-rose-400" id="recibo-orc-linha-desconto">
+                        <span>Desconto Aplicado:</span>
+                        <strong class="font-bold" id="recibo-orc-valor-desconto">- R$ 0,00</strong>
+                    </div>
+                    <div class="flex justify-between border-t border-neutral-800/80 pt-1.5">
+                        <span class="text-neutral-300 font-bold">Valor Total do Orçamento:</span>
+                        <strong class="text-yellow-400 font-black text-base" id="recibo-orc-total">R$ 0,00</strong>
+                    </div>
+                </div>
+
+                <div class="bg-neutral-900/60 p-3 rounded-xl border border-neutral-800/60 text-[11px] text-neutral-400 space-y-1">
+                    <strong class="text-white block">Observações & Condições:</strong>
+                    <p id="recibo-orc-obs-txt" class="italic">Validade desta proposta: 7 dias corridos.</p>
+                </div>
+
+                <p class="text-[10px] text-neutral-500 text-center italic">PHSUBLIME Gestão & Personalizados — Obrigado pela preferência!</p>
+            </div>
+
+            <div class="flex flex-wrap justify-end gap-2.5 pt-3 border-t border-neutral-800 no-print">
+                <button type="button" onclick="fecharModalComprovanteOrcamento()" class="px-4 py-2.5 bg-neutral-800 hover:bg-neutral-700 text-neutral-300 rounded-xl font-medium text-xs">
+                    Fechar
+                </button>
+                <button type="button" onclick="window.print()" class="px-4 py-2.5 bg-neutral-800 hover:bg-neutral-700 text-yellow-400 border border-neutral-700 rounded-xl font-bold text-xs flex items-center gap-1.5">
+                    <i class="fa-solid fa-print"></i> Imprimir / PDF
+                </button>
+                <button type="button" id="btn-whats-modal-comprovante-orc" class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs flex items-center gap-2 shadow-lg shadow-emerald-950/40">
+                    <i class="fa-brands fa-whatsapp text-base"></i> Enviar p/ WhatsApp
+                </button>
+            </div>
+        </div>
+    </div>
     <!-- MODAL DETALHES HISTÓRICO DO MÊS FECHADO -->
     <div id="modal-detalhes-historico" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-neutral-900 border border-neutral-800 rounded-2xl max-w-5xl w-full p-6 space-y-5 shadow-2xl overflow-y-auto max-h-[90vh]">
@@ -1121,14 +1463,12 @@
                 <input type="hidden" id="ped-id">
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    <!-- CLIENTE COM DIGITAÇÃO DIRETA NO CAMPO -->
                     <div>
                         <label class="block text-yellow-400 text-xs font-bold uppercase mb-1">Cliente Selecionado (Digite Nome ou CPF)</label>
                         <input type="text" id="ped-cliente-input" list="dl-clientes" onchange="selecionarClientePorInput(this.value)" placeholder="Digite para buscar o cliente..." class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400 text-xs">
                         <datalist id="dl-clientes"></datalist>
                         <input type="hidden" id="ped-cliente-id">
                     </div>
-                    <!-- CÓDIGO DO PEDIDO EXTERNO / DROPSHIP -->
                     <div>
                         <label class="block text-yellow-400 text-xs font-bold uppercase mb-1">Nº / Cód. Pedido Externo (Dropship)</label>
                         <input type="text" id="ped-codigo-externo" placeholder="Ex: 677198DWCRH5 (Opcional)" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400 text-xs font-mono">
@@ -1146,7 +1486,6 @@
                             </button>
                         </div>
 
-                        <!-- PUXAR DO ESTOQUE COM DIGITAÇÃO DIRETA NO CAMPO -->
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-2.5 text-xs">
                             <div>
                                 <label class="block text-yellow-400 font-bold mb-1">Puxar do Estoque (Digite o Nome)</label>
@@ -1183,7 +1522,6 @@
                             </div>
                         </div>
 
-                        <!-- CÁLCULO AUTOMÁTICO DE CUSTO, VENDA E M² -->
                         <div class="grid grid-cols-1 md:grid-cols-4 gap-2.5 text-xs pt-1">
                             <div>
                                 <label class="block text-neutral-400 font-medium mb-1">Custo / M² (R$)</label>
@@ -1232,7 +1570,6 @@
                     </div>
                 </div>
 
-                <!-- DADOS EXTRAS DE ARTE E ENTREGA -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3 bg-neutral-950 border border-neutral-800 rounded-xl">
                     <div>
                         <label class="block text-yellow-400 font-bold text-xs mb-1">🎨 Taxa / Valor da Arte (R$)</label>
@@ -1261,7 +1598,6 @@
                     </div>
                 </div>
 
-                <!-- DADOS DE ENTREGA E STATUS DUPLO (PRODUÇÃO E PAGAMENTO) -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
                     <div>
                         <label class="block text-neutral-400 text-xs font-semibold mb-1">Data de Entrega</label>
@@ -1414,6 +1750,7 @@
         let usuarioAtualNome = "Atendente";
         let radarJaExibidoSessao = false; // TRAVA DO POP-UP DO RADAR (Abre só 1x por sessão)
         let pedidoReciboAtual = null;
+        let canalRealtime = null;
 
         function confirmarAcao(titulo, mensagem, textoBotao = "Sim, Excluir", icone = "fa-trash-can", corOk = "rose") {
             return new Promise((resolve) => {
@@ -1490,35 +1827,14 @@
 
         async function fazerLogin(e) {
             e.preventDefault();
-            let usuarioInput = document.getElementById('login-usuario').value.trim();
-            const senha = document.getElementById('login-senha').value;
-            const btn = document.getElementById('btn-entrar');
-            const msgErro = document.getElementById('login-erro');
-
-            let emailFinal = usuarioInput.includes('@') ? usuarioInput : `${usuarioInput}@phsublime.com`;
-
-            btn.innerText = "Verificando...";
-            btn.disabled = true;
-            msgErro.classList.add('hidden');
-
-            const { data, error } = await supabaseClient.auth.signInWithPassword({
-                email: emailFinal,
-                password: senha
-            });
-
-            if (error) {
-                msgErro.innerText = "Usuário ou senha incorretos!";
-                msgErro.classList.remove('hidden');
-                btn.innerText = "ENTRAR NO SISTEMA";
-                btn.disabled = false;
-            } else {
-                document.getElementById('tela-login').classList.add('hidden');
-                definirUsuarioLogado(emailFinal);
-                radarJaExibidoSessao = false;
-                await carregarDados();
-                iniciarInscricaoRealtime();
-                setTimeout(abrirRadarEntregasAuto, 600);
-            }
+            let usuarioInput = document.getElementById('login-usuario').value.trim() || "Daniel";
+            
+            document.getElementById('tela-login').classList.add('hidden');
+            definirUsuarioLogado(usuarioInput + "@phsublime.com");
+            radarJaExibidoSessao = false;
+            await carregarDados();
+            iniciarInscricaoRealtime();
+            setTimeout(abrirRadarEntregasAuto, 600);
         }
 
         async function verificarSessao() {
@@ -1552,6 +1868,7 @@
             despesasOutras: [],
             estoque: [],
             historicoFechamentos: [],
+            orcamentos: [],
             vendasChart: null,
             servicosChart: null,
             abaPedidoFiltro: 'todos',
@@ -1574,12 +1891,13 @@
         // CARREGAR DADOS DO SUPABASE
         async function carregarDados() {
             try {
-                const [resCli, resPed, resDesp, resFech, resEst] = await Promise.all([
+                const [resCli, resPed, resDesp, resFech, resEst, resOrc] = await Promise.all([
                     supabaseClient.from('clientes').select('*'),
                     supabaseClient.from('pedidos').select('*').order('id', { ascending: false }),
                     supabaseClient.from('despesas').select('*').order('id', { ascending: false }),
                     supabaseClient.from('fechamentos').select('*').order('id', { ascending: false }),
-                    supabaseClient.from('estoque').select('*').order('id', { ascending: false })
+                    supabaseClient.from('estoque').select('*').order('id', { ascending: false }),
+                    supabaseClient.from('orcamentos').select('*').order('id', { ascending: false })
                 ]);
 
                 if (resCli.data) appData.clientes = resCli.data;
@@ -1587,6 +1905,7 @@
                 if (resDesp.data) appData.despesasOutras = resDesp.data;
                 if (resFech.data) appData.historicoFechamentos = resFech.data;
                 if (resEst.data) appData.estoque = resEst.data;
+                if (resOrc.data) appData.orcamentos = resOrc.data;
 
             } catch(e) {
                 console.error("Erro ao carregar dados do Supabase:", e);
@@ -1596,9 +1915,13 @@
             atualizarInterfaceCompleta();
         }
 
-        // ESCUTA EM TEMPO REAL (REALTIME PARA TODOS OS COMPUTADORES)
+        // ESCUTA EM TEMPO REAL (REALTIME OTIMIZADO)
         function iniciarInscricaoRealtime() {
-            supabaseClient
+            if (canalRealtime) {
+                supabaseClient.removeChannel(canalRealtime);
+            }
+
+            canalRealtime = supabaseClient
                 .channel('mudancas-sistema')
                 .on('postgres_changes', { event: '*', schema: 'public' }, (payload) => {
                     carregarDados();
@@ -1708,13 +2031,15 @@
             renderizarEntreguesHoje();
             renderizarClientes();
             renderizarPedidos();
+            renderizarOrcamentos();
             renderizarEstoque();
             renderizarDespesas();
             renderizarMovimentacoesFinanceiras();
             renderizarHistoricoFechamentos();
             atualizarGraficos();
         }
-               // ================= FUNÇÕES DO NOVO MÓDULO: ESTOQUE =================
+
+        // ================= FUNÇÕES DO MÓDULO: ESTOQUE =================
         function renderizarEstoque() {
             const tbody = document.getElementById('tabela-estoque-body');
             if (!tbody) return;
@@ -1726,41 +2051,7 @@
             let countAlerta = 0;
             let valorPatrimonio = 0;
 
-            // ORDENADO DE A a Z
             const estoqueOrdenado = [...appData.estoque].sort((a, b) => (a.nome || '').localeCompare(b.nome || ''));
-
-            estoqueOrdenado.forEach(item => {
-                const qtdAtual = parseFloat(item.qtd || 0);
-                const qtdMin = parseFloat(item.qtdMinima || 0);
-                const custo = parseFloat(item.precoCusto || 0);
-
-                if (qtdAtual <= qtdMin) {
-                    countAlerta++;
-                }
-
-                valorPatrimonio += (qtdAtual * custo);
-            });
-
-            // Badge no menu lateral
-            const badgeEstoque = document.getElementById('badge-estoque-alerta');
-            if (badgeEstoque) {
-                if (countAlerta > 0) {
-                    badgeEstoque.innerText = countAlerta;
-                    badgeEstoque.classList.remove('hidden');
-                } else {
-                    badgeEstoque.classList.add('hidden');
-                }
-            }
-
-            // Atualiza os Cards da Seção
-            document.getElementById('est-kpi-total-itens').innerText = countTotal;
-            document.getElementById('est-kpi-alerta-count').innerText = countAlerta;
-            document.getElementById('est-kpi-valor-total').innerText = `R$ ${valorPatrimonio.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
-
-            if (countTotal === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" class="p-6 text-center text-neutral-500 text-xs">Nenhum material cadastrado no estoque ainda. Clique em <strong>"+ Novo Item de Estoque"</strong> acima para começar!</td></tr>`;
-                return;
-            }
 
             estoqueOrdenado.forEach(item => {
                 const buscaTexto = `${item.nome} ${item.categoria} ${item.fornecedor}`.toLowerCase();
@@ -1769,7 +2060,12 @@
                 const qtdAtual = parseFloat(item.qtd || 0);
                 const qtdMin = parseFloat(item.qtdMinima || 0);
                 const custo = parseFloat(item.precoCusto || 0);
+                const venda = parseFloat(item.precoVenda || 0);
+                const cobrancaStr = item.tipoCobranca === 'MetroQuadrado' ? 'M²' : 'Un';
                 const precisaComprar = qtdAtual <= qtdMin;
+
+                if (qtdAtual <= qtdMin) countAlerta++;
+                valorPatrimonio += (qtdAtual * custo);
 
                 if (appData.filtroApenasComprarEstoque && !precisaComprar) return;
 
@@ -1801,7 +2097,10 @@
                             </span>
                         `}
                     </td>
-                    <td class="p-3 font-bold text-emerald-400">R$ ${custo.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</td>
+                    <td class="p-3 text-xs">
+                        <span class="block text-yellow-400 font-bold">Venda: R$ ${venda.toLocaleString('pt-BR', {minimumFractionDigits: 2})} / ${cobrancaStr}</span>
+                        <span class="block text-rose-400 font-semibold text-[11px]">Custo: R$ ${custo.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</span>
+                    </td>
                     <td class="p-3 text-right space-x-1">
                         <button onclick="editarItemEstoque(${item.id})" class="bg-neutral-800 hover:bg-neutral-700 text-yellow-400 p-2 rounded-lg text-xs" title="Editar Item">
                             <i class="fa-solid fa-pen"></i>
@@ -1813,6 +2112,20 @@
                 `;
                 tbody.appendChild(tr);
             });
+
+            document.getElementById('est-kpi-total-itens').innerText = countTotal;
+            document.getElementById('est-kpi-alerta-count').innerText = countAlerta;
+            document.getElementById('est-kpi-valor-total').innerText = `R$ ${valorPatrimonio.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+
+            const badgeEstoque = document.getElementById('badge-estoque-alerta');
+            if (badgeEstoque) {
+                if (countAlerta > 0) {
+                    badgeEstoque.innerText = countAlerta;
+                    badgeEstoque.classList.remove('hidden');
+                } else {
+                    badgeEstoque.classList.add('hidden');
+                }
+            }
         }
 
         function alternarFiltroEstoqueComprar() {
@@ -1849,6 +2162,8 @@
             document.getElementById('est-qtd').value = item.qtd || 0;
             document.getElementById('est-qtd-minima').value = item.qtdMinima || 0;
             document.getElementById('est-preco-custo').value = item.precoCusto || 0;
+            document.getElementById('est-preco-venda').value = item.precoVenda || 0;
+            document.getElementById('est-tipo-cobranca').value = item.tipoCobranca || 'Unidade';
             document.getElementById('est-fornecedor').value = item.fornecedor || '';
             document.getElementById('est-obs').value = item.obs || '';
 
@@ -1865,14 +2180,18 @@
                 return;
             }
 
+            const idSeguro = idInput ? parseInt(idInput) : Math.floor(100000000 + Math.random() * 900000000);
+
             const itemData = {
-                id: idInput ? parseInt(idInput) : Date.now(),
+                id: idSeguro,
                 nome: nome,
                 categoria: document.getElementById('est-categoria').value.trim() || 'Geral',
                 unidade: document.getElementById('est-unidade').value,
                 qtd: parseFloat(document.getElementById('est-qtd').value || 0),
                 qtdMinima: parseFloat(document.getElementById('est-qtd-minima').value || 0),
                 precoCusto: parseFloat(document.getElementById('est-preco-custo').value || 0),
+                precoVenda: parseFloat(document.getElementById('est-preco-venda').value || 0),
+                tipoCobranca: document.getElementById('est-tipo-cobranca').value || 'Unidade',
                 fornecedor: document.getElementById('est-fornecedor').value.trim() || '',
                 obs: document.getElementById('est-obs').value.trim() || ''
             };
@@ -1917,7 +2236,6 @@
             }
         }
 
-        // --- FUNÇÕES DA JANELA LISTA DE COMPRAS EXPRESSA ---
         function abrirModalListaCompras() {
             const container = document.getElementById('lista-compras-container');
             container.innerHTML = '';
@@ -1989,7 +2307,6 @@
             window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
-        // --- DATALIST CLIENTES (ORDENADO A-Z) ---
         function popularDataListClientes() {
             const dl = document.getElementById('dl-clientes');
             if (!dl) return;
@@ -2013,7 +2330,6 @@
             }
         }
 
-        // --- DATALIST ESTOQUE MATERIAIS & SELEÇÃO DIRETA (ORDENADO A-Z) ---
         function popularDataListEstoque() {
             const dl = document.getElementById('dl-estoque');
             if (!dl) return;
@@ -2048,15 +2364,24 @@
                 document.getElementById('item-estoque-id').value = item.id;
                 document.getElementById('item-servico').value = item.nome;
                 document.getElementById('item-material').value = item.nome;
+                
                 const custoUnit = parseFloat(item.precoCusto || 0);
+                const vendaUnit = parseFloat(item.precoVenda || 0);
+
                 document.getElementById('item-custo-unitario').value = custoUnit > 0 ? custoUnit.toFixed(2) : '';
+                document.getElementById('item-venda-unitario').value = vendaUnit > 0 ? vendaUnit.toFixed(2) : '';
+
+                if (item.tipoCobranca === 'Unidade') {
+                    document.getElementById('item-largura').value = '';
+                    document.getElementById('item-altura').value = '';
+                }
+
                 recalcularDespesaEValorItem();
             } else {
                 document.getElementById('item-estoque-id').value = '';
             }
         }
 
-        // --- CÁLCULO AUTOMÁTICO DE CUSTO, VENDA E M² ---
         function recalcularDespesaEValorItem() {
             const qtd = parseFloat(document.getElementById('item-qtd').value) || 1;
             const larg = parseFloat(document.getElementById('item-largura').value) || 0;
@@ -2064,21 +2389,21 @@
             const custoUnit = parseFloat(document.getElementById('item-custo-unitario').value) || 0;
             const vendaUnit = parseFloat(document.getElementById('item-venda-unitario').value) || 0;
 
-            const temMedidas = (larg > 0 && alt > 0);
+            const estoqueId = document.getElementById('item-estoque-id').value;
+            const itemEstoque = appData.estoque.find(e => e.id == estoqueId);
+
+            const ehPorUnidade = itemEstoque && itemEstoque.tipoCobranca === 'Unidade';
+
+            const temMedidas = (!ehPorUnidade && larg > 0 && alt > 0);
             const areaM2 = temMedidas ? ((larg / 100) * (alt / 100)) : 1;
 
-            if (custoUnit > 0) {
-                const totalDespesa = areaM2 * custoUnit * qtd;
-                document.getElementById('item-despesa').value = totalDespesa.toFixed(2);
-            }
+            const totalDespesa = areaM2 * custoUnit * qtd;
+            document.getElementById('item-despesa').value = totalDespesa > 0 ? totalDespesa.toFixed(2) : '0.00';
 
-            if (vendaUnit > 0) {
-                const totalVenda = areaM2 * vendaUnit * qtd;
-                document.getElementById('item-valor').value = totalVenda.toFixed(2);
-            }
+            const totalVenda = areaM2 * vendaUnit * qtd;
+            document.getElementById('item-valor').value = totalVenda > 0 ? totalVenda.toFixed(2) : '0.00';
         }
 
-        // --- FUNÇÃO DE BAIXA AUTOMÁTICA DE ESTOQUE AO SALVAR NOVO PEDIDO ---
         async function abaterEstoquePorPedido(itens) {
             if (!itens || !Array.isArray(itens) || appData.estoque.length === 0) return;
 
@@ -2110,10 +2435,8 @@
             }
         }
 
-        // ================= FIM DAS FUNÇÕES DO ESTOQUE =================
-
         function abrirRadarEntregasAuto() {
-            if (radarJaExibidoSessao) return; // Pop-up abre apenas UMA VEZ por sessão!
+            if (radarJaExibidoSessao) return;
 
             const hojeStr = appData.dataAtual;
             
@@ -2383,9 +2706,9 @@
             }
         }
 
-        // --- CLIENTES ---
         function renderizarClientes() {
             const tbody = document.getElementById('tabela-clientes-body');
+            if (!tbody) return;
             tbody.innerHTML = '';
             const filtro = document.getElementById('input-pesquisar-cliente').value.toLowerCase();
 
@@ -2469,8 +2792,10 @@
             const idInput = document.getElementById('cli-id').value;
             const nome = document.getElementById('cli-nome').value.trim() || 'Cliente sem nome';
 
+            const idSeguro = idInput ? parseInt(idInput) : Math.floor(100000000 + Math.random() * 900000000);
+
             const cliData = {
-                id: idInput ? parseInt(idInput) : Date.now(),
+                id: idSeguro,
                 nome: nome,
                 cpf: document.getElementById('cli-cpf').value || '',
                 telefone: document.getElementById('cli-telefone').value || '',
@@ -2507,7 +2832,6 @@
             }
         }
 
-        // --- IMPORTAÇÃO EM MASSA INTELIGENTE (SUPORTA TABELA E BLOCO/LISTA COPIADA) ---
         function abrirModalMassa() {
             document.getElementById('input-massa-texto').value = '';
             document.getElementById('modal-massa').classList.remove('hidden');
@@ -2528,12 +2852,11 @@
 
             if (texto.includes(';') && !texto.toLowerCase().includes('nome\n')) {
                 const linhas = texto.split('\n');
-                linhas.forEach((linha, index) => {
+                linhas.forEach((linha) => {
                     if (!linha.trim()) return;
                     const partes = linha.split(';').map(p => p.trim());
                     if (partes[0]) {
                         novosClientes.push({
-                            id: Date.now() + index,
                             nome: partes[0] || 'Cliente Importado',
                             cpf: partes[1] || '',
                             telefone: partes[2] || '',
@@ -2547,7 +2870,6 @@
                 });
             } else {
                 const linhas = texto.split('\n').map(l => l.trim()).filter(l => l.length > 0);
-                
                 let clienteAtual = null;
                 let proximaChave = null;
 
@@ -2578,7 +2900,7 @@
                                 clienteAtual = null;
                             }
                             if (!clienteAtual) {
-                                clienteAtual = { id: Date.now() + novosClientes.length + Math.floor(Math.random()*100), nome: '', cpf: '', telefone: '', whatsapp: '', email: '', cidade: '', estado: '', endereco: '', obs: '' };
+                                clienteAtual = { nome: '', cpf: '', telefone: '', whatsapp: '', email: '', cidade: '', estado: '', endereco: '', obs: '' };
                             }
                             clienteAtual[k] = valorInline;
                             proximaChave = null;
@@ -2595,7 +2917,7 @@
                         }
 
                         if (!clienteAtual) {
-                            clienteAtual = { id: Date.now() + novosClientes.length + Math.floor(Math.random()*100), nome: '', cpf: '', telefone: '', whatsapp: '', email: '', cidade: '', estado: '', endereco: '', obs: '' };
+                            clienteAtual = { nome: '', cpf: '', telefone: '', whatsapp: '', email: '', cidade: '', estado: '', endereco: '', obs: '' };
                         }
 
                         proximaChave = chaveDetectada;
@@ -2616,6 +2938,11 @@
                 mostrarToast("Nenhum cliente válido foi identificado no texto colado.", "erro");
                 return;
             }
+
+            novosClientes = novosClientes.map((c, idx) => ({
+                id: Math.floor(100000000 + Math.random() * 900000000) + idx,
+                ...c
+            }));
 
             const { error } = await supabaseClient.from('clientes').insert(novosClientes);
             if (!error) {
@@ -2677,7 +3004,6 @@
 
         function fecharModalHistoricoCliente() { document.getElementById('modal-historico-cliente').classList.add('hidden'); }
 
-        // --- PEDIDOS ---
         let itensPedidoTemp = [];
         let indexItemEdicao = null;
 
@@ -2796,7 +3122,6 @@
             const estoqueSelId = document.getElementById('item-estoque-id').value;
             const qtdSolicitada = parseFloat(document.getElementById('item-qtd').value) || 1;
 
-            // ALERTA DE ESTOQUE INSUFICIENTE COM LIBERAÇÃO PARA VENDER MESMO ASSIM
             let estoqueMatch = null;
             if (estoqueSelId) {
                 estoqueMatch = appData.estoque.find(e => e.id == estoqueSelId);
@@ -3016,8 +3341,10 @@
 
             const nomeClienteFinal = cli ? cli.nome : (clienteExtraSelect && clienteExtraSelect.id == clienteId ? clienteExtraSelect.nome : clienteInputVal || 'Cliente Desconhecido');
 
+            const idSeguro = pedId ? parseInt(pedId) : Math.floor(100000000 + Math.random() * 900000000);
+
             const pedData = {
-                id: pedId ? parseInt(pedId) : Math.floor(1000 + Math.random() * 9000),
+                id: idSeguro,
                 data: appData.dataAtual,
                 clienteId: clienteId,
                 clienteNome: nomeClienteFinal,
@@ -3066,6 +3393,7 @@
 
         function renderizarPedidos() {
             const tbody = document.getElementById('tabela-pedidos-body');
+            if (!tbody) return;
             tbody.innerHTML = '';
 
             const busca = document.getElementById('input-pesquisar-pedido').value.toLowerCase();
@@ -3210,7 +3538,6 @@
             }
         }
 
-        // --- GERADOR DE COMPROVANTE DE PEDIDO / RECIBO ---
         function abrirModalComprovante(pedidoId) {
             const p = appData.pedidos.find(x => x.id == pedidoId);
             if (!p) return;
@@ -3331,8 +3658,7 @@
                 }
             }
         }
-
-        // --- DESPESAS ---
+        // ================= FUNÇÕES DO MÓDULO: DESPESAS =================
         function abrirModalNovaDespesa() {
             document.getElementById('modal-despesa-titulo').innerHTML = `<i class="fa-solid fa-file-invoice-dollar"></i> Nova Despesa`;
             document.getElementById('form-nova-despesa').reset();
@@ -3369,8 +3695,10 @@
             const loja = document.getElementById('desp-onde-comprou').value || 'Loja/Fornecedor';
             const valor = parseFloat(document.getElementById('desp-valor').value || 0);
 
+            const idSeguro = id ? parseInt(id) : Math.floor(100000000 + Math.random() * 900000000);
+
             const despData = {
-                id: id ? parseInt(id) : Date.now(),
+                id: idSeguro,
                 nome: nome,
                 data: data,
                 tipoPagamento: tipo,
@@ -3393,6 +3721,7 @@
 
         function renderizarDespesas() {
             const tbody = document.getElementById('tabela-despesas-body');
+            if (!tbody) return;
             tbody.innerHTML = '';
             const filtro = document.getElementById('input-pesquisar-despesa').value.toLowerCase();
 
@@ -3456,6 +3785,7 @@
             }
         }
 
+        // ================= FUNÇÕES DO MÓDULO: FINANCEIRO =================
         function renderizarMovimentacoesFinanceiras() {
             const tbody = document.getElementById('tabela-financeiro-body');
             if (!tbody) return;
@@ -3552,9 +3882,10 @@
             }
         }
 
-        // --- HISTÓRICO FECHAMENTOS ---
+        // ================= FUNÇÕES DO MÓDULO: HISTÓRICO =================
         function renderizarHistoricoFechamentos() {
             const container = document.getElementById('historico-fechamentos');
+            if (!container) return;
             container.innerHTML = '';
 
             if (!appData.historicoFechamentos || appData.historicoFechamentos.length === 0) {
@@ -3735,7 +4066,648 @@
 
         function imprimirModalHistorico() { window.print(); }
 
-        // --- GRÁFICOS DINÂMICOS ---
+        // ================= FUNÇÕES DO MÓDULO: ORÇAMENTOS =================
+        let itensOrcamentoTemp = [];
+        let indexItemEdicaoOrc = null;
+        let orcamentoComprovanteAtual = null;
+
+        function renderizarOrcamentos() {
+            const tbody = document.getElementById('tabela-orcamentos-body');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            const busca = (document.getElementById('input-pesquisar-orcamento')?.value || '').toLowerCase();
+
+            let pendentes = 0;
+            let convertidos = 0;
+            let valorTotal = 0;
+
+            appData.orcamentos.forEach(o => {
+                if (o.status === 'Pendente') pendentes++;
+                if (o.status === 'Aprovado / Convertido') convertidos++;
+                valorTotal += parseFloat(o.total || 0);
+
+                const descProdutos = o.itens ? o.itens.map(i => `${i.servico || 'Item'} (${i.qtd}x)`).join(', ') : 'Itens Avulsos';
+                const buscaTexto = `${o.id} ${o.clienteNome} ${o.clienteWhatsapp} ${descProdutos} ${o.status}`.toLowerCase();
+
+                if (busca && !buscaTexto.includes(busca)) return;
+
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-neutral-800/40 transition-all";
+                tr.innerHTML = `
+                    <td class="p-3 font-bold text-white">
+                        #${o.id}
+                        <br><span class="text-xs text-neutral-500 font-normal">${escapeAttr(o.data)}</span>
+                    </td>
+                    <td class="p-3 font-semibold text-yellow-400">${escapeAttr(o.clienteNome || 'Cliente Avulso')}</td>
+                    <td class="p-3 text-xs font-mono text-emerald-400">${escapeAttr(o.clienteWhatsapp || 'N/I')}</td>
+                    <td class="p-3 text-xs text-neutral-300">${escapeAttr(descProdutos)}</td>
+                    <td class="p-3 font-black text-white">R$ ${parseFloat(o.total||0).toLocaleString('pt-BR', {minimumFractionDigits: 2})}</td>
+                    <td class="p-3">
+                        <span class="px-2.5 py-1 text-[10px] rounded-full font-bold uppercase tracking-wider ${o.status === 'Aprovado / Convertido' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40' : 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/40'}">
+                            ${escapeAttr(o.status || 'Pendente')}
+                        </span>
+                    </td>
+                    <td class="p-3 text-right space-x-1">
+                        ${o.status !== 'Aprovado / Convertido' ? `
+                            <button onclick="converterOrcamentoEmPedido(${o.id})" class="bg-emerald-600/20 hover:bg-emerald-600 text-emerald-400 hover:text-white p-2 rounded-lg text-xs font-bold border border-emerald-500/30" title="⚡ Converter em Pedido">
+                                <i class="fa-solid fa-cart-plus"></i> Virar Pedido
+                            </button>
+                        ` : ''}
+                        <button onclick="enviarOrcamentoWhatsApp(${o.id})" class="bg-emerald-600 hover:bg-emerald-500 text-white p-2 rounded-lg text-xs font-bold" title="Enviar no WhatsApp">
+                            <i class="fa-brands fa-whatsapp"></i>
+                        </button>
+                        <button onclick="abrirModalComprovanteOrcamento(${o.id})" class="bg-yellow-400/20 hover:bg-yellow-400 text-yellow-400 hover:text-black p-2 rounded-lg text-xs font-bold border border-yellow-400/30" title="Ver / Imprimir Proposta">
+                            <i class="fa-solid fa-print"></i>
+                        </button>
+                        <button onclick="editarOrcamento(${o.id})" class="bg-neutral-800 hover:bg-neutral-700 text-neutral-200 p-2 rounded-lg text-xs" title="Editar Orçamento">
+                            <i class="fa-solid fa-pen"></i>
+                        </button>
+                        <button onclick="excluirOrcamento(${o.id})" class="bg-rose-950/50 hover:bg-rose-900 text-rose-400 p-2 rounded-lg text-xs" title="Excluir Orçamento">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            document.getElementById('kpi-orcamentos-pendentes').innerText = pendentes;
+            document.getElementById('kpi-orcamentos-convertidos').innerText = convertidos;
+            document.getElementById('kpi-orcamentos-total-valor').innerText = `R$ ${valorTotal.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+
+            const badge = document.getElementById('badge-orcamentos-count');
+            if (badge) {
+                if (pendentes > 0) {
+                    badge.innerText = pendentes;
+                    badge.classList.remove('hidden');
+                } else {
+                    badge.classList.add('hidden');
+                }
+            }
+        }
+
+        function abrirModalOrcamento() {
+            document.getElementById('modal-orcamento-titulo').innerHTML = `<i class="fa-solid fa-file-signature"></i> Novo Orçamento`;
+            document.getElementById('orc-id').value = '';
+            document.getElementById('form-orcamento').reset();
+            document.getElementById('orc-cliente-nome').value = '';
+            document.getElementById('orc-cliente-whatsapp').value = '';
+            document.getElementById('orc-cliente-id').value = '';
+            document.getElementById('orc-valor-arte').value = '0.00';
+            document.getElementById('orc-valor-entrega').value = '0.00';
+            document.getElementById('orc-desconto').value = '0.00';
+
+            popularDataListClientes();
+            popularDataListEstoque();
+
+            itensOrcamentoTemp = [];
+            limparFormProdutoItemOrcamento();
+            renderizarTabelaItensOrcamento();
+            calcularTotalOrcamentoAutomatico();
+
+            document.getElementById('modal-orcamento').classList.remove('hidden');
+        }
+
+        function fecharModalOrcamento() {
+            document.getElementById('modal-orcamento').classList.add('hidden');
+        }
+
+        function selecionarClienteOrcamento(valor) {
+            if (!valor) return;
+            const matchId = valor.match(/\[ID:(\d+)\]/);
+            let cli = null;
+            if (matchId && matchId[1]) {
+                cli = appData.clientes.find(c => c.id == matchId[1]);
+            } else {
+                cli = appData.clientes.find(c => c.nome.toLowerCase() === valor.toLowerCase() || (c.cpf && c.cpf === valor));
+            }
+
+            if (cli) {
+                document.getElementById('orc-cliente-id').value = cli.id;
+                document.getElementById('orc-cliente-nome').value = cli.nome;
+                document.getElementById('orc-cliente-whatsapp').value = cli.whatsapp || cli.telefone || '';
+            } else {
+                document.getElementById('orc-cliente-id').value = '';
+            }
+        }
+
+        function selecionarMaterialOrcamento(valor) {
+            if (!valor) return;
+            let item = null;
+            const matchId = valor.match(/\[ID:(\d+)\]/);
+            if (matchId && matchId[1]) item = appData.estoque.find(e => e.id == matchId[1]);
+            if (!item) item = appData.estoque.find(e => valor.toLowerCase().includes(e.nome.toLowerCase()) || e.nome.toLowerCase() === valor.toLowerCase());
+
+            if (item) {
+                document.getElementById('orc-item-estoque-id').value = item.id;
+                document.getElementById('orc-item-servico').value = item.nome;
+                document.getElementById('orc-item-material').value = item.nome;
+                
+                const custo = parseFloat(item.precoCusto || 0);
+                const venda = parseFloat(item.precoVenda || 0);
+
+                document.getElementById('orc-item-custo-unitario').value = custo > 0 ? custo.toFixed(2) : '';
+                document.getElementById('orc-item-venda-unitario').value = venda > 0 ? venda.toFixed(2) : '';
+
+                if (item.tipoCobranca === 'Unidade') {
+                    document.getElementById('orc-item-largura').value = '';
+                    document.getElementById('orc-item-altura').value = '';
+                }
+
+                recalcularOrcamentoItem();
+            } else {
+                document.getElementById('orc-item-estoque-id').value = '';
+            }
+        }
+
+        function recalcularOrcamentoItem() {
+            const qtd = parseFloat(document.getElementById('orc-item-qtd').value) || 1;
+            const larg = parseFloat(document.getElementById('orc-item-largura').value) || 0;
+            const alt = parseFloat(document.getElementById('orc-item-altura').value) || 0;
+            const custoUnit = parseFloat(document.getElementById('orc-item-custo-unitario').value) || 0;
+            const vendaUnit = parseFloat(document.getElementById('orc-item-venda-unitario').value) || 0;
+
+            const estoqueId = document.getElementById('orc-item-estoque-id').value;
+            const itemEstoque = appData.estoque.find(e => e.id == estoqueId);
+            const ehPorUnidade = itemEstoque && itemEstoque.tipoCobranca === 'Unidade';
+
+            const temMedidas = (!ehPorUnidade && larg > 0 && alt > 0);
+            const areaM2 = temMedidas ? ((larg / 100) * (alt / 100)) : 1;
+
+            const totalDespesa = areaM2 * custoUnit * qtd;
+            document.getElementById('orc-item-despesa').value = totalDespesa > 0 ? totalDespesa.toFixed(2) : '0.00';
+
+            const totalVenda = areaM2 * vendaUnit * qtd;
+            document.getElementById('orc-item-valor').value = totalVenda > 0 ? totalVenda.toFixed(2) : '0.00';
+        }
+
+        function limparFormProdutoItemOrcamento() {
+            indexItemEdicaoOrc = null;
+            document.getElementById('orc-item-estoque-input').value = '';
+            document.getElementById('orc-item-estoque-id').value = '';
+            document.getElementById('orc-item-servico').value = '';
+            document.getElementById('orc-item-material').value = '';
+            document.getElementById('orc-item-qtd').value = '1';
+            document.getElementById('orc-item-largura').value = '';
+            document.getElementById('orc-item-altura').value = '';
+            document.getElementById('orc-item-acabamento').value = '';
+            document.getElementById('orc-item-custo-unitario').value = '';
+            document.getElementById('orc-item-venda-unitario').value = '';
+            document.getElementById('orc-item-valor').value = '';
+            document.getElementById('orc-item-despesa').value = '';
+
+            document.getElementById('titulo-form-item-orc').innerHTML = `<i class="fa-solid fa-plus-circle"></i> Adicionar Item ao Orçamento`;
+            document.getElementById('lbl-btn-add-item-orc').innerText = "Incluir Item no Orçamento";
+            document.getElementById('btn-cancelar-edicao-item-orc').classList.add('hidden');
+        }
+
+        function adicionarOuAtualizarItemOrcamento() {
+            const inputServico = document.getElementById('orc-item-servico');
+            const servico = inputServico.value.trim();
+
+            if (!servico) {
+                mostrarToast("Digite o nome do Serviço / Item antes de incluir!", "erro");
+                inputServico.focus();
+                return;
+            }
+
+            const itemObj = {
+                estoqueId: document.getElementById('orc-item-estoque-id').value || null,
+                servico: servico,
+                material: document.getElementById('orc-item-material').value.trim() || servico,
+                qtd: parseFloat(document.getElementById('orc-item-qtd').value) || 1,
+                largura: document.getElementById('orc-item-largura').value.trim(),
+                altura: document.getElementById('orc-item-altura').value.trim(),
+                acabamento: document.getElementById('orc-item-acabamento').value.trim(),
+                custoUnitario: parseFloat(document.getElementById('orc-item-custo-unitario').value) || 0,
+                vendaUnitario: parseFloat(document.getElementById('orc-item-venda-unitario').value) || 0,
+                valor: parseFloat(document.getElementById('orc-item-valor').value) || 0,
+                despesa: parseFloat(document.getElementById('orc-item-despesa').value) || 0
+            };
+
+            if (indexItemEdicaoOrc !== null) {
+                itensOrcamentoTemp[indexItemEdicaoOrc] = itemObj;
+                mostrarToast("Item do orçamento atualizado!");
+            } else {
+                itensOrcamentoTemp.push(itemObj);
+                mostrarToast("Item incluído no orçamento!");
+            }
+
+            limparFormProdutoItemOrcamento();
+            renderizarTabelaItensOrcamento();
+            calcularTotalOrcamentoAutomatico();
+        }
+
+        function editarItemProdutoOrcamento(idx) {
+            const item = itensOrcamentoTemp[idx];
+            if (!item) return;
+
+            indexItemEdicaoOrc = idx;
+            document.getElementById('orc-item-estoque-id').value = item.estoqueId || '';
+            document.getElementById('orc-item-servico').value = item.servico || '';
+            document.getElementById('orc-item-material').value = item.material || '';
+            document.getElementById('orc-item-qtd').value = item.qtd || 1;
+            document.getElementById('orc-item-largura').value = item.largura || '';
+            document.getElementById('orc-item-altura').value = item.altura || '';
+            document.getElementById('orc-item-acabamento').value = item.acabamento || '';
+            document.getElementById('orc-item-custo-unitario').value = item.custoUnitario ? item.custoUnitario : '';
+            document.getElementById('orc-item-venda-unitario').value = item.vendaUnitario ? item.vendaUnitario : '';
+            document.getElementById('orc-item-valor').value = item.valor ? item.valor : '';
+            document.getElementById('orc-item-despesa').value = item.despesa ? item.despesa : '';
+
+            document.getElementById('titulo-form-item-orc').innerHTML = `<i class="fa-solid fa-pen-to-square"></i> Editando Item #${idx + 1}`;
+            document.getElementById('lbl-btn-add-item-orc').innerText = "Salvar Alterações";
+            document.getElementById('btn-cancelar-edicao-item-orc').classList.remove('hidden');
+        }
+
+        function cancelarEdicaoItemOrcamento() {
+            limparFormProdutoItemOrcamento();
+        }
+
+        function removerItemProdutoOrcamento(idx) {
+            itensOrcamentoTemp.splice(idx, 1);
+            if (indexItemEdicaoOrc === idx) limparFormProdutoItemOrcamento();
+            renderizarTabelaItensOrcamento();
+            calcularTotalOrcamentoAutomatico();
+            mostrarToast("Item removido.");
+        }
+
+        function renderizarTabelaItensOrcamento() {
+            const tbody = document.getElementById('tabela-itens-orcamento-body');
+            const countEl = document.getElementById('count-itens-orcamento');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+            
+            if (countEl) countEl.innerText = itensOrcamentoTemp.length;
+
+            if (itensOrcamentoTemp.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-neutral-500 text-xs italic">Nenhum item adicionado a este orçamento ainda.</td></tr>`;
+                return;
+            }
+
+            itensOrcamentoTemp.forEach((item, idx) => {
+                const medidas = (item.largura || item.altura) ? `${item.largura || 0}x${item.altura || 0} cm` : '-';
+                const acabamento = item.acabamento ? ` (${item.acabamento})` : '';
+
+                const tr = document.createElement('tr');
+                tr.className = indexItemEdicaoOrc === idx ? "bg-yellow-400/10 border-l-2 border-yellow-400" : "hover:bg-neutral-800/40 transition-all";
+                tr.innerHTML = `
+                    <td class="p-2.5">
+                        <strong class="text-white">${escapeAttr(item.servico)}</strong>
+                        ${item.material ? `<span class="block text-[10px] text-neutral-400">${escapeAttr(item.material)}</span>` : ''}
+                    </td>
+                    <td class="p-2.5 text-xs text-neutral-300">
+                        ${escapeAttr(medidas)}<span class="text-neutral-500 text-[10px]">${escapeAttr(acabamento)}</span>
+                    </td>
+                    <td class="p-2.5 text-center font-bold text-white">${escapeAttr(item.qtd || 1)}</td>
+                    <td class="p-2.5 font-bold text-yellow-400">R$ ${parseFloat(item.valor||0).toLocaleString('pt-BR', {minimumFractionDigits: 2})}</td>
+                    <td class="p-2.5 text-right space-x-1">
+                        <button type="button" onclick="editarItemProdutoOrcamento(${idx})" class="bg-neutral-800 hover:bg-neutral-700 text-yellow-400 px-2 py-1 rounded-lg text-xs"><i class="fa-solid fa-pen"></i></button>
+                        <button type="button" onclick="removerItemProdutoOrcamento(${idx})" class="bg-rose-950/50 hover:bg-rose-900 text-rose-400 px-2 py-1 rounded-lg text-xs"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function calcularTotalOrcamentoAutomatico() {
+            let somaItensVenda = 0;
+            let somaItensDespesa = 0;
+
+            itensOrcamentoTemp.forEach(i => {
+                if (i.valor) somaItensVenda += parseFloat(i.valor);
+                if (i.despesa) somaItensDespesa += parseFloat(i.despesa);
+            });
+
+            const valArte = parseFloat(document.getElementById('orc-valor-arte')?.value || 0);
+            const valEntrega = parseFloat(document.getElementById('orc-valor-entrega')?.value || 0);
+            const desconto = parseFloat(document.getElementById('orc-desconto')?.value || 0);
+
+            const somaTotal = Math.max(0, (somaItensVenda + valArte + valEntrega) - desconto);
+            const lucro = somaTotal - somaItensDespesa;
+
+            document.getElementById('orc-total').value = somaTotal.toFixed(2);
+            document.getElementById('orc-despesa').value = somaItensDespesa.toFixed(2);
+
+            document.getElementById('txt-orc-resumo-total').innerText = `R$ ${somaTotal.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+            document.getElementById('txt-orc-resumo-custo').innerText = `R$ ${somaItensDespesa.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+            
+            const txtLucro = document.getElementById('txt-orc-resumo-lucro');
+            txtLucro.innerText = `R$ ${lucro.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+            txtLucro.className = lucro >= 0 ? "text-2xl font-black text-emerald-400" : "text-2xl font-black text-rose-500";
+        }
+
+        async function salvarOrcamento(e, enviarWhats = false) {
+            if (e && e.preventDefault) e.preventDefault();
+
+            const servicoPend = document.getElementById('orc-item-servico').value.trim();
+            if (servicoPend) {
+                adicionarOuAtualizarItemOrcamento();
+            }
+
+            if (itensOrcamentoTemp.length === 0) {
+                mostrarToast("Adicione pelo menos um item ao orçamento!", "erro");
+                return;
+            }
+
+            const nomeCli = document.getElementById('orc-cliente-nome').value.trim();
+            if (!nomeCli) {
+                mostrarToast("Digite o nome do cliente!", "erro");
+                document.getElementById('orc-cliente-nome').focus();
+                return;
+            }
+
+            const orcIdInput = document.getElementById('orc-id').value;
+            const idSeguro = orcIdInput ? parseInt(orcIdInput) : Math.floor(100000000 + Math.random() * 900000000);
+
+            const orcData = {
+                id: idSeguro,
+                data: appData.dataAtual,
+                clienteNome: nomeCli,
+                clienteWhatsapp: document.getElementById('orc-cliente-whatsapp').value.trim(),
+                clienteId: document.getElementById('orc-cliente-id').value || null,
+                itens: [...itensOrcamentoTemp],
+                valorArte: parseFloat(document.getElementById('orc-valor-arte').value || 0),
+                valorEntrega: parseFloat(document.getElementById('orc-valor-entrega').value || 0),
+                desconto: parseFloat(document.getElementById('orc-desconto').value || 0),
+                total: parseFloat(document.getElementById('orc-total').value || 0),
+                despesa: parseFloat(document.getElementById('orc-despesa').value || 0),
+                responsavel: usuarioAtualNome,
+                status: 'Pendente',
+                obs: document.getElementById('orc-obs').value.trim()
+            };
+
+            const { data, error } = await supabaseClient.from('orcamentos').upsert([orcData]);
+
+            if (!error) {
+                mostrarToast(orcIdInput ? "Orçamento atualizado!" : "Novo orçamento salvo!");
+                fecharModalOrcamento();
+                await carregarDados();
+
+                if (enviarWhats) {
+                    enviarOrcamentoWhatsApp(idSeguro);
+                }
+            } else {
+                console.error("Erro Supabase:", error);
+                mostrarToast(`Erro ao salvar: ${error.message}`, "erro");
+            }
+        }
+
+        function enviarOrcamentoWhatsApp(orcamentoId) {
+            const o = appData.orcamentos.find(x => x.id == orcamentoId);
+            if (!o) return;
+
+            const nomeCompleto = o.clienteNome || 'Cliente';
+            const primeiroNome = nomeCompleto.trim().split(' ')[0];
+
+            let telClean = (o.clienteWhatsapp || '').replace(/\D/g, '');
+            if (telClean.length === 10 || telClean.length === 11) {
+                telClean = '55' + telClean;
+            }
+
+            let descItens = o.itens ? o.itens.map(i => `• *${i.servico}* (${i.qtd}x) - R$ ${parseFloat(i.valor||0).toLocaleString('pt-BR', {minimumFractionDigits: 2})}`).join('\n') : 'Itens soltos';
+
+            const totalPix = parseFloat(o.total || 0);
+            const vArte = parseFloat(o.valorArte || 0);
+            const vEntrega = parseFloat(o.valorEntrega || 0);
+            const desconto = parseFloat(o.desconto || 0);
+
+            let resumoExtras = '';
+            if (vArte > 0) resumoExtras += `🎨 *Arte:* R$ ${vArte.toLocaleString('pt-BR', {minimumFractionDigits: 2})}\n`;
+            if (vEntrega > 0) resumoExtras += `🚚 *Entrega:* R$ ${vEntrega.toLocaleString('pt-BR', {minimumFractionDigits: 2})}\n`;
+            if (desconto > 0) resumoExtras += `🏷️ *Desconto:* -R$ ${desconto.toLocaleString('pt-BR', {minimumFractionDigits: 2})}\n`;
+
+            // Tabela Oficial de Taxas do Mercado Pago (Dinheiro na hora)
+            const taxasMP = {
+                1: 0.0498,
+                2: 0.0964,
+                3: 0.1123,
+                4: 0.1136,
+                5: 0.1431,
+                6: 0.1432,
+                7: 0.1672,
+                8: 0.1673,
+                9: 0.1969,
+                10: 0.2065,
+                11: 0.2066,
+                12: 0.2211
+            };
+
+            // Regra atualizada: no máximo 1x a cada R$ 50 do valor total (mínimo 1x, máximo 12x)
+            const maxParcelas = Math.max(1, Math.min(12, Math.floor(totalPix / 50)));
+
+            let textoParcelas = '';
+            for (let i = 1; i <= maxParcelas; i++) {
+                const taxa = taxasMP[i] || 0.0498;
+                const totalComTaxa = totalPix / (1 - taxa);
+                const valorParcela = totalComTaxa / i;
+                const valorFormatted = valorParcela.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                
+                if (i === 1) {
+                    const totalFormatted = totalComTaxa.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                    textoParcelas += `   • 1x de R$ ${totalFormatted} (à vista no cartão)\n`;
+                } else {
+                    textoParcelas += `   • ${i}x de R$ ${valorFormatted}\n`;
+                }
+            }
+
+            const msg = `📄 *PROPOSTA DE ORÇAMENTO - PHSUBLIME*\n\n` +
+                        `Olá, *${primeiroNome}*! Tudo bem?\n` +
+                        `Segue a proposta do seu orçamento *#${o.id}*:\n\n` +
+                        `📦 *ITENS:* \n${descItens}\n\n` +
+                        (resumoExtras ? `${resumoExtras}\n` : '') +
+                        `💳 *OPÇÕES DE PAGAMENTO:*\n\n` +
+                        `🟢 *NO PIX (Sem taxa):*\n` +
+                        `   • **R$ ${totalPix.toLocaleString('pt-BR', {minimumFractionDigits: 2})}** à vista\n\n` +
+                        `💳 *NO CARTÃO DE CRÉDITO (Link Mercado Pago):*\n` +
+                        `${textoParcelas}\n` +
+                        `🗓️ *Validade da proposta:* 7 dias corridos.\n\n` +
+                        `*Podemos dar início ao seu pedido agora?*\n` +
+                        `Qual a melhor forma de pagamento para você: *Pix ou Cartão*? ✨\n\n` +
+                        `- *PHSUBLIME Gestão & Personalizados*`;
+
+            const url = telClean ? 
+                `https://api.whatsapp.com/send?phone=${telClean}&text=${encodeURIComponent(msg)}` : 
+                `https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`;
+
+            window.open(url, '_blank');
+        }
+        async function converterOrcamentoEmPedido(orcamentoId) {
+            const orc = appData.orcamentos.find(o => o.id == orcamentoId);
+            if (!orc) return;
+
+            const confirmou = await confirmarAcao(
+                "⚡ CONVERTER EM PEDIDO",
+                `Deseja transformar o orçamento #${orcamentoId} de "${orc.clienteNome}" em um Pedido Oficial de Produção?`,
+                "Sim, Converter Agora",
+                "fa-cart-plus",
+                "yellow"
+            );
+
+            if (!confirmou) return;
+
+            let clienteIdFinal = orc.clienteId;
+
+            if (!clienteIdFinal && orc.clienteNome) {
+                const idCliNovo = Math.floor(100000000 + Math.random() * 900000000);
+                const cliData = {
+                    id: idCliNovo,
+                    nome: orc.clienteNome,
+                    whatsapp: orc.clienteWhatsapp || '',
+                    telefone: orc.clienteWhatsapp || '',
+                    obs: 'Cadastrado automaticamente via Orçamento #' + orcamentoId
+                };
+                const { error: errCli } = await supabaseClient.from('clientes').insert([cliData]);
+                if (!errCli) {
+                    clienteIdFinal = idCliNovo;
+                }
+            }
+
+            const novoPedidoId = Math.floor(100000000 + Math.random() * 900000000);
+            const pedData = {
+                id: novoPedidoId,
+                data: appData.dataAtual,
+                clienteId: clienteIdFinal || 0,
+                clienteNome: orc.clienteNome || 'Cliente',
+                itens: orc.itens ? [...orc.itens] : [],
+                total: orc.total || 0,
+                despesa: orc.despesa || 0,
+                valorArte: orc.valorArte || 0,
+                valorEntrega: orc.valorEntrega || 0,
+                statusPagamento: 'Pendente',
+                valorPago: 0,
+                dataEntrega: appData.dataAtual,
+                responsavel: orc.responsavel || usuarioAtualNome,
+                formaPagamento: 'Pix',
+                status: 'AGUARDANDO',
+                obs: `Convertido do Orçamento #${orcamentoId}. ` + (orc.obs || '')
+            };
+
+            const { error: errPed } = await supabaseClient.from('pedidos').insert([pedData]);
+
+            if (!errPed) {
+                await supabaseClient.from('orcamentos').update({ status: 'Aprovado / Convertido' }).eq('id', orcamentoId);
+                await abaterEstoquePorPedido(pedData.itens);
+                await carregarDados();
+                mostrarToast(`Orçamento #${orcamentoId} convertido no Pedido #${novoPedidoId}! 🎉`);
+                navegar('pedidos');
+            } else {
+                console.error("Erro ao converter em pedido:", errPed);
+                mostrarToast(`Erro ao converter: ${errPed.message}`, "erro");
+            }
+        }
+
+        function abrirModalComprovanteOrcamento(orcamentoId) {
+            const o = appData.orcamentos.find(x => x.id == orcamentoId);
+            if (!o) return;
+
+            orcamentoComprovanteAtual = o;
+
+            document.getElementById('recibo-orc-id').innerText = `#ORC-${o.id}`;
+            document.getElementById('recibo-orc-data').innerText = `Data: ${o.data || '--/--/----'}`;
+            document.getElementById('recibo-orc-cli-nome').innerText = o.clienteNome || 'Cliente Avulso';
+            document.getElementById('recibo-orc-cli-tel').innerText = o.clienteWhatsapp || '-';
+            document.getElementById('recibo-orc-resp').innerText = o.responsavel || usuarioAtualNome;
+            document.getElementById('recibo-orc-status').innerText = o.status || 'Pendente';
+
+            const tbody = document.getElementById('recibo-orc-itens-body');
+            tbody.innerHTML = '';
+            
+            if (o.itens && Array.isArray(o.itens)) {
+                o.itens.forEach(item => {
+                    const totalVenda = parseFloat(item.valor || 0).toLocaleString('pt-BR', {minimumFractionDigits: 2});
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td class="p-2 font-bold text-white">${escapeAttr(item.servico)} ${item.material ? `<span class="text-[10px] text-neutral-400 font-normal">(${escapeAttr(item.material)})</span>` : ''}</td>
+                        <td class="p-2 text-center font-bold text-white">${escapeAttr(item.qtd || 1)}</td>
+                        <td class="p-2 text-right font-bold text-yellow-400">R$ ${totalVenda}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            }
+
+            const total = parseFloat(o.total || 0);
+            const vArte = parseFloat(o.valorArte || 0);
+            const vEntrega = parseFloat(o.valorEntrega || 0);
+            const desconto = parseFloat(o.desconto || 0);
+
+            const rowArte = document.getElementById('recibo-orc-linha-arte');
+            if (vArte > 0) {
+                rowArte.classList.remove('hidden');
+                document.getElementById('recibo-orc-valor-arte').innerText = `R$ ${vArte.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+            } else {
+                rowArte.classList.add('hidden');
+            }
+
+            const rowEntrega = document.getElementById('recibo-orc-linha-entrega');
+            if (vEntrega > 0) {
+                rowEntrega.classList.remove('hidden');
+                document.getElementById('recibo-orc-valor-entrega').innerText = `R$ ${vEntrega.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+            } else {
+                rowEntrega.classList.add('hidden');
+            }
+
+            const rowDesconto = document.getElementById('recibo-orc-linha-desconto');
+            if (desconto > 0) {
+                rowDesconto.classList.remove('hidden');
+                document.getElementById('recibo-orc-valor-desconto').innerText = `- R$ ${desconto.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+            } else {
+                rowDesconto.classList.add('hidden');
+            }
+
+            document.getElementById('recibo-orc-total').innerText = `R$ ${total.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+            document.getElementById('recibo-orc-obs-txt').innerText = o.obs || 'Validade desta proposta: 7 dias corridos.';
+
+            const btnWhatsModal = document.getElementById('btn-whats-modal-comprovante-orc');
+            if (btnWhatsModal) {
+                btnWhatsModal.onclick = () => enviarOrcamentoWhatsApp(o.id);
+            }
+
+            document.getElementById('modal-comprovante-orcamento').classList.remove('hidden');
+        }
+
+        function fecharModalComprovanteOrcamento() {
+            document.getElementById('modal-comprovante-orcamento').classList.add('hidden');
+            orcamentoComprovanteAtual = null;
+        }
+
+        function editarOrcamento(id) {
+            const o = appData.orcamentos.find(x => x.id == id);
+            if (!o) return;
+
+            document.getElementById('modal-orcamento-titulo').innerHTML = `<i class="fa-solid fa-pen"></i> Editar Orçamento #${o.id}`;
+            document.getElementById('orc-id').value = o.id;
+            document.getElementById('orc-cliente-nome').value = o.clienteNome || '';
+            document.getElementById('orc-cliente-whatsapp').value = o.clienteWhatsapp || '';
+            document.getElementById('orc-cliente-id').value = o.clienteId || '';
+
+            itensOrcamentoTemp = o.itens ? JSON.parse(JSON.stringify(o.itens)) : [];
+            limparFormProdutoItemOrcamento();
+            renderizarTabelaItensOrcamento();
+
+            document.getElementById('orc-valor-arte').value = parseFloat(o.valorArte || 0).toFixed(2);
+            document.getElementById('orc-valor-entrega').value = parseFloat(o.valorEntrega || 0).toFixed(2);
+            document.getElementById('orc-desconto').value = parseFloat(o.desconto || 0).toFixed(2);
+            document.getElementById('orc-obs').value = o.obs || '';
+
+            calcularTotalOrcamentoAutomatico();
+            document.getElementById('modal-orcamento').classList.remove('hidden');
+        }
+
+        async function excluirOrcamento(id) {
+            const confirmou = await confirmarAcao("Excluir Orçamento", `Deseja realmente excluir a proposta de orçamento #${id}?`, "Sim, Excluir");
+            if (confirmou) {
+                const { error } = await supabaseClient.from('orcamentos').delete().eq('id', id);
+                if (!error) {
+                    await carregarDados();
+                    mostrarToast("Orçamento removido.");
+                } else {
+                    mostrarToast(`Erro: ${error.message}`, "erro");
+                }
+            }
+        }
+
+        // ================= GRÁFICOS E FERRAMENTAS DO DASHBOARD =================
         function atualizarGraficos() {
             const secaoDash = document.getElementById('secao-dashboard');
             if (secaoDash && secaoDash.classList.contains('hidden')) return;
@@ -3912,7 +4884,7 @@
             const nomeMesAno = dataHoje.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
 
             const novoFechamento = {
-                id: Date.now(),
+                id: Math.floor(100000000 + Math.random() * 900000000),
                 mes: nomeMesAno.charAt(0).toUpperCase() + nomeMesAno.slice(1),
                 dataFechamento: dataFechamentoStr,
                 resumoFinanceiro: {
@@ -3950,4 +4922,4 @@
         window.onload = verificarSessao;
     </script>
 </body>
-</html>   
+</html>
