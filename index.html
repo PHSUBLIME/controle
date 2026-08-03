@@ -4459,6 +4459,7 @@
 
             const nomeCompleto = o.clienteNome || 'Cliente';
             const primeiroNome = nomeCompleto.trim().split(' ')[0];
+            const nomeAtendente = o.responsavel || usuarioAtualNome || 'Atendente';
 
             let telClean = (o.clienteWhatsapp || '').replace(/\D/g, '');
             if (telClean.length === 10 || telClean.length === 11) {
@@ -4493,7 +4494,7 @@
                 12: 0.2211
             };
 
-            // Regra atualizada: no máximo 1x a cada R$ 50 do valor total (mínimo 1x, máximo 12x)
+            // Regra: no máximo 1x a cada R$ 50 do valor total (mínimo 1x, máximo 12x)
             const maxParcelas = Math.max(1, Math.min(12, Math.floor(totalPix / 50)));
 
             let textoParcelas = '';
@@ -4511,7 +4512,8 @@
                 }
             }
 
-            const msg = `📄 *PROPOSTA DE ORÇAMENTO - PHSUBLIME*\n\n` +
+            const msg = `📄 *PROPOSTA DE ORÇAMENTO - PHSUBLIME*\n` +
+                        `👤 *Atendente:* ${nomeAtendente}\n\n` +
                         `Olá, *${primeiroNome}*! Tudo bem?\n` +
                         `Segue a proposta do seu orçamento *#${o.id}*:\n\n` +
                         `📦 *ITENS:* \n${descItens}\n\n` +
