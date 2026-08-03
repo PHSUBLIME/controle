@@ -3647,14 +3647,18 @@
         }
 
         async function excluirPedido(id) {
-            const confirmou = await confirmarAcao("Excluir Pedido", `Deseja excluir o pedido #${id}? Seus valores serão deduzidos do caixa.`, "Sim, Excluir");
+            const p = appData.pedidos.find(x => x.id == id);
+            const nomeCli = p ? p.clienteNome : '';
+
+            const confirmou = confirm(`🚨 ATENÇÃO: Tem certeza que deseja EXCLUIR o pedido #${id} (${nomeCli})?\n\nEsta ação irá remover o pedido do banco de dados e recalcular o caixa.`);
+
             if (confirmou) {
                 const { error } = await supabaseClient.from('pedidos').delete().eq('id', id);
                 if (!error) {
                     await carregarDados();
-                    mostrarToast("Pedido removido.");
+                    mostrarToast(`Pedido #${id} removido com sucesso!`);
                 } else {
-                    mostrarToast(`Erro: ${error.message}`, "erro");
+                    mostrarToast(`Erro ao excluir: ${error.message}`, "erro");
                 }
             }
         }
