@@ -866,10 +866,10 @@
 
     <!-- MODAL ITEM DE ESTOQUE -->
     <div id="modal-estoque" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-neutral-900 border border-neutral-800 rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl">
+        <div class="bg-neutral-900 border border-neutral-800 rounded-2xl max-w-xl w-full p-6 space-y-4 shadow-2xl overflow-y-auto max-h-[90vh]">
             <div class="flex justify-between items-center border-b border-neutral-800 pb-3">
                 <h3 class="text-xl font-bold text-yellow-400 flex items-center gap-2" id="modal-estoque-titulo">
-                    <i class="fa-solid fa-boxes-stacked"></i> Novo Item no Estoque
+                    <i class="fa-solid fa-boxes-stacked"></i> Novo Item / Produto
                 </h3>
                 <button onclick="fecharModalEstoque()" class="text-neutral-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
             </div>
@@ -878,40 +878,57 @@
                 <input type="hidden" id="est-id">
                 
                 <div>
-                    <label class="block text-neutral-400 text-xs font-semibold mb-1">Nome do Material / Insumo <span class="text-rose-400">*</span></label>
-                    <input type="text" id="est-nome" required placeholder="Ex: Caneca Branca, Lona 440g, Tinta Sublimática" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400">
+                    <label class="block text-neutral-400 text-xs font-semibold mb-1">Nome do Material / Produto <span class="text-rose-400">*</span></label>
+                    <input type="text" id="est-nome" required placeholder="Ex: Cartão de Visita, Lona 440g, Panfletos" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400">
                 </div>
 
                 <div class="grid grid-cols-2 gap-3">
                     <div>
-                        <label class="block text-neutral-400 text-xs font-semibold mb-1">Categoria</label>
-                        <input type="text" id="est-categoria" placeholder="Ex: Brindes, Mídia, Tintas" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400">
+                        <label class="block text-yellow-400 text-xs font-bold mb-1">Tipo de Estoque</label>
+                        <select id="est-tipo-item" onchange="alternarCamposTipoEstoque()" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white text-xs font-bold focus:outline-none focus:border-yellow-400">
+                            <option value="Fisico">📦 Estoque Físico (Guardo no local)</option>
+                            <option value="Dropship">🚚 Sob Encomenda / Dropship (Gráfica Externa)</option>
+                        </select>
                     </div>
                     <div>
-                        <label class="block text-neutral-400 text-xs font-semibold mb-1">Unidade de Medida</label>
-                        <select id="est-unidade" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400">
-                            <option value="Unidades">Unidades (Un)</option>
-                            <option value="Metros">Metros (m)</option>
-                            <option value="Litros">Litros (L)</option>
-                            <option value="Caixas">Caixas (Cx)</option>
-                            <option value="Pacotes">Pacotes (Pct)</option>
-                            <option value="Kilos">Kilos (Kg)</option>
+                        <label class="block text-yellow-400 text-xs font-bold mb-1">Tipo de Cobrança</label>
+                        <select id="est-tipo-cobranca" onchange="alternarCamposTipoCobranca()" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white text-xs font-bold focus:outline-none focus:border-yellow-400">
+                            <option value="Unidade">Por Unidade (Un)</option>
+                            <option value="MetroQuadrado">Por Metro² (M²)</option>
+                            <option value="Tiragem">📦 Por Pacotes / Tiragens (Lotes)</option>
                         </select>
                     </div>
                 </div>
 
                 <div class="grid grid-cols-2 gap-3">
                     <div>
-                        <label class="block text-yellow-400 text-xs font-bold mb-1">Qtd Atual em Estoque</label>
-                        <input type="number" step="0.01" id="est-qtd" required placeholder="0" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white font-bold focus:outline-none focus:border-yellow-400">
+                        <label class="block text-neutral-400 text-xs font-semibold mb-1">Categoria</label>
+                        <input type="text" id="est-categoria" placeholder="Ex: Gráfica, Comunicação Visual, Brindes" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400">
                     </div>
                     <div>
-                        <label class="block text-rose-400 text-xs font-bold mb-1">Estoque Mínimo (Alerta)</label>
-                        <input type="number" step="0.01" id="est-qtd-minima" required placeholder="5" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white font-bold focus:outline-none focus:border-rose-400">
+                        <label class="block text-neutral-400 text-xs font-semibold mb-1">Unidade de Medida</label>
+                        <select id="est-unidade" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400">
+                            <option value="Unidades">Unidades (Un)</option>
+                            <option value="Metros">Metros (m)</option>
+                            <option value="Caixas">Caixas (Cx)</option>
+                            <option value="Pacotes">Pacotes (Pct)</option>
+                        </select>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div id="bloco-campos-fisicos" class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-yellow-400 text-xs font-bold mb-1">Qtd Atual em Estoque</label>
+                        <input type="number" step="0.01" id="est-qtd" placeholder="0" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white font-bold focus:outline-none focus:border-yellow-400">
+                    </div>
+                    <div>
+                        <label class="block text-rose-400 text-xs font-bold mb-1">Estoque Mínimo (Alerta)</label>
+                        <input type="number" step="0.01" id="est-qtd-minima" placeholder="5" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white font-bold focus:outline-none focus:border-rose-400">
+                    </div>
+                </div>
+
+                <!-- PREÇO PADRÃO (UNIDADE OU M²) -->
+                <div id="bloco-precos-padrao" class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="block text-rose-400 text-xs font-bold mb-1">Preço Custo (R$)</label>
                         <input type="number" step="0.01" id="est-preco-custo" placeholder="0.00" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-rose-300 font-bold focus:outline-none focus:border-yellow-400">
@@ -920,18 +937,41 @@
                         <label class="block text-yellow-400 text-xs font-bold mb-1">Preço Venda (R$)</label>
                         <input type="number" step="0.01" id="est-preco-venda" placeholder="0.00" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-yellow-400 font-bold focus:outline-none focus:border-yellow-400">
                     </div>
-                    <div>
-                        <label class="block text-neutral-400 text-xs font-semibold mb-1">Cobrança</label>
-                        <select id="est-tipo-cobranca" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white text-xs focus:outline-none focus:border-yellow-400">
-                            <option value="Unidade">Por Unidade (Un)</option>
-                            <option value="MetroQuadrado">Por Metro² (M²)</option>
-                        </select>
+                </div>
+
+                <!-- TABELA DE TIRAGENS / PACOTES -->
+                <div id="bloco-tiragens" class="hidden space-y-3 bg-neutral-950 p-3.5 rounded-xl border border-neutral-800">
+                    <h4 class="text-xs font-bold text-yellow-400 uppercase tracking-wide flex items-center gap-1.5">
+                        <i class="fa-solid fa-layer-group"></i> Tabela de Tiragens / Pacotes
+                    </h4>
+                    <div class="grid grid-cols-3 gap-2">
+                        <input type="number" id="tiragem-qtd" placeholder="Qtd (ex: 500)" class="bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-xs text-white">
+                        <input type="number" step="0.01" id="tiragem-custo" placeholder="Custo R$" class="bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-xs text-rose-300">
+                        <input type="number" step="0.01" id="tiragem-venda" placeholder="Venda R$" class="bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-xs text-yellow-400">
+                    </div>
+                    
+                    <button type="button" onclick="adicionarTiragemItem()" class="w-full py-1.5 bg-yellow-400/20 hover:bg-yellow-400 hover:text-black text-yellow-400 font-bold rounded-lg text-xs border border-yellow-400/30 transition-all">
+                        + Incluir Pacote na Tabela
+                    </button>
+
+                    <div class="border border-neutral-800 rounded-lg max-h-36 overflow-y-auto">
+                        <table class="w-full text-left text-xs text-neutral-300">
+                            <thead class="bg-neutral-800 text-yellow-400">
+                                <tr>
+                                    <th class="p-2">Tiragem</th>
+                                    <th class="p-2">Custo</th>
+                                    <th class="p-2">Venda</th>
+                                    <th class="p-2 text-right">Ação</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabela-tiragens-body" class="divide-y divide-neutral-800"></tbody>
+                        </table>
                     </div>
                 </div>
 
                 <div>
-                    <label class="block text-neutral-400 text-xs font-semibold mb-1">Fornecedor / Loja</label>
-                    <input type="text" id="est-fornecedor" placeholder="Ex: Mercado Livre, Kalunga" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400">
+                    <label class="block text-neutral-400 text-xs font-semibold mb-1">Fornecedor / Gráfica Parceira</label>
+                    <input type="text" id="est-fornecedor" placeholder="Ex: Mercado Livre, Gráfica Externa" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400">
                 </div>
                 <div>
                     <label class="block text-neutral-400 text-xs font-semibold mb-1">Observações / Detalhes</label>
@@ -945,7 +985,6 @@
             </form>
         </div>
     </div>
-
     <!-- MODAL RADAR DE ENTREGAS -->
     <div id="modal-radar-entregas" class="fixed inset-0 bg-black/85 backdrop-blur-md z-[900] hidden flex items-center justify-center p-4">
         <div class="bg-neutral-900 border border-neutral-800 rounded-2xl max-w-3xl w-full p-6 space-y-5 shadow-2xl overflow-y-auto max-h-[85vh]">
@@ -1502,7 +1541,11 @@
                                 <input type="text" id="item-material" placeholder="Ex: Lona 440g, Algodão" class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-white focus:outline-none focus:border-yellow-400">
                             </div>
                         </div>
-
+<!-- SELETOR DE TIRAGEM / PACOTES -->
+                        <div id="container-seletor-tiragem-pedido" class="hidden bg-neutral-900 border border-yellow-400/40 p-3 rounded-xl my-2">
+                            <label class="block text-yellow-400 font-bold text-xs mb-1">📦 Selecione o Pacote / Tiragem Desejada:</label>
+                            <select id="item-seletor-tiragem" onchange="aplicarTiragemSelecionadaPedido()" class="w-full bg-neutral-800 border border-neutral-700 text-white font-bold text-xs p-2 rounded-lg focus:outline-none focus:border-yellow-400"></select>
+                        </div>
                         <div class="grid grid-cols-2 md:grid-cols-4 gap-2.5 text-xs">
                             <div>
                                 <label class="block text-neutral-400 font-medium mb-1">Quantidade</label>
@@ -2139,39 +2182,124 @@
             renderizarEstoque();
         }
 
-        function abrirModalEstoque() {
-            document.getElementById('modal-estoque-titulo').innerHTML = `<i class="fa-solid fa-boxes-stacked"></i> Novo Item no Estoque`;
+        let tiragensTempModal = [];
+
+        function alternarCamposTipoEstoque() {
+            const tipoItem = document.getElementById('est-tipo-item').value;
+            const blocoFisico = document.getElementById('bloco-campos-fisicos');
+            if (blocoFisico) {
+                if (tipoItem === 'Dropship') {
+                    blocoFisico.classList.add('hidden');
+                } else {
+                    blocoFisico.classList.remove('hidden');
+                }
+            }
+        }
+
+        function alternarCamposTipoCobranca() {
+            const tipoCobranca = document.getElementById('est-tipo-cobranca').value;
+            const blocoPrecos = document.getElementById('bloco-precos-padrao');
+            const blocoTiragens = document.getElementById('bloco-tiragens');
+            if (blocoPrecos && blocoTiragens) {
+                if (tipoCobranca === 'Tiragem') {
+                    blocoPrecos.classList.add('hidden');
+                    blocoTiragens.classList.remove('hidden');
+                } else {
+                    blocoPrecos.classList.remove('hidden');
+                    blocoTiragens.classList.add('hidden');
+                }
+            }
+        }
+
+        function adicionarTiragemItem() {
+            const qtd = parseFloat(document.getElementById('tiragem-qtd').value) || 0;
+            const custo = parseFloat(document.getElementById('tiragem-custo').value) || 0;
+            const venda = parseFloat(document.getElementById('tiragem-venda').value) || 0;
+
+            if (qtd <= 0) {
+                mostrarToast("Digite a quantidade da tiragem!", "erro");
+                return;
+            }
+
+            tiragensTempModal.push({ qtd, custo, venda });
+            document.getElementById('tiragem-qtd').value = '';
+            document.getElementById('tiragem-custo').value = '';
+            document.getElementById('tiragem-venda').value = '';
+            renderizarTabelaTiragensModal();
+        }
+
+        function removerTiragemItem(idx) {
+            tiragensTempModal.splice(idx, 1);
+            renderizarTabelaTiragensModal();
+        }
+
+        function renderizarTabelaTiragensModal() {
+            const tbody = document.getElementById('tabela-tiragens-body');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+            
+            tiragensTempModal.sort((a, b) => a.qtd - b.qtd);
+
+            tiragensTempModal.forEach((t, idx) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="p-2 font-bold text-white">${t.qtd} un</td>
+                    <td class="p-2 text-rose-300">R$ ${t.custo.toFixed(2)}</td>
+                    <td class="p-2 font-bold text-yellow-400">R$ ${t.venda.toFixed(2)}</td>
+                    <td class="p-2 text-right">
+                        <button type="button" onclick="removerTiragemItem(${idx})" class="text-rose-400 hover:text-rose-300 p-1"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function abrirModalEstoque(id = null) {
             document.getElementById('form-estoque').reset();
-            document.getElementById('est-id').value = '';
+            document.getElementById('est-id').value = id || '';
+            tiragensTempModal = [];
+
+            if (id) {
+                const item = appData.estoque.find(e => e.id == id);
+                if (item) {
+                    document.getElementById('modal-estoque-titulo').innerHTML = `<i class="fa-solid fa-pen"></i> Editar Material / Produto`;
+                    document.getElementById('est-nome').value = item.nome || '';
+                    if (document.getElementById('est-tipo-item')) document.getElementById('est-tipo-item').value = item.tipoItem || 'Fisico';
+                    if (document.getElementById('est-tipo-cobranca')) document.getElementById('est-tipo-cobranca').value = item.tipoCobranca || 'Unidade';
+                    document.getElementById('est-categoria').value = item.categoria || '';
+                    document.getElementById('est-unidade').value = item.unidade || 'Unidades';
+                    document.getElementById('est-qtd').value = item.qtd || 0;
+                    document.getElementById('est-qtd-minima').value = item.qtdMinima || 0;
+                    document.getElementById('est-preco-custo').value = item.precoCusto || 0;
+                    document.getElementById('est-preco-venda').value = item.precoVenda || 0;
+                    document.getElementById('est-fornecedor').value = item.fornecedor || '';
+                    document.getElementById('est-obs').value = item.obs || '';
+
+                    if (item.tiragens && Array.isArray(item.tiragens)) {
+                        tiragensTempModal = JSON.parse(JSON.stringify(item.tiragens));
+                    }
+                }
+            } else {
+                document.getElementById('modal-estoque-titulo').innerHTML = `<i class="fa-solid fa-boxes-stacked"></i> Novo Item / Produto`;
+            }
+
+            alternarCamposTipoEstoque();
+            alternarCamposTipoCobranca();
+            renderizarTabelaTiragensModal();
             document.getElementById('modal-estoque').classList.remove('hidden');
         }
 
         function fecharModalEstoque() {
             document.getElementById('modal-estoque').classList.add('hidden');
+            tiragensTempModal = [];
         }
 
         function editarItemEstoque(id) {
-            const item = appData.estoque.find(x => x.id == id);
-            if (!item) return;
-
-            document.getElementById('modal-estoque-titulo').innerHTML = `<i class="fa-solid fa-pen"></i> Editar Material no Estoque`;
-            document.getElementById('est-id').value = item.id;
-            document.getElementById('est-nome').value = item.nome || '';
-            document.getElementById('est-categoria').value = item.categoria || '';
-            document.getElementById('est-unidade').value = item.unidade || 'Unidades';
-            document.getElementById('est-qtd').value = item.qtd || 0;
-            document.getElementById('est-qtd-minima').value = item.qtdMinima || 0;
-            document.getElementById('est-preco-custo').value = item.precoCusto || 0;
-            document.getElementById('est-preco-venda').value = item.precoVenda || 0;
-            document.getElementById('est-tipo-cobranca').value = item.tipoCobranca || 'Unidade';
-            document.getElementById('est-fornecedor').value = item.fornecedor || '';
-            document.getElementById('est-obs').value = item.obs || '';
-
-            document.getElementById('modal-estoque').classList.remove('hidden');
+            abrirModalEstoque(id);
         }
 
         async function salvarItemEstoque(e) {
-            e.preventDefault();
+            if (e) e.preventDefault();
             const idInput = document.getElementById('est-id').value;
             const nome = document.getElementById('est-nome').value.trim();
 
@@ -2180,18 +2308,22 @@
                 return;
             }
 
+            const tipoItem = document.getElementById('est-tipo-item') ? document.getElementById('est-tipo-item').value : 'Fisico';
+            const tipoCobranca = document.getElementById('est-tipo-cobranca') ? document.getElementById('est-tipo-cobranca').value : 'Unidade';
             const idSeguro = idInput ? parseInt(idInput) : Math.floor(100000000 + Math.random() * 900000000);
 
             const itemData = {
                 id: idSeguro,
                 nome: nome,
+                tipoItem: tipoItem,
+                tipoCobranca: tipoCobranca,
                 categoria: document.getElementById('est-categoria').value.trim() || 'Geral',
                 unidade: document.getElementById('est-unidade').value,
-                qtd: parseFloat(document.getElementById('est-qtd').value || 0),
-                qtdMinima: parseFloat(document.getElementById('est-qtd-minima').value || 0),
+                qtd: tipoItem === 'Dropship' ? 9999 : parseFloat(document.getElementById('est-qtd').value || 0),
+                qtdMinima: tipoItem === 'Dropship' ? 0 : parseFloat(document.getElementById('est-qtd-minima').value || 0),
                 precoCusto: parseFloat(document.getElementById('est-preco-custo').value || 0),
                 precoVenda: parseFloat(document.getElementById('est-preco-venda').value || 0),
-                tipoCobranca: document.getElementById('est-tipo-cobranca').value || 'Unidade',
+                tiragens: tipoCobranca === 'Tiragem' ? tiragensTempModal : [],
                 fornecedor: document.getElementById('est-fornecedor').value.trim() || '',
                 obs: document.getElementById('est-obs').value.trim() || ''
             };
@@ -2349,37 +2481,54 @@
 
             let item = null;
             const matchId = valor.match(/\[ID:(\d+)\]/);
-            if (matchId && matchId[1]) {
-                item = appData.estoque.find(e => e.id == matchId[1]);
-            }
+            if (matchId && matchId[1]) item = appData.estoque.find(e => e.id == matchId[1]);
+            if (!item) item = appData.estoque.find(e => valor.toLowerCase().includes(e.nome.toLowerCase()) || e.nome.toLowerCase() === valor.toLowerCase());
 
-            if (!item) {
-                item = appData.estoque.find(e => 
-                    valor.toLowerCase().includes(e.nome.toLowerCase()) || 
-                    e.nome.toLowerCase() === valor.toLowerCase()
-                );
-            }
+            const containerTiragem = document.getElementById('container-seletor-tiragem-pedido');
+            const selectTiragem = document.getElementById('item-seletor-tiragem');
 
             if (item) {
                 document.getElementById('item-estoque-id').value = item.id;
                 document.getElementById('item-servico').value = item.nome;
                 document.getElementById('item-material').value = item.nome;
-                
-                const custoUnit = parseFloat(item.precoCusto || 0);
-                const vendaUnit = parseFloat(item.precoVenda || 0);
 
-                document.getElementById('item-custo-unitario').value = custoUnit > 0 ? custoUnit.toFixed(2) : '';
-                document.getElementById('item-venda-unitario').value = vendaUnit > 0 ? vendaUnit.toFixed(2) : '';
-
-                if (item.tipoCobranca === 'Unidade') {
-                    document.getElementById('item-largura').value = '';
-                    document.getElementById('item-altura').value = '';
+                if (item.tipoCobranca === 'Tiragem' && item.tiragens && item.tiragens.length > 0) {
+                    if (containerTiragem) containerTiragem.classList.remove('hidden');
+                    if (selectTiragem) {
+                        selectTiragem.innerHTML = '<option value="">-- Escolha o Pacote / Tiragem --</option>';
+                        item.tiragens.sort((a, b) => a.qtd - b.qtd).forEach(t => {
+                            const opt = document.createElement('option');
+                            opt.value = JSON.stringify(t);
+                            opt.innerText = `Pacote com ${t.qtd} unidades - R$ ${parseFloat(t.venda).toFixed(2)} (Custo: R$ ${parseFloat(t.custo).toFixed(2)})`;
+                            selectTiragem.appendChild(opt);
+                        });
+                    }
+                } else {
+                    if (containerTiragem) containerTiragem.classList.add('hidden');
+                    document.getElementById('item-custo-unitario').value = parseFloat(item.precoCusto || 0) > 0 ? parseFloat(item.precoCusto).toFixed(2) : '';
+                    document.getElementById('item-venda-unitario').value = parseFloat(item.precoVenda || 0) > 0 ? parseFloat(item.precoVenda).toFixed(2) : '';
+                    recalcularDespesaEValorItem();
                 }
-
-                recalcularDespesaEValorItem();
             } else {
                 document.getElementById('item-estoque-id').value = '';
+                if (containerTiragem) containerTiragem.classList.add('hidden');
             }
+        }
+
+        function aplicarTiragemSelecionadaPedido() {
+            const selectTiragem = document.getElementById('item-seletor-tiragem');
+            if (!selectTiragem) return;
+            const rawVal = selectTiragem.value;
+            if (!rawVal) return;
+
+            const t = JSON.parse(rawVal);
+            document.getElementById('item-qtd').value = 1;
+            document.getElementById('item-largura').value = '';
+            document.getElementById('item-altura').value = '';
+            document.getElementById('item-custo-unitario').value = parseFloat(t.custo).toFixed(2);
+            document.getElementById('item-venda-unitario').value = parseFloat(t.venda).toFixed(2);
+            document.getElementById('item-despesa').value = parseFloat(t.custo).toFixed(2);
+            document.getElementById('item-valor').value = parseFloat(t.venda).toFixed(2);
         }
 
         function recalcularDespesaEValorItem() {
@@ -2389,12 +2538,7 @@
             const custoUnit = parseFloat(document.getElementById('item-custo-unitario').value) || 0;
             const vendaUnit = parseFloat(document.getElementById('item-venda-unitario').value) || 0;
 
-            const estoqueId = document.getElementById('item-estoque-id').value;
-            const itemEstoque = appData.estoque.find(e => e.id == estoqueId);
-
-            const ehPorUnidade = itemEstoque && itemEstoque.tipoCobranca === 'Unidade';
-
-            const temMedidas = (!ehPorUnidade && larg > 0 && alt > 0);
+            const temMedidas = (larg > 0 && alt > 0);
             const areaM2 = temMedidas ? ((larg / 100) * (alt / 100)) : 1;
 
             const totalDespesa = areaM2 * custoUnit * qtd;
@@ -4237,11 +4381,7 @@
             const custoUnit = parseFloat(document.getElementById('orc-item-custo-unitario').value) || 0;
             const vendaUnit = parseFloat(document.getElementById('orc-item-venda-unitario').value) || 0;
 
-            const estoqueId = document.getElementById('orc-item-estoque-id').value;
-            const itemEstoque = appData.estoque.find(e => e.id == estoqueId);
-            const ehPorUnidade = itemEstoque && itemEstoque.tipoCobranca === 'Unidade';
-
-            const temMedidas = (!ehPorUnidade && larg > 0 && alt > 0);
+            const temMedidas = (larg > 0 && alt > 0);
             const areaM2 = temMedidas ? ((larg / 100) * (alt / 100)) : 1;
 
             const totalDespesa = areaM2 * custoUnit * qtd;
