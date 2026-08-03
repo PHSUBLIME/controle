@@ -661,10 +661,9 @@
                         <i class="fa-solid fa-clipboard-list text-lg"></i> 📋 Gerar Lista de Compras
                     </button>
 
-                    <button onclick="alternarFiltroEstoqueComprar()" id="btn-filtro-comprar-apenas" class="flex items-center gap-2 bg-neutral-800 hover:bg-neutral-700 text-neutral-200 border border-neutral-700 px-4 py-2.5 rounded-xl font-medium text-sm transition-all">
-                        <i class="fa-solid fa-cart-shopping text-yellow-400"></i> <span>🛒 Ver Apenas O Que Comprar</span>
-                    </button>
-
+                   <button onclick="abrirModalMassaEstoque()" class="flex items-center gap-2 bg-neutral-800 hover:bg-neutral-700 text-neutral-200 border border-neutral-700 px-4 py-2.5 rounded-xl font-medium text-sm transition-all">
+    <i class="fa-solid fa-file-import text-yellow-400"></i> Adicionar em Massa
+</button>
                     <button onclick="abrirModalEstoque()" class="flex items-center gap-2 bg-yellow-400 hover:bg-yellow-300 text-black font-bold px-4 py-2.5 rounded-xl text-sm transition-all shadow-lg shadow-yellow-950/30">
                         <i class="fa-solid fa-plus"></i> + Novo Item de Estoque
                     </button>
@@ -1775,7 +1774,22 @@
             </div>
         </div>
     </div>
-
+<!-- MODAL MASSA ESTOQUE / PRODUTOS -->
+<div id="modal-massa-estoque" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-neutral-900 border border-neutral-800 rounded-2xl max-w-2xl w-full p-6 space-y-4 shadow-2xl">
+        <div class="flex justify-between items-center border-b border-neutral-800 pb-3">
+            <h3 class="text-xl font-bold text-yellow-400"><i class="fa-solid fa-file-import"></i> Importar Produtos em Massa</h3>
+            <button onclick="fecharModalMassaEstoque()" class="text-neutral-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <p class="text-xs text-neutral-400">Cole abaixo a coluna com o nome dos produtos do seu arquivo Excel:</p>
+        <textarea id="input-massa-estoque-texto" rows="10" placeholder="Cole aqui os produtos do Excel..." class="w-full bg-neutral-800 border border-neutral-700 rounded-xl p-3 text-white text-xs font-mono focus:outline-none focus:border-yellow-400"></textarea>
+        
+        <div class="flex justify-end gap-3 border-t border-neutral-800 pt-3">
+            <button onclick="fecharModalMassaEstoque()" class="px-4 py-2 bg-neutral-800 text-neutral-300 rounded-xl text-sm">Cancelar</button>
+            <button onclick="processarMassaEstoque()" class="px-5 py-2 bg-yellow-400 text-black font-bold rounded-xl text-sm">Importar Tudo para o Supabase</button>
+        </div>
+    </div>
+</div>
     <!-- TOAST DE NOTIFICAÇÃO -->
     <div id="toast" class="fixed bottom-5 right-5 bg-neutral-900 text-white border border-yellow-400 px-5 py-3 rounded-xl shadow-2xl transform translate-y-20 opacity-0 transition-all duration-300 flex items-center gap-3 z-[1001]">
         <i id="toast-icon" class="fa-solid fa-circle-check text-yellow-400 text-lg"></i>
@@ -5094,6 +5108,74 @@ if (!appData.servicosChart) {
         }
 
         window.onload = verificarSessao;
+        function abrirModalMassaEstoque() {
+    document.getElementById('input-massa-estoque-texto').value = '';
+    document.getElementById('modal-massa-estoque').classList.remove('hidden');
+}
+
+function fecharModalMassaEstoque() {
+    document.getElementById('modal-massa-estoque').classList.add('hidden');
+}
+
+async function processarMassaEstoque() {
+    const texto = document.getElementById('input-massa-estoque-texto').value.trim();
+    if (!texto) {
+        mostrarToast("Cole a lista de produtos do Excel antes de importar.", "erro");
+        return;
+    }
+
+    const linhas = texto.split('\n');
+    let novosProdutos = [];
+
+    linhas.forEach((linha, idx) => {
+        const nomeProduto = linha.trim();
+        if (!nomeProduto || nomeProduto === '-' || nomeProduto.startsWith('NULL') || nomeProduto === '0' || nomeProduto.toLowerCase() === 'nome') return;
+
+        let categoria = "Geral";
+        const nomeLower = nomeProduto.toLowerCase();
+        if (nomeLower.includes("cartão") || nomeLower.includes("folheto") || nomeLower.includes("panf")) categoria = "Gráfica Offset";
+        else if (nomeLower.includes("adesivo") || nomeLower.includes("vinil")) categoria = "Adesivos";
+        else if (nomeLower.includes("banner") || nomeLower.includes("lona")) categoria = "Comunicação Visual";
+        else if (nomeLower.includes("camisa") || nomeLower.includes("camiseta") || nomeLower.includes("top")) categoria = "Vestuário";
+        else if (nomeLower.includes("caneca") || nomeLower.includes("copo") || nomeLower.includes("taça")) categoria = "Brindes";
+
+        const tipoCobranca = (nomeLower.includes("m²") || nomeLower.includes("m2")) ? "MetroQuadrado" : "Unidade";
+
+        novosProdutos.push({
+            id: Math.floor(100000000 + Math.random() * 900000000) + idx,
+            nome: nomeProduto,
+            tipoItem: "Fisico",
+            tipoCobranca: tipoCobranca,
+            categoria: categoria,
+            unidade: tipoCobranca === "MetroQuadrado" ? "Metros" : "Unidades",
+            qtd: 100,
+            qtdMinima: 10,
+            precoCusto: 0.00,
+            precoVenda: 0.00,
+            tiragens: [],
+            fornecedor: "Produção Própria",
+            obs: "Importado via Excel"
+        });
+    });
+
+    if (novosProdutos.length === 0) {
+        mostrarToast("Nenhum produto válido foi encontrado no texto colado.", "erro");
+        return;
+    }
+
+    mostrarToast(`Enviando ${novosProdutos.length} produtos para o Supabase...`);
+
+    const { error } = await supabaseClient.from('estoque').insert(novosProdutos);
+
+    if (!error) {
+        fecharModalMassaEstoque();
+        await carregarDados();
+        mostrarToast(`${novosProdutos.length} produtos importados do Excel com sucesso! 🎉`);
+    } else {
+        console.error("Erro no Supabase:", error);
+        mostrarToast(`Erro ao importar: ${error.message}`, "erro");
+    }
+}
     </script>
 </body>
 </html>
