@@ -4784,19 +4784,20 @@
             }
 
             const servicosMap = {};
-            appData.pedidos.forEach(p => {
-                if (p.status !== 'Cancelado' && p.itens) {
-                    p.itens.forEach(i => {
-                        const nomeS = i.servico || 'Outros';
-                        servicosMap[nomeS] = (servicosMap[nomeS] || 0) + (parseInt(i.qtd) || 1);
-                    });
-                }
-            });
+appData.pedidos.forEach(p => {
+    if (p.status !== 'Cancelado' && p.itens) {
+        p.itens.forEach(i => {
+            const nomeS = i.servico || 'Outros';
+            // Soma 1 por venda realizada para dar peso proporcional a todos os serviços
+            servicosMap[nomeS] = (servicosMap[nomeS] || 0) + 1;
+        });
+    }
+});
 
-            const labelsServ = Object.keys(servicosMap).length > 0 ? Object.keys(servicosMap) : ['Nenhum serviço'];
-            const dataServ = Object.keys(servicosMap).length > 0 ? Object.values(servicosMap) : [1];
+const labelsServ = Object.keys(servicosMap).length > 0 ? Object.keys(servicosMap) : ['Nenhum serviço'];
+const dataServ = Object.keys(servicosMap).length > 0 ? Object.values(servicosMap) : [1];
 
-           if (!appData.servicosChart) {
+if (!appData.servicosChart) {
     const ctxS = document.getElementById('servicosChart').getContext('2d');
     appData.servicosChart = new Chart(ctxS, {
         type: 'doughnut',
@@ -4804,6 +4805,7 @@
             labels: labelsServ,
             datasets: [{
                 data: dataServ,
+                minAngle: 12,
                 backgroundColor: [
                     '#facc15', // Amarelo PHSUBLIME
                     '#3b82f6', // Azul
@@ -4843,7 +4845,6 @@
     appData.servicosChart.update();
 }
 }
-
         function copiarCSV() {
             let csv = "ID;Data;Cliente;Total;Despesa;StatusPagamento;Responsavel;Status\n";
             appData.pedidos.forEach(p => {
