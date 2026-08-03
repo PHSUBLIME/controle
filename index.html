@@ -1953,7 +1953,7 @@
                     supabaseClient.from('pedidos').select('*').order('id', { ascending: false }),
                     supabaseClient.from('despesas').select('*').order('id', { ascending: false }),
                     supabaseClient.from('fechamentos').select('*').order('id', { ascending: false }),
-                    supabaseClient.from('estoque').select('*').order('id', { ascending: false }),
+                    supabaseClient.from('estoque').select('*').order('id', { ascending: false }).limit(1000000),
                     supabaseClient.from('orcamentos').select('*').order('id', { ascending: false })
                 ]);
 
