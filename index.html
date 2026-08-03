@@ -4796,32 +4796,53 @@
             const labelsServ = Object.keys(servicosMap).length > 0 ? Object.keys(servicosMap) : ['Nenhum serviço'];
             const dataServ = Object.keys(servicosMap).length > 0 ? Object.values(servicosMap) : [1];
 
-            if (!appData.servicosChart) {
-                const ctxS = document.getElementById('servicosChart').getContext('2d');
-                appData.servicosChart = new Chart(ctxS, {
-                    type: 'doughnut',
-                    data: {
-                        labels: labelsServ,
-                        datasets: [{
-                            data: dataServ,
-                            backgroundColor: ['#facc15', '#eab308', '#ca8a04', '#a16207', '#52525b'],
-                            borderWidth: 2,
-                            borderColor: '#18181b'
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: { legend: { position: 'bottom', labels: { color: '#d4d4d8' } } },
-                        cutout: '70%'
-                    }
-                });
-            } else {
-                appData.servicosChart.data.labels = labelsServ;
-                appData.servicosChart.data.datasets[0].data = dataServ;
-                appData.servicosChart.update();
-            }
+           if (!appData.servicosChart) {
+    const ctxS = document.getElementById('servicosChart').getContext('2d');
+    appData.servicosChart = new Chart(ctxS, {
+        type: 'doughnut',
+        data: {
+            labels: labelsServ,
+            datasets: [{
+                data: dataServ,
+                backgroundColor: [
+                    '#facc15', // Amarelo PHSUBLIME
+                    '#3b82f6', // Azul
+                    '#10b981', // Verde
+                    '#f97316', // Laranja
+                    '#a855f7', // Roxo
+                    '#ec4899', // Rosa
+                    '#06b6d4', // Ciano
+                    '#f43f5e'  // Vermelho
+                ],
+                borderWidth: 2,
+                borderColor: '#18181b'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { 
+                legend: { 
+                    position: 'bottom', 
+                    labels: { 
+                        color: '#e4e4e7',
+                        padding: 12,
+                        font: { family: 'Inter', size: 11, weight: '600' }
+                    } 
+                } 
+            },
+            cutout: '65%'
         }
+    });
+} else {
+    appData.servicosChart.data.labels = labelsServ;
+    appData.servicosChart.data.datasets[0].data = dataServ;
+    appData.servicosChart.data.datasets[0].backgroundColor = [
+        '#facc15', '#3b82f6', '#10b981', '#f97316', '#a855f7', '#ec4899', '#06b6d4', '#f43f5e'
+    ];
+    appData.servicosChart.update();
+}
+}
 
         function copiarCSV() {
             let csv = "ID;Data;Cliente;Total;Despesa;StatusPagamento;Responsavel;Status\n";
