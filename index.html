@@ -3504,6 +3504,7 @@
             const pedData = {
                 id: idSeguro,
                 data: appData.dataAtual,
+                created_at: pedId ? (appData.pedidos.find(x => x.id == pedId)?.created_at || new Date().toISOString()) : new Date().toISOString(),
                 clienteId: clienteId,
                 clienteNome: nomeClienteFinal,
                 codigoExterno: document.getElementById('ped-codigo-externo').value.trim(),
@@ -3561,7 +3562,18 @@
             let countProducao = 0;
             let countTotal = appData.pedidos.length;
 
-            appData.pedidos.forEach(p => {
+            // ORDENAÇÃO: Garante que o último pedido criado fique SEMPRE no topo
+            const pedidosOrdenados = [...appData.pedidos].sort((a, b) => {
+                if (a.created_at && b.created_at) {
+                    return new Date(b.created_at) - new Date(a.created_at);
+                }
+                if (a.data && b.data && a.data !== b.data) {
+                    return b.data.localeCompare(a.data);
+                }
+                return (b.id || 0) - (a.id || 0);
+            });
+
+            pedidosOrdenados.forEach(p => {
                 if (p.status === 'AGUARDANDO') countNovos++;
                 if (p.status === 'Em Produção') countProducao++;
 
@@ -4733,6 +4745,7 @@
             const pedData = {
                 id: novoPedidoId,
                 data: appData.dataAtual,
+                created_at: new Date().toISOString(),
                 clienteId: clienteIdFinal || 0,
                 clienteNome: orc.clienteNome || 'Cliente',
                 itens: orc.itens ? [...orc.itens] : [],
