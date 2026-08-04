@@ -1886,6 +1886,9 @@
             e.preventDefault();
             let usuarioInput = document.getElementById('login-usuario').value.trim() || "Daniel";
             
+            // Salva o login no navegador para não pedir senha ao dar F5
+            localStorage.setItem('phsublime_usuario', usuarioInput);
+
             document.getElementById('tela-login').classList.add('hidden');
             definirUsuarioLogado(usuarioInput + "@phsublime.com");
             radarJaExibidoSessao = false;
@@ -1895,9 +1898,16 @@
         }
 
         async function verificarSessao() {
+            const usuarioSalvo = localStorage.getItem('phsublime_usuario');
             const { data: { session } } = await supabaseClient.auth.getSession();
             
-            if (session && session.user) {
+            if (usuarioSalvo) {
+                document.getElementById('tela-login').classList.add('hidden');
+                definirUsuarioLogado(usuarioSalvo + "@phsublime.com");
+                await carregarDados();
+                iniciarInscricaoRealtime();
+                setTimeout(abrirRadarEntregasAuto, 800);
+            } else if (session && session.user) {
                 document.getElementById('tela-login').classList.add('hidden');
                 definirUsuarioLogado(session.user.email);
                 await carregarDados();
@@ -1912,6 +1922,7 @@
             const confirmou = await confirmarAcao("Sair do Sistema", "Deseja realmente sair do sistema da PHSUBLIME?", "Sim, Sair", "fa-right-from-bracket", "yellow");
             if (confirmou) {
                 radarJaExibidoSessao = false;
+                localStorage.removeItem('phsublime_usuario'); // Remove o login salvo ao sair
                 await supabaseClient.auth.signOut();
                 window.location.reload();
             }
