@@ -2134,10 +2134,17 @@
                 const custo = parseFloat(item.precoCusto || 0);
                 const venda = parseFloat(item.precoVenda || 0);
                 const cobrancaStr = item.tipoCobranca === 'MetroQuadrado' ? 'M²' : 'Un';
-                const precisaComprar = qtdAtual <= qtdMin;
+                const isDropship = item.tipoItem === 'Dropship';
+                
+                // Dropship não gera alerta de estoque mínimo
+                const precisaComprar = !isDropship && (qtdAtual <= qtdMin);
 
-                if (qtdAtual <= qtdMin) countAlerta++;
-                valorPatrimonio += (qtdAtual * custo);
+                if (precisaComprar) countAlerta++;
+                
+                // SÓ SOMA AO VALOR DO ESTOQUE SE FOR ESTOQUE FÍSICO (IGNORA DROPSHIP)
+                if (!isDropship) {
+                    valorPatrimonio += (qtdAtual * custo);
+                }
 
                 if (appData.filtroApenasComprarEstoque && !precisaComprar) return;
 
@@ -2151,15 +2158,23 @@
                     </td>
                     <td class="p-3 text-xs text-neutral-300 font-medium">${escapeAttr(item.categoria || 'Geral')}</td>
                     <td class="p-3 text-center">
-                        <div class="flex items-center justify-center gap-2">
-                            <button onclick="ajustarQtdRapidaEstoque(${item.id}, -1)" class="w-6 h-6 bg-neutral-800 hover:bg-rose-900/60 text-rose-400 rounded-lg text-xs font-black border border-neutral-700 flex items-center justify-center">-</button>
-                            <span class="text-base font-black ${precisaComprar ? 'text-rose-400' : 'text-white'}">${qtdAtual} <span class="text-[10px] font-normal text-neutral-400">${escapeAttr(item.unidade || 'Un')}</span></span>
-                            <button onclick="ajustarQtdRapidaEstoque(${item.id}, 1)" class="w-6 h-6 bg-neutral-800 hover:bg-emerald-900/60 text-emerald-400 rounded-lg text-xs font-black border border-neutral-700 flex items-center justify-center">+</button>
-                        </div>
+                        ${isDropship ? `
+                            <span class="text-amber-400 font-bold text-xs"><i class="fa-solid fa-truck-fast"></i> Sob Encomenda</span>
+                        ` : `
+                            <div class="flex items-center justify-center gap-2">
+                                <button onclick="ajustarQtdRapidaEstoque(${item.id}, -1)" class="w-6 h-6 bg-neutral-800 hover:bg-rose-900/60 text-rose-400 rounded-lg text-xs font-black border border-neutral-700 flex items-center justify-center">-</button>
+                                <span class="text-base font-black ${precisaComprar ? 'text-rose-400' : 'text-white'}">${qtdAtual} <span class="text-[10px] font-normal text-neutral-400">${escapeAttr(item.unidade || 'Un')}</span></span>
+                                <button onclick="ajustarQtdRapidaEstoque(${item.id}, 1)" class="w-6 h-6 bg-neutral-800 hover:bg-emerald-900/60 text-emerald-400 rounded-lg text-xs font-black border border-neutral-700 flex items-center justify-center">+</button>
+                            </div>
+                        `}
                     </td>
-                    <td class="p-3 text-center font-bold text-neutral-400 text-xs">${qtdMin} ${escapeAttr(item.unidade || 'Un')}</td>
+                    <td class="p-3 text-center font-bold text-neutral-400 text-xs">${isDropship ? '-' : `${qtdMin} ${escapeAttr(item.unidade || 'Un')}`}</td>
                     <td class="p-3">
-                        ${precisaComprar ? `
+                        ${isDropship ? `
+                            <span class="bg-amber-500/10 text-amber-400 border border-amber-500/30 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider flex items-center gap-1.5 w-fit">
+                                <i class="fa-solid fa-boxes-packing"></i> Dropshipping
+                            </span>
+                        ` : (precisaComprar ? `
                             <span class="bg-rose-500/20 text-rose-400 border border-rose-500/40 px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider flex items-center gap-1.5 w-fit">
                                 <i class="fa-solid fa-triangle-exclamation"></i> COMPRAR URGENTE
                             </span>
@@ -2167,7 +2182,7 @@
                             <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider flex items-center gap-1.5 w-fit">
                                 <i class="fa-solid fa-check"></i> Estoque OK
                             </span>
-                        `}
+                        `)}
                     </td>
                     <td class="p-3 text-xs">
                         <span class="block text-yellow-400 font-bold">Venda: R$ ${venda.toLocaleString('pt-BR', {minimumFractionDigits: 2})} / ${cobrancaStr}</span>
@@ -2199,7 +2214,6 @@
                 }
             }
         }
-
         function alternarFiltroEstoqueComprar() {
             appData.filtroApenasComprarEstoque = !appData.filtroApenasComprarEstoque;
             const btn = document.getElementById('btn-filtro-comprar-apenas');
