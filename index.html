@@ -1950,7 +1950,7 @@
             try {
                 const [resCli, resPed, resDesp, resFech, resEst, resOrc] = await Promise.all([
                     supabaseClient.from('clientes').select('*'),
-                    supabaseClient.from('pedidos').select('*').order('created_at', { ascending: false }),
+                    supabaseClient.from('pedidos').select('*').order('id', { ascending: false }),
                     supabaseClient.from('despesas').select('*').order('id', { ascending: false }),
                     supabaseClient.from('fechamentos').select('*').order('id', { ascending: false }),
                     supabaseClient.from('estoque').select('*').order('id', { ascending: false }).limit(1000000),
