@@ -3516,10 +3516,9 @@
 
             const idSeguro = pedId ? parseInt(pedId) : Math.floor(100000000 + Math.random() * 900000000);
 
-            const pedData = {
+           const pedData = {
                 id: idSeguro,
                 data: appData.dataAtual,
-                created_at: pedId ? (appData.pedidos.find(x => x.id == pedId)?.created_at || new Date().toISOString()) : new Date().toISOString(),
                 clienteId: clienteId,
                 clienteNome: nomeClienteFinal,
                 codigoExterno: document.getElementById('ped-codigo-externo').value.trim(),
@@ -4768,7 +4767,6 @@ const pedidosOrdenados = [...appData.pedidos].sort((a, b) => {
             const pedData = {
                 id: novoPedidoId,
                 data: appData.dataAtual,
-                created_at: new Date().toISOString(),
                 clienteId: clienteIdFinal || 0,
                 clienteNome: orc.clienteNome || 'Cliente',
                 itens: orc.itens ? [...orc.itens] : [],
