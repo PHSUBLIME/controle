@@ -1945,12 +1945,12 @@
                 .replace(/>/g, '&gt;');
         }
 
-        // CARREGAR DADOS DO SUPABASE
+       // CARREGAR DADOS DO SUPABASE
         async function carregarDados() {
             try {
                 const [resCli, resPed, resDesp, resFech, resEst, resOrc] = await Promise.all([
                     supabaseClient.from('clientes').select('*'),
-                    supabaseClient.from('pedidos').select('*').order('id', { ascending: false }),
+                    supabaseClient.from('pedidos').select('*'),
                     supabaseClient.from('despesas').select('*').order('id', { ascending: false }),
                     supabaseClient.from('fechamentos').select('*').order('id', { ascending: false }),
                     supabaseClient.from('estoque').select('*').order('id', { ascending: false }).limit(1000000),
@@ -1958,7 +1958,11 @@
                 ]);
 
                 if (resCli.data) appData.clientes = resCli.data;
-                if (resPed.data) appData.pedidos = resPed.data;
+                if (resPed.data) {
+                    // Guarda a ordem real de entrada no banco de dados para desempate
+                    resPed.data.forEach((p, idx) => p._originalIndex = idx);
+                    appData.pedidos = resPed.data;
+                }
                 if (resDesp.data) appData.despesasOutras = resDesp.data;
                 if (resFech.data) appData.historicoFechamentos = resFech.data;
                 if (resEst.data) appData.estoque = resEst.data;
@@ -3562,21 +3566,24 @@
             let countProducao = 0;
             let countTotal = appData.pedidos.length;
 
-            // ORDENAÇÃO: Garante que o último pedido criado fique SEMPRE no topo
-            // ORDENAÇÃO INTELIGENTE: Funciona para pedidos novos e antigos
-            const getTime = (p) => {
-                if (p.created_at) {
-                    const t = new Date(p.created_at).getTime();
-                    if (!isNaN(t)) return t;
-                }
-                if (p.data) {
-                    const t = new Date(p.data + 'T00:00:00').getTime();
-                    if (!isNaN(t)) return t;
-                }
-                return 0;
-            };
+           // ORDENAÇÃO INTELIGENTE: Usa hora, data e ordem de criação no banco
+const getTime = (p) => {
+    if (p.created_at) {
+        const t = new Date(p.created_at).getTime();
+        if (!isNaN(t)) return t;
+    }
+    if (p.data) {
+        const t = new Date(p.data + 'T00:00:00').getTime();
+        if (!isNaN(t)) return t;
+    }
+    return 0;
+};
 
-            const pedidosOrdenados = [...appData.pedidos].sort((a, b) => getTime(b) - getTime(a));
+const pedidosOrdenados = [...appData.pedidos].sort((a, b) => {
+    const timeDiff = getTime(b) - getTime(a);
+    if (timeDiff !== 0) return timeDiff;
+    return (b._originalIndex || 0) - (a._originalIndex || 0);
+});
 
             pedidosOrdenados.forEach(p => {
                 if (p.status === 'AGUARDANDO') countNovos++;
