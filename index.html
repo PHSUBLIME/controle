@@ -317,9 +317,16 @@
                     </h2>
                     <p class="text-neutral-400 text-sm mt-1">Acompanhe e notifique os clientes com pedidos com entrega prevista para hoje.</p>
                 </div>
-                <div class="flex items-center gap-3 bg-neutral-800 px-4 py-2.5 rounded-xl border border-neutral-700">
-                    <span class="text-xs text-neutral-400 font-bold uppercase">Total Agendado Hoje:</span>
-                    <span class="text-xl font-black text-yellow-400" id="kpi-entregas-hoje-count">0</span>
+               <div class="flex items-center gap-3">
+                    <!-- BOTÃO DA AUDITORIA DO FRETE -->
+                    <button onclick="abrirModalAnaliseFrete()" class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-4 py-2.5 rounded-xl text-xs flex items-center gap-2 shadow-lg shadow-blue-950/40">
+                        <i class="fa-solid fa-calculator"></i> Auditoria Plano Dropship
+                    </button>
+
+                    <div class="flex items-center gap-3 bg-neutral-800 px-4 py-2.5 rounded-xl border border-neutral-700">
+                        <span class="text-xs text-neutral-400 font-bold uppercase">Total Agendado Hoje:</span>
+                        <span class="text-xl font-black text-yellow-400" id="kpi-entregas-hoje-count">0</span>
+                    </div>
                 </div>
             </div>
 
@@ -1640,9 +1647,24 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-7 gap-3">
+                    <!-- NOVO CAMPO: TIPO DE LOGÍSTICA -->
                     <div>
-                        <label class="block text-neutral-400 text-xs font-semibold mb-1">Data de Entrega</label>
+                        <label class="block text-yellow-400 text-xs font-bold uppercase mb-1">Tipo Logística</label>
+                        <select id="ped-tipo-entrega" onchange="alternarCamposLogistica()" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400 text-xs font-bold">
+                            <option value="Entrega">🚚 Entrega / Dropship</option>
+                            <option value="Retirada">🏪 Retirada no Local</option>
+                        </select>
+                    </div>
+
+                    <!-- NOVO CAMPO: CUSTO AVULSO DO FRETE (SÓ PARA A AUDITORIA) -->
+                    <div id="container-custo-frete-avulso">
+                        <label class="block text-blue-400 text-xs font-bold uppercase mb-1" title="Valor do frete se fosse pago avulso (Padrão: R$ 21,00)">Frete Avulso (R$)</label>
+                        <input type="number" step="0.01" id="ped-custo-frete-avulso" value="21.00" placeholder="21.00" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-blue-300 font-bold focus:outline-none text-xs">
+                    </div>
+
+                    <div>
+                        <label class="block text-neutral-400 text-xs font-semibold mb-1">Data Prevista</label>
                         <input type="date" id="ped-data-entrega" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400 text-xs">
                     </div>
                     <div>
@@ -1790,6 +1812,51 @@
         </div>
     </div>
 </div>
+    <!-- MODAL ANÁLISE DE FRETE DROPSHIP (CONSULTA INDEPENDENTE) -->
+    <div id="modal-analise-frete" class="fixed inset-0 bg-black/85 backdrop-blur-md z-[990] hidden flex items-center justify-center p-4">
+        <div class="bg-neutral-900 border border-neutral-800 rounded-2xl max-w-2xl w-full p-6 space-y-5 shadow-2xl overflow-y-auto max-h-[90vh]">
+            <div class="flex justify-between items-center border-b border-neutral-800 pb-3">
+                <h3 class="text-xl font-black text-blue-400 flex items-center gap-2">
+                    <i class="fa-solid fa-calculator"></i> Auditoria do Plano Fixo de Entregas
+                </h3>
+                <button onclick="fecharModalAnaliseFrete()" class="text-neutral-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <p class="text-xs text-neutral-400 leading-relaxed">
+                Esta é uma <strong>ferramenta de consulta gerencial</strong>. Os cálculos abaixo são apenas para auditoria e <strong>não afetam</strong> o caixa ou lucro real da empresa.
+            </p>
+
+            <!-- CARDS COMPARATIVOS -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div class="bg-neutral-800/80 p-4 rounded-xl border border-neutral-700">
+                    <span class="text-[10px] text-neutral-400 font-bold uppercase block">Plano Fixo Mensal</span>
+                    <span class="text-xl font-black text-white">R$ 300,00</span>
+                    <span class="text-[10px] text-neutral-500 block mt-1">Sua mensalidade atual</span>
+                </div>
+                <div class="bg-neutral-800/80 p-4 rounded-xl border border-neutral-700">
+                    <span class="text-[10px] text-neutral-400 font-bold uppercase block">Entregas Dropship</span>
+                    <span class="text-xl font-black text-yellow-400" id="frete-qtd-entregas">0</span>
+                    <span class="text-[10px] text-neutral-500 block mt-1">Pedidos no mês</span>
+                </div>
+                <div class="bg-neutral-800/80 p-4 rounded-xl border border-neutral-700">
+                    <span class="text-[10px] text-neutral-400 font-bold uppercase block">Custo Estimado Avulso</span>
+                    <span class="text-xl font-black text-blue-400" id="frete-custo-avulso-total">R$ 0,00</span>
+                    <span class="text-[10px] text-neutral-500 block mt-1">Soma dos fretes avulsos</span>
+                </div>
+            </div>
+
+            <!-- PAINEL DE VEREDITO / RESULTADO -->
+            <div id="frete-painel-resultado" class="p-4 rounded-xl border text-xs space-y-1">
+                <!-- Preenchido via JavaScript -->
+            </div>
+
+            <div class="flex justify-end pt-2 border-t border-neutral-800">
+                <button type="button" onclick="fecharModalAnaliseFrete()" class="px-5 py-2.5 bg-neutral-800 hover:bg-neutral-700 text-neutral-200 font-bold text-xs rounded-xl">
+                    Fechar Consulta
+                </button>
+            </div>
+        </div>
+    </div>
     <!-- TOAST DE NOTIFICAÇÃO -->
     <div id="toast" class="fixed bottom-5 right-5 bg-neutral-900 text-white border border-yellow-400 px-5 py-3 rounded-xl shadow-2xl transform translate-y-20 opacity-0 transition-all duration-300 flex items-center gap-3 z-[1001]">
         <i id="toast-icon" class="fa-solid fa-circle-check text-yellow-400 text-lg"></i>
@@ -2806,8 +2873,12 @@
                 
                 card.innerHTML = `
                     <div class="space-y-1.5 flex-1">
-                        <div class="flex items-center gap-2">
+                        <div class="flex items-center gap-2 flex-wrap">
                             <span class="text-xs font-bold text-yellow-400">Pedido #${p.id}</span>
+                            ${p.tipoEntrega === 'Retirada' ? 
+                                `<span class="px-2 py-0.5 text-[10px] rounded-full font-bold uppercase bg-blue-500/20 text-blue-300 border border-blue-500/40"><i class="fa-solid fa-store"></i> Retirada Balcão</span>` : 
+                                `<span class="px-2 py-0.5 text-[10px] rounded-full font-bold uppercase bg-yellow-500/20 text-yellow-300 border border-yellow-500/40"><i class="fa-solid fa-truck"></i> Entrega</span>`
+                            }
                             <span class="px-2.5 py-0.5 text-[10px] rounded-full font-bold uppercase ${jaEntregue ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30' : 'bg-amber-500/10 text-amber-400 border border-amber-500/30'}">
                                 ${escapeAttr(p.status)}
                             </span>
@@ -2859,8 +2930,8 @@
             const cli = appData.clientes.find(c => c.id == p.clienteId);
             const descProdutos = p.itens ? p.itens.map(i => `${i.servico || 'Item'} (${i.qtd}x)`).join(', ') : 'seu pedido';
             
-            const nomeCompleto = p.clienteNome || 'Cliente';
-            const primeiroNome = nomeCompleto.trim().split(' ')[0];
+            const nomeCompleto = p.clienteNome || "Cliente";
+            const primeiroNome = nomeCompleto.trim().split(" ")[0];
 
             let telClean = '';
             if (cli) {
@@ -2871,14 +2942,23 @@
                 }
             }
 
-            const msg = `*Atendimento PHSUBLIME (${usuarioAtualNome})*\n\n` +
-                        `Olá, *${primeiroNome}*! Tudo bem?\n\n` +
-                        `Passando para avisar que o seu pedido *#${p.id}* (*${descProdutos}*) da PHSUBLIME está agendado para ser entregue hoje! 🚚✨\n\n` +
-                        `Qualquer dúvida estamos à disposição. Obrigado! - *PHSUBLIME*`;
+            const isRetirada = (p.tipoEntrega === 'Retirada');
+
+            // MENSAGEM INTELIGENTE (Muda se for Retirada no Balcão ou Entrega em Domicílio)
+            const msg = isRetirada ?
+                "*Atendimento PHSUBLIME (" + usuarioAtualNome + ")*\n\n" +
+                "Olá, *" + primeiroNome + "*! Tudo bem?\n\n" +
+                "Passando para avisar que o seu pedido *#" + p.id + "* (*" + descProdutos + "*) já está *PRONTO PARA RETIRADA* na PHSUBLIME! 📦✨\n\n" +
+                "Pode vir retirar no balcão quando desejar. Qualquer dúvida estamos à disposição! - *PHSUBLIME*" :
+                
+                "*Atendimento PHSUBLIME (" + usuarioAtualNome + ")*\n\n" +
+                "Olá, *" + primeiroNome + "*! Tudo bem?\n\n" +
+                "Passando para avisar que o seu pedido *#" + p.id + "* (*" + descProdutos + "*) da PHSUBLIME está agendado para ser entregue hoje! 🚚✨\n\n" +
+                "Qualquer dúvida estamos à disposição. Obrigado! - *PHSUBLIME*";
 
             const url = telClean ? 
-                `https://api.whatsapp.com/send?phone=${telClean}&text=${encodeURIComponent(msg)}` : 
-                `https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`;
+                "https://api.whatsapp.com/send?phone=" + telClean + "&text=" + encodeURIComponent(msg) : 
+                "https://api.whatsapp.com/send?text=" + encodeURIComponent(msg);
 
             window.open(url, '_blank');
         }
@@ -3222,6 +3302,14 @@
             calcularTotalPedidoAutomatico();
             
             document.getElementById('ped-data-entrega').value = appData.dataAtual;
+            if (document.getElementById('ped-tipo-entrega')) {
+                document.getElementById('ped-tipo-entrega').value = 'Entrega';
+            }
+            if (document.getElementById('ped-custo-frete-avulso')) {
+                document.getElementById('ped-custo-frete-avulso').value = '21.00';
+            }
+            alternarCamposLogistica();
+
             document.getElementById('modal-pedido').classList.remove('hidden');
         }
 
@@ -3258,6 +3346,13 @@
             calcularTotalPedidoAutomatico();
 
             document.getElementById('ped-data-entrega').value = p.dataEntrega || appData.dataAtual;
+            if (document.getElementById('ped-tipo-entrega')) {
+                document.getElementById('ped-tipo-entrega').value = p.tipoEntrega || 'Entrega';
+            }
+            if (document.getElementById('ped-custo-frete-avulso')) {
+                document.getElementById('ped-custo-frete-avulso').value = p.custoFreteAvulso !== undefined ? p.custoFreteAvulso : 21.00;
+            }
+            alternarCamposLogistica();
             document.getElementById('ped-responsavel').value = p.responsavel || usuarioAtualNome;
             
             if (p.formaPagamento && p.formaPagamento.includes('Misto')) {
@@ -3530,12 +3625,14 @@
 
             const idSeguro = pedId ? parseInt(pedId) : Math.floor(100000000 + Math.random() * 900000000);
 
-           const pedData = {
+            const pedData = {
                 id: idSeguro,
                 data: appData.dataAtual,
                 clienteId: clienteId,
                 clienteNome: nomeClienteFinal,
                 codigoExterno: document.getElementById('ped-codigo-externo').value.trim(),
+                tipoEntrega: document.getElementById('ped-tipo-entrega')?.value || 'Entrega',
+                custoFreteAvulso: parseFloat(document.getElementById('ped-custo-frete-avulso')?.value || 21.00),
                 itens: [...itensPedidoTemp],
                 total: total,
                 despesa: despesa,
@@ -3590,24 +3687,23 @@
             let countProducao = 0;
             let countTotal = appData.pedidos.length;
 
-           // ORDENAÇÃO INTELIGENTE: Usa hora, data e ordem de criação no banco
-const getTime = (p) => {
-    if (p.created_at) {
-        const t = new Date(p.created_at).getTime();
-        if (!isNaN(t)) return t;
-    }
-    if (p.data) {
-        const t = new Date(p.data + 'T00:00:00').getTime();
-        if (!isNaN(t)) return t;
-    }
-    return 0;
-};
+            const getTime = (p) => {
+                if (p.created_at) {
+                    const t = new Date(p.created_at).getTime();
+                    if (!isNaN(t)) return t;
+                }
+                if (p.data) {
+                    const t = new Date(p.data + 'T00:00:00').getTime();
+                    if (!isNaN(t)) return t;
+                }
+                return 0;
+            };
 
-const pedidosOrdenados = [...appData.pedidos].sort((a, b) => {
-    const timeDiff = getTime(b) - getTime(a);
-    if (timeDiff !== 0) return timeDiff;
-    return (b._originalIndex || 0) - (a._originalIndex || 0);
-});
+            const pedidosOrdenados = [...appData.pedidos].sort((a, b) => {
+                const timeDiff = getTime(b) - getTime(a);
+                if (timeDiff !== 0) return timeDiff;
+                return (b._originalIndex || 0) - (a._originalIndex || 0);
+            });
 
             pedidosOrdenados.forEach(p => {
                 if (p.status === 'AGUARDANDO') countNovos++;
@@ -3874,6 +3970,7 @@ const pedidosOrdenados = [...appData.pedidos].sort((a, b) => {
                 }
             }
         }
+
         // ================= FUNÇÕES DO MÓDULO: DESPESAS =================
         function abrirModalNovaDespesa() {
             document.getElementById('modal-despesa-titulo').innerHTML = `<i class="fa-solid fa-file-invoice-dollar"></i> Nova Despesa`;
@@ -5154,7 +5251,70 @@ if (!appData.servicosChart) {
             await carregarDados();
             mostrarToast("Mês fechado e arquivado com sucesso no Histórico!");
         }
+function alternarCamposLogistica() {
+            const tipo = document.getElementById('ped-tipo-entrega')?.value;
+            const containerFrete = document.getElementById('container-custo-frete-avulso');
+            if (containerFrete) {
+                if (tipo === 'Retirada') {
+                    containerFrete.classList.add('hidden');
+                } else {
+                    containerFrete.classList.remove('hidden');
+                }
+            }
+        }
 
+        function abrirModalAnaliseFrete() {
+            let totalEntregasDrop = 0;
+            let totalCustoAvulsoAcumulado = 0;
+            const PLANO_FIXO = 300.00;
+
+            appData.pedidos.forEach(p => {
+                // Considera apenas pedidos válidos que são do tipo Entrega/Dropship
+                if (p.status !== 'Cancelado' && (p.tipoEntrega === 'Entrega' || !p.tipoEntrega)) {
+                    totalEntregasDrop++;
+                    const costoUnit = p.custoFreteAvulso !== undefined ? parseFloat(p.custoFreteAvulso) : 21.00;
+                    totalCustoAvulsoAcumulado += costoUnit;
+                }
+            });
+
+            document.getElementById('frete-qtd-entregas').innerText = totalEntregasDrop;
+            document.getElementById('frete-custo-avulso-total').innerText = `R$ ${totalCustoAvulsoAcumulado.toFixed(2)}`;
+
+            const painelResultado = document.getElementById('frete-painel-resultado');
+            const diferenca = totalCustoAvulsoAcumulado - PLANO_FIXO;
+
+            if (totalEntregasDrop === 0) {
+                painelResultado.className = "p-4 rounded-xl border border-neutral-700 bg-neutral-800 text-neutral-300 text-xs";
+                painelResultado.innerHTML = `
+                    <strong class="text-white block text-sm">Nenhuma entrega Dropship cadastrada este mês</strong>
+                    <p>Assim que cadastrar pedidos do tipo "Entrega", a comparação aparecerá aqui.</p>
+                `;
+            } else if (diferenca > 0) {
+                painelResultado.className = "p-4 rounded-xl border border-emerald-500/50 bg-emerald-950/30 text-emerald-200 text-xs space-y-1";
+                painelResultado.innerHTML = `
+                    <strong class="text-emerald-400 text-sm font-black flex items-center gap-1.5">
+                        <i class="fa-solid fa-circle-check"></i> O PLANO FIXO (R$ 300,00) VALE A PENA!
+                    </strong>
+                    <p>Se você pagasse cada entrega separadamente no avulso, gastaria <strong>R$ ${totalCustoAvulsoAcumulado.toFixed(2)}</strong>.</p>
+                    <p class="font-bold text-white">Você economizou R$ ${diferenca.toFixed(2)} este mês ao manter o plano fixo!</p>
+                `;
+            } else {
+                painelResultado.className = "p-4 rounded-xl border border-rose-500/50 bg-rose-950/30 text-rose-200 text-xs space-y-1";
+                painelResultado.innerHTML = `
+                    <strong class="text-rose-400 text-sm font-black flex items-center gap-1.5">
+                        <i class="fa-solid fa-circle-xmark"></i> O PLANO FIXO NÃO ESTÁ VALENDO A PENA!
+                    </strong>
+                    <p>Se você pagasse cada entrega separadamente no avulso, gastaria apenas <strong>R$ ${totalCustoAvulsoAcumulado.toFixed(2)}</strong>.</p>
+                    <p class="font-bold text-white">Você está tendo R$ ${Math.abs(diferenca).toFixed(2)} de prejuízo por causa da taxa fixa de R$ 300,00.</p>
+                `;
+            }
+
+            document.getElementById('modal-analise-frete').classList.remove('hidden');
+        }
+
+        function fecharModalAnaliseFrete() {
+            document.getElementById('modal-analise-frete').classList.add('hidden');
+        }
         window.onload = verificarSessao;
         function abrirModalMassaEstoque() {
     document.getElementById('input-massa-estoque-texto').value = '';
