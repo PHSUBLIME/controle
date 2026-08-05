@@ -2791,13 +2791,18 @@
                     const cli = appData.clientes.find(c => c.id == p.clienteId);
                     const descProdutos = p.itens ? p.itens.map(i => `${i.servico || 'Item'} (${i.qtd}x)`).join(', ') : 'Serviço';
                     const telefoneCli = cli ? (cli.whatsapp || cli.telefone || '') : '';
+                    const isRetirada = p.tipoEntrega === 'Retirada';
 
                     const card = document.createElement('div');
                     card.className = 'bg-rose-950/40 border-2 border-rose-500/80 p-5 rounded-2xl transition-all flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 shadow-lg shadow-rose-950/30';
                     card.innerHTML = `
                         <div class="space-y-1.5 flex-1">
-                            <div class="flex items-center gap-2">
+                            <div class="flex items-center gap-2 flex-wrap">
                                 <span class="text-xs font-bold text-rose-400">Pedido #${p.id}</span>
+                                ${isRetirada ? 
+                                    `<span class="px-2.5 py-0.5 text-[10px] rounded-full font-bold uppercase bg-blue-500/20 text-blue-300 border border-blue-500/40"><i class="fa-solid fa-store"></i> RETIRAR NO BALCÃO</span>` : 
+                                    `<span class="px-2.5 py-0.5 text-[10px] rounded-full font-bold uppercase bg-amber-500/20 text-amber-300 border border-amber-500/40"><i class="fa-solid fa-truck"></i> ENTREGA DROPSHIPPING</span>`
+                                }
                                 <span class="px-2.5 py-0.5 text-[10px] rounded-full font-bold uppercase bg-rose-500/20 text-rose-300 border border-rose-500/40">
                                     🚨 ATRASADO (PREVISTO: ${p.dataEntrega})
                                 </span>
@@ -2822,7 +2827,7 @@
 
                             <div class="flex flex-wrap items-center gap-2 w-full sm:w-auto">
                                 <button onclick="enviarMensagemWhatsAppEntrega(${p.id})" class="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2.5 rounded-xl text-xs shadow-lg shadow-emerald-950/40 transition-all">
-                                    <i class="fa-brands fa-whatsapp text-base"></i> Avisar Whats
+                                    <i class="fa-brands fa-whatsapp text-base"></i> ${isRetirada ? '📦 Produto Pronto! Avisar Retirada' : '🚚 Avisar Entrega Hoje'}
                                 </button>
                                 <button onclick="concluirEntregaRapida(${p.id})" class="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-yellow-400 hover:bg-yellow-300 text-black font-bold px-4 py-2.5 rounded-xl text-xs shadow-lg shadow-yellow-950/30 transition-all">
                                     <i class="fa-solid fa-circle-check"></i> Marcar Entregue
@@ -2855,7 +2860,7 @@
                 container.innerHTML = `
                     <div class="bg-neutral-900 border border-neutral-800 p-8 rounded-2xl text-center space-y-2">
                         <i class="fa-solid fa-circle-check text-4xl text-emerald-400 mb-2 block"></i>
-                        <h3 class="text-lg font-bold text-white">Nenhum pedido agendado para entrega hoje!</h3>
+                        <h3 class="text-lg font-bold text-white">Nenhum pedido agendado para entrega ou retirada hoje!</h3>
                         <p class="text-xs text-neutral-400">Todos os pedidos agendados para a data de hoje já foram finalizados ou não existem novos agendamentos.</p>
                     </div>
                 `;
@@ -2867,6 +2872,7 @@
                 const descProdutos = p.itens ? p.itens.map(i => `${i.servico || 'Item'} (${i.qtd}x)`).join(', ') : 'Serviço';
                 const telefoneCli = cli ? (cli.whatsapp || cli.telefone || '') : '';
                 const jaEntregue = p.status === 'Entregue';
+                const isRetirada = p.tipoEntrega === 'Retirada';
 
                 const card = document.createElement('div');
                 card.className = `bg-neutral-900 border ${jaEntregue ? 'border-emerald-500/40 bg-emerald-950/10' : 'border-neutral-800 hover:border-yellow-400/40'} p-5 rounded-2xl transition-all flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4`;
@@ -2875,9 +2881,9 @@
                     <div class="space-y-1.5 flex-1">
                         <div class="flex items-center gap-2 flex-wrap">
                             <span class="text-xs font-bold text-yellow-400">Pedido #${p.id}</span>
-                            ${p.tipoEntrega === 'Retirada' ? 
-                                `<span class="px-2 py-0.5 text-[10px] rounded-full font-bold uppercase bg-blue-500/20 text-blue-300 border border-blue-500/40"><i class="fa-solid fa-store"></i> Retirada Balcão</span>` : 
-                                `<span class="px-2 py-0.5 text-[10px] rounded-full font-bold uppercase bg-yellow-500/20 text-yellow-300 border border-yellow-500/40"><i class="fa-solid fa-truck"></i> Entrega</span>`
+                            ${isRetirada ? 
+                                `<span class="px-2.5 py-0.5 text-[10px] rounded-full font-bold uppercase bg-blue-500/20 text-blue-300 border border-blue-500/40"><i class="fa-solid fa-store"></i> RETIRAR NO BALCÃO</span>` : 
+                                `<span class="px-2.5 py-0.5 text-[10px] rounded-full font-bold uppercase bg-amber-500/20 text-amber-300 border border-amber-500/40"><i class="fa-solid fa-truck"></i> ENTREGA DROPSHIPPING</span>`
                             }
                             <span class="px-2.5 py-0.5 text-[10px] rounded-full font-bold uppercase ${jaEntregue ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30' : 'bg-amber-500/10 text-amber-400 border border-amber-500/30'}">
                                 ${escapeAttr(p.status)}
@@ -2904,7 +2910,7 @@
 
                         <div class="flex flex-wrap items-center gap-2 w-full sm:w-auto">
                             <button onclick="enviarMensagemWhatsAppEntrega(${p.id})" class="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2.5 rounded-xl text-xs shadow-lg shadow-emerald-950/40 transition-all">
-                                <i class="fa-brands fa-whatsapp text-base"></i> Avisar no WhatsApp
+                                <i class="fa-brands fa-whatsapp text-base"></i> ${isRetirada ? '📦 Produto Pronto! Avisar Retirada' : '🚚 Avisar Entrega Hoje'}
                             </button>
 
                             ${!jaEntregue ? `
@@ -2922,7 +2928,6 @@
                 container.appendChild(card);
             });
         }
-
         function enviarMensagemWhatsAppEntrega(pedidoId) {
             const p = appData.pedidos.find(x => x.id == pedidoId);
             if (!p) return;
