@@ -1543,6 +1543,7 @@
                                 <input type="text" id="item-estoque-input" list="dl-estoque" onchange="selecionarMaterialDoEstoque(this.value)" placeholder="Digite para buscar no estoque..." class="w-full bg-neutral-800 border border-neutral-700 rounded-lg p-2 text-white focus:outline-none focus:border-yellow-400 transition-all text-xs">
                                 <datalist id="dl-estoque"></datalist>
                                 <input type="hidden" id="item-estoque-id">
+                                <input type="hidden" id="item-tipo-cobranca" value="Unidade">
                             </div>
                             <div>
                                 <label class="block text-neutral-400 font-medium mb-1">Serviço / Item <span class="text-rose-400">*</span></label>
@@ -1700,11 +1701,17 @@
                     </div>
                     <div>
                         <label class="block text-emerald-400 text-xs font-bold uppercase mb-1">Status Pagamento</label>
-                        <select id="ped-status-pagamento" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-emerald-400 text-xs font-bold">
-                            <option value="Pendente">🔴 Pendente (0%)</option>
-                            <option value="Sinal 50%">🟡 Sinal (50% Pago)</option>
+                        <select id="ped-status-pagamento" onchange="alternarCampoSinalCustom()" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-emerald-400 text-xs font-bold">
+                            <option value="Pendente">🔴 Pendente (0% Pago)</option>
+                            <option value="Sinal 50%">🟡 Sinal / Pagamento Parcial</option>
                             <option value="Pago 100%">🟢 Pago (100% Quitado)</option>
                         </select>
+                    </div>
+
+                    <!-- NOVO CAMPO: VALOR PAGO PERSONALIZADO -->
+                    <div id="container-valor-sinal-custom" class="hidden">
+                        <label class="block text-yellow-400 text-xs font-bold uppercase mb-1">Valor Pago Agora (R$)</label>
+                        <input type="number" step="0.01" id="ped-valor-pago-custom" placeholder="0.00" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-yellow-300 font-bold focus:outline-none text-xs">
                     </div>
                 </div>
 
@@ -2605,6 +2612,9 @@
 
             if (item) {
                 document.getElementById('item-estoque-id').value = item.id;
+                if (document.getElementById('item-tipo-cobranca')) {
+                    document.getElementById('item-tipo-cobranca').value = item.tipoCobranca || 'Unidade';
+                }
                 document.getElementById('item-servico').value = item.nome;
                 document.getElementById('item-material').value = item.nome;
 
@@ -2627,6 +2637,9 @@
                 }
             } else {
                 document.getElementById('item-estoque-id').value = '';
+                if (document.getElementById('item-tipo-cobranca')) {
+                    document.getElementById('item-tipo-cobranca').value = 'Unidade';
+                }
                 if (containerTiragem) containerTiragem.classList.add('hidden');
             }
         }
@@ -2653,9 +2666,11 @@
             const alt = parseFloat(document.getElementById('item-altura').value) || 0;
             const custoUnit = parseFloat(document.getElementById('item-custo-unitario').value) || 0;
             const vendaUnit = parseFloat(document.getElementById('item-venda-unitario').value) || 0;
+            const tipoCobranca = document.getElementById('item-tipo-cobranca')?.value || 'Unidade';
 
-            const temMedidas = (larg > 0 && alt > 0);
-            const areaM2 = temMedidas ? ((larg / 100) * (alt / 100)) : 1;
+            // Só multiplica pela área M² se a cobrança do produto for MetroQuadrado!
+            const isM2 = (tipoCobranca === 'MetroQuadrado');
+            const areaM2 = (isM2 && larg > 0 && alt > 0) ? ((larg / 100) * (alt / 100)) : 1;
 
             const totalDespesa = areaM2 * custoUnit * qtd;
             document.getElementById('item-despesa').value = totalDespesa > 0 ? totalDespesa.toFixed(2) : '0.00';
@@ -3302,6 +3317,8 @@
             document.getElementById('ped-valor-arte').value = '0.00';
             document.getElementById('ped-valor-entrega').value = '0.00';
             document.getElementById('ped-status-pagamento').value = 'Pendente';
+            const customInput = document.getElementById('ped-valor-pago-custom');
+            if (customInput) customInput.value = '';
 
             document.getElementById('ped-responsavel').value = usuarioAtualNome;
 
@@ -3322,6 +3339,7 @@
                 document.getElementById('ped-custo-frete-avulso').value = '21.00';
             }
             alternarCamposLogistica();
+            alternarCampoSinalCustom();
 
             document.getElementById('modal-pedido').classList.remove('hidden');
         }
@@ -3366,6 +3384,11 @@
                 document.getElementById('ped-custo-frete-avulso').value = p.custoFreteAvulso !== undefined ? p.custoFreteAvulso : 21.00;
             }
             alternarCamposLogistica();
+            if (p.statusPagamento === 'Sinal 50%' || p.statusPagamento === 'Sinal / Parcial') {
+                const inputCustom = document.getElementById('ped-valor-pago-custom');
+                if (inputCustom) inputCustom.value = parseFloat(p.valorPago !== undefined ? p.valorPago : (p.total * 0.5)).toFixed(2);
+            }
+            alternarCampoSinalCustom();
             document.getElementById('ped-responsavel').value = p.responsavel || usuarioAtualNome;
             
             if (p.formaPagamento && p.formaPagamento.includes('Misto')) {
@@ -3385,6 +3408,9 @@
             indexItemEdicao = null;
             document.getElementById('item-estoque-input').value = '';
             document.getElementById('item-estoque-id').value = '';
+            if (document.getElementById('item-tipo-cobranca')) {
+                document.getElementById('item-tipo-cobranca').value = 'Unidade';
+            }
             document.getElementById('item-servico').value = '';
             document.getElementById('item-material').value = '';
             document.getElementById('item-qtd').value = '1';
@@ -3624,8 +3650,14 @@
 
             const stPag = document.getElementById('ped-status-pagamento').value || 'Pendente';
             let valorPagoCalc = 0;
-            if (stPag === 'Pago 100%') valorPagoCalc = total;
-            else if (stPag === 'Sinal 50%') valorPagoCalc = total * 0.5;
+            if (stPag === 'Pago 100%') {
+                valorPagoCalc = total;
+            } else if (stPag === 'Pendente') {
+                valorPagoCalc = 0;
+            } else {
+                const valCustom = parseFloat(document.getElementById('ped-valor-pago-custom')?.value);
+                valorPagoCalc = !isNaN(valCustom) ? valCustom : (total * 0.5);
+            }
 
             let detalhePag = formaPag;
             if (formaPag === 'Parte Dinheiro / Parte Pix') {
@@ -3733,7 +3765,7 @@
 
                 let badgePag = 'bg-rose-500/20 text-rose-400 border-rose-500/40';
                 if (stPag === 'Pago 100%') badgePag = 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40';
-                else if (stPag === 'Sinal 50%') badgePag = 'bg-yellow-500/20 text-yellow-400 border-yellow-500/40';
+                else if (stPag === 'Sinal 50%' || stPag === 'Sinal / Parcial') badgePag = 'bg-yellow-500/20 text-yellow-400 border-yellow-500/40';
 
                 const buscaTexto = `${p.id} ${codExt} ${p.clienteNome} ${descProdutos} ${resp} ${p.status} ${stPag}`.toLowerCase();
                 if (busca && !buscaTexto.includes(busca)) return;
@@ -3764,7 +3796,7 @@
                     <td class="p-3">
                         <select onchange="alterarStatusPagamentoPedido(${p.id}, this.value)" class="bg-neutral-800 text-xs border border-neutral-700 rounded-lg p-1 font-bold focus:outline-none ${badgePag}">
                             <option value="Pendente" ${stPag==='Pendente'?'selected':''}>🔴 Pendente</option>
-                            <option value="Sinal 50%" ${stPag==='Sinal 50%'?'selected':''}>🟡 Sinal 50%</option>
+                            <option value="Sinal 50%" ${stPag==='Sinal 50%'||stPag==='Sinal / Parcial'?'selected':''}>🟡 Sinal / Parcial</option>
                             <option value="Pago 100%" ${stPag==='Pago 100%'?'selected':''}>🟢 Pago 100%</option>
                         </select>
                     </td>
@@ -3913,7 +3945,7 @@
             
             const elSt = document.getElementById('recibo-status-pag');
             elSt.innerText = stPag;
-            elSt.className = stPag === 'Pago 100%' ? 'font-bold uppercase text-emerald-400' : (stPag === 'Sinal 50%' ? 'font-bold uppercase text-yellow-400' : 'font-bold uppercase text-rose-400');
+            elSt.className = stPag === 'Pago 100%' ? 'font-bold uppercase text-emerald-400' : (stPag === 'Sinal 50%' || stPag === 'Sinal / Parcial' ? 'font-bold uppercase text-yellow-400' : 'font-bold uppercase text-rose-400');
 
             document.getElementById('modal-comprovante-pedido').classList.remove('hidden');
         }
@@ -5096,67 +5128,60 @@
             }
 
             const servicosMap = {};
-appData.pedidos.forEach(p => {
-    if (p.status !== 'Cancelado' && p.itens) {
-        p.itens.forEach(i => {
-            const nomeS = i.servico || 'Outros';
-            // Soma 1 por venda realizada para dar peso proporcional a todos os serviços
-            servicosMap[nomeS] = (servicosMap[nomeS] || 0) + 1;
-        });
-    }
-});
+            appData.pedidos.forEach(p => {
+                if (p.status !== 'Cancelado' && p.itens) {
+                    p.itens.forEach(i => {
+                        const nomeS = i.servico || 'Outros';
+                        servicosMap[nomeS] = (servicosMap[nomeS] || 0) + 1;
+                    });
+                }
+            });
 
-const labelsServ = Object.keys(servicosMap).length > 0 ? Object.keys(servicosMap) : ['Nenhum serviço'];
-const dataServ = Object.keys(servicosMap).length > 0 ? Object.values(servicosMap) : [1];
+            const labelsServ = Object.keys(servicosMap).length > 0 ? Object.keys(servicosMap) : ['Nenhum serviço'];
+            const dataServ = Object.keys(servicosMap).length > 0 ? Object.values(servicosMap) : [1];
 
-if (!appData.servicosChart) {
-    const ctxS = document.getElementById('servicosChart').getContext('2d');
-    appData.servicosChart = new Chart(ctxS, {
-        type: 'doughnut',
-        data: {
-            labels: labelsServ,
-            datasets: [{
-                data: dataServ,
-                minAngle: 12,
-                backgroundColor: [
-                    '#facc15', // Amarelo PHSUBLIME
-                    '#3b82f6', // Azul
-                    '#10b981', // Verde
-                    '#f97316', // Laranja
-                    '#a855f7', // Roxo
-                    '#ec4899', // Rosa
-                    '#06b6d4', // Ciano
-                    '#f43f5e'  // Vermelho
-                ],
-                borderWidth: 2,
-                borderColor: '#18181b'
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: { 
-                legend: { 
-                    position: 'bottom', 
-                    labels: { 
-                        color: '#e4e4e7',
-                        padding: 12,
-                        font: { family: 'Inter', size: 11, weight: '600' }
-                    } 
-                } 
-            },
-            cutout: '65%'
+            if (!appData.servicosChart) {
+                const ctxS = document.getElementById('servicosChart').getContext('2d');
+                appData.servicosChart = new Chart(ctxS, {
+                    type: 'doughnut',
+                    data: {
+                        labels: labelsServ,
+                        datasets: [{
+                            data: dataServ,
+                            minAngle: 12,
+                            backgroundColor: [
+                                '#facc15', '#3b82f6', '#10b981', '#f97316', '#a855f7', '#ec4899', '#06b6d4', '#f43f5e'
+                            ],
+                            borderWidth: 2,
+                            borderColor: '#18181b'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { 
+                            legend: { 
+                                position: 'bottom', 
+                                labels: { 
+                                    color: '#e4e4e7',
+                                    padding: 12,
+                                    font: { family: 'Inter', size: 11, weight: '600' }
+                                } 
+                            } 
+                        },
+                        cutout: '65%'
+                    }
+                });
+            } else {
+                appData.servicosChart.data.labels = labelsServ;
+                appData.servicosChart.data.datasets[0].data = dataServ;
+                appData.servicosChart.data.datasets[0].backgroundColor = [
+                    '#facc15', '#3b82f6', '#10b981', '#f97316', '#a855f7', '#ec4899', '#06b6d4', '#f43f5e'
+                ];
+                appData.servicosChart.update();
+            }
         }
-    });
-} else {
-    appData.servicosChart.data.labels = labelsServ;
-    appData.servicosChart.data.datasets[0].data = dataServ;
-    appData.servicosChart.data.datasets[0].backgroundColor = [
-        '#facc15', '#3b82f6', '#10b981', '#f97316', '#a855f7', '#ec4899', '#06b6d4', '#f43f5e'
-    ];
-    appData.servicosChart.update();
-}
-}
+
         function copiarCSV() {
             let csv = "ID;Data;Cliente;Total;Despesa;StatusPagamento;Responsavel;Status\n";
             appData.pedidos.forEach(p => {
@@ -5264,17 +5289,16 @@ if (!appData.servicosChart) {
             await carregarDados();
             mostrarToast("Mês fechado e arquivado com sucesso no Histórico!");
         }
-function alternarCamposLogistica() {
+
+        function alternarCamposLogistica() {
             const tipo = document.getElementById('ped-tipo-entrega')?.value;
             const inputFrete = document.getElementById('ped-custo-frete-avulso');
             const containerFrete = document.getElementById('container-custo-frete-avulso');
             
-            // Deixa o campo SEMPRE VISÍVEL
             if (containerFrete) {
                 containerFrete.classList.remove('hidden');
             }
             
-            // Sugere R$ 16,90 se for Retirada e R$ 21,00 se for Entrega direta
             if (inputFrete) {
                 if (tipo === 'Retirada' && (inputFrete.value === '21.00' || inputFrete.value === '21' || !inputFrete.value)) {
                     inputFrete.value = '16.90';
@@ -5291,10 +5315,8 @@ function alternarCamposLogistica() {
 
             appData.pedidos.forEach(p => {
                 if (p.status !== 'Cancelado') {
-                    // Pega o custo do frete avulso (se não preenchido, usa 21 se entrega ou 16.90 se retirada)
                     const costoUnit = p.custoFreteAvulso !== undefined ? parseFloat(p.custoFreteAvulso) : (p.tipoEntrega === 'Retirada' ? 16.90 : 21.00);
                     
-                    // Soma no relatório qualquer frete que teve custo maior que R$ 0
                     if (costoUnit > 0) {
                         totalEntregasDrop++;
                         totalCustoAvulsoAcumulado += costoUnit;
@@ -5340,75 +5362,95 @@ function alternarCamposLogistica() {
         function fecharModalAnaliseFrete() {
             document.getElementById('modal-analise-frete').classList.add('hidden');
         }
+
+        function alternarCampoSinalCustom() {
+            const stPag = document.getElementById('ped-status-pagamento')?.value;
+            const containerCustom = document.getElementById('container-valor-sinal-custom');
+            const total = parseFloat(document.getElementById('ped-total')?.value || 0);
+
+            if (containerCustom) {
+                if (stPag === 'Sinal 50%') {
+                    containerCustom.classList.remove('hidden');
+                    const inputCustom = document.getElementById('ped-valor-pago-custom');
+                    if (inputCustom && (!inputCustom.value || inputCustom.value === '0.00')) {
+                        inputCustom.value = (total * 0.5).toFixed(2);
+                    }
+                } else {
+                    containerCustom.classList.add('hidden');
+                }
+            }
+        }
+
         window.onload = verificarSessao;
+
         function abrirModalMassaEstoque() {
-    document.getElementById('input-massa-estoque-texto').value = '';
-    document.getElementById('modal-massa-estoque').classList.remove('hidden');
-}
+            document.getElementById('input-massa-estoque-texto').value = '';
+            document.getElementById('modal-massa-estoque').classList.remove('hidden');
+        }
 
-function fecharModalMassaEstoque() {
-    document.getElementById('modal-massa-estoque').classList.add('hidden');
-}
+        function fecharModalMassaEstoque() {
+            document.getElementById('modal-massa-estoque').classList.add('hidden');
+        }
 
-async function processarMassaEstoque() {
-    const texto = document.getElementById('input-massa-estoque-texto').value.trim();
-    if (!texto) {
-        mostrarToast("Cole a lista de produtos do Excel antes de importar.", "erro");
-        return;
-    }
+        async function processarMassaEstoque() {
+            const texto = document.getElementById('input-massa-estoque-texto').value.trim();
+            if (!texto) {
+                mostrarToast("Cole a lista de produtos do Excel antes de importar.", "erro");
+                return;
+            }
 
-    const linhas = texto.split('\n');
-    let novosProdutos = [];
+            const linhas = texto.split('\n');
+            let novosProdutos = [];
 
-    linhas.forEach((linha, idx) => {
-        const nomeProduto = linha.trim();
-        if (!nomeProduto || nomeProduto === '-' || nomeProduto.startsWith('NULL') || nomeProduto === '0' || nomeProduto.toLowerCase() === 'nome') return;
+            linhas.forEach((linha, idx) => {
+                const nomeProduto = linha.trim();
+                if (!nomeProduto || nomeProduto === '-' || nomeProduto.startsWith('NULL') || nomeProduto === '0' || nomeProduto.toLowerCase() === 'nome') return;
 
-        let categoria = "Geral";
-        const nomeLower = nomeProduto.toLowerCase();
-        if (nomeLower.includes("cartão") || nomeLower.includes("folheto") || nomeLower.includes("panf")) categoria = "Gráfica Offset";
-        else if (nomeLower.includes("adesivo") || nomeLower.includes("vinil")) categoria = "Adesivos";
-        else if (nomeLower.includes("banner") || nomeLower.includes("lona")) categoria = "Comunicação Visual";
-        else if (nomeLower.includes("camisa") || nomeLower.includes("camiseta") || nomeLower.includes("top")) categoria = "Vestuário";
-        else if (nomeLower.includes("caneca") || nomeLower.includes("copo") || nomeLower.includes("taça")) categoria = "Brindes";
+                let categoria = "Geral";
+                const nomeLower = nomeProduto.toLowerCase();
+                if (nomeLower.includes("cartão") || nomeLower.includes("folheto") || nomeLower.includes("panf")) categoria = "Gráfica Offset";
+                else if (nomeLower.includes("adesivo") || nomeLower.includes("vinil")) categoria = "Adesivos";
+                else if (nomeLower.includes("banner") || nomeLower.includes("lona")) categoria = "Comunicação Visual";
+                else if (nomeLower.includes("camisa") || nomeLower.includes("camiseta") || nomeLower.includes("top")) categoria = "Vestuário";
+                else if (nomeLower.includes("caneca") || nomeLower.includes("copo") || nomeLower.includes("taça")) categoria = "Brindes";
 
-        const tipoCobranca = (nomeLower.includes("m²") || nomeLower.includes("m2")) ? "MetroQuadrado" : "Unidade";
+                const tipoCobranca = (nomeLower.includes("m²") || nomeLower.includes("m2")) ? "MetroQuadrado" : "Unidade";
 
-        novosProdutos.push({
-            id: Math.floor(100000000 + Math.random() * 900000000) + idx,
-            nome: nomeProduto,
-            tipoItem: "Fisico",
-            tipoCobranca: tipoCobranca,
-            categoria: categoria,
-            unidade: tipoCobranca === "MetroQuadrado" ? "Metros" : "Unidades",
-            qtd: 100,
-            qtdMinima: 10,
-            precoCusto: 0.00,
-            precoVenda: 0.00,
-            tiragens: [],
-            fornecedor: "Produção Própria",
-            obs: "Importado via Excel"
-        });
-    });
+                novosProdutos.push({
+                    id: Math.floor(100000000 + Math.random() * 900000000) + idx,
+                    nome: nomeProduto,
+                    tipoItem: "Fisico",
+                    tipoCobranca: tipoCobranca,
+                    categoria: categoria,
+                    unidade: tipoCobranca === "MetroQuadrado" ? "Metros" : "Unidades",
+                    qtd: 100,
+                    qtdMinima: 10,
+                    precoCusto: 0.00,
+                    precoVenda: 0.00,
+                    tiragens: [],
+                    fornecedor: "Produção Própria",
+                    obs: "Importado via Excel"
+                });
+            });
 
-    if (novosProdutos.length === 0) {
-        mostrarToast("Nenhum produto válido foi encontrado no texto colado.", "erro");
-        return;
-    }
+            if (novosProdutos.length === 0) {
+                mostrarToast("Nenhum produto válido foi encontrado no texto colado.", "erro");
+                return;
+            }
 
-    mostrarToast(`Enviando ${novosProdutos.length} produtos para o Supabase...`);
+            mostrarToast(`Enviando ${novosProdutos.length} produtos para o Supabase...`);
 
-    const { error } = await supabaseClient.from('estoque').insert(novosProdutos);
+            const { error } = await supabaseClient.from('estoque').insert(novosProdutos);
 
-    if (!error) {
-        fecharModalMassaEstoque();
-        await carregarDados();
-        mostrarToast(`${novosProdutos.length} produtos importados do Excel com sucesso! 🎉`);
-    } else {
-        console.error("Erro no Supabase:", error);
-        mostrarToast(`Erro ao importar: ${error.message}`, "erro");
-    }
-}
+            if (!error) {
+                fecharModalMassaEstoque();
+                await carregarDados();
+                mostrarToast(`${novosProdutos.length} produtos importados do Excel com sucesso! 🎉`);
+            } else {
+                console.error("Erro no Supabase:", error);
+                mostrarToast(`Erro ao importar: ${error.message}`, "erro");
+            }
+        }
     </script>
 </body>
 </html>
