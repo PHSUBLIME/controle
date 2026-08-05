@@ -1437,13 +1437,19 @@
                     <label class="block text-neutral-400 text-xs font-semibold mb-1">E-mail</label>
                     <input type="email" id="cli-email" placeholder="cliente@email.com" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400">
                 </div>
-                <div>
-                    <label class="block text-neutral-400 text-xs font-semibold mb-1">Cidade</label>
-                    <input type="text" id="cli-cidade" placeholder="Rio de Janeiro" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400">
-                </div>
-                <div>
-                    <label class="block text-neutral-400 text-xs font-semibold mb-1">Estado</label>
-                    <input type="text" id="cli-estado" placeholder="RJ" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400">
+                    <div class="md:col-span-2 grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div>
+                        <label class="block text-neutral-400 text-xs font-semibold mb-1">Bairro</label>
+                        <input type="text" id="cli-bairro" placeholder="Fragoso" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400">
+                    </div>
+                    <div>
+                        <label class="block text-neutral-400 text-xs font-semibold mb-1">Cidade</label>
+                        <input type="text" id="cli-cidade" placeholder="Magé" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400">
+                    </div>
+                    <div>
+                        <label class="block text-neutral-400 text-xs font-semibold mb-1">Estado</label>
+                        <input type="text" id="cli-estado" placeholder="Rio de Janeiro" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400">
+                    </div>
                 </div>
                 <div class="md:col-span-2">
                     <label class="block text-neutral-400 text-xs font-semibold mb-1">Endereço</label>
@@ -3051,6 +3057,7 @@
             document.getElementById('cli-telefone').value = cli.telefone || '';
             document.getElementById('cli-whatsapp').value = cli.whatsapp || '';
             document.getElementById('cli-email').value = cli.email || '';
+            if (document.getElementById('cli-bairro')) document.getElementById('cli-bairro').value = cli.bairro || '';
             document.getElementById('cli-cidade').value = cli.cidade || '';
             document.getElementById('cli-estado').value = cli.estado || '';
             document.getElementById('cli-endereco').value = cli.endereco || '';
@@ -3073,6 +3080,7 @@
                 telefone: document.getElementById('cli-telefone').value || '',
                 whatsapp: document.getElementById('cli-whatsapp').value || '',
                 email: document.getElementById('cli-email').value || '',
+                bairro: document.getElementById('cli-bairro')?.value || '',
                 cidade: document.getElementById('cli-cidade').value || '',
                 estado: document.getElementById('cli-estado').value || '',
                 endereco: document.getElementById('cli-endereco').value || '',
