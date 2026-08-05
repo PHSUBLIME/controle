@@ -5258,12 +5258,20 @@ if (!appData.servicosChart) {
         }
 function alternarCamposLogistica() {
             const tipo = document.getElementById('ped-tipo-entrega')?.value;
+            const inputFrete = document.getElementById('ped-custo-frete-avulso');
             const containerFrete = document.getElementById('container-custo-frete-avulso');
+            
+            // Deixa o campo SEMPRE VISÍVEL
             if (containerFrete) {
-                if (tipo === 'Retirada') {
-                    containerFrete.classList.add('hidden');
-                } else {
-                    containerFrete.classList.remove('hidden');
+                containerFrete.classList.remove('hidden');
+            }
+            
+            // Sugere R$ 16,90 se for Retirada e R$ 21,00 se for Entrega direta
+            if (inputFrete) {
+                if (tipo === 'Retirada' && (inputFrete.value === '21.00' || inputFrete.value === '21' || !inputFrete.value)) {
+                    inputFrete.value = '16.90';
+                } else if (tipo === 'Entrega' && (inputFrete.value === '16.90' || !inputFrete.value)) {
+                    inputFrete.value = '21.00';
                 }
             }
         }
@@ -5274,11 +5282,15 @@ function alternarCamposLogistica() {
             const PLANO_FIXO = 300.00;
 
             appData.pedidos.forEach(p => {
-                // Considera apenas pedidos válidos que são do tipo Entrega/Dropship
-                if (p.status !== 'Cancelado' && (p.tipoEntrega === 'Entrega' || !p.tipoEntrega)) {
-                    totalEntregasDrop++;
-                    const costoUnit = p.custoFreteAvulso !== undefined ? parseFloat(p.custoFreteAvulso) : 21.00;
-                    totalCustoAvulsoAcumulado += costoUnit;
+                if (p.status !== 'Cancelado') {
+                    // Pega o custo do frete avulso (se não preenchido, usa 21 se entrega ou 16.90 se retirada)
+                    const costoUnit = p.custoFreteAvulso !== undefined ? parseFloat(p.custoFreteAvulso) : (p.tipoEntrega === 'Retirada' ? 16.90 : 21.00);
+                    
+                    // Soma no relatório qualquer frete que teve custo maior que R$ 0
+                    if (costoUnit > 0) {
+                        totalEntregasDrop++;
+                        totalCustoAvulsoAcumulado += costoUnit;
+                    }
                 }
             });
 
@@ -5291,8 +5303,8 @@ function alternarCamposLogistica() {
             if (totalEntregasDrop === 0) {
                 painelResultado.className = "p-4 rounded-xl border border-neutral-700 bg-neutral-800 text-neutral-300 text-xs";
                 painelResultado.innerHTML = `
-                    <strong class="text-white block text-sm">Nenhuma entrega Dropship cadastrada este mês</strong>
-                    <p>Assim que cadastrar pedidos do tipo "Entrega", a comparação aparecerá aqui.</p>
+                    <strong class="text-white block text-sm">Nenhuma entrega ou envio Dropship registrado este mês</strong>
+                    <p>Assim que cadastrar pedidos com valor de frete avulso, a comparação aparecerá aqui.</p>
                 `;
             } else if (diferenca > 0) {
                 painelResultado.className = "p-4 rounded-xl border border-emerald-500/50 bg-emerald-950/30 text-emerald-200 text-xs space-y-1";
@@ -5300,7 +5312,7 @@ function alternarCamposLogistica() {
                     <strong class="text-emerald-400 text-sm font-black flex items-center gap-1.5">
                         <i class="fa-solid fa-circle-check"></i> O PLANO FIXO (R$ 300,00) VALE A PENA!
                     </strong>
-                    <p>Se você pagasse cada entrega separadamente no avulso, gastaria <strong>R$ ${totalCustoAvulsoAcumulado.toFixed(2)}</strong>.</p>
+                    <p>Se você pagasse cada frete separadamente no avulso, gastaria <strong>R$ ${totalCustoAvulsoAcumulado.toFixed(2)}</strong>.</p>
                     <p class="font-bold text-white">Você economizou R$ ${diferenca.toFixed(2)} este mês ao manter o plano fixo!</p>
                 `;
             } else {
@@ -5309,7 +5321,7 @@ function alternarCamposLogistica() {
                     <strong class="text-rose-400 text-sm font-black flex items-center gap-1.5">
                         <i class="fa-solid fa-circle-xmark"></i> O PLANO FIXO NÃO ESTÁ VALENDO A PENA!
                     </strong>
-                    <p>Se você pagasse cada entrega separadamente no avulso, gastaria apenas <strong>R$ ${totalCustoAvulsoAcumulado.toFixed(2)}</strong>.</p>
+                    <p>Se você pagasse cada frete separadamente no avulso, gastaria apenas <strong>R$ ${totalCustoAvulsoAcumulado.toFixed(2)}</strong>.</p>
                     <p class="font-bold text-white">Você está tendo R$ ${Math.abs(diferenca).toFixed(2)} de prejuízo por causa da taxa fixa de R$ 300,00.</p>
                 `;
             }
