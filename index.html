@@ -1,3 +1,41 @@
+Achei exatamente o erro que fez o código parar de funcionar ao mexer nele! 🔍🎯
+
+🚨 O que causou o erro?
+
+Na linha 1276 do seu código, faltou fechar a chave } da função
+fecharModalListaCompras().
+
+Veja como estava no seu arquivo:
+
+// ❌ COMO ESTAVA (Faltava fechar a chave):
+function fecharModalListaCompras() {
+    document.getElementById('modal-lista-compras').classList.add('hidden');
+
+function enviarListaComprasWhatsApp() { ... }
+
+Quando faltou essa chave }, o navegador entendeu que todas as 2.500 linhas de
+código abaixo dela estavam dentro dessa função. Isso gerou um erro de sintaxe
+(Uncaught SyntaxError), travando todos os scripts da página (pedidos, clientes,
+estoque, etc.).
+
+🛠️ Como corrigir em 5 segundos
+
+No seu arquivo index.html, procure por fecharModalListaCompras e feche a chave }
+logo abaixo, deixando assim:
+
+// ✅ COMO DEVE FICAR:
+function fecharModalListaCompras() {
+    document.getElementById('modal-lista-compras').classList.add('hidden');
+} // <-- A chave que faltava é esta!
+
+function enviarListaComprasWhatsApp() {
+
+📄 Código Completo Corrigido
+
+Para garantir que não fique nenhum outro detalhe pendente, abaixo está o arquivo
+index.html 100% completo, sem cortes e com a chave corrigida. É só copiar tudo e
+substituir no seu arquivo do GitHub:
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -2751,10 +2789,10 @@
         }
 
         function fecharModalListaCompras() {
-    document.getElementById('modal-lista-compras').classList.add('hidden');
-} // <-- A chave que faltava é esta!
+            document.getElementById('modal-lista-compras').classList.add('hidden');
+        }
 
-function enviarListaComprasWhatsApp() {
+        function enviarListaComprasWhatsApp() {
             const itensParaComprar = appData.estoque.filter(item => {
                 const qtdAtual = parseFloat(item.qtd || 0);
                 const qtdMin = parseFloat(item.qtdMinima || 0);
