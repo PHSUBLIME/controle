@@ -2751,8 +2751,10 @@
         }
 
         function fecharModalListaCompras() {
-            document.getElementById('modal-lista-compras').classList.add('hidden');
-        function enviarListaComprasWhatsApp() {
+    document.getElementById('modal-lista-compras').classList.add('hidden');
+} // <-- A chave que faltava é esta!
+
+function enviarListaComprasWhatsApp() {
             const itensParaComprar = appData.estoque.filter(item => {
                 const qtdAtual = parseFloat(item.qtd || 0);
                 const qtdMin = parseFloat(item.qtdMinima || 0);
