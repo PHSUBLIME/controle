@@ -517,7 +517,7 @@
             <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-neutral-900 p-6 rounded-2xl border border-neutral-800">
                 <div>
                     <h2 class="text-2xl font-black text-yellow-400 flex items-center gap-2">
-                        <i class="fa-solid fa-file-invoice-dollar text-yellow-400"></i> Controle de Despesas (Mês Ativo)
+                        <i class="fa-solid fa-file-invoice-dollar text-yellow-400"></i> Controle de Despesas
                     </h2>
                     <p class="text-neutral-400 text-sm mt-1">Calculado e atualizado automaticamente com base nos pedidos ativos, compras de insumos e parcelamentos.</p>
                 </div>
@@ -545,9 +545,20 @@
                 </div>
             </div>
 
-            <div class="bg-neutral-900 p-4 rounded-2xl border border-neutral-800 flex items-center gap-3">
-                <i class="fa-solid fa-magnifying-glass text-yellow-400 text-lg ml-2"></i>
-                <input type="text" id="input-pesquisar-despesa" onkeyup="renderizarDespesas()" placeholder="Pesquisar despesas por produto, loja, cadastrado por..." class="w-full bg-transparent text-white focus:outline-none text-sm placeholder-neutral-500">
+            <div class="bg-neutral-900 p-4 rounded-2xl border border-neutral-800 flex flex-col sm:flex-row items-center justify-between gap-3">
+                <div class="flex items-center gap-2 w-full sm:w-auto">
+                    <button onclick="filtrarDespesasAba('mes')" id="btn-desp-mes" class="px-4 py-2 rounded-xl text-xs font-bold bg-yellow-400 text-black shadow-md transition-all">
+                        📅 Mês Ativo
+                    </button>
+                    <button onclick="filtrarDespesasAba('todas')" id="btn-desp-todas" class="px-4 py-2 rounded-xl text-xs font-bold bg-neutral-800 text-neutral-300 hover:text-white flex items-center gap-1.5 transition-all">
+                        <i class="fa-solid fa-credit-card text-yellow-400"></i> 💳 Ver Parcelas Futuras / Geral
+                    </button>
+                </div>
+
+                <div class="flex items-center gap-3 w-full sm:w-80 bg-neutral-800 px-3 py-2 rounded-xl border border-neutral-700">
+                    <i class="fa-solid fa-magnifying-glass text-yellow-400"></i>
+                    <input type="text" id="input-pesquisar-despesa" onkeyup="renderizarDespesas()" placeholder="Pesquisar por produto, loja, cadastrado por..." class="w-full bg-transparent text-white focus:outline-none text-xs placeholder-neutral-500">
+                </div>
             </div>
 
             <div class="bg-neutral-900 p-6 rounded-2xl border border-neutral-800 overflow-x-auto">
@@ -665,8 +676,8 @@
                     </button>
 
                    <button onclick="abrirModalMassaEstoque()" class="flex items-center gap-2 bg-neutral-800 hover:bg-neutral-700 text-neutral-200 border border-neutral-700 px-4 py-2.5 rounded-xl font-medium text-sm transition-all">
-    <i class="fa-solid fa-file-import text-yellow-400"></i> Adicionar em Massa
-</button>
+                        <i class="fa-solid fa-file-import text-yellow-400"></i> Adicionar em Massa
+                    </button>
                     <button onclick="abrirModalEstoque()" class="flex items-center gap-2 bg-yellow-400 hover:bg-yellow-300 text-black font-bold px-4 py-2.5 rounded-xl text-sm transition-all shadow-lg shadow-yellow-950/30">
                         <i class="fa-solid fa-plus"></i> + Novo Item de Estoque
                     </button>
@@ -2025,6 +2036,7 @@
             vendasChart: null,
             servicosChart: null,
             abaPedidoFiltro: 'todos',
+            abaDespesaFiltro: 'mes',
             filtroApenasComprarEstoque: false
         };
 
@@ -2196,7 +2208,8 @@
             renderizarHistoricoFechamentos();
             atualizarGraficos();
         }
-       // ================= FUNÇÕES DO MÓDULO: ENTREGAS DE HOJE =================
+
+        // ================= FUNÇÕES DO MÓDULO: ENTREGAS DE HOJE =================
         function renderizarEntreguesHoje() {
             const container = document.getElementById('lista-entregas-hoje-container');
             const kpiCount = document.getElementById('kpi-entregas-hoje-count');
@@ -2776,16 +2789,17 @@
         }
 
         function popularDataListClientes() {
-            const dl = document.getElementById('dl-clientes');
-            if (!dl) return;
-            dl.innerHTML = '';
-            const clientesOrdenados = [...appData.clientes].sort((a, b) => (a.nome || '').localeCompare(b.nome || ''));
-            clientesOrdenados.forEach(c => {
-                const opt = document.createElement('option');
-                opt.value = `${c.nome} ${c.cpf ? `(${c.cpf})` : ''} [ID:${c.id}]`;
-                dl.appendChild(opt);
-            });
-        }
+    const dl = document.getElementById('dl-clientes');
+    if (!dl) return;
+    dl.innerHTML = '';
+    const clientesOrdenados = [...appData.clientes].sort((a, b) => (a.nome || '').localeCompare(b.nome || ''));
+    clientesOrdenados.forEach(c => {
+        const opt = document.createElement('option');
+        const cpfTexto = c.cpf ? '(' + c.cpf + ')' : '';
+        opt.value = `${c.nome} ${cpfTexto} [ID:${c.id}]`;
+        dl.appendChild(opt);
+    });
+}
 
         function selecionarClientePorInput(valor) {
             if (!valor) return;
@@ -2799,20 +2813,20 @@
         }
 
         function popularDataListEstoque() {
-            const dl = document.getElementById('dl-estoque');
-            if (!dl) return;
-            dl.innerHTML = '';
+    const dl = document.getElementById('dl-estoque');
+    if (!dl) return;
+    dl.innerHTML = '';
 
-            const estoqueOrdenado = [...appData.estoque].sort((a, b) => (a.nome || '').localeCompare(b.nome || ''));
+    const estoqueOrdenado = [...appData.estoque].sort((a, b) => (a.nome || '').localeCompare(b.nome || ''));
 
-            estoqueOrdenado.forEach(item => {
-                const opt = document.createElement('option');
-                opt.value = `${item.nome} [Estoque: ${item.qtd} ${item.unidade||'Un'}] [ID:${item.id}]`;
-                dl.appendChild(opt);
-            });
-        }
+    estoqueOrdenado.forEach(item => {
+        const opt = document.createElement('option');
+        opt.value = `${item.nome} [Estoque: ${item.qtd} ${item.unidade||'Un'}] [ID:${item.id}]`;
+        dl.appendChild(opt);
+    });
+}
 
-        function selecionarMaterialDoEstoque(valor) {
+function selecionarMaterialDoEstoque(valor) {
             if (!valor) return;
 
             let item = null;
@@ -4021,18 +4035,6 @@
             }
         }
 
-        function popularDataListClientes() {
-            const dl = document.getElementById('dl-clientes');
-            if (!dl) return;
-            dl.innerHTML = '';
-            const clientesOrdenados = [...appData.clientes].sort((a, b) => (a.nome || '').localeCompare(b.nome || ''));
-            clientesOrdenados.forEach(c => {
-                const opt = document.createElement('option');
-                opt.value = `${c.nome} ${c.cpf ? `(${c.cpf})` : ''} [ID:${c.id}]`;
-                dl.appendChild(opt);
-            });
-        }
-
         // ================= FUNÇÕES DO MÓDULO: DESPESAS =================
         function calcularPreviewParcela() {
             const valTotal = parseFloat(document.getElementById('desp-valor').value || 0);
@@ -4184,14 +4186,28 @@
             }
         }
 
+        function filtrarDespesasAba(aba) {
+            appData.abaDespesaFiltro = aba;
+            const btnMes = document.getElementById('btn-desp-mes');
+            const btnTodas = document.getElementById('btn-desp-todas');
+            if (btnMes) btnMes.className = aba === 'mes' ? 'px-4 py-2 rounded-xl text-xs font-bold bg-yellow-400 text-black shadow-md transition-all' : 'px-4 py-2 rounded-xl text-xs font-bold bg-neutral-800 text-neutral-300 hover:text-white transition-all';
+            if (btnTodas) btnTodas.className = aba === 'todas' ? 'px-4 py-2 rounded-xl text-xs font-bold bg-yellow-400 text-black shadow-md transition-all' : 'px-4 py-2 rounded-xl text-xs font-bold bg-neutral-800 text-neutral-300 hover:text-white transition-all';
+            renderizarDespesas();
+        }
+
         function renderizarDespesas() {
             const tbody = document.getElementById('tabela-despesas-body');
             if (!tbody) return;
             tbody.innerHTML = '';
-            const filtro = document.getElementById('input-pesquisar-despesa').value.toLowerCase();
 
+            const filtro = (document.getElementById('input-pesquisar-despesa')?.value || '').toLowerCase();
+            const mesAnoAtual = appData.dataAtual.substring(0, 7);
+
+            // 1. Custo de produção dos Pedidos
             appData.pedidos.forEach(p => {
                 if (p.despesa > 0 && p.status !== 'Cancelado') {
+                    if (appData.abaDespesaFiltro === 'mes' && p.data && !p.data.startsWith(mesAnoAtual)) return;
+
                     const descProdutos = p.itens ? p.itens.map(i => i.servico).join(', ') : 'Insumos do Pedido';
                     const resp = p.responsavel || 'N/I';
                     const buscaTexto = `pedido #${p.id} ${p.clienteNome} ${descProdutos} ${resp} custo producao`.toLowerCase();
@@ -4211,12 +4227,12 @@
                 }
             });
 
-            // Ordena as despesas por DATA CRESCENTE (1/9, 2/9, 3/9...)
-            const despesasOrdenadas = [...appData.despesasOutras].sort((a, b) => {
-                return (a.data || '').localeCompare(b.data || '');
-            });
+            // 2. Despesas Avulsas / Compras em Parcelas
+            const despesasOrdenadas = [...appData.despesasOutras].sort((a, b) => (a.data || '').localeCompare(b.data || ''));
 
             despesasOrdenadas.forEach(d => {
+                if (appData.abaDespesaFiltro === 'mes' && d.data && !d.data.startsWith(mesAnoAtual)) return;
+
                 const regPor = d.registradoPor || 'N/I';
                 const buscaTexto = `${d.nome} ${d.loja} ${d.tipoPagamento} ${regPor}`.toLowerCase();
                 if (!filtro || buscaTexto.includes(filtro)) {
@@ -4245,6 +4261,7 @@
                 }
             });
         }
+
         async function excluirDespesaAvulsa(id) {
             const confirmou = await confirmarAcao("Excluir Despesa", "Deseja realmente excluir esta despesa?", "Sim, Excluir");
             if (confirmou) {
@@ -4304,7 +4321,6 @@
                 }
             });
 
-            // Mostra APENAS as despesas do mês atual no extrato financeiro
             appData.despesasOutras.forEach(d => {
                 if (d.data && d.data.startsWith(mesAnoAtual)) {
                     movimentacoes.push({
