@@ -2109,6 +2109,7 @@
 
         function atualizarInterfaceCompleta() {
             const hojeStr = appData.dataAtual;
+            const mesAnoAtual = hojeStr.substring(0, 7); // Ex: "2026-08"
             
             const pData = appData.dataAtual.split('-');
             if (pData.length === 3) {
@@ -2155,8 +2156,11 @@
                 }
             });
 
+            // FILTRO DE SEGURANÇA: Soma APENAS as despesas pertencentes ao mês ativo!
             appData.despesasOutras.forEach(d => {
-                despesaOutrasGeral += parseFloat(d.valor || 0);
+                if (d.data && d.data.startsWith(mesAnoAtual)) {
+                    despesaOutrasGeral += parseFloat(d.valor || 0);
+                }
             });
 
             const totalDespesaGeral = despesaPedidosGeral + despesaOutrasGeral;
@@ -4210,7 +4214,12 @@
                 }
             });
 
-            appData.despesasOutras.forEach(d => {
+            // Ordena as despesas por DATA CRESCENTE (1/9, 2/9, 3/9...)
+            const despesasOrdenadas = [...appData.despesasOutras].sort((a, b) => {
+                return (a.data || '').localeCompare(b.data || '');
+            });
+
+            despesasOrdenadas.forEach(d => {
                 const regPor = d.registradoPor || 'N/I';
                 const buscaTexto = `${d.nome} ${d.loja} ${d.tipoPagamento} ${regPor}`.toLowerCase();
                 if (!filtro || buscaTexto.includes(filtro)) {
@@ -4239,7 +4248,6 @@
                 }
             });
         }
-
         async function excluirDespesaAvulsa(id) {
             const confirmou = await confirmarAcao("Excluir Despesa", "Deseja realmente excluir esta despesa?", "Sim, Excluir");
             if (confirmou) {
@@ -4260,6 +4268,7 @@
             tbody.innerHTML = '';
 
             const filtro = (document.getElementById('input-pesquisar-financeiro')?.value || '').toLowerCase();
+            const mesAnoAtual = appData.dataAtual.substring(0, 7);
 
             let movimentacoes = [];
 
@@ -4298,17 +4307,20 @@
                 }
             });
 
+            // Mostra APENAS as despesas do mês atual no extrato financeiro
             appData.despesasOutras.forEach(d => {
-                movimentacoes.push({
-                    data: d.data,
-                    tipo: 'Saída',
-                    categoria: 'Despesa Operacional',
-                    descricao: `${d.nome} ${d.loja ? `(${d.loja})` : ''} - Resp: ${d.registradoPor || 'N/I'}`,
-                    valor: parseFloat(d.valor || 0),
-                    metodo: d.tipoPagamento || 'Pix',
-                    origemTipo: 'despesa',
-                    origemId: d.id
-                });
+                if (d.data && d.data.startsWith(mesAnoAtual)) {
+                    movimentacoes.push({
+                        data: d.data,
+                        tipo: 'Saída',
+                        categoria: 'Despesa Operacional',
+                        descricao: `${d.nome} ${d.loja ? `(${d.loja})` : ''} - Resp: ${d.registradoPor || 'N/I'}`,
+                        valor: parseFloat(d.valor || 0),
+                        metodo: d.tipoPagamento || 'Pix',
+                        origemTipo: 'despesa',
+                        origemId: d.id
+                    });
+                }
             });
 
             movimentacoes.sort((a, b) => new Date(b.data) - new Date(a.data));
@@ -4346,7 +4358,7 @@
             });
 
             if (exibidos === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" class="p-4 text-center text-neutral-500 text-xs">Nenhuma movimentação financeira encontrada.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="7" class="p-4 text-center text-neutral-500 text-xs">Nenhuma movimentação financeira encontrada para este mês.</td></tr>`;
             }
         }
 
