@@ -1304,26 +1304,40 @@
                 }
 
                 if (clienteEncontrado) {
-                    if (clienteEncontrado.senha) {
-                        if (senhaDigitada && clienteEncontrado.senha !== senhaDigitada) {
+                    if (clienteEncontrado.senha && senhaDigitada) {
+                        if (clienteEncontrado.senha !== senhaDigitada) {
                             mostrarToast("Senha incorreta! Acesso negado por segurança.", "erro");
                             clienteIdentificado = null;
                             atualizarHeaderELista();
                             return;
                         }
                     }
+                    clienteIdentificado = clienteEncontrado;
+                    localStorage.setItem('phsublime_cliente_dados', JSON.stringify(clienteIdentificado));
+                } else {
+                    // Preservar o cliente salvo no LocalStorage se coincidir
+                    const dadosSalvos = localStorage.getItem('phsublime_cliente_dados');
+                    if (dadosSalvos) {
+                        try {
+                            const cliLocal = JSON.parse(dadosSalvos);
+                            const cpfL = limparNumeros(cliLocal.cpf || cliLocal.cpf_cnpj);
+                            const whatsL = limparNumeros(cliLocal.whatsapp);
+                            if ((termoLimpo && (cpfL === termoLimpo || whatsL.endsWith(termoLimpo))) ||
+                                (cliLocal.nome && cliLocal.nome.toLowerCase().includes(identificacaoTermo.toLowerCase()))) {
+                                clienteIdentificado = cliLocal;
+                            } else if (!identificacaoTermo) {
+                                clienteIdentificado = cliLocal;
+                            }
+                        } catch(e){}
+                    }
                 }
-
-                clienteIdentificado = clienteEncontrado;
 
                 const { data: pedidosData, error } = await supabaseClient
                     .from('pedidos')
                     .select('id, data, clienteId, clienteNome, itens, total, valorPago, statusPagamento, dataEntrega, status, tipoEntrega, formaPagamento, obs')
                     .order('id', { ascending: false });
 
-                if (error) throw error;
-
-                if (pedidosData) {
+                if (!error && pedidosData) {
                     pedidosDoCliente = pedidosData.filter(p => {
                         if (String(p.id) === identificacaoTermo || String(p.id) === termoLimpo) return true;
                         if (clienteIdentificado && (p.clienteId == clienteIdentificado.id)) return true;
@@ -1335,9 +1349,6 @@
                 }
 
                 localStorage.setItem('phsublime_cliente_termo', identificacaoTermo);
-                if (clienteIdentificado) {
-                    localStorage.setItem('phsublime_cliente_dados', JSON.stringify(clienteIdentificado));
-                }
                 atualizarHeaderELista();
 
             } catch (err) {
