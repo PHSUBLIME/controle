@@ -4540,7 +4540,34 @@
             }
         }
     }
+async function reverterBaixaParcela(id, dataInicialOriginal, numParcela) {
+        const confirmou = await confirmarAcao(
+            "🔄 REVERTER BAIXA DE PARCELA",
+            "Deseja cancelar a baixa e retornar esta parcela para o status PENDENTE?",
+            "Sim, Reverter",
+            "fa-rotate-left",
+            "yellow"
+        );
 
+        if (confirmou) {
+            const dataOriginalRecalculada = adicionarMesesISO(dataInicialOriginal, numParcela - 1);
+
+            const { error } = await supabaseClient.from('despesas').update({
+                status: 'Pendente',
+                data: dataOriginalRecalculada
+            }).eq('id', id);
+
+            if (!error) {
+                await carregarDados();
+                if (compraAgrupadaModalAtual) {
+                    abrirModalDetalhesParcelamento(compraAgrupadaModalAtual.baseNome, compraAgrupadaModalAtual.loja);
+                }
+                mostrarToast("Baixa revertida! Parcela voltou para Pendente.");
+            } else {
+                mostrarToast(`Erro: ${error.message}`, "erro");
+            }
+        }
+    }
     async function excluirCompraParcelada(baseNome, loja) {
         const confirmou = await confirmarAcao(
             "Excluir Compra Parcelada",
