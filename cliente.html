@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PHSUBLIME - Portal do Cliente & Rastreio</title>
+    <title>PHSUBLIME - Gráfica Rápida & Comunicação Visual</title>
 
     <!-- FAVICON -->
     <link rel="icon" type="image/png" href="FIVICOM.png">
@@ -13,215 +13,340 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
     <!-- Supabase JS Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #000000; }
+        body { font-family: 'Open Sans', sans-serif; background-color: #f1f5f9; color: #1e293b; }
+        h1, h2, h3, h4, .font-heading { font-family: 'Roboto', sans-serif; }
         
         /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #000000; }
-        ::-webkit-scrollbar-thumb { background: #262626; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #facc15; }
+        ::-webkit-scrollbar-track { background: #e2e8f0; }
+        ::-webkit-scrollbar-thumb { background: #0284c7; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #0369a1; }
 
-        /* Card Glow Effect */
-        .card-glow:hover {
-            box-shadow: 0 0 25px -5px rgba(250, 204, 21, 0.15);
-            border-color: rgba(250, 204, 21, 0.4);
+        .btn-comprar {
+            background: linear-gradient(180deg, #38ef7d 0%, #11998e 100%);
+        }
+        .btn-comprar:hover {
+            background: linear-gradient(180deg, #2ecc71 0%, #0e8378 100%);
         }
     </style>
 </head>
-<body class="bg-black text-slate-100 min-h-screen flex flex-col justify-between selection:bg-yellow-400 selection:text-black">
+<body class="bg-slate-100 min-h-screen flex flex-col justify-between selection:bg-amber-400 selection:text-black">
 
-    <!-- CABEÇALHO PRINCIPAL -->
-    <header class="bg-neutral-900/90 backdrop-blur-md border-b border-neutral-800 sticky top-0 z-50 shadow-2xl">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between">
+    <!-- BARRA SUPERIOR DE AVISO / ATENDIMENTO -->
+    <div class="bg-slate-900 text-slate-300 text-xs py-1.5 px-4 border-b border-slate-800">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
+            <div class="flex items-center gap-4">
+                <span><i class="fa-solid fa-truck-fast text-amber-400 mr-1"></i> Entrega Rápida em todo o Rio de Janeiro & Magé</span>
+                <span class="hidden md:inline"><i class="fa-solid fa-clock text-amber-400 mr-1"></i> Atendimento: Seg. a Sex. das 08h às 18h</span>
+            </div>
+            <div class="flex items-center gap-4 font-semibold">
+                <button onclick="alternarAba('pedidos')" class="hover:text-amber-400 transition-all flex items-center gap-1">
+                    <i class="fa-solid fa-box-open text-amber-400"></i> Rastrear Meu Pedido
+                </button>
+                <a id="link-whats-topo" href="#" target="_blank" class="hover:text-emerald-400 transition-all flex items-center gap-1">
+                    <i class="fa-brands fa-whatsapp text-emerald-400"></i> Suporte WhatsApp
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- CABEÇALHO PRINCIPAL DA LOJA (ESTILO GRÁFICA) -->
+    <header class="bg-gradient-to-r from-blue-900 via-blue-800 to-indigo-900 text-white shadow-xl sticky top-0 z-50 border-b-4 border-amber-400">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-col md:flex-row items-center justify-between gap-4">
             
-            <a href="cliente.html" class="flex items-center gap-3.5 group">
-                <div class="w-11 h-11 shrink-0 flex items-center justify-center bg-neutral-950 rounded-xl p-1 border border-neutral-800 group-hover:border-yellow-400/50 transition-all">
-                    <img src="FIVICOM.png" alt="PHSUBLIME" class="w-full h-full object-contain" onerror="this.outerHTML='<i class=\'fa-solid fa-crown text-yellow-400 text-2xl\'></i>'">
+            <!-- LOGO PHSUBLIME -->
+            <a href="javascript:void(0)" onclick="alternarAba('catalogo')" class="flex items-center gap-3 group">
+                <div class="w-12 h-12 shrink-0 flex items-center justify-center bg-white rounded-xl p-1 shadow-md group-hover:scale-105 transition-all">
+                    <img src="FIVICOM.png" alt="PHSUBLIME" class="w-full h-full object-contain" onerror="this.outerHTML='<i class=\'fa-solid fa-crown text-blue-900 text-2xl\'></i>'">
                 </div>
                 <div>
                     <div class="flex items-center gap-2">
-                        <h1 class="text-xl font-black tracking-wider text-yellow-400">PHSUBLIME</h1>
-                        <span class="text-[10px] bg-yellow-400/10 text-yellow-400 border border-yellow-400/30 px-2.5 py-0.5 rounded-full uppercase font-bold tracking-wider">
-                            Portal do Cliente
+                        <h1 class="text-2xl font-black tracking-wider text-amber-400 font-heading">PHSUBLIME</h1>
+                        <span class="text-[10px] bg-amber-400 text-blue-950 font-black px-2 py-0.5 rounded uppercase tracking-wider">
+                            GRÁFICA
                         </span>
                     </div>
-                    <span class="text-[11px] text-neutral-400 font-medium block">Gráfica Rápida & Comunicação Visual</span>
+                    <span class="text-xs text-blue-100 font-medium block">Gráfica Rápida & Comunicação Visual</span>
                 </div>
             </a>
 
-            <!-- Botão de Acesso / Identificação -->
-            <div id="header-user-info" class="flex items-center gap-3">
-                <button id="btn-login-header" onclick="abrirModalIdentificacao()" class="bg-yellow-400 hover:bg-yellow-300 text-black font-black text-xs px-5 py-2.5 rounded-xl transition-all shadow-lg shadow-yellow-950/30 flex items-center gap-2">
-                    <i class="fa-solid fa-user-check text-sm"></i> <span>Acessar Meus Pedidos</span>
+            <!-- BARRA DE PESQUISA CENTRAL -->
+            <div class="w-full md:w-1/2 relative">
+                <div class="flex items-center bg-white rounded-lg overflow-hidden shadow-inner border border-slate-300">
+                    <input type="text" id="input-busca-catalogo" onkeyup="renderizarCatalogo()" placeholder="Buscar panfleto, banner, cartão de visita, caneca, adesivo..." class="w-full px-4 py-2.5 text-slate-800 text-xs sm:text-sm focus:outline-none">
+                    <button onclick="renderizarCatalogo()" class="bg-amber-400 hover:bg-amber-300 text-blue-950 px-5 py-2.5 font-bold transition-all flex items-center gap-1.5">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- IDENTIFICAÇÃO DO CLIENTE / MINHA CONTA -->
+            <div id="header-user-info" class="flex items-center gap-3 shrink-0">
+                <button id="btn-login-header" onclick="abrirModalIdentificacao()" class="bg-amber-400 hover:bg-amber-300 text-blue-950 font-black text-xs px-4 py-2.5 rounded-lg transition-all shadow-md flex items-center gap-2">
+                    <i class="fa-solid fa-user-circle text-base"></i> <span>Acessar Meus Pedidos</span>
                 </button>
             </div>
 
         </div>
+
+        <!-- MENU DE NAVEGAÇÃO HORIZONTAL DE CATEGORIAS -->
+        <nav class="bg-blue-950 border-t border-blue-800/60 text-xs font-bold text-slate-200">
+            <div class="max-w-7xl mx-auto px-4 flex items-center justify-between overflow-x-auto no-scrollbar">
+                <div class="flex items-center whitespace-nowrap">
+                    <button onclick="alternarAba('catalogo')" id="tab-nav-catalogo" class="px-4 py-3 hover:bg-blue-900 text-amber-400 border-b-2 border-amber-400 transition-all flex items-center gap-1.5">
+                        <i class="fa-solid fa-store"></i> CATÁLOGO
+                    </button>
+                    <button onclick="alternarAba('pedidos')" id="tab-nav-pedidos" class="px-4 py-3 hover:bg-blue-900 hover:text-amber-400 transition-all flex items-center gap-1.5">
+                        <i class="fa-solid fa-truck-ramp-box"></i> RASTREAR PEDIDO
+                    </button>
+                    <button onclick="alternarAba('recompra')" id="tab-nav-recompra" class="px-4 py-3 hover:bg-blue-900 hover:text-amber-400 transition-all flex items-center gap-1.5">
+                        <i class="fa-solid fa-rotate-right"></i> RECOMPRA RÁPIDA
+                    </button>
+                    <a href="#chave-pix-box" class="px-4 py-3 hover:bg-blue-900 hover:text-amber-400 transition-all flex items-center gap-1.5 text-emerald-400">
+                        <i class="fa-brands fa-pix"></i> PAGAR VIA PIX
+                    </a>
+                </div>
+                <div class="hidden lg:flex items-center gap-2 text-[11px] text-amber-300 font-semibold px-2">
+                    <i class="fa-solid fa-location-dot"></i> Magé & Rio de Janeiro
+                </div>
+            </div>
+        </nav>
     </header>
 
-    <!-- CONTEÚDO PRINCIPAL (EXPANDIDO PARA TELAS DE COMPUTADOR) -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full flex-1 space-y-8">
-
-        <!-- HERO BANNER DE BOAS-VINDAS -->
-        <section class="relative overflow-hidden bg-gradient-to-r from-neutral-900 via-neutral-900 to-black border border-neutral-800 rounded-3xl p-6 sm:p-8 shadow-2xl">
-            <div class="absolute -right-10 -bottom-10 w-72 h-72 bg-yellow-400/5 rounded-full blur-3xl pointer-events-none"></div>
-            <div class="absolute -left-10 -top-10 w-72 h-72 bg-emerald-500/5 rounded-full blur-3xl pointer-events-none"></div>
-
-            <div class="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-                <div class="space-y-2 max-w-2xl">
-                    <div class="inline-flex items-center gap-2 bg-neutral-800/80 border border-neutral-700 px-3 py-1 rounded-full text-xs font-semibold text-neutral-300">
-                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                        Fábrica e Produção em Funcionamento
-                    </div>
-                    <h2 class="text-2xl sm:text-3xl font-black text-white tracking-tight">
-                        Acompanhe seus Pedidos & Peça Novamente com <span class="text-yellow-400">1-Clique</span>
-                    </h2>
-                    <p class="text-xs sm:text-sm text-neutral-400 leading-relaxed">
-                        Transparência total na fabricação do seu material. Consulte o status de produção em tempo real ou navegue pela nossa vitrine de produtos.
-                    </p>
+    <!-- ÁREA PRINCIPAL COM LAYOUT EM 2 COLUNAS (SIDEBAR + CONTEÚDO) -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full flex-1">
+        
+        <!-- BANNER DE ENTREGA RÁPIDA / OFICIAL -->
+        <div class="bg-gradient-to-r from-blue-700 via-indigo-800 to-blue-950 text-white rounded-xl shadow-lg p-5 mb-6 border border-blue-600 flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-4">
+                <div class="w-14 h-14 bg-amber-400 text-blue-950 rounded-xl flex items-center justify-center text-2xl shrink-0 shadow-md">
+                    <i class="fa-solid fa-bolt"></i>
                 </div>
-
-                <!-- CARD CHAVE PIX EM DESTAQUE -->
-                <div class="bg-neutral-950/80 border border-neutral-800 p-5 rounded-2xl flex flex-col justify-between gap-3 shrink-0 lg:w-80 shadow-inner">
-                    <div class="flex items-center justify-between">
-                        <span class="text-xs font-bold text-yellow-400 uppercase tracking-wide flex items-center gap-1.5">
-                            <i class="fa-brands fa-pix text-emerald-400 text-sm"></i> Chave Pix CNPJ
-                        </span>
-                        <span class="text-[10px] text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full font-bold">Oficial</span>
-                    </div>
-
-                    <div class="bg-black border border-neutral-800 px-3.5 py-2.5 rounded-xl text-xs font-mono text-white flex items-center justify-between gap-2 select-all">
-                        <strong id="txt-chave-pix">60416979000105</strong>
-                        <i class="fa-solid fa-lock text-neutral-600 text-xs"></i>
-                    </div>
-
-                    <button onclick="copiarChavePix()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs py-2.5 rounded-xl transition-all shadow-lg shadow-emerald-950/40 flex items-center justify-center gap-2">
-                        <i class="fa-regular fa-copy text-sm"></i> Copiar Chave Pix
-                    </button>
+                <div>
+                    <span class="bg-amber-400 text-blue-950 text-[10px] font-black px-2 py-0.5 rounded uppercase">ENTREGA RÁPIDA</span>
+                    <h2 class="text-xl font-black font-heading tracking-wide text-white">PEDIU, CHEGOU! ENTREGA EM TODO RIO DE JANEIRO E MAGÉ!</h2>
+                    <p class="text-xs text-blue-100">Consulte os pontos de retirada ou solicite entrega porta a porta para seus materiais gráficos.</p>
                 </div>
             </div>
-        </section>
 
-        <!-- SELETOR DE NAVEGAÇÃO POR ABAS -->
-        <nav class="flex items-center gap-3 border-b border-neutral-800 pb-4 overflow-x-auto no-scrollbar">
-            <button onclick="alternarAba('pedidos')" id="tab-pedidos" class="tab-btn active px-5 py-3 rounded-2xl font-black text-xs transition-all flex items-center gap-2.5 bg-yellow-400 text-black shadow-lg shadow-yellow-950/20 shrink-0">
-                <i class="fa-solid fa-box-open text-base"></i>
-                <span>Meus Pedidos & Rastreio</span>
-                <span id="badge-count-pedidos" class="bg-black/20 text-black px-2 py-0.5 rounded-full text-[10px] font-bold">0</span>
-            </button>
-
-            <button onclick="alternarAba('recompra')" id="tab-recompra" class="tab-btn px-5 py-3 rounded-2xl font-bold text-xs transition-all flex items-center gap-2.5 bg-neutral-900 text-neutral-400 hover:text-white border border-neutral-800 hover:bg-neutral-800 shrink-0">
-                <i class="fa-solid fa-rotate-right text-base text-yellow-400"></i>
-                <span>Recompra Rápida</span>
-            </button>
-
-            <button onclick="alternarAba('catalogo')" id="tab-catalogo" class="tab-btn px-5 py-3 rounded-2xl font-bold text-xs transition-all flex items-center gap-2.5 bg-neutral-900 text-neutral-400 hover:text-white border border-neutral-800 hover:bg-neutral-800 shrink-0">
-                <i class="fa-solid fa-store text-base text-emerald-400"></i>
-                <span>Catálogo de Produtos</span>
-            </button>
-        </nav>
-
-        <!-- ================= SEÇÃO 1: RASTREIO DE PEDIDOS ================= -->
-        <section id="secao-pedidos" class="secao-cliente space-y-6">
-            
-            <!-- Card Estado Desconectado -->
-            <div id="msg-nao-identificado" class="bg-neutral-900 border border-neutral-800 p-8 sm:p-12 rounded-3xl text-center space-y-5 max-w-xl mx-auto shadow-2xl">
-                <div class="w-20 h-20 bg-yellow-400/10 text-yellow-400 rounded-2xl flex items-center justify-center mx-auto text-3xl border border-yellow-400/20 shadow-inner">
-                    <i class="fa-solid fa-magnifying-glass-location"></i>
+            <!-- CARD CHAVE PIX EM DESTAQUE -->
+            <div id="chave-pix-box" class="bg-blue-950/90 border border-blue-700/80 p-3.5 rounded-lg shrink-0 w-full md:w-72 text-center shadow-inner">
+                <div class="flex items-center justify-between text-xs mb-1.5">
+                    <span class="font-bold text-emerald-400 flex items-center gap-1">
+                        <i class="fa-brands fa-pix"></i> Chave Pix CNPJ
+                    </span>
+                    <span class="text-[9px] bg-emerald-500/20 text-emerald-300 px-1.5 py-0.5 rounded font-bold">Oficial</span>
                 </div>
-                <div class="space-y-1.5">
-                    <h3 class="text-xl font-black text-white">Identifique-se para rastrear seus pedidos</h3>
-                    <p class="text-xs text-neutral-400 leading-relaxed">
-                        Informe seu CPF/CNPJ ou o número do WhatsApp cadastrado para acompanhar a fila de produção e entrega da PHSUBLIME.
-                    </p>
+                <div class="bg-slate-900 border border-slate-700 px-3 py-1.5 rounded text-xs font-mono text-white mb-2 select-all">
+                    <strong>60416979000105</strong>
                 </div>
-                <button onclick="abrirModalIdentificacao()" class="w-full bg-yellow-400 hover:bg-yellow-300 text-black font-black py-3.5 rounded-2xl text-xs transition-all shadow-xl shadow-yellow-950/40">
-                    DIGITAR MEU CPF OU WHATSAPP
+                <button onclick="copiarChavePix()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs py-1.5 rounded transition-all shadow flex items-center justify-center gap-1.5">
+                    <i class="fa-regular fa-copy"></i> Copiar Chave Pix
                 </button>
             </div>
+        </div>
 
-            <!-- Lista Dinâmica dos Pedidos Rasteados -->
-            <div id="container-lista-pedidos" class="hidden space-y-6"></div>
-        </section>
+        <div class="flex flex-col lg:flex-row gap-6">
 
-        <!-- ================= SEÇÃO 2: RECOMPRA RÁPIDA ================= -->
-        <section id="secao-recompra" class="secao-cliente hidden space-y-6">
-            <div class="bg-neutral-900 p-6 rounded-2xl border border-neutral-800 flex items-center justify-between flex-wrap gap-4">
-                <div>
-                    <h3 class="text-lg font-black text-yellow-400 flex items-center gap-2">
-                        <i class="fa-solid fa-rotate-right"></i> Seus Produtos Comprados Recentemente
-                    </h3>
-                    <p class="text-xs text-neutral-400 mt-0.5">Repita seu pedido com as mesmas especificações direto com nosso atendimento.</p>
-                </div>
-            </div>
-
-            <div id="container-recompra-lista" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-        </section>
-
-        <!-- ================= SEÇÃO 3: CATÁLOGO DE PRODUTOS ================= -->
-        <section id="secao-catalogo" class="secao-cliente hidden space-y-6">
-            <div class="bg-neutral-900 p-6 rounded-2xl border border-neutral-800 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-xl">
-                <div>
-                    <h3 class="text-lg font-black text-yellow-400 flex items-center gap-2">
-                        <i class="fa-solid fa-store"></i> Vitrine & Catálogo de Produtos
-                    </h3>
-                    <p class="text-xs text-neutral-400 mt-0.5">Confira materiais disponíveis para personalização gráfica e comunicação visual.</p>
+            <!-- SIDEBAR ESQUERDA (MENU DE CATEGORIAS ESTILO GRÁFICA) -->
+            <aside class="w-full lg:w-64 shrink-0 space-y-4">
+                
+                <!-- MENU MAIS VENDIDOS -->
+                <div class="bg-white rounded-lg shadow-md border border-slate-200 overflow-hidden">
+                    <div class="bg-red-600 text-white font-black text-xs px-4 py-2.5 uppercase tracking-wider flex items-center justify-between">
+                        <span>MAIS VENDIDOS</span>
+                        <span class="bg-amber-400 text-black text-[9px] px-1.5 py-0.5 rounded">PROMOÇÃO</span>
+                    </div>
+                    <ul class="divide-y divide-slate-100 text-xs font-semibold text-slate-700">
+                        <li><a href="javascript:void(0)" onclick="filtrarCategoria('banner')" class="px-4 py-2.5 hover:bg-slate-50 hover:text-blue-700 flex items-center justify-between transition-all"><span>Banner com Tubete</span> <i class="fa-solid fa-chevron-right text-[10px] text-slate-400"></i></a></li>
+                        <li><a href="javascript:void(0)" onclick="filtrarCategoria('cartao')" class="px-4 py-2.5 hover:bg-slate-50 hover:text-blue-700 flex items-center justify-between transition-all"><span>Cartão de Visita</span> <i class="fa-solid fa-chevron-right text-[10px] text-slate-400"></i></a></li>
+                        <li><a href="javascript:void(0)" onclick="filtrarCategoria('folheto')" class="px-4 py-2.5 hover:bg-slate-50 hover:text-blue-700 flex items-center justify-between transition-all"><span>Folhetos e Panfletos</span> <i class="fa-solid fa-chevron-right text-[10px] text-slate-400"></i></a></li>
+                        <li><a href="javascript:void(0)" onclick="filtrarCategoria('adesivo')" class="px-4 py-2.5 hover:bg-slate-50 hover:text-blue-700 flex items-center justify-between transition-all"><span>Adesivos Vinil</span> <i class="fa-solid fa-chevron-right text-[10px] text-slate-400"></i></a></li>
+                        <li><a href="javascript:void(0)" onclick="filtrarCategoria('caneca')" class="px-4 py-2.5 hover:bg-slate-50 hover:text-blue-700 flex items-center justify-between transition-all"><span>Canecas e Copos</span> <i class="fa-solid fa-chevron-right text-[10px] text-slate-400"></i></a></li>
+                    </ul>
                 </div>
 
-                <div class="w-full md:w-80 bg-neutral-800 px-4 py-2.5 rounded-2xl border border-neutral-700 flex items-center gap-2.5">
-                    <i class="fa-solid fa-magnifying-glass text-yellow-400 text-xs"></i>
-                    <input type="text" id="input-busca-catalogo" onkeyup="renderizarCatalogo()" placeholder="Buscar lona, adesivo, panfleto, caneca..." class="bg-transparent text-white focus:outline-none text-xs w-full placeholder-neutral-500">
+                <!-- MENU TODOS OS PRODUTOS -->
+                <div class="bg-white rounded-lg shadow-md border border-slate-200 overflow-hidden">
+                    <div class="bg-blue-900 text-white font-black text-xs px-4 py-2.5 uppercase tracking-wider">
+                        TODOS OS PRODUTOS
+                    </div>
+                    <ul class="divide-y divide-slate-100 text-xs font-medium text-slate-600">
+                        <li><a href="javascript:void(0)" onclick="filtrarCategoria('')" class="px-4 py-2 hover:bg-blue-50 hover:text-blue-700 flex items-center justify-between"><span>Ver Todo o Catálogo</span> <i class="fa-solid fa-border-all text-[10px] text-slate-400"></i></a></li>
+                        <li><a href="javascript:void(0)" onclick="filtrarCategoria('banner')" class="px-4 py-2 hover:bg-blue-50 hover:text-blue-700 flex items-center justify-between"><span>Banners & Lonas</span> <i class="fa-solid fa-angle-right text-[10px]"></i></a></li>
+                        <li><a href="javascript:void(0)" onclick="filtrarCategoria('cartao')" class="px-4 py-2 hover:bg-blue-50 hover:text-blue-700 flex items-center justify-between"><span>Cartões de Visita</span> <i class="fa-solid fa-angle-right text-[10px]"></i></a></li>
+                        <li><a href="javascript:void(0)" onclick="filtrarCategoria('folheto')" class="px-4 py-2 hover:bg-blue-50 hover:text-blue-700 flex items-center justify-between"><span>Folhetos & Panfletos</span> <i class="fa-solid fa-angle-right text-[10px]"></i></a></li>
+                        <li><a href="javascript:void(0)" onclick="filtrarCategoria('brinde')" class="px-4 py-2 hover:bg-blue-50 hover:text-blue-700 flex items-center justify-between"><span>Brindes & Canecas</span> <i class="fa-solid fa-angle-right text-[10px]"></i></a></li>
+                        <li><a href="javascript:void(0)" onclick="filtrarCategoria('camisa')" class="px-4 py-2 hover:bg-blue-50 hover:text-blue-700 flex items-center justify-between"><span>Camisas & Uniformes</span> <i class="fa-solid fa-angle-right text-[10px]"></i></a></li>
+                        <li><a href="javascript:void(0)" onclick="filtrarCategoria('pasta')" class="px-4 py-2 hover:bg-blue-50 hover:text-blue-700 flex items-center justify-between"><span>Pastas & Envelopes</span> <i class="fa-solid fa-angle-right text-[10px]"></i></a></li>
+                        <li><a href="javascript:void(0)" onclick="filtrarCategoria('tag')" class="px-4 py-2 hover:bg-blue-50 hover:text-blue-700 flex items-center justify-between"><span>Tags & Rótulos</span> <i class="fa-solid fa-angle-right text-[10px]"></i></a></li>
+                    </ul>
                 </div>
-            </div>
 
-            <div id="container-catalogo-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
-        </section>
+                <!-- BOX SUPORTE RÁPIDO -->
+                <div class="bg-amber-400 text-blue-950 p-4 rounded-lg shadow-md border border-amber-500 text-center space-y-2">
+                    <i class="fa-brands fa-whatsapp text-3xl"></i>
+                    <h4 class="font-black text-sm uppercase">Precisa de Arte Personalizada?</h4>
+                    <p class="text-[11px] leading-tight">Fale direto com nossa equipe de design no WhatsApp.</p>
+                    <a id="btn-whats-sidebar" href="#" target="_blank" class="block bg-blue-950 hover:bg-blue-900 text-white font-bold text-xs py-2 rounded transition-all">
+                        Falar no WhatsApp
+                    </a>
+                </div>
+
+            </aside>
+
+            <!-- CONTEÚDO PRINCIPAL (VITRINE / RASTREIO / RECOMPRA) -->
+            <section class="flex-1 space-y-6">
+
+                <!-- ================= SEÇÃO 1: CATÁLOGO DE PRODUTOS (VITRINE) ================= -->
+                <div id="secao-catalogo" class="space-y-4">
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3">
+                        <div>
+                            <h3 class="text-base font-black text-blue-950 font-heading uppercase flex items-center gap-2">
+                                <i class="fa-solid fa-fire text-red-500"></i> Produtos Mais Vendidos & Tabela
+                            </h3>
+                            <p class="text-xs text-slate-500">Selecione o produto desejado, baixe o gabarito ou faça seu pedido diretamente.</p>
+                        </div>
+                        <div class="text-xs font-bold bg-slate-100 text-slate-700 px-3 py-1.5 rounded border border-slate-200">
+                            Exibindo materiais gráficos oficiais
+                        </div>
+                    </div>
+
+                    <!-- GRID DE CARDS DE PRODUTO ESTILO VITRINE GRÁFICA -->
+                    <div id="container-catalogo-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4"></div>
+                </div>
+
+                <!-- ================= SEÇÃO 2: RASTREIO DE PEDIDOS ================= -->
+                <div id="secao-pedidos" class="hidden space-y-6">
+                    <div class="bg-white p-6 rounded-xl shadow-md border border-slate-200">
+                        <h3 class="text-lg font-black text-blue-950 font-heading mb-1 flex items-center gap-2">
+                            <i class="fa-solid fa-magnifying-glass-location text-amber-500"></i> Rastreio e Acompanhamento de Pedidos
+                        </h3>
+                        <p class="text-xs text-slate-500">Digite seu CPF, CNPJ ou WhatsApp cadastrado para consultar a fila de produção.</p>
+                    </div>
+
+                    <!-- Estado Desconectado -->
+                    <div id="msg-nao-identificado" class="bg-white border border-slate-200 p-8 sm:p-12 rounded-xl text-center space-y-4 shadow-md max-w-lg mx-auto">
+                        <div class="w-16 h-16 bg-blue-50 text-blue-900 rounded-full flex items-center justify-center mx-auto text-2xl border border-blue-200">
+                            <i class="fa-solid fa-user-lock"></i>
+                        </div>
+                        <div class="space-y-1">
+                            <h4 class="text-lg font-black text-slate-800">Identifique-se para rastrear seus pedidos</h4>
+                            <p class="text-xs text-slate-500">
+                                Acesse seu histórico de compras e status de fabricação em tempo real.
+                            </p>
+                        </div>
+                        <button onclick="abrirModalIdentificacao()" class="w-full bg-amber-400 hover:bg-amber-300 text-blue-950 font-black py-3 rounded-lg text-xs transition-all shadow-md">
+                            DIGITAR MEU CPF OU WHATSAPP
+                        </button>
+                    </div>
+
+                    <!-- Lista Dinâmica dos Pedidos Rasteados -->
+                    <div id="container-lista-pedidos" class="hidden space-y-6"></div>
+                </div>
+
+                <!-- ================= SEÇÃO 3: RECOMPRA RÁPIDA ================= -->
+                <div id="secao-recompra" class="hidden space-y-6">
+                    <div class="bg-white p-6 rounded-xl shadow-md border border-slate-200 flex items-center justify-between flex-wrap gap-4">
+                        <div>
+                            <h3 class="text-lg font-black text-blue-950 font-heading flex items-center gap-2">
+                                <i class="fa-solid fa-rotate-right text-amber-500"></i> Repetir Pedidos Anteriores
+                            </h3>
+                            <p class="text-xs text-slate-500 mt-0.5">Faça a recompra rápida dos seus materiais com as mesmas configurações.</p>
+                        </div>
+                    </div>
+
+                    <div id="container-recompra-lista" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+                </div>
+
+            </section>
+
+        </div>
 
     </main>
 
-    <!-- RODAPÉ -->
-    <footer class="bg-neutral-950 border-t border-neutral-900 py-8 mt-12">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6 text-xs text-neutral-500 text-center md:text-left">
-            <div class="space-y-1">
-                <strong class="text-yellow-400 font-bold block text-sm">PHSUBLIME — Gráfica Rápida & Personalizados</strong>
-                <p class="text-xs text-neutral-400">Atendimento das 08h às 18h | Magé / Rio de Janeiro</p>
+    <!-- RODAPÉ DA LOJA (FORMAS DE PAGAMENTO E ENVIO) -->
+    <footer class="bg-white border-t border-slate-200 pt-10 pb-6 mt-12 text-slate-600 text-xs">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 pb-8 border-b border-slate-200">
+                <!-- COLUNA 1 -->
+                <div class="space-y-2">
+                    <strong class="text-blue-950 font-black text-sm font-heading block">PHSUBLIME GRÁFICA RÁPIDA</strong>
+                    <p class="text-xs text-slate-500 leading-relaxed">
+                        Especialista em Comunicação Visual, Materiais Gráficos Promocionais e Personalizados em Geral.
+                    </p>
+                    <p class="text-xs text-slate-500">Magé / Rio de Janeiro — Atendimento das 08h às 18h</p>
+                </div>
+
+                <!-- COLUNA 2: PAGAMENTO -->
+                <div class="space-y-2">
+                    <strong class="text-slate-800 font-bold uppercase block text-xs">Formas de Pagamento:</strong>
+                    <div class="flex items-center gap-2 text-2xl text-slate-500 flex-wrap">
+                        <i class="fa-brands fa-pix text-emerald-600" title="Pix CNPJ"></i>
+                        <i class="fa-brands fa-cc-visa text-blue-700" title="Visa"></i>
+                        <i class="fa-brands fa-cc-mastercard text-red-600" title="Mastercard"></i>
+                        <span class="text-xs font-bold border border-slate-300 px-2 py-0.5 rounded text-slate-700">ELO</span>
+                        <span class="text-xs font-bold border border-slate-300 px-2 py-0.5 rounded text-slate-700">DEPÓSITO</span>
+                    </div>
+                </div>
+
+                <!-- COLUNA 3: ENVIO -->
+                <div class="space-y-2">
+                    <strong class="text-slate-800 font-bold uppercase block text-xs">Formas de Envio & Entrega:</strong>
+                    <div class="flex items-center gap-3 text-xs font-bold text-slate-700 flex-wrap">
+                        <span class="bg-slate-100 border border-slate-200 px-2.5 py-1 rounded flex items-center gap-1">
+                            <i class="fa-solid fa-truck text-blue-600"></i> CORREIOS / PAC
+                        </span>
+                        <span class="bg-slate-100 border border-slate-200 px-2.5 py-1 rounded flex items-center gap-1">
+                            <i class="fa-solid fa-motorcycle text-amber-600"></i> MOTOBOY
+                        </span>
+                        <span class="bg-slate-100 border border-slate-200 px-2.5 py-1 rounded flex items-center gap-1">
+                            <i class="fa-solid fa-store text-emerald-600"></i> RETIRADA BALCÃO
+                        </span>
+                    </div>
+                </div>
             </div>
-            <div>
-                <a id="link-whats-rodape" href="#" target="_blank" class="inline-flex items-center gap-2 bg-emerald-600/20 hover:bg-emerald-600 text-emerald-400 hover:text-white border border-emerald-500/30 px-5 py-2.5 rounded-2xl font-bold transition-all shadow-lg">
-                    <i class="fa-brands fa-whatsapp text-base"></i> Atendimento WhatsApp
+
+            <!-- COPYRIGHT -->
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-4 text-center text-[11px] text-slate-400">
+                <p>© 2026 PHSUBLIME - Todos os direitos reservados.</p>
+                <a id="link-whats-rodape" href="#" target="_blank" class="inline-flex items-center gap-1.5 text-emerald-600 font-bold hover:underline">
+                    <i class="fa-brands fa-whatsapp text-sm"></i> Falar com o Atendimento no WhatsApp
                 </a>
             </div>
+
         </div>
     </footer>
 
     <!-- MODAL DE IDENTIFICAÇÃO DO CLIENTE -->
-    <div id="modal-identificacao" class="fixed inset-0 bg-black/85 backdrop-blur-md z-[990] hidden flex items-center justify-center p-4">
-        <div class="bg-neutral-900 border border-neutral-800 rounded-3xl max-w-md w-full p-6 sm:p-8 space-y-6 shadow-2xl text-center relative">
-            <button onclick="fecharModalIdentificacao()" class="absolute top-5 right-5 text-neutral-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+    <div id="modal-identificacao" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-[990] hidden flex items-center justify-center p-4">
+        <div class="bg-white border border-slate-200 rounded-2xl max-w-md w-full p-6 sm:p-8 space-y-6 shadow-2xl text-center relative">
+            <button onclick="fecharModalIdentificacao()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-700 text-lg"><i class="fa-solid fa-xmark"></i></button>
 
-            <div class="w-20 h-20 bg-yellow-400/10 text-yellow-400 rounded-3xl flex items-center justify-center mx-auto text-3xl border border-yellow-400/20 shadow-inner">
-                <i class="fa-solid fa-user-lock"></i>
+            <div class="w-16 h-16 bg-amber-100 text-amber-600 rounded-2xl flex items-center justify-center mx-auto text-2xl shadow-inner">
+                <i class="fa-solid fa-user-check"></i>
             </div>
 
             <div class="space-y-1">
-                <h3 class="text-xl font-black text-yellow-400">Identificação do Cliente</h3>
-                <p class="text-xs text-neutral-400 leading-relaxed">
-                    Digite seu CPF/CNPJ ou WhatsApp para acessar seus pedidos e histórico de compras na PHSUBLIME.
+                <h3 class="text-lg font-black text-blue-950 font-heading">Acessar Meus Pedidos</h3>
+                <p class="text-xs text-slate-500 leading-relaxed">
+                    Digite seu CPF, CNPJ ou WhatsApp com DDD para localizar seu histórico de compras na PHSUBLIME.
                 </p>
             </div>
 
             <form onsubmit="confirmarIdentificacao(event)" class="space-y-4 text-left">
                 <div>
-                    <label class="block text-xs font-bold text-neutral-400 mb-1">CPF, CNPJ ou WhatsApp com DDD</label>
-                    <input type="text" id="input-identificacao-cliente" required placeholder="Ex: 21999998888 ou CPF..." class="w-full bg-neutral-800 border border-neutral-700 rounded-2xl px-4 py-3.5 text-white text-sm focus:outline-none focus:border-yellow-400 font-bold placeholder-neutral-500">
+                    <label class="block text-xs font-bold text-slate-700 mb-1">CPF, CNPJ ou WhatsApp com DDD</label>
+                    <input type="text" id="input-identificacao-cliente" required placeholder="Ex: 21999998888 ou CPF..." class="w-full bg-slate-50 border border-slate-300 rounded-lg px-4 py-3 text-slate-800 text-sm focus:outline-none focus:border-blue-600 font-bold placeholder-slate-400">
                 </div>
 
-                <button type="submit" class="w-full bg-yellow-400 hover:bg-yellow-300 text-black font-black py-4 rounded-2xl text-xs transition-all shadow-xl shadow-yellow-950/40 tracking-wider">
+                <button type="submit" class="w-full bg-amber-400 hover:bg-amber-300 text-blue-950 font-black py-3.5 rounded-lg text-xs transition-all shadow-md tracking-wider">
                     BUSCAR MEUS PEDIDOS
                 </button>
             </form>
@@ -229,12 +354,12 @@
     </div>
 
     <!-- TOAST DE NOTIFICAÇÃO -->
-    <div id="toast" class="fixed bottom-5 right-5 bg-neutral-900 text-white border border-yellow-400 px-5 py-3.5 rounded-2xl shadow-2xl transform translate-y-20 opacity-0 transition-all duration-300 flex items-center gap-3 z-[1001]">
-        <i id="toast-icon" class="fa-solid fa-circle-check text-yellow-400 text-lg"></i>
+    <div id="toast" class="fixed bottom-5 right-5 bg-slate-900 text-white border border-amber-400 px-5 py-3.5 rounded-xl shadow-2xl transform translate-y-20 opacity-0 transition-all duration-300 flex items-center gap-3 z-[1001]">
+        <i id="toast-icon" class="fa-solid fa-circle-check text-amber-400 text-lg"></i>
         <span id="toast-message" class="font-medium text-sm">Ação realizada!</span>
     </div>
 
-    <!-- SCRIPT E INTEGRAÇÃO COM SUPABASE -->
+    <!-- SCRIPT INTEGRAÇÃO SUPABASE & REGRAS DE NEGÓCIO -->
     <script>
         // CONFIGURAÇÕES DO SUPABASE
         const SUPABASE_URL = 'https://qkcrimqakjsokdztzqxe.supabase.co';
@@ -250,9 +375,9 @@
         let identificacaoTermo = '';
         let pedidosDoCliente = [];
         let catalogoEstoque = [];
+        let categoriaFiltro = '';
         let canalRealtime = null;
 
-        // FUNÇÃO DE ESCAPE SEGURO
         function escapeAttr(str) {
             if (str === null || str === undefined) return '';
             return String(str).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -265,11 +390,11 @@
 
             msgEl.innerText = msg;
             if (tipo === 'erro' || tipo === 'alerta') {
-                toast.className = "fixed bottom-5 right-5 bg-neutral-900 text-white border border-rose-500 px-5 py-3.5 rounded-2xl shadow-2xl transform translate-y-20 opacity-0 transition-all duration-300 flex items-center gap-3 z-[1001]";
+                toast.className = "fixed bottom-5 right-5 bg-slate-900 text-white border border-rose-500 px-5 py-3.5 rounded-xl shadow-2xl transform translate-y-20 opacity-0 transition-all duration-300 flex items-center gap-3 z-[1001]";
                 icon.className = "fa-solid fa-triangle-exclamation text-rose-500 text-lg";
             } else {
-                toast.className = "fixed bottom-5 right-5 bg-neutral-900 text-white border border-yellow-400 px-5 py-3.5 rounded-2xl shadow-2xl transform translate-y-20 opacity-0 transition-all duration-300 flex items-center gap-3 z-[1001]";
-                icon.className = "fa-solid fa-circle-check text-yellow-400 text-lg";
+                toast.className = "fixed bottom-5 right-5 bg-slate-900 text-white border border-amber-400 px-5 py-3.5 rounded-xl shadow-2xl transform translate-y-20 opacity-0 transition-all duration-300 flex items-center gap-3 z-[1001]";
+                icon.className = "fa-solid fa-circle-check text-amber-400 text-lg";
             }
 
             toast.classList.remove('translate-y-20', 'opacity-0');
@@ -284,22 +409,24 @@
 
         // ALTERNAR ABAS
         function alternarAba(aba) {
-            document.querySelectorAll('.secao-cliente').forEach(el => el.classList.add('hidden'));
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.className = "tab-btn px-5 py-3 rounded-2xl font-bold text-xs transition-all flex items-center gap-2.5 bg-neutral-900 text-neutral-400 hover:text-white border border-neutral-800 hover:bg-neutral-800 shrink-0";
-            });
+            document.getElementById('secao-catalogo').classList.add('hidden');
+            document.getElementById('secao-pedidos').classList.add('hidden');
+            document.getElementById('secao-recompra').classList.add('hidden');
+
+            document.getElementById('tab-nav-catalogo').className = "px-4 py-3 hover:bg-blue-900 hover:text-amber-400 transition-all flex items-center gap-1.5";
+            document.getElementById('tab-nav-pedidos').className = "px-4 py-3 hover:bg-blue-900 hover:text-amber-400 transition-all flex items-center gap-1.5";
+            document.getElementById('tab-nav-recompra').className = "px-4 py-3 hover:bg-blue-900 hover:text-amber-400 transition-all flex items-center gap-1.5";
 
             const secAlvo = document.getElementById(`secao-${aba}`);
-            const tabAlvo = document.getElementById(`tab-${aba}`);
+            const tabAlvo = document.getElementById(`tab-nav-${aba}`);
 
             if (secAlvo) secAlvo.classList.remove('hidden');
-            if (tabAlvo) tabAlvo.className = "tab-btn active px-5 py-3 rounded-2xl font-black text-xs transition-all flex items-center gap-2.5 bg-yellow-400 text-black shadow-lg shadow-yellow-950/20 shrink-0";
+            if (tabAlvo) tabAlvo.className = "px-4 py-3 hover:bg-blue-900 text-amber-400 border-b-2 border-amber-400 transition-all flex items-center gap-1.5";
 
             if (aba === 'catalogo') renderizarCatalogo();
             if (aba === 'recompra') renderizarRecompra();
         }
 
-        // MODAL IDENTIFICAÇÃO
         function abrirModalIdentificacao() {
             document.getElementById('modal-identificacao').classList.remove('hidden');
         }
@@ -307,11 +434,12 @@
             document.getElementById('modal-identificacao').classList.add('hidden');
         }
 
-        // CARREGAMENTO E LEITURA DE URL PARAMS
         async function inicializarPortal() {
-            document.getElementById('link-whats-rodape').href = `https://api.whatsapp.com/send?phone=${WHATSAPP_ATENDIMENTO}&text=${encodeURIComponent("Olá, equipe PHSUBLIME! Gostaria de tirar uma dúvida.")}`;
+            const linkWhats = `https://api.whatsapp.com/send?phone=${WHATSAPP_ATENDIMENTO}&text=${encodeURIComponent("Olá, equipe PHSUBLIME! Gostaria de tirar uma dúvida.")}`;
+            if(document.getElementById('link-whats-topo')) document.getElementById('link-whats-topo').href = linkWhats;
+            if(document.getElementById('link-whats-rodape')) document.getElementById('link-whats-rodape').href = linkWhats;
+            if(document.getElementById('btn-whats-sidebar')) document.getElementById('btn-whats-sidebar').href = linkWhats;
 
-            // Ler Parâmetros de URL (?pedido=123 ou ?whats=... ou ?cpf=...)
             const params = new URLSearchParams(window.location.search);
             const paramPedido = params.get('pedido');
             const paramWhats = params.get('whats') || params.get('whatsapp') || params.get('tel');
@@ -351,7 +479,6 @@
             mostrarToast("Buscando informações...", "info");
 
             try {
-                // 1. Buscar base de clientes para localizar pelo CPF/CNPJ/WhatsApp
                 const { data: clientesData } = await supabaseClient.from('clientes').select('id, nome, cpf, whatsapp, telefone, cidade, estado');
 
                 let clienteEncontrado = null;
@@ -368,7 +495,6 @@
 
                 clienteIdentificado = clienteEncontrado;
 
-                // 2. Buscar Pedidos (Filtro por ID do Pedido ou ID do Cliente ou Nome)
                 const { data: pedidosData, error } = await supabaseClient
                     .from('pedidos')
                     .select('id, data, clienteId, clienteNome, itens, total, valorPago, statusPagamento, dataEntrega, status, tipoEntrega, formaPagamento, obs')
@@ -400,21 +526,18 @@
             const containerHeader = document.getElementById('header-user-info');
             const msgSemId = document.getElementById('msg-nao-identificado');
             const containerLista = document.getElementById('container-lista-pedidos');
-            const badgeCount = document.getElementById('badge-count-pedidos');
-
-            badgeCount.innerText = pedidosDoCliente.length;
 
             if (clienteIdentificado || pedidosDoCliente.length > 0) {
                 const nomeExibicao = clienteIdentificado ? clienteIdentificado.nome : `Busca: #${identificacaoTermo}`;
                 
                 containerHeader.innerHTML = `
                     <div class="text-right hidden sm:block">
-                        <span class="text-[10px] text-neutral-400 font-bold block uppercase">Cliente Conectado:</span>
-                        <strong class="text-xs text-yellow-400 font-bold flex items-center gap-1.5 justify-end">
+                        <span class="text-[9px] text-blue-200 font-bold block uppercase">Cliente Conectado:</span>
+                        <strong class="text-xs text-amber-400 font-bold flex items-center gap-1 justify-end">
                             <i class="fa-solid fa-circle-user"></i> ${escapeAttr(nomeExibicao)}
                         </strong>
                     </div>
-                    <button onclick="sairEBuscarOutro()" class="bg-neutral-800 hover:bg-neutral-700 text-neutral-300 p-2.5 rounded-2xl text-xs border border-neutral-700 transition-all flex items-center gap-1.5" title="Sair / Buscar Outro">
+                    <button onclick="sairEBuscarOutro()" class="bg-blue-950 hover:bg-blue-900 text-slate-200 p-2 rounded text-xs border border-blue-800 transition-all flex items-center gap-1" title="Sair / Buscar Outro">
                         <i class="fa-solid fa-right-from-bracket"></i> <span class="hidden sm:inline">Trocar</span>
                     </button>
                 `;
@@ -424,8 +547,8 @@
                 renderizarListaPedidos();
             } else {
                 containerHeader.innerHTML = `
-                    <button id="btn-login-header" onclick="abrirModalIdentificacao()" class="bg-yellow-400 hover:bg-yellow-300 text-black font-black text-xs px-5 py-2.5 rounded-xl transition-all shadow-lg shadow-yellow-950/30 flex items-center gap-2">
-                        <i class="fa-solid fa-user-check text-sm"></i> <span>Acessar Meus Pedidos</span>
+                    <button id="btn-login-header" onclick="abrirModalIdentificacao()" class="bg-amber-400 hover:bg-amber-300 text-blue-950 font-black text-xs px-4 py-2.5 rounded-lg transition-all shadow-md flex items-center gap-2">
+                        <i class="fa-solid fa-user-circle text-base"></i> <span>Acessar Meus Pedidos</span>
                     </button>
                 `;
 
@@ -450,11 +573,11 @@
 
             if (pedidosDoCliente.length === 0) {
                 container.innerHTML = `
-                    <div class="bg-neutral-900 border border-neutral-800 p-8 sm:p-12 rounded-3xl text-center space-y-3 shadow-2xl">
-                        <i class="fa-solid fa-box-open text-4xl text-neutral-600 block"></i>
-                        <h4 class="text-base font-bold text-white">Nenhum pedido encontrado para a busca realizada.</h4>
-                        <p class="text-xs text-neutral-400">Verifique se o CPF ou WhatsApp informado é o mesmo do cadastro do seu pedido.</p>
-                        <button onclick="abrirModalIdentificacao()" class="px-5 py-2.5 bg-yellow-400 text-black font-black rounded-xl text-xs transition-all shadow-md mt-2">Buscar Outro Número</button>
+                    <div class="bg-white border border-slate-200 p-8 rounded-xl text-center space-y-3 shadow-md">
+                        <i class="fa-solid fa-box-open text-4xl text-slate-300 block"></i>
+                        <h4 class="text-base font-bold text-slate-800">Nenhum pedido encontrado para a busca realizada.</h4>
+                        <p class="text-xs text-slate-500">Verifique se o CPF ou WhatsApp informado é o mesmo do cadastro do seu pedido.</p>
+                        <button onclick="abrirModalIdentificacao()" class="px-4 py-2 bg-amber-400 text-blue-950 font-black rounded text-xs transition-all shadow mt-2">Buscar Outro Número</button>
                     </div>
                 `;
                 return;
@@ -479,95 +602,91 @@
                 const isRetirada = (p.tipoEntrega === 'Retirada');
 
                 const card = document.createElement('div');
-                card.className = "bg-neutral-900 border border-neutral-800 rounded-3xl p-6 md:p-8 space-y-6 shadow-2xl hover:border-neutral-700 transition-all card-glow";
+                card.className = "bg-white border border-slate-200 rounded-xl p-6 space-y-6 shadow-md hover:shadow-lg transition-all";
 
                 card.innerHTML = `
-                    <!-- Cabeçalho do Card -->
-                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-neutral-800 pb-5">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-100 pb-4">
                         <div class="space-y-1">
-                            <div class="flex items-center gap-2.5 flex-wrap">
-                                <strong class="text-xl font-black text-yellow-400">Pedido #${p.id}</strong>
-                                <span class="text-[10px] font-bold uppercase px-3 py-1 rounded-full ${isRetirada ? 'bg-blue-500/20 text-blue-300 border border-blue-500/30' : 'bg-purple-500/20 text-purple-300 border border-purple-500/30'} flex items-center gap-1.5">
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <strong class="text-lg font-black text-blue-950 font-heading">Pedido #${p.id}</strong>
+                                <span class="text-[10px] font-bold uppercase px-2.5 py-0.5 rounded ${isRetirada ? 'bg-blue-100 text-blue-800 border border-blue-200' : 'bg-purple-100 text-purple-800 border border-purple-200'} flex items-center gap-1">
                                     <i class="fa-solid ${isRetirada ? 'fa-store' : 'fa-truck'} text-[10px]"></i> ${isRetirada ? 'Retirada no Balcão' : 'Entrega / Dropship'}
                                 </span>
                             </div>
-                            <span class="text-xs text-neutral-400 block">
-                                Solicitado em: <strong class="text-neutral-200">${p.data || '--/--/----'}</strong> | Entrega Prevista: <strong class="text-yellow-300">${p.dataEntrega || '--/--/----'}</strong>
+                            <span class="text-xs text-slate-500 block">
+                                Solicitado em: <strong class="text-slate-700">${p.data || '--/--/----'}</strong> | Entrega Prevista: <strong class="text-blue-700">${p.dataEntrega || '--/--/----'}</strong>
                             </span>
                         </div>
 
                         <div class="text-left sm:text-right">
-                            <span class="text-[10px] text-neutral-400 uppercase font-bold block mb-1">Status Pagamento</span>
-                            <span class="px-3 py-1 text-xs rounded-full font-bold uppercase ${stPag === 'Pago 100%' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40' : (stPag === 'Sinal 50%' ? 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/40' : 'bg-rose-500/20 text-rose-400 border border-rose-500/40')}">
+                            <span class="text-[10px] text-slate-400 uppercase font-bold block mb-0.5">Status Pagamento</span>
+                            <span class="px-2.5 py-1 text-xs rounded font-bold uppercase ${stPag === 'Pago 100%' ? 'bg-emerald-100 text-emerald-800 border border-emerald-200' : (stPag === 'Sinal 50%' ? 'bg-amber-100 text-amber-800 border border-amber-200' : 'bg-rose-100 text-rose-800 border border-rose-200')}">
                                 ${stPag}
                             </span>
                         </div>
                     </div>
 
-                    <!-- LINHA DO TEMPO ESTILO TICKET DE RASTREIO -->
                     ${st === 'Cancelado' ? `
-                        <div class="bg-rose-950/40 border border-rose-800 p-4 rounded-2xl text-center space-y-1">
-                            <strong class="text-rose-400 font-bold text-sm flex items-center justify-center gap-2">
+                        <div class="bg-rose-50 border border-rose-200 p-4 rounded-lg text-center space-y-1">
+                            <strong class="text-rose-700 font-bold text-sm flex items-center justify-center gap-2">
                                 <i class="fa-solid fa-circle-xmark"></i> Pedido Cancelado
                             </strong>
-                            <p class="text-xs text-neutral-300">Entre em contato com o atendimento pelo WhatsApp se precisar de suporte.</p>
+                            <p class="text-xs text-slate-600">Entre em contato com o atendimento pelo WhatsApp se precisar de suporte.</p>
                         </div>
                     ` : `
-                        <div class="space-y-3">
-                            <span class="text-xs font-bold text-yellow-400 uppercase tracking-wider block">Progresso da Fabricação</span>
-                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center text-xs">
-                                <div class="p-3.5 rounded-2xl border ${step >= 1 ? 'bg-yellow-400/10 border-yellow-400 text-yellow-400 font-bold shadow-lg shadow-yellow-950/20' : 'bg-neutral-950 border-neutral-800 text-neutral-600'}">
-                                    <i class="fa-solid fa-clock text-lg block mb-1"></i>
-                                    <span class="text-[11px] block">1. Solicitado</span>
+                        <div class="space-y-2">
+                            <span class="text-xs font-bold text-blue-950 uppercase tracking-wider block">Progresso da Fabricação:</span>
+                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center text-xs">
+                                <div class="p-3 rounded-lg border ${step >= 1 ? 'bg-blue-50 border-blue-300 text-blue-900 font-bold' : 'bg-slate-50 border-slate-200 text-slate-400'}">
+                                    <i class="fa-solid fa-clock text-base block mb-1"></i>
+                                    <span class="text-[10px] block">1. Solicitado</span>
                                 </div>
-                                <div class="p-3.5 rounded-2xl border ${step >= 2 ? 'bg-yellow-400/10 border-yellow-400 text-yellow-400 font-bold shadow-lg shadow-yellow-950/20' : 'bg-neutral-950 border-neutral-800 text-neutral-600'}">
-                                    <i class="fa-solid fa-gears text-lg block mb-1"></i>
-                                    <span class="text-[11px] block">2. Em Produção</span>
+                                <div class="p-3 rounded-lg border ${step >= 2 ? 'bg-blue-50 border-blue-300 text-blue-900 font-bold' : 'bg-slate-50 border-slate-200 text-slate-400'}">
+                                    <i class="fa-solid fa-gears text-base block mb-1"></i>
+                                    <span class="text-[10px] block">2. Em Produção</span>
                                 </div>
-                                <div class="p-3.5 rounded-2xl border ${step >= 3 ? 'bg-yellow-400/10 border-yellow-400 text-yellow-400 font-bold shadow-lg shadow-yellow-950/20' : 'bg-neutral-950 border-neutral-800 text-neutral-600'}">
-                                    <i class="fa-solid ${isRetirada ? 'fa-boxes-packing' : 'fa-truck-fast'} text-lg block mb-1"></i>
-                                    <span class="text-[11px] block">${isRetirada ? '3. Pronto Balcão' : '3. Em Rota'}</span>
+                                <div class="p-3 rounded-lg border ${step >= 3 ? 'bg-blue-50 border-blue-300 text-blue-900 font-bold' : 'bg-slate-50 border-slate-200 text-slate-400'}">
+                                    <i class="fa-solid ${isRetirada ? 'fa-boxes-packing' : 'fa-truck-fast'} text-base block mb-1"></i>
+                                    <span class="text-[10px] block">${isRetirada ? '3. Pronto Balcão' : '3. Em Rota'}</span>
                                 </div>
-                                <div class="p-3.5 rounded-2xl border ${step >= 4 ? 'bg-emerald-500/20 border-emerald-500 text-emerald-400 font-bold shadow-lg shadow-emerald-950/20' : 'bg-neutral-950 border-neutral-800 text-neutral-600'}">
-                                    <i class="fa-solid fa-circle-check text-lg block mb-1"></i>
-                                    <span class="text-[11px] block">4. Concluído</span>
+                                <div class="p-3 rounded-lg border ${step >= 4 ? 'bg-emerald-50 border-emerald-300 text-emerald-800 font-bold' : 'bg-slate-50 border-slate-200 text-slate-400'}">
+                                    <i class="fa-solid fa-circle-check text-base block mb-1"></i>
+                                    <span class="text-[10px] block">4. Concluído</span>
                                 </div>
                             </div>
                         </div>
                     `}
 
-                    <!-- Resumo dos Itens & Financeiro -->
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 bg-black/60 p-5 rounded-2xl border border-neutral-800 text-xs">
-                        <div class="md:col-span-2 space-y-1.5">
-                            <span class="text-[10px] text-neutral-500 uppercase font-bold block">Itens Solicitados:</span>
-                            <strong class="text-white font-semibold block text-sm leading-relaxed">${escapeAttr(descItens)}</strong>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 bg-slate-50 p-4 rounded-lg border border-slate-200 text-xs">
+                        <div class="md:col-span-2 space-y-1">
+                            <span class="text-[10px] text-slate-500 uppercase font-bold block">Itens Solicitados:</span>
+                            <strong class="text-slate-800 font-semibold block leading-relaxed">${escapeAttr(descItens)}</strong>
                         </div>
-                        <div class="space-y-1.5 border-t md:border-t-0 md:border-l border-neutral-800 pt-3 md:pt-0 md:pl-5">
+                        <div class="space-y-1 border-t md:border-t-0 md:border-l border-slate-200 pt-3 md:pt-0 md:pl-4">
                             <div class="flex justify-between">
-                                <span class="text-neutral-400">Total Pedido:</span>
-                                <strong class="text-white">R$ ${total.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</strong>
+                                <span class="text-slate-500">Total Pedido:</span>
+                                <strong class="text-slate-800">R$ ${total.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</strong>
                             </div>
                             <div class="flex justify-between">
-                                <span class="text-emerald-400">Valor Pago:</span>
-                                <strong class="text-emerald-400">R$ ${valorPago.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</strong>
+                                <span class="text-emerald-700">Valor Pago:</span>
+                                <strong class="text-emerald-700">R$ ${valorPago.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</strong>
                             </div>
-                            <div class="flex justify-between border-t border-neutral-800 pt-1.5">
-                                <span class="text-amber-400 font-bold">Saldo Pendente:</span>
-                                <strong class="text-amber-400 font-black text-sm">R$ ${saldoPendente.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</strong>
+                            <div class="flex justify-between border-t border-slate-200 pt-1">
+                                <span class="text-blue-950 font-bold">Saldo Pendente:</span>
+                                <strong class="text-blue-900 font-black">R$ ${saldoPendente.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</strong>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Botões de Ação WhatsApp -->
-                    <div class="flex flex-wrap items-center justify-end gap-3 pt-2">
+                    <div class="flex flex-wrap items-center justify-end gap-3">
                         ${saldoPendente > 0 ? `
-                            <button onclick="enviarComprovantePixModal('#${p.id}')" class="flex-1 sm:flex-none bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-5 py-3 rounded-2xl text-xs shadow-lg shadow-emerald-950/40 transition-all flex items-center justify-center gap-2">
+                            <button onclick="enviarComprovantePixModal('#${p.id}')" class="flex-1 sm:flex-none bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2.5 rounded text-xs shadow transition-all flex items-center justify-center gap-2">
                                 <i class="fa-brands fa-whatsapp text-sm"></i> Enviar Comprovante Pix
                             </button>
                         ` : ''}
 
-                        <button onclick="tirarDuvidaPedido('${p.id}', '${escapeAttr(st)}')" class="flex-1 sm:flex-none bg-neutral-800 hover:bg-neutral-700 text-yellow-400 border border-neutral-700 font-bold px-5 py-3 rounded-2xl text-xs transition-all flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-comment-dots text-sm"></i> Tirar Dúvida no Whats
+                        <button onclick="tirarDuvidaPedido('${p.id}', '${escapeAttr(st)}')" class="flex-1 sm:flex-none bg-slate-800 hover:bg-slate-700 text-white font-bold px-4 py-2.5 rounded text-xs transition-all flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-comment-dots text-sm"></i> Tirar Dúvida
                         </button>
                     </div>
                 `;
@@ -612,10 +731,10 @@
 
             if (itensUnicos.length === 0) {
                 container.innerHTML = `
-                    <div class="col-span-full bg-neutral-900 border border-neutral-800 p-12 rounded-3xl text-center space-y-2 shadow-2xl">
-                        <i class="fa-solid fa-rotate-right text-3xl text-neutral-600 block"></i>
-                        <h4 class="text-sm font-bold text-white">Nenhum histórico de compra anterior localizado.</h4>
-                        <p class="text-xs text-neutral-400">Assim que você realizar um pedido na PHSUBLIME, seus itens aparecerão aqui para repetição rápida.</p>
+                    <div class="col-span-full bg-white border border-slate-200 p-8 rounded-xl text-center space-y-2 shadow-md">
+                        <i class="fa-solid fa-rotate-right text-3xl text-slate-300 block"></i>
+                        <h4 class="text-sm font-bold text-slate-800">Nenhum histórico de compra anterior localizado.</h4>
+                        <p class="text-xs text-slate-500">Assim que você realizar um pedido na PHSUBLIME, seus itens aparecerão aqui para repetição rápida.</p>
                     </div>
                 `;
                 return;
@@ -623,23 +742,23 @@
 
             itensUnicos.forEach(item => {
                 const card = document.createElement('div');
-                card.className = "bg-neutral-900 border border-neutral-800 rounded-3xl p-6 space-y-5 hover:border-yellow-400/40 transition-all flex flex-col justify-between card-glow";
+                card.className = "bg-white border border-slate-200 rounded-xl p-5 space-y-4 hover:border-blue-400 transition-all flex flex-col justify-between shadow-sm";
                 card.innerHTML = `
-                    <div class="space-y-3">
-                        <span class="text-[10px] font-bold uppercase tracking-wider text-yellow-400 bg-yellow-400/10 border border-yellow-400/20 px-3 py-1 rounded-full inline-block">
+                    <div class="space-y-2">
+                        <span class="text-[9px] font-bold uppercase tracking-wider text-blue-900 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded inline-block">
                             Comprado Anteriormente
                         </span>
-                        <h4 class="text-base font-black text-white leading-snug">${escapeAttr(item.nome)}</h4>
-                        <p class="text-xs text-neutral-400">Material: <strong class="text-neutral-200">${escapeAttr(item.material)}</strong></p>
+                        <h4 class="text-sm font-black text-slate-800 leading-snug font-heading">${escapeAttr(item.nome)}</h4>
+                        <p class="text-xs text-slate-500">Especificação: <strong class="text-slate-700">${escapeAttr(item.material)}</strong></p>
                     </div>
 
-                    <div class="pt-4 border-t border-neutral-800 flex items-center justify-between gap-2">
+                    <div class="pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
                         <div>
-                            <span class="text-[10px] text-neutral-500 uppercase font-bold block">Último Valor:</span>
-                            <strong class="text-emerald-400 font-black text-lg">R$ ${item.ultimoValor.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</strong>
+                            <span class="text-[9px] text-slate-400 uppercase font-bold block">Último Valor:</span>
+                            <strong class="text-emerald-700 font-black text-base">R$ ${item.ultimoValor.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</strong>
                         </div>
-                        <button onclick="solicitarRecompraWhats('${escapeAttr(item.nome)}', '${escapeAttr(item.material)}', ${item.ultimaQtd})" class="bg-yellow-400 hover:bg-yellow-300 text-black font-black text-xs px-4 py-3 rounded-2xl transition-all shadow-md flex items-center gap-1.5">
-                            <i class="fa-solid fa-cart-plus"></i> Pedir Novamente
+                        <button onclick="solicitarRecompraWhats('${escapeAttr(item.nome)}', '${escapeAttr(item.material)}', ${item.ultimaQtd})" class="bg-amber-400 hover:bg-amber-300 text-blue-950 font-black text-xs px-3 py-2 rounded transition-all shadow flex items-center gap-1">
+                            <i class="fa-solid fa-cart-plus"></i> Repetir
                         </button>
                     </div>
                 `;
@@ -656,7 +775,7 @@
             window.open(`https://api.whatsapp.com/send?phone=${WHATSAPP_ATENDIMENTO}&text=${encodeURIComponent(msg)}`, '_blank');
         }
 
-        // CARREGAR E RENDERIZAR CATÁLOGO PÚBLICO
+        // CARREGAR E RENDERIZAR CATÁLOGO PÚBLICO ESTILO GRÁFICA
         async function carregarEstoquePublico() {
             try {
                 const { data, error } = await supabaseClient
@@ -674,16 +793,10 @@
             }
         }
 
-        function obterIconeCategoria(categoria, nome) {
-            const cat = (categoria || '').toLowerCase();
-            const nom = (nome || '').toLowerCase();
-
-            if (cat.includes('adesivo') || nom.includes('adesivo') || nom.includes('vinil')) return 'fa-tags';
-            if (cat.includes('comunicação') || nom.includes('lona') || nom.includes('banner')) return 'fa-image';
-            if (cat.includes('gráfica') || nom.includes('panfleto') || nom.includes('cartão') || nom.includes('folheto')) return 'fa-print';
-            if (cat.includes('brinde') || nom.includes('caneca') || nom.includes('copo') || nom.includes('taça')) return 'fa-mug-hot';
-            if (cat.includes('vestuário') || nom.includes('camisa') || nom.includes('camiseta')) return 'fa-shirt';
-            return 'fa-box-open';
+        function filtrarCategoria(cat) {
+            categoriaFiltro = cat.toLowerCase();
+            document.getElementById('input-busca-catalogo').value = '';
+            alternarAba('catalogo');
         }
 
         function renderizarCatalogo() {
@@ -695,15 +808,17 @@
 
             const filtrados = catalogoEstoque.filter(item => {
                 const txt = `${item.nome} ${item.categoria} ${item.fornecedor}`.toLowerCase();
-                return !busca || txt.includes(busca);
+                const atendeBusca = !busca || txt.includes(busca);
+                const atendeCategoria = !categoriaFiltro || txt.includes(categoriaFiltro);
+                return atendeBusca && atendeCategoria;
             });
 
             if (filtrados.length === 0) {
                 container.innerHTML = `
-                    <div class="col-span-full bg-neutral-900 border border-neutral-800 p-12 rounded-3xl text-center space-y-2 shadow-2xl">
-                        <i class="fa-solid fa-store text-3xl text-neutral-600 block"></i>
-                        <h4 class="text-sm font-bold text-white">Nenhum produto localizado no catálogo.</h4>
-                        <p class="text-xs text-neutral-400">Tente buscar por termos como lona, adesivo, panfleto, caneca...</p>
+                    <div class="col-span-full bg-white border border-slate-200 p-8 rounded-xl text-center space-y-2 shadow-sm">
+                        <i class="fa-solid fa-store text-3xl text-slate-300 block"></i>
+                        <h4 class="text-sm font-bold text-slate-800">Nenhum produto localizado no catálogo.</h4>
+                        <p class="text-xs text-slate-500">Tente buscar por termos como lona, adesivo, panfleto, caneca...</p>
                     </div>
                 `;
                 return;
@@ -711,43 +826,57 @@
 
             filtrados.forEach(item => {
                 const preco = parseFloat(item.precoVenda || 0);
-                const iconeCat = obterIconeCategoria(item.categoria, item.nome);
 
                 const card = document.createElement('div');
-                card.className = "bg-neutral-900 border border-neutral-800 rounded-3xl p-6 space-y-5 hover:border-yellow-400/40 transition-all flex flex-col justify-between card-glow";
+                card.className = "bg-white border border-slate-200 rounded-lg p-4 space-y-3 hover:shadow-md hover:border-blue-400 transition-all flex flex-col justify-between";
 
                 card.innerHTML = `
-                    <div class="space-y-3">
-                        <div class="flex items-center justify-between gap-2">
-                            <span class="text-[10px] font-bold uppercase tracking-wider text-yellow-400 bg-yellow-400/10 border border-yellow-400/20 px-3 py-1 rounded-full flex items-center gap-1.5">
-                                <i class="fa-solid ${iconeCat}"></i> ${escapeAttr(item.categoria || 'Geral')}
-                            </span>
-                            <span class="text-[10px] text-neutral-500 font-bold uppercase">${escapeAttr(item.unidade || 'Un')}</span>
+                    <div class="space-y-2">
+                        <!-- Imagem / Icone Ilustrativo do Produto -->
+                        <div class="w-full h-28 bg-slate-100 rounded border border-slate-200 flex flex-col items-center justify-center text-slate-400 p-2 relative overflow-hidden">
+                            <span class="absolute top-2 left-2 bg-yellow-400 text-blue-950 text-[9px] font-black px-1.5 py-0.5 rounded uppercase">PÁG. 12/24</span>
+                            <i class="fa-solid fa-print text-3xl mb-1 text-slate-300"></i>
+                            <span class="text-[10px] font-bold uppercase text-slate-500">${escapeAttr(item.categoria || 'Gráfica')}</span>
                         </div>
-                        <h4 class="text-base font-black text-white leading-snug">${escapeAttr(item.nome)}</h4>
-                        ${item.obs ? `<p class="text-xs text-neutral-400 italic line-clamp-2">${escapeAttr(item.obs)}</p>` : ''}
+
+                        <div class="space-y-1">
+                            <h4 class="text-xs font-black text-blue-950 leading-snug font-heading line-clamp-2">${escapeAttr(item.nome)}</h4>
+                            ${item.obs ? `<p class="text-[11px] text-slate-500 italic line-clamp-2">${escapeAttr(item.obs)}</p>` : ''}
+                        </div>
                     </div>
 
-                    <div class="pt-4 border-t border-neutral-800 flex items-center justify-between gap-2">
-                        <div>
-                            <span class="text-[10px] text-neutral-500 uppercase font-bold block">Preço de Tabela:</span>
-                            <strong class="text-yellow-400 font-black text-lg">R$ ${preco.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</strong>
+                    <div class="pt-3 border-t border-slate-100 space-y-2">
+                        <div class="text-center">
+                            <span class="text-[10px] text-slate-400 uppercase font-bold block">a partir de:</span>
+                            <strong class="text-red-600 font-black text-sm">R$ ${preco.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</strong>
                         </div>
-                        <button onclick="solicitarOrcamentoProdutoCatalogo('${escapeAttr(item.nome)}', ${preco})" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs px-4 py-3 rounded-2xl transition-all shadow-md flex items-center gap-1.5">
-                            <i class="fa-brands fa-whatsapp text-sm"></i> Pedir no Whats
-                        </button>
+
+                        <!-- BOTÕES ESTILO LOJA GRÁFICA -->
+                        <div class="grid grid-cols-2 gap-2">
+                            <button onclick="solicitarGabarito('${escapeAttr(item.nome)}')" class="bg-blue-600 hover:bg-blue-700 text-white font-bold text-[10px] py-1.5 rounded transition-all flex items-center justify-center gap-1" title="Baixar Gabarito">
+                                <i class="fa-solid fa-download"></i> Gabarito
+                            </button>
+
+                            <button onclick="solicitarOrcamentoProdutoCatalogo('${escapeAttr(item.nome)}', ${preco})" class="btn-comprar text-white font-black text-[10px] py-1.5 rounded shadow transition-all flex items-center justify-center gap-1 uppercase">
+                                COMPRAR <i class="fa-solid fa-cart-shopping"></i>
+                            </button>
+                        </div>
                     </div>
                 `;
                 container.appendChild(card);
             });
         }
 
-        function solicitarOrcamentoProdutoCatalogo(nomeProduto, preco) {
-            const msg = `Olá, PHSUBLIME! Vi no site o produto *${nomeProduto}* (R$ ${preco.toFixed(2)}) e gostaria de solicitar um orçamento/arte personalizada!`;
+        function solicitarGabarito(nomeProduto) {
+            const msg = `Olá, PHSUBLIME! Gostaria de receber o *GABARITO / MOLDE* para produção do produto: *${nomeProduto}*.`;
             window.open(`https://api.whatsapp.com/send?phone=${WHATSAPP_ATENDIMENTO}&text=${encodeURIComponent(msg)}`, '_blank');
         }
 
-        // REALTIME SUBSCRIPTION
+        function solicitarOrcamentoProdutoCatalogo(nomeProduto, preco) {
+            const msg = `Olá, PHSUBLIME! Vi no site o produto *${nomeProduto}* (A partir de R$ ${preco.toFixed(2)}) e gostaria de solicitar um orçamento/arte personalizada!`;
+            window.open(`https://api.whatsapp.com/send?phone=${WHATSAPP_ATENDIMENTO}&text=${encodeURIComponent(msg)}`, '_blank');
+        }
+
         function iniciarInscricaoRealtime() {
             if (canalRealtime) supabaseClient.removeChannel(canalRealtime);
 
@@ -761,7 +890,6 @@
                 .subscribe();
         }
 
-        // INICIALIZAÇÃO
         window.onload = inicializarPortal;
     </script>
 </body>
