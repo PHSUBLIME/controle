@@ -18,14 +18,22 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
-        body { font-family: 'Open Sans', sans-serif; background-color: #f1f5f9; color: #1e293b; }
+        body { font-family: 'Open Sans', sans-serif; background-color: #f8fafc; color: #1e293b; }
         h1, h2, h3, h4, .font-heading { font-family: 'Roboto', sans-serif; }
         
         /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: #e2e8f0; }
-        ::-webkit-scrollbar-thumb { background: #0284c7; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #0369a1; }
+        ::-webkit-scrollbar-thumb { background: #5b21b6; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #4c1d95; }
+
+        .btn-purple {
+            background-color: #5b21b6;
+            color: #ffffff;
+        }
+        .btn-purple:hover {
+            background-color: #4c1d95;
+        }
 
         .btn-comprar {
             background: linear-gradient(180deg, #38ef7d 0%, #11998e 100%);
@@ -35,14 +43,14 @@
         }
     </style>
 </head>
-<body class="bg-slate-100 min-h-screen flex flex-col justify-between selection:bg-amber-400 selection:text-black">
+<body class="bg-slate-50 min-h-screen flex flex-col justify-between selection:bg-purple-200 selection:text-purple-900">
 
     <!-- BARRA SUPERIOR DE AVISO / ATENDIMENTO -->
     <div class="bg-slate-900 text-slate-300 text-xs py-1.5 px-4 border-b border-slate-800">
         <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
             <div class="flex items-center gap-4">
                 <span><i class="fa-solid fa-truck-fast text-amber-400 mr-1"></i> Entrega Rápida em todo o Rio de Janeiro & Magé</span>
-                <span class="hidden md:inline"><i class="fa-solid fa-clock text-amber-400 mr-1"></i> Atendimento: Seg. a Sex. das 08h às 18h</span>
+                <span class="hidden md:inline"><i class="fa-solid fa-clock text-amber-400 mr-1"></i> Atendimento: Seg. a Sex. das 09h às 19h</span>
             </div>
             <div class="flex items-center gap-4 font-semibold">
                 <button onclick="alternarAba('pedidos')" class="hover:text-amber-400 transition-all flex items-center gap-1">
@@ -55,286 +63,449 @@
         </div>
     </div>
 
-    <!-- CABEÇALHO PRINCIPAL DA LOJA (ESTILO GRÁFICA) -->
-    <header class="bg-gradient-to-r from-blue-900 via-blue-800 to-indigo-900 text-white shadow-xl sticky top-0 z-50 border-b-4 border-amber-400">
+    <!-- CABEÇALHO PRINCIPAL DA LOJA (ESTILO GRAFICANAUTA/PHSUBLIME) -->
+    <header class="bg-purple-950 text-white shadow-xl sticky top-0 z-50 border-b-4 border-amber-400">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-col md:flex-row items-center justify-between gap-4">
             
             <!-- LOGO PHSUBLIME -->
             <a href="javascript:void(0)" onclick="alternarAba('catalogo')" class="flex items-center gap-3 group">
                 <div class="w-12 h-12 shrink-0 flex items-center justify-center bg-white rounded-xl p-1 shadow-md group-hover:scale-105 transition-all">
-                    <img src="FIVICOM.png" alt="PHSUBLIME" class="w-full h-full object-contain" onerror="this.outerHTML='<i class=\'fa-solid fa-crown text-blue-900 text-2xl\'></i>'">
+                    <img src="FIVICOM.png" alt="PHSUBLIME" class="w-full h-full object-contain" onerror="this.outerHTML='<i class=\'fa-solid fa-crown text-purple-900 text-2xl\'></i>'">
                 </div>
                 <div>
                     <div class="flex items-center gap-2">
                         <h1 class="text-2xl font-black tracking-wider text-amber-400 font-heading">PHSUBLIME</h1>
-                        <span class="text-[10px] bg-amber-400 text-blue-950 font-black px-2 py-0.5 rounded uppercase tracking-wider">
+                        <span class="text-[10px] bg-amber-400 text-purple-950 font-black px-2 py-0.5 rounded uppercase tracking-wider">
                             GRÁFICA
                         </span>
                     </div>
-                    <span class="text-xs text-blue-100 font-medium block">Gráfica Rápida & Comunicação Visual</span>
+                    <span class="text-xs text-purple-200 font-medium block">A Gráfica das Galáxias & Personalizados</span>
                 </div>
             </a>
 
             <!-- BARRA DE PESQUISA CENTRAL -->
-            <div class="w-full md:w-1/2 relative">
+            <div class="w-full md:w-1/3 relative">
                 <div class="flex items-center bg-white rounded-lg overflow-hidden shadow-inner border border-slate-300">
-                    <input type="text" id="input-busca-catalogo" onkeyup="renderizarCatalogo()" placeholder="Buscar panfleto, banner, cartão de visita, caneca, adesivo..." class="w-full px-4 py-2.5 text-slate-800 text-xs sm:text-sm focus:outline-none">
-                    <button onclick="renderizarCatalogo()" class="bg-amber-400 hover:bg-amber-300 text-blue-950 px-5 py-2.5 font-bold transition-all flex items-center gap-1.5">
+                    <input type="text" id="input-busca-catalogo" onkeyup="renderizarCatalogo()" placeholder="Buscar cartões, banners, folhetos, canecas..." class="w-full px-4 py-2.5 text-slate-800 text-xs sm:text-sm focus:outline-none">
+                    <button onclick="renderizarCatalogo()" class="bg-amber-400 hover:bg-amber-300 text-purple-950 px-4 py-2.5 font-bold transition-all flex items-center gap-1.5">
                         <i class="fa-solid fa-magnifying-glass"></i>
                     </button>
                 </div>
             </div>
 
-            <!-- IDENTIFICAÇÃO DO CLIENTE / MINHA CONTA -->
-            <div id="header-user-info" class="flex items-center gap-3 shrink-0">
-                <button id="btn-login-header" onclick="abrirModalIdentificacao()" class="bg-amber-400 hover:bg-amber-300 text-blue-950 font-black text-xs px-4 py-2.5 rounded-lg transition-all shadow-md flex items-center gap-2">
-                    <i class="fa-solid fa-user-circle text-base"></i> <span>Acessar Meus Pedidos</span>
+            <!-- ÁREA DE CONTA E BOTÃO DO CARRINHO -->
+            <div class="flex items-center gap-3 shrink-0">
+                <!-- BOTÃO DO CARRINHO DE COMPRAS -->
+                <button onclick="alternarAba('carrinho')" class="relative bg-amber-400 hover:bg-amber-300 text-purple-950 font-black text-xs px-4 py-2.5 rounded-lg transition-all shadow-md flex items-center gap-2">
+                    <i class="fa-solid fa-cart-shopping text-base"></i>
+                    <span class="hidden sm:inline">CARRINHO</span>
+                    <span id="badge-carrinho-qtd" class="bg-purple-900 text-white font-bold px-2 py-0.5 rounded-full text-[11px]">0</span>
                 </button>
+
+                <!-- IDENTIFICAÇÃO DO CLIENTE / MINHA CONTA -->
+                <div id="header-user-info" class="flex items-center gap-3">
+                    <button id="btn-login-header" onclick="abrirModalIdentificacao()" class="bg-purple-800 hover:bg-purple-700 text-white font-bold text-xs px-4 py-2.5 rounded-lg transition-all shadow-md flex items-center gap-2 border border-purple-600">
+                        <i class="fa-solid fa-user-circle text-base"></i> <span class="hidden lg:inline">Olá, Entrar</span>
+                    </button>
+                </div>
             </div>
 
         </div>
 
         <!-- MENU DE NAVEGAÇÃO HORIZONTAL DE CATEGORIAS -->
-        <nav class="bg-blue-950 border-t border-blue-800/60 text-xs font-bold text-slate-200">
+        <nav class="bg-purple-900 border-t border-purple-800/60 text-xs font-bold text-slate-100">
             <div class="max-w-7xl mx-auto px-4 flex items-center justify-between overflow-x-auto no-scrollbar">
                 <div class="flex items-center whitespace-nowrap">
-                    <button onclick="alternarAba('catalogo')" id="tab-nav-catalogo" class="px-4 py-3 hover:bg-blue-900 text-amber-400 border-b-2 border-amber-400 transition-all flex items-center gap-1.5">
-                        <i class="fa-solid fa-store"></i> CATÁLOGO
+                    <button onclick="alternarAba('catalogo')" id="tab-nav-catalogo" class="px-4 py-3 hover:bg-purple-800 text-amber-400 border-b-2 border-amber-400 transition-all flex items-center gap-1.5">
+                        <i class="fa-solid fa-store"></i> INÍCIO / CATÁLOGO
                     </button>
-                    <button onclick="alternarAba('pedidos')" id="tab-nav-pedidos" class="px-4 py-3 hover:bg-blue-900 hover:text-amber-400 transition-all flex items-center gap-1.5">
+                    <button onclick="alternarAba('carrinho')" id="tab-nav-carrinho" class="px-4 py-3 hover:bg-purple-800 hover:text-amber-400 transition-all flex items-center gap-1.5">
+                        <i class="fa-solid fa-cart-shopping"></i> MEU CARRINHO
+                    </button>
+                    <button onclick="alternarAba('pedidos')" id="tab-nav-pedidos" class="px-4 py-3 hover:bg-purple-800 hover:text-amber-400 transition-all flex items-center gap-1.5">
                         <i class="fa-solid fa-truck-ramp-box"></i> RASTREAR PEDIDO
                     </button>
-                    <button onclick="alternarAba('recompra')" id="tab-nav-recompra" class="px-4 py-3 hover:bg-blue-900 hover:text-amber-400 transition-all flex items-center gap-1.5">
+                    <button onclick="alternarAba('recompra')" id="tab-nav-recompra" class="px-4 py-3 hover:bg-purple-800 hover:text-amber-400 transition-all flex items-center gap-1.5">
                         <i class="fa-solid fa-rotate-right"></i> RECOMPRA RÁPIDA
                     </button>
-                    <a href="#chave-pix-box" class="px-4 py-3 hover:bg-blue-900 hover:text-amber-400 transition-all flex items-center gap-1.5 text-emerald-400">
-                        <i class="fa-brands fa-pix"></i> PAGAR VIA PIX
-                    </a>
                 </div>
                 <div class="hidden lg:flex items-center gap-2 text-[11px] text-amber-300 font-semibold px-2">
-                    <i class="fa-solid fa-location-dot"></i> Magé & Rio de Janeiro
+                    <i class="fa-solid fa-location-dot"></i> Balcões de Retirada & Entregas
                 </div>
             </div>
         </nav>
     </header>
 
-    <!-- ÁREA PRINCIPAL COM LAYOUT EM 2 COLUNAS (SIDEBAR + CONTEÚDO) -->
+    <!-- CONTEÚDO PRINCIPAL -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full flex-1">
-        
-        <!-- BANNER DE ENTREGA RÁPIDA / OFICIAL -->
-        <div class="bg-gradient-to-r from-blue-700 via-indigo-800 to-blue-950 text-white rounded-xl shadow-lg p-5 mb-6 border border-blue-600 flex flex-col md:flex-row items-center justify-between gap-4">
-            <div class="flex items-center gap-4">
-                <div class="w-14 h-14 bg-amber-400 text-blue-950 rounded-xl flex items-center justify-center text-2xl shrink-0 shadow-md">
-                    <i class="fa-solid fa-bolt"></i>
+
+        <!-- ================= SEÇÃO 1: CATÁLOGO / VITRINE (PÁGINA INICIAL) ================= -->
+        <div id="secao-catalogo" class="space-y-6">
+            <!-- BANNER DE DESTAQUE -->
+            <div class="bg-gradient-to-r from-purple-900 via-purple-800 to-indigo-950 text-white rounded-xl shadow-lg p-5 border border-purple-700 flex flex-col md:flex-row items-center justify-between gap-4">
+                <div class="flex items-center gap-4">
+                    <div class="w-14 h-14 bg-amber-400 text-purple-950 rounded-xl flex items-center justify-center text-2xl shrink-0 shadow-md">
+                        <i class="fa-solid fa-bolt"></i>
+                    </div>
+                    <div>
+                        <span class="bg-amber-400 text-purple-950 text-[10px] font-black px-2 py-0.5 rounded uppercase">PRODUÇÃO RÁPIDA</span>
+                        <h2 class="text-xl font-black font-heading tracking-wide text-white">PEDIU, CHEGOU! MATERIAL GRÁFICO DE ALTA QUALIDADE</h2>
+                        <p class="text-xs text-purple-200">Escolha seu produto, anexe a arte e receba em casa ou retire no balcão mais próximo.</p>
+                    </div>
                 </div>
-                <div>
-                    <span class="bg-amber-400 text-blue-950 text-[10px] font-black px-2 py-0.5 rounded uppercase">ENTREGA RÁPIDA</span>
-                    <h2 class="text-xl font-black font-heading tracking-wide text-white">PEDIU, CHEGOU! ENTREGA EM TODO RIO DE JANEIRO E MAGÉ!</h2>
-                    <p class="text-xs text-blue-100">Consulte os pontos de retirada ou solicite entrega porta a porta para seus materiais gráficos.</p>
+
+                <div id="chave-pix-box" class="bg-purple-950/90 border border-purple-700 p-3.5 rounded-lg shrink-0 w-full md:w-72 text-center shadow-inner">
+                    <div class="flex items-center justify-between text-xs mb-1.5">
+                        <span class="font-bold text-emerald-400 flex items-center gap-1">
+                            <i class="fa-brands fa-pix"></i> Chave Pix CNPJ
+                        </span>
+                        <span class="text-[9px] bg-emerald-500/20 text-emerald-300 px-1.5 py-0.5 rounded font-bold">Oficial</span>
+                    </div>
+                    <div class="bg-slate-900 border border-slate-700 px-3 py-1.5 rounded text-xs font-mono text-white mb-2 select-all">
+                        <strong>60416979000105</strong>
+                    </div>
+                    <button onclick="copiarChavePix()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs py-1.5 rounded transition-all shadow flex items-center justify-center gap-1.5">
+                        <i class="fa-regular fa-copy"></i> Copiar Chave Pix
+                    </button>
                 </div>
             </div>
 
-            <!-- CARD CHAVE PIX EM DESTAQUE -->
-            <div id="chave-pix-box" class="bg-blue-950/90 border border-blue-700/80 p-3.5 rounded-lg shrink-0 w-full md:w-72 text-center shadow-inner">
-                <div class="flex items-center justify-between text-xs mb-1.5">
-                    <span class="font-bold text-emerald-400 flex items-center gap-1">
-                        <i class="fa-brands fa-pix"></i> Chave Pix CNPJ
-                    </span>
-                    <span class="text-[9px] bg-emerald-500/20 text-emerald-300 px-1.5 py-0.5 rounded font-bold">Oficial</span>
+            <!-- LAYOUT EM 2 COLUNAS (SIDEBAR + PRODUTOS) -->
+            <div class="flex flex-col lg:flex-row gap-6">
+                <!-- SIDEBAR ESQUERDA -->
+                <aside class="w-full lg:w-64 shrink-0 space-y-4">
+                    <div class="bg-white rounded-lg shadow-md border border-slate-200 overflow-hidden">
+                        <div class="bg-purple-900 text-white font-black text-xs px-4 py-2.5 uppercase tracking-wider flex items-center justify-between">
+                            <span>MAIS VENDIDOS</span>
+                            <span class="bg-amber-400 text-purple-950 text-[9px] px-1.5 py-0.5 rounded font-bold">OFERTA</span>
+                        </div>
+                        <ul class="divide-y divide-slate-100 text-xs font-semibold text-slate-700">
+                            <li><a href="javascript:void(0)" onclick="filtrarCategoria('cartao')" class="px-4 py-2.5 hover:bg-purple-50 hover:text-purple-900 flex items-center justify-between transition-all"><span>Cartão de Visita 250g/300g</span> <i class="fa-solid fa-chevron-right text-[10px] text-slate-400"></i></a></li>
+                            <li><a href="javascript:void(0)" onclick="filtrarCategoria('banner')" class="px-4 py-2.5 hover:bg-purple-50 hover:text-purple-900 flex items-center justify-between transition-all"><span>Banners & Lonas</span> <i class="fa-solid fa-chevron-right text-[10px] text-slate-400"></i></a></li>
+                            <li><a href="javascript:void(0)" onclick="filtrarCategoria('folheto')" class="px-4 py-2.5 hover:bg-purple-50 hover:text-purple-900 flex items-center justify-between transition-all"><span>Panfletos & Folhetos</span> <i class="fa-solid fa-chevron-right text-[10px] text-slate-400"></i></a></li>
+                            <li><a href="javascript:void(0)" onclick="filtrarCategoria('adesivo')" class="px-4 py-2.5 hover:bg-purple-50 hover:text-purple-900 flex items-center justify-between transition-all"><span>Adesivos e Rótulos</span> <i class="fa-solid fa-chevron-right text-[10px] text-slate-400"></i></a></li>
+                            <li><a href="javascript:void(0)" onclick="filtrarCategoria('caneca')" class="px-4 py-2.5 hover:bg-purple-50 hover:text-purple-900 flex items-center justify-between transition-all"><span>Canecas & Brindes</span> <i class="fa-solid fa-chevron-right text-[10px] text-slate-400"></i></a></li>
+                        </ul>
+                    </div>
+                </aside>
+
+                <!-- GRID DE PRODUTOS DA VITRINE -->
+                <div class="flex-1 space-y-4">
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 flex items-center justify-between">
+                        <h3 class="text-sm font-black text-purple-950 uppercase font-heading flex items-center gap-2">
+                            <i class="fa-solid fa-fire text-amber-500"></i> Catálogo de Produtos
+                        </h3>
+                        <span class="text-xs text-slate-500">Selecione para configurar e adicionar ao carrinho</span>
+                    </div>
+
+                    <div id="container-catalogo-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
                 </div>
-                <div class="bg-slate-900 border border-slate-700 px-3 py-1.5 rounded text-xs font-mono text-white mb-2 select-all">
-                    <strong>60416979000105</strong>
-                </div>
-                <button onclick="copiarChavePix()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs py-1.5 rounded transition-all shadow flex items-center justify-center gap-1.5">
-                    <i class="fa-regular fa-copy"></i> Copiar Chave Pix
-                </button>
             </div>
         </div>
 
-        <div class="flex flex-col lg:flex-row gap-6">
 
-            <!-- SIDEBAR ESQUERDA (MENU DE CATEGORIAS ESTILO GRÁFICA) -->
-            <aside class="w-full lg:w-64 shrink-0 space-y-4">
-                
-                <!-- MENU MAIS VENDIDOS -->
-                <div class="bg-white rounded-lg shadow-md border border-slate-200 overflow-hidden">
-                    <div class="bg-red-600 text-white font-black text-xs px-4 py-2.5 uppercase tracking-wider flex items-center justify-between">
-                        <span>MAIS VENDIDOS</span>
-                        <span class="bg-amber-400 text-black text-[9px] px-1.5 py-0.5 rounded">PROMOÇÃO</span>
+        <!-- ================= SEÇÃO 2: PÁGINA DO CARRINHO (ESTILO GRAFICANAUTA) ================= -->
+        <div id="secao-carrinho" class="hidden space-y-6">
+            
+            <!-- BREADCRUMB -->
+            <div class="text-xs text-slate-500 flex items-center gap-2 bg-slate-200/60 px-4 py-2 rounded-lg">
+                <a href="javascript:void(0)" onclick="alternarAba('catalogo')" class="hover:underline text-purple-900 font-bold">Início</a>
+                <span>/</span>
+                <span class="font-bold text-slate-700">Carrinho</span>
+            </div>
+
+            <!-- CONTAINER DE PRODUTOS VAZIO -->
+            <div id="carrinho-vazio-msg" class="hidden bg-white border border-slate-200 p-12 rounded-xl text-center space-y-3 shadow-sm">
+                <i class="fa-solid fa-cart-flatbed text-5xl text-slate-300 block"></i>
+                <h3 class="text-lg font-black text-slate-800">Seu carrinho de compras está vazio.</h3>
+                <p class="text-xs text-slate-500">Navegue pelo nosso catálogo e escolha os materiais que deseja produzir.</p>
+                <button onclick="alternarAba('catalogo')" class="px-6 py-2.5 bg-purple-900 text-white font-bold text-xs rounded-lg hover:bg-purple-800 transition-all shadow">
+                    VER PRODUTOS DISPONÍVEIS
+                </button>
+            </div>
+
+            <!-- CONTEÚDO DO CARRINHO CHEIO (ESTILO EXACTO DA IMAGEM) -->
+            <div id="carrinho-conteudo-box" class="space-y-6">
+
+                <!-- TABELA DE PRODUTOS DO CARRINHO -->
+                <div class="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs border-collapse">
+                            <thead>
+                                <tr class="bg-slate-100 border-b border-slate-200 text-slate-600 font-bold uppercase text-[11px]">
+                                    <th class="py-3 px-4 w-1/2">PRODUTO</th>
+                                    <th class="py-3 px-4 text-center">QUANTIDADE</th>
+                                    <th class="py-3 px-4 text-center">AÇÕES</th>
+                                    <th class="py-3 px-4 text-right">VALOR</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabela-itens-carrinho" class="divide-y divide-slate-100">
+                                <!-- Preenchido Dinamicamente pelo JS -->
+                            </tbody>
+                        </table>
                     </div>
-                    <ul class="divide-y divide-slate-100 text-xs font-semibold text-slate-700">
-                        <li><a href="javascript:void(0)" onclick="filtrarCategoria('banner')" class="px-4 py-2.5 hover:bg-slate-50 hover:text-blue-700 flex items-center justify-between transition-all"><span>Banner com Tubete</span> <i class="fa-solid fa-chevron-right text-[10px] text-slate-400"></i></a></li>
-                        <li><a href="javascript:void(0)" onclick="filtrarCategoria('cartao')" class="px-4 py-2.5 hover:bg-slate-50 hover:text-blue-700 flex items-center justify-between transition-all"><span>Cartão de Visita</span> <i class="fa-solid fa-chevron-right text-[10px] text-slate-400"></i></a></li>
-                        <li><a href="javascript:void(0)" onclick="filtrarCategoria('folheto')" class="px-4 py-2.5 hover:bg-slate-50 hover:text-blue-700 flex items-center justify-between transition-all"><span>Folhetos e Panfletos</span> <i class="fa-solid fa-chevron-right text-[10px] text-slate-400"></i></a></li>
-                        <li><a href="javascript:void(0)" onclick="filtrarCategoria('adesivo')" class="px-4 py-2.5 hover:bg-slate-50 hover:text-blue-700 flex items-center justify-between transition-all"><span>Adesivos Vinil</span> <i class="fa-solid fa-chevron-right text-[10px] text-slate-400"></i></a></li>
-                        <li><a href="javascript:void(0)" onclick="filtrarCategoria('caneca')" class="px-4 py-2.5 hover:bg-slate-50 hover:text-blue-700 flex items-center justify-between transition-all"><span>Canecas e Copos</span> <i class="fa-solid fa-chevron-right text-[10px] text-slate-400"></i></a></li>
-                    </ul>
                 </div>
 
-                <!-- MENU TODOS OS PRODUTOS -->
-                <div class="bg-white rounded-lg shadow-md border border-slate-200 overflow-hidden">
-                    <div class="bg-blue-900 text-white font-black text-xs px-4 py-2.5 uppercase tracking-wider">
-                        TODOS OS PRODUTOS
-                    </div>
-                    <ul class="divide-y divide-slate-100 text-xs font-medium text-slate-600">
-                        <li><a href="javascript:void(0)" onclick="filtrarCategoria('')" class="px-4 py-2 hover:bg-blue-50 hover:text-blue-700 flex items-center justify-between"><span>Ver Todo o Catálogo</span> <i class="fa-solid fa-border-all text-[10px] text-slate-400"></i></a></li>
-                        <li><a href="javascript:void(0)" onclick="filtrarCategoria('banner')" class="px-4 py-2 hover:bg-blue-50 hover:text-blue-700 flex items-center justify-between"><span>Banners & Lonas</span> <i class="fa-solid fa-angle-right text-[10px]"></i></a></li>
-                        <li><a href="javascript:void(0)" onclick="filtrarCategoria('cartao')" class="px-4 py-2 hover:bg-blue-50 hover:text-blue-700 flex items-center justify-between"><span>Cartões de Visita</span> <i class="fa-solid fa-angle-right text-[10px]"></i></a></li>
-                        <li><a href="javascript:void(0)" onclick="filtrarCategoria('folheto')" class="px-4 py-2 hover:bg-blue-50 hover:text-blue-700 flex items-center justify-between"><span>Folhetos & Panfletos</span> <i class="fa-solid fa-angle-right text-[10px]"></i></a></li>
-                        <li><a href="javascript:void(0)" onclick="filtrarCategoria('brinde')" class="px-4 py-2 hover:bg-blue-50 hover:text-blue-700 flex items-center justify-between"><span>Brindes & Canecas</span> <i class="fa-solid fa-angle-right text-[10px]"></i></a></li>
-                        <li><a href="javascript:void(0)" onclick="filtrarCategoria('camisa')" class="px-4 py-2 hover:bg-blue-50 hover:text-blue-700 flex items-center justify-between"><span>Camisas & Uniformes</span> <i class="fa-solid fa-angle-right text-[10px]"></i></a></li>
-                        <li><a href="javascript:void(0)" onclick="filtrarCategoria('pasta')" class="px-4 py-2 hover:bg-blue-50 hover:text-blue-700 flex items-center justify-between"><span>Pastas & Envelopes</span> <i class="fa-solid fa-angle-right text-[10px]"></i></a></li>
-                        <li><a href="javascript:void(0)" onclick="filtrarCategoria('tag')" class="px-4 py-2 hover:bg-blue-50 hover:text-blue-700 flex items-center justify-between"><span>Tags & Rótulos</span> <i class="fa-solid fa-angle-right text-[10px]"></i></a></li>
-                    </ul>
-                </div>
-
-                <!-- BOX SUPORTE RÁPIDO -->
-                <div class="bg-amber-400 text-blue-950 p-4 rounded-lg shadow-md border border-amber-500 text-center space-y-2">
-                    <i class="fa-brands fa-whatsapp text-3xl"></i>
-                    <h4 class="font-black text-sm uppercase">Precisa de Arte Personalizada?</h4>
-                    <p class="text-[11px] leading-tight">Fale direto com nossa equipe de design no WhatsApp.</p>
-                    <a id="btn-whats-sidebar" href="#" target="_blank" class="block bg-blue-950 hover:bg-blue-900 text-white font-bold text-xs py-2 rounded transition-all">
-                        Falar no WhatsApp
-                    </a>
-                </div>
-
-            </aside>
-
-            <!-- CONTEÚDO PRINCIPAL (VITRINE / RASTREIO / RECOMPRA) -->
-            <section class="flex-1 space-y-6">
-
-                <!-- ================= SEÇÃO 1: CATÁLOGO DE PRODUTOS (VITRINE) ================= -->
-                <div id="secao-catalogo" class="space-y-4">
-                    <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3">
-                        <div>
-                            <h3 class="text-base font-black text-blue-950 font-heading uppercase flex items-center gap-2">
-                                <i class="fa-solid fa-fire text-red-500"></i> Produtos Mais Vendidos & Tabela
-                            </h3>
-                            <p class="text-xs text-slate-500">Selecione o produto desejado, baixe o gabarito ou faça seu pedido diretamente.</p>
+                <!-- LINHA 2: CUPOM DE DESCONTO E RESUMO DOS VALORES (LADO A LADO) -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    
+                    <!-- BOX CUPOM DE DESCONTO -->
+                    <div class="bg-white p-5 rounded-lg border border-slate-200 shadow-sm flex flex-col justify-between space-y-4">
+                        <div class="space-y-2">
+                            <label class="block text-xs font-bold text-slate-700">Cupom de Desconto:</label>
+                            <div class="flex gap-2">
+                                <input type="text" id="input-cupom" placeholder="Digite seu cupom..." class="flex-1 border border-slate-300 rounded px-3 py-2 text-xs focus:outline-none focus:border-purple-600 uppercase font-bold">
+                                <button onclick="aplicarCupom()" class="bg-purple-900 hover:bg-purple-800 text-white font-bold text-xs px-5 py-2 rounded transition-all">
+                                    Aplicar cupom
+                                </button>
+                            </div>
                         </div>
-                        <div class="text-xs font-bold bg-slate-100 text-slate-700 px-3 py-1.5 rounded border border-slate-200">
-                            Exibindo materiais gráficos oficiais
+                        <div class="text-[11px] text-slate-400 italic">
+                            * Cupons válidos para primeira compra ou promoções ativas.
                         </div>
                     </div>
 
-                    <!-- GRID DE CARDS DE PRODUTO ESTILO VITRINE GRÁFICA -->
-                    <div id="container-catalogo-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4"></div>
-                </div>
-
-                <!-- ================= SEÇÃO 2: RASTREIO DE PEDIDOS ================= -->
-                <div id="secao-pedidos" class="hidden space-y-6">
-                    <div class="bg-white p-6 rounded-xl shadow-md border border-slate-200">
-                        <h3 class="text-lg font-black text-blue-950 font-heading mb-1 flex items-center gap-2">
-                            <i class="fa-solid fa-magnifying-glass-location text-amber-500"></i> Rastreio e Acompanhamento de Pedidos
-                        </h3>
-                        <p class="text-xs text-slate-500">Digite seu CPF, CNPJ ou WhatsApp cadastrado para consultar a fila de produção.</p>
-                    </div>
-
-                    <!-- Estado Desconectado -->
-                    <div id="msg-nao-identificado" class="bg-white border border-slate-200 p-8 sm:p-12 rounded-xl text-center space-y-4 shadow-md max-w-lg mx-auto">
-                        <div class="w-16 h-16 bg-blue-50 text-blue-900 rounded-full flex items-center justify-center mx-auto text-2xl border border-blue-200">
-                            <i class="fa-solid fa-user-lock"></i>
+                    <!-- BOX RESUMO FINANCEIRO (EXTRATO) -->
+                    <div class="bg-white p-5 rounded-lg border border-purple-900/40 shadow-sm space-y-2 text-xs">
+                        <div class="flex justify-between text-slate-600">
+                            <span>Subtotal:</span>
+                            <strong id="cart-resumo-subtotal" class="text-slate-800">R$ 0,00</strong>
                         </div>
-                        <div class="space-y-1">
-                            <h4 class="text-lg font-black text-slate-800">Identifique-se para rastrear seus pedidos</h4>
-                            <p class="text-xs text-slate-500">
-                                Acesse seu histórico de compras e status de fabricação em tempo real.
-                            </p>
+                        <div class="flex justify-between text-slate-600">
+                            <span>Frete:</span>
+                            <strong id="cart-resumo-frete" class="text-slate-800">R$ 0,00</strong>
                         </div>
-                        <button onclick="abrirModalIdentificacao()" class="w-full bg-amber-400 hover:bg-amber-300 text-blue-950 font-black py-3 rounded-lg text-xs transition-all shadow-md">
-                            DIGITAR MEU CPF OU WHATSAPP
-                        </button>
-                    </div>
-
-                    <!-- Lista Dinâmica dos Pedidos Rasteados -->
-                    <div id="container-lista-pedidos" class="hidden space-y-6"></div>
-                </div>
-
-                <!-- ================= SEÇÃO 3: RECOMPRA RÁPIDA ================= -->
-                <div id="secao-recompra" class="hidden space-y-6">
-                    <div class="bg-white p-6 rounded-xl shadow-md border border-slate-200 flex items-center justify-between flex-wrap gap-4">
-                        <div>
-                            <h3 class="text-lg font-black text-blue-950 font-heading flex items-center gap-2">
-                                <i class="fa-solid fa-rotate-right text-amber-500"></i> Repetir Pedidos Anteriores
-                            </h3>
-                            <p class="text-xs text-slate-500 mt-0.5">Faça a recompra rápida dos seus materiais com as mesmas configurações.</p>
+                        <div class="flex justify-between text-slate-600">
+                            <span>Previsão de produção:</span>
+                            <strong id="cart-resumo-previsao" class="text-purple-900 font-bold">--/--/----</strong>
+                        </div>
+                        <p class="text-[10px] text-red-600 italic">
+                            *Previsão de entrega caso o pagamento seja confirmado até as 18:00 horas de hoje.
+                        </p>
+                        <div class="border-t border-slate-200 pt-2 flex justify-between items-center text-sm font-black text-slate-900">
+                            <span>TOTAL</span>
+                            <strong id="cart-resumo-total" class="text-emerald-700 text-base">R$ 0,00</strong>
                         </div>
                     </div>
 
-                    <div id="container-recompra-lista" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
                 </div>
 
-            </section>
+                <!-- LINHA 3: ENDEREÇO DE ENTREGA -->
+                <div class="bg-white p-5 rounded-lg border border-purple-900/40 shadow-sm space-y-3">
+                    <h3 class="text-sm font-bold text-purple-950 uppercase font-heading">Endereço de entrega</h3>
+                    <div class="space-y-2">
+                        <select id="select-endereco-cliente" class="w-full border border-slate-300 rounded px-3 py-2 text-xs font-semibold text-slate-700 focus:outline-none focus:border-purple-600">
+                            <option value="principal">Endereço Principal</option>
+                        </select>
+                        <input type="text" id="input-endereco-completo" value="Rua Marcílio Dias, - quadra 20 lote 36 casa b em frente o mercadinho marques, Seropédica/RJ 23898-036" class="w-full border border-slate-300 rounded px-3 py-2 text-xs text-slate-800 font-bold bg-slate-50 focus:outline-none">
+                    </div>
+                </div>
 
+                <!-- LINHA 4: MÉTODOS DE ENTREGA (OPÇÕES COM TABS) -->
+                <div class="bg-white border border-purple-900/40 rounded-lg shadow-sm overflow-hidden">
+                    <!-- ABAS -->
+                    <div class="flex border-b border-slate-200 bg-slate-100 text-xs font-bold">
+                        <button onclick="alternarAbaFrete('entrega')" id="tab-frete-entrega" class="px-5 py-2.5 bg-white border-t-2 border-purple-900 text-purple-950 font-black">Entrega</button>
+                        <button onclick="alternarAbaFrete('balcao')" id="tab-frete-balcao" class="px-5 py-2.5 text-slate-600 hover:text-purple-900">Balcão de retirada</button>
+                    </div>
+
+                    <!-- TABELA DE OPÇÕES DE FRETE -->
+                    <div class="p-4 overflow-x-auto">
+                        <table class="w-full text-left text-xs">
+                            <thead>
+                                <tr class="bg-purple-900 text-white font-bold text-[11px]">
+                                    <th class="py-2.5 px-4">Serviço</th>
+                                    <th class="py-2.5 px-4 text-center">Prazo</th>
+                                    <th class="py-2.5 px-4 text-right">Valor</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabela-opcoes-frete" class="divide-y divide-slate-100 font-semibold text-slate-700">
+                                <!-- Opções via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- LINHA 5: FORMA DE PAGAMENTO -->
+                <div class="bg-white p-5 rounded-lg border border-purple-900/40 shadow-sm space-y-3">
+                    <h3 class="text-sm font-bold text-purple-950 uppercase font-heading">Forma de pagamento</h3>
+                    <div class="border border-slate-200 rounded-lg p-4 flex items-center justify-between bg-slate-50">
+                        <label class="flex items-center gap-3 cursor-pointer">
+                            <input type="radio" name="forma_pagamento" value="pix" checked class="w-4 h-4 text-purple-900 focus:ring-purple-900">
+                            <div class="flex items-center gap-2">
+                                <i class="fa-brands fa-pix text-emerald-600 text-xl"></i>
+                                <span class="font-bold text-slate-800 text-xs">PIX</span>
+                            </div>
+                        </label>
+                        <span class="text-xs font-black text-emerald-600 uppercase bg-emerald-100 px-2.5 py-1 rounded border border-emerald-200">
+                            <i class="fa-solid fa-clock mr-1"></i> LIBERAÇÃO IMEDIATA
+                        </span>
+                    </div>
+                </div>
+
+                <!-- BOTÃO FINALIZAR PEDIDO NO WHATSAPP/LOJA -->
+                <div class="pt-4 flex justify-end">
+                    <button onclick="finalizarCompraWhatsApp()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-black text-sm px-8 py-4 rounded-xl shadow-lg transition-all flex items-center gap-2">
+                        <i class="fa-brands fa-whatsapp text-xl"></i> FINALIZAR PEDIDO AGORA
+                    </button>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================= SEÇÃO 3: RASTREIO DE PEDIDOS ================= -->
+        <div id="secao-pedidos" class="hidden space-y-6">
+            <div class="bg-white p-6 rounded-xl shadow-md border border-slate-200">
+                <h3 class="text-lg font-black text-purple-950 font-heading mb-1 flex items-center gap-2">
+                    <i class="fa-solid fa-magnifying-glass-location text-amber-500"></i> Rastreio e Acompanhamento de Pedidos
+                </h3>
+                <p class="text-xs text-slate-500">Digite seu CPF, CNPJ ou WhatsApp cadastrado para consultar a fila de produção.</p>
+            </div>
+
+            <div id="msg-nao-identificado" class="bg-white border border-slate-200 p-8 sm:p-12 rounded-xl text-center space-y-4 shadow-md max-w-lg mx-auto">
+                <div class="w-16 h-16 bg-purple-50 text-purple-900 rounded-full flex items-center justify-center mx-auto text-2xl border border-purple-200">
+                    <i class="fa-solid fa-user-lock"></i>
+                </div>
+                <div class="space-y-1">
+                    <h4 class="text-lg font-black text-slate-800">Identifique-se para rastrear seus pedidos</h4>
+                    <p class="text-xs text-slate-500">Acesse seu histórico de compras e status de fabricação em tempo real.</p>
+                </div>
+                <button onclick="abrirModalIdentificacao()" class="w-full bg-amber-400 hover:bg-amber-300 text-purple-950 font-black py-3 rounded-lg text-xs transition-all shadow-md">
+                    DIGITAR MEU CPF OU WHATSAPP
+                </button>
+            </div>
+
+            <div id="container-lista-pedidos" class="hidden space-y-6"></div>
+        </div>
+
+        <!-- ================= SEÇÃO 4: RECOMPRA RÁPIDA ================= -->
+        <div id="secao-recompra" class="hidden space-y-6">
+            <div class="bg-white p-6 rounded-xl shadow-md border border-slate-200 flex items-center justify-between flex-wrap gap-4">
+                <div>
+                    <h3 class="text-lg font-black text-purple-950 font-heading flex items-center gap-2">
+                        <i class="fa-solid fa-rotate-right text-amber-500"></i> Repetir Pedidos Anteriores
+                    </h3>
+                    <p class="text-xs text-slate-500 mt-0.5">Faça a recompra rápida dos seus materiais com as mesmas configurações.</p>
+                </div>
+            </div>
+
+            <div id="container-recompra-lista" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
         </div>
 
     </main>
 
-    <!-- RODAPÉ DA LOJA (FORMAS DE PAGAMENTO E ENVIO) -->
-    <footer class="bg-white border-t border-slate-200 pt-10 pb-6 mt-12 text-slate-600 text-xs">
+    <!-- RODAPÉ DA LOJA (ESTILO GRAFICANAUTA) -->
+    <footer class="bg-purple-950 text-white border-t-4 border-amber-400 pt-10 pb-6 mt-12 text-xs">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-            
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 pb-8 border-b border-slate-200">
-                <!-- COLUNA 1 -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 pb-8 border-b border-purple-800">
                 <div class="space-y-2">
-                    <strong class="text-blue-950 font-black text-sm font-heading block">PHSUBLIME GRÁFICA RÁPIDA</strong>
-                    <p class="text-xs text-slate-500 leading-relaxed">
+                    <strong class="text-amber-400 font-black text-sm font-heading block">PHSUBLIME GRÁFICA RÁPIDA</strong>
+                    <p class="text-xs text-purple-200 leading-relaxed">
                         Especialista em Comunicação Visual, Materiais Gráficos Promocionais e Personalizados em Geral.
                     </p>
-                    <p class="text-xs text-slate-500">Magé / Rio de Janeiro — Atendimento das 08h às 18h</p>
+                    <p class="text-xs text-purple-300">Magé / Seropédica / Rio de Janeiro — Atendimento das 09h às 19h</p>
                 </div>
 
-                <!-- COLUNA 2: PAGAMENTO -->
                 <div class="space-y-2">
-                    <strong class="text-slate-800 font-bold uppercase block text-xs">Formas de Pagamento:</strong>
-                    <div class="flex items-center gap-2 text-2xl text-slate-500 flex-wrap">
-                        <i class="fa-brands fa-pix text-emerald-600" title="Pix CNPJ"></i>
-                        <i class="fa-brands fa-cc-visa text-blue-700" title="Visa"></i>
-                        <i class="fa-brands fa-cc-mastercard text-red-600" title="Mastercard"></i>
-                        <span class="text-xs font-bold border border-slate-300 px-2 py-0.5 rounded text-slate-700">ELO</span>
-                        <span class="text-xs font-bold border border-slate-300 px-2 py-0.5 rounded text-slate-700">DEPÓSITO</span>
+                    <strong class="text-white font-bold uppercase block text-xs">Formas de Pagamento:</strong>
+                    <div class="flex items-center gap-2 text-2xl text-purple-300 flex-wrap">
+                        <i class="fa-brands fa-pix text-emerald-400" title="Pix CNPJ"></i>
+                        <i class="fa-brands fa-cc-visa text-blue-400" title="Visa"></i>
+                        <i class="fa-brands fa-cc-mastercard text-red-400" title="Mastercard"></i>
+                        <span class="text-xs font-bold border border-purple-700 px-2 py-0.5 rounded text-white">SICOOB</span>
                     </div>
                 </div>
 
-                <!-- COLUNA 3: ENVIO -->
                 <div class="space-y-2">
-                    <strong class="text-slate-800 font-bold uppercase block text-xs">Formas de Envio & Entrega:</strong>
-                    <div class="flex items-center gap-3 text-xs font-bold text-slate-700 flex-wrap">
-                        <span class="bg-slate-100 border border-slate-200 px-2.5 py-1 rounded flex items-center gap-1">
-                            <i class="fa-solid fa-truck text-blue-600"></i> CORREIOS / PAC
-                        </span>
-                        <span class="bg-slate-100 border border-slate-200 px-2.5 py-1 rounded flex items-center gap-1">
-                            <i class="fa-solid fa-motorcycle text-amber-600"></i> MOTOBOY
-                        </span>
-                        <span class="bg-slate-100 border border-slate-200 px-2.5 py-1 rounded flex items-center gap-1">
-                            <i class="fa-solid fa-store text-emerald-600"></i> RETIRADA BALCÃO
-                        </span>
+                    <strong class="text-white font-bold uppercase block text-xs">Formas de Envio & Entrega:</strong>
+                    <div class="flex items-center gap-2 text-xs font-bold text-slate-200 flex-wrap">
+                        <span class="bg-purple-900 border border-purple-700 px-2.5 py-1 rounded">PORTA A PORTA</span>
+                        <span class="bg-purple-900 border border-purple-700 px-2.5 py-1 rounded">DROPSHIPPING</span>
+                        <span class="bg-purple-900 border border-purple-700 px-2.5 py-1 rounded">JADLOG</span>
                     </div>
                 </div>
             </div>
 
-            <!-- COPYRIGHT -->
-            <div class="flex flex-col sm:flex-row items-center justify-between gap-4 text-center text-[11px] text-slate-400">
-                <p>© 2026 PHSUBLIME - Todos os direitos reservados.</p>
-                <a id="link-whats-rodape" href="#" target="_blank" class="inline-flex items-center gap-1.5 text-emerald-600 font-bold hover:underline">
-                    <i class="fa-brands fa-whatsapp text-sm"></i> Falar com o Atendimento no WhatsApp
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-4 text-center text-[11px] text-purple-300">
+                <p>© Copyright 2026 PHSUBLIME - Todos os direitos reservados</p>
+                <a id="link-whats-rodape" href="#" target="_blank" class="inline-flex items-center gap-1.5 text-emerald-400 font-bold hover:underline">
+                    <i class="fa-brands fa-whatsapp text-sm"></i> atendimento@phsublime.com.br
                 </a>
             </div>
-
         </div>
     </footer>
+
+    <!-- ================= MODAIS DA APLICAÇÃO ================= -->
+
+    <!-- POP-UP PERSONALIZADO: PRODUTO ADICIONADO AO CARRINHO -->
+    <div id="modal-pos-adicao" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-[999] hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 space-y-5 shadow-2xl text-center border border-purple-200 relative">
+            <button onclick="fecharModalPosAdicao()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-700 text-lg"><i class="fa-solid fa-xmark"></i></button>
+
+            <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto text-2xl shadow-inner">
+                <i class="fa-solid fa-circle-check"></i>
+            </div>
+
+            <div class="space-y-1">
+                <h3 class="text-lg font-black text-purple-950 font-heading">Produto Adicionado ao Carrinho!</h3>
+                <p id="txt-nome-item-adicionado" class="text-xs text-slate-600 font-bold leading-relaxed">
+                    Cartão 250g | 4/0 | UV 1/0
+                </p>
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-3 pt-2">
+                <button onclick="fecharModalPosAdicao()" class="flex-1 bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold py-3 rounded-xl text-xs transition-all">
+                    Continuar Comprando
+                </button>
+                <button onclick="irParaCarrinhoApartirDoModal()" class="flex-1 bg-purple-900 hover:bg-purple-800 text-white font-bold py-3 rounded-xl text-xs transition-all shadow-md flex items-center justify-center gap-1.5">
+                    <i class="fa-solid fa-cart-shopping"></i> Ir para o Carrinho
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL PARA ANEXAR ARQUIVO AO ITEM -->
+    <div id="modal-anexar-arquivo" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-[995] hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-lg w-full p-6 space-y-5 shadow-2xl relative border border-purple-200">
+            <button onclick="fecharModalAnexo()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-700 text-lg"><i class="fa-solid fa-xmark"></i></button>
+
+            <div class="flex items-center gap-3 border-b border-slate-100 pb-3">
+                <div class="w-10 h-10 bg-purple-100 text-purple-900 rounded-lg flex items-center justify-center text-lg">
+                    <i class="fa-solid fa-paperclip"></i>
+                </div>
+                <div>
+                    <h3 class="text-sm font-black text-purple-950 font-heading">Anexar Arte / Arquivo</h3>
+                    <p id="txt-anexo-item-nome" class="text-xs text-slate-500">Para o item selecionado</p>
+                </div>
+            </div>
+
+            <div class="space-y-3 text-xs">
+                <p class="text-slate-600">Envie o arquivo em PDF, CDR, AI ou imagem de alta resolução (frente e verso):</p>
+                <input type="file" id="input-arquivo-item" class="w-full border border-slate-300 rounded p-2 text-xs">
+                <p class="text-[10px] text-slate-400">* Se preferir, você também poderá enviar a arte diretamente pelo WhatsApp após finalizar.</p>
+            </div>
+
+            <div class="flex justify-end gap-2 pt-2">
+                <button onclick="salvarAnexoItem()" class="bg-purple-900 hover:bg-purple-800 text-white font-bold px-5 py-2.5 rounded-lg text-xs transition-all">
+                    Salvar Arquivo
+                </button>
+            </div>
+        </div>
+    </div>
 
     <!-- MODAL DE IDENTIFICAÇÃO DO CLIENTE -->
     <div id="modal-identificacao" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-[990] hidden flex items-center justify-center p-4">
         <div class="bg-white border border-slate-200 rounded-2xl max-w-md w-full p-6 sm:p-8 space-y-6 shadow-2xl text-center relative">
             <button onclick="fecharModalIdentificacao()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-700 text-lg"><i class="fa-solid fa-xmark"></i></button>
 
-            <div class="w-16 h-16 bg-amber-100 text-amber-600 rounded-2xl flex items-center justify-center mx-auto text-2xl shadow-inner">
+            <div class="w-16 h-16 bg-purple-100 text-purple-900 rounded-2xl flex items-center justify-center mx-auto text-2xl shadow-inner">
                 <i class="fa-solid fa-user-check"></i>
             </div>
 
             <div class="space-y-1">
-                <h3 class="text-lg font-black text-blue-950 font-heading">Acessar Meus Pedidos</h3>
+                <h3 class="text-lg font-black text-purple-950 font-heading">Acessar Meus Pedidos</h3>
                 <p class="text-xs text-slate-500 leading-relaxed">
                     Digite seu CPF, CNPJ ou WhatsApp com DDD para localizar seu histórico de compras na PHSUBLIME.
                 </p>
@@ -343,10 +514,10 @@
             <form onsubmit="confirmarIdentificacao(event)" class="space-y-4 text-left">
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">CPF, CNPJ ou WhatsApp com DDD</label>
-                    <input type="text" id="input-identificacao-cliente" required placeholder="Ex: 21999998888 ou CPF..." class="w-full bg-slate-50 border border-slate-300 rounded-lg px-4 py-3 text-slate-800 text-sm focus:outline-none focus:border-blue-600 font-bold placeholder-slate-400">
+                    <input type="text" id="input-identificacao-cliente" required placeholder="Ex: 21999998888 ou CPF..." class="w-full bg-slate-50 border border-slate-300 rounded-lg px-4 py-3 text-slate-800 text-sm focus:outline-none focus:border-purple-600 font-bold placeholder-slate-400">
                 </div>
 
-                <button type="submit" class="w-full bg-amber-400 hover:bg-amber-300 text-blue-950 font-black py-3.5 rounded-lg text-xs transition-all shadow-md tracking-wider">
+                <button type="submit" class="w-full bg-amber-400 hover:bg-amber-300 text-purple-950 font-black py-3.5 rounded-lg text-xs transition-all shadow-md tracking-wider">
                     BUSCAR MEUS PEDIDOS
                 </button>
             </form>
@@ -359,24 +530,31 @@
         <span id="toast-message" class="font-medium text-sm">Ação realizada!</span>
     </div>
 
-    <!-- SCRIPT INTEGRAÇÃO SUPABASE & REGRAS DE NEGÓCIO -->
+
+    <!-- SCRIPT INTEGRAÇÃO SUPABASE & LOGICA DO CARRINHO GRAFICANAUTA -->
     <script>
-        // CONFIGURAÇÕES DO SUPABASE
+        // CONFIGURAÇÕES SUPABASE E CONTATOS
         const SUPABASE_URL = 'https://qkcrimqakjsokdztzqxe.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_mF--YXTFkjyjbQ7Uw7Qq1w_ODzsJPA1'; 
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // CONTATO DE ATENDIMENTO PHSUBLIME
         const WHATSAPP_ATENDIMENTO = '5521965404820';
         const CHAVE_PIX_OFICIAL = '60416979000105';
 
-        // ESTADO DA APLICAÇÃO
+        // ESTADO GLOBAL
         let clienteIdentificado = null;
         let identificacaoTermo = '';
         let pedidosDoCliente = [];
         let catalogoEstoque = [];
         let categoriaFiltro = '';
-        let canalRealtime = null;
+        let itemIndexAnexoAtual = null;
+
+        // OPÇÕES DE FRETE
+        let freteSelecionado = { tipo: 'DROPSHIPPING', prazo: '1 dia', valor: 0.00 };
+        let abaFreteAtiva = 'entrega';
+
+        // CARRINHO INICIALIZADO COM ESTRUTURA COMPLETA
+        let carrinho = JSON.parse(localStorage.getItem('phsublime_carrinho_v2') || '[]');
 
         function escapeAttr(str) {
             if (str === null || str === undefined) return '';
@@ -407,22 +585,337 @@
             });
         }
 
-        // ALTERNAR ABAS
+        // ================= LÓGICA DO CARRINHO =================
+        function salvarCarrinho() {
+            localStorage.setItem('phsublime_carrinho_v2', JSON.stringify(carrinho));
+            atualizarBadgeCarrinho();
+        }
+
+        function atualizarBadgeCarrinho() {
+            const badge = document.getElementById('badge-carrinho-qtd');
+            const totalQtd = carrinho.reduce((acc, i) => acc + i.qtd, 0);
+            if (badge) badge.innerText = totalQtd;
+        }
+
+        function adicionarAoCarrinho(id, nome, preco, ref = 'crt001', specs = 'Card 250g | 4/0') {
+            const itemExistente = carrinho.find(i => i.id === id || i.nome === nome);
+            
+            if (itemExistente) {
+                itemExistente.qtd += 1;
+            } else {
+                carrinho.push({
+                    id: id || Date.now(),
+                    nome: nome,
+                    ref: ref,
+                    specs: specs,
+                    acabamento: 'Pacote / Padrão',
+                    preco: parseFloat(preco),
+                    qtd: 1,
+                    anexo: null,
+                    obs: ''
+                });
+            }
+
+            salvarCarrinho();
+
+            // EXIBIR POP-UP PERSONALIZADO DE CONFIRMAÇÃO
+            document.getElementById('txt-nome-item-adicionado').innerText = `${nome} - R$ ${parseFloat(preco).toFixed(2)}`;
+            document.getElementById('modal-pos-adicao').classList.remove('hidden');
+        }
+
+        function fecharModalPosAdicao() {
+            document.getElementById('modal-pos-adicao').classList.add('hidden');
+        }
+
+        function irParaCarrinhoApartirDoModal() {
+            fecharModalPosAdicao();
+            alternarAba('carrinho');
+        }
+
+        function alterarQtdItemCarrinho(index, delta) {
+            if (carrinho[index]) {
+                carrinho[index].qtd += delta;
+                if (carrinho[index].qtd <= 0) {
+                    carrinho.splice(index, 1);
+                }
+                salvarCarrinho();
+                renderizarPaginaCarrinho();
+            }
+        }
+
+        function duplicarItemCarrinho(index) {
+            if (carrinho[index]) {
+                const item = JSON.parse(JSON.stringify(carrinho[index]));
+                item.id = Date.now();
+                carrinho.splice(index + 1, 0, item);
+                salvarCarrinho();
+                renderizarPaginaCarrinho();
+                mostrarToast("Item duplicado no carrinho!");
+            }
+        }
+
+        function removerItemCarrinho(index) {
+            if (carrinho[index]) {
+                carrinho.splice(index, 1);
+                salvarCarrinho();
+                renderizarPaginaCarrinho();
+                mostrarToast("Item removido.");
+            }
+        }
+
+        // AÇÕES DE ANEXO E OBSERVAÇÃO
+        function abrirModalAnexoItem(index) {
+            itemIndexAnexoAtual = index;
+            const item = carrinho[index];
+            if (item) {
+                document.getElementById('txt-anexo-item-nome').innerText = item.nome;
+                document.getElementById('modal-anexar-arquivo').classList.remove('hidden');
+            }
+        }
+
+        function fecharModalAnexo() {
+            document.getElementById('modal-anexar-arquivo').classList.add('hidden');
+            itemIndexAnexoAtual = null;
+        }
+
+        function salvarAnexoItem() {
+            const input = document.getElementById('input-arquivo-item');
+            if (itemIndexAnexoAtual !== null && carrinho[itemIndexAnexoAtual]) {
+                if (input.files && input.files[0]) {
+                    carrinho[itemIndexAnexoAtual].anexo = input.files[0].name;
+                    mostrarToast("Arquivo anexado com sucesso!");
+                }
+            }
+            salvarCarrinho();
+            fecharModalAnexo();
+            renderizarPaginaCarrinho();
+        }
+
+        function adicionarObsItem(index) {
+            const obsAtual = carrinho[index].obs || '';
+            const novaObs = prompt("Digite observações específicas de produção para este item:", obsAtual);
+            if (novaObs !== null) {
+                carrinho[index].obs = novaObs.trim();
+                salvarCarrinho();
+                renderizarPaginaCarrinho();
+            }
+        }
+
+        // RENDERIZAR TELA COMPLETA DO CARRINHO (ESTILO GRAFICANAUTA)
+        function renderizarPaginaCarrinho() {
+            const boxVazio = document.getElementById('carrinho-vazio-msg');
+            const boxConteudo = document.getElementById('carrinho-conteudo-box');
+            const tbody = document.getElementById('tabela-itens-carrinho');
+
+            if (carrinho.length === 0) {
+                boxVazio.classList.remove('hidden');
+                boxConteudo.classList.add('hidden');
+                return;
+            }
+
+            boxVazio.classList.add('hidden');
+            boxConteudo.classList.remove('hidden');
+
+            tbody.innerHTML = '';
+            let subtotalGeral = 0;
+
+            carrinho.forEach((item, index) => {
+                const totalItem = item.preco * item.qtd;
+                subtotalGeral += totalItem;
+
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-50/80 transition-all";
+
+                tr.innerHTML = `
+                    <td class="py-4 px-4 align-top space-y-1">
+                        <div class="flex items-start gap-3">
+                            <div class="w-12 h-12 bg-slate-100 border border-slate-200 rounded shrink-0 flex items-center justify-center text-slate-400">
+                                <i class="fa-solid fa-box-open text-xl"></i>
+                            </div>
+                            <div>
+                                <strong class="text-purple-950 font-bold block text-xs font-heading">${escapeAttr(item.nome)}</strong>
+                                <span class="text-[11px] text-slate-500 block">Ref.: ${escapeAttr(item.ref || 'crt001')} | ${escapeAttr(item.specs || '')}</span>
+                                <span class="text-[10px] text-slate-400 block">Acabamentos: ${escapeAttr(item.acabamento || 'Pacote')}</span>
+                                ${item.obs ? `<span class="text-[10px] text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200 block mt-1">Obs: ${escapeAttr(item.obs)}</span>` : ''}
+                            </div>
+                        </div>
+                    </td>
+
+                    <td class="py-4 px-4 align-top text-center">
+                        <div class="inline-flex items-center border border-slate-300 rounded bg-white">
+                            <button onclick="alterarQtdItemCarrinho(${index}, -1)" class="px-2 py-1 text-slate-600 hover:bg-slate-100 font-bold">-</button>
+                            <span class="px-3 font-bold text-slate-800 text-xs">${item.qtd}</span>
+                            <button onclick="alterarQtdItemCarrinho(${index}, 1)" class="px-2 py-1 text-slate-600 hover:bg-slate-100 font-bold">+</button>
+                        </div>
+                    </td>
+
+                    <td class="py-4 px-4 align-top text-center space-y-1">
+                        <div class="flex items-center justify-center gap-1.5 flex-wrap">
+                            <button onclick="abrirModalAnexoItem(${index})" class="btn-purple text-[10px] font-bold px-2.5 py-1 rounded shadow-sm flex items-center gap-1">
+                                <i class="fa-solid fa-paperclip"></i> ${item.anexo ? 'Anexado ✓' : 'Anexar Arquivos'}
+                            </button>
+                            <button onclick="adicionarObsItem(${index})" class="bg-purple-900 hover:bg-purple-800 text-white text-[10px] font-bold px-2.5 py-1 rounded shadow-sm">
+                                Observações
+                            </button>
+                            <button onclick="duplicarItemCarrinho(${index})" class="text-slate-400 hover:text-purple-900 p-1" title="Duplicar Item">
+                                <i class="fa-regular fa-copy text-sm"></i>
+                            </button>
+                            <button onclick="removerItemCarrinho(${index})" class="text-slate-400 hover:text-red-600 p-1" title="Excluir Item">
+                                <i class="fa-regular fa-trash-can text-sm"></i>
+                            </button>
+                        </div>
+                    </td>
+
+                    <td class="py-4 px-4 align-top text-right font-bold text-slate-800 text-xs">
+                        R$ ${totalItem.toLocaleString('pt-BR', {minimumFractionDigits: 2})}
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            // ATUALIZAR RESUMO FINANCEIRO
+            const valorFrete = freteSelecionado ? freteSelecionado.valor : 0;
+            const totalFinal = subtotalGeral + valorFrete;
+
+            document.getElementById('cart-resumo-subtotal').innerText = `R$ ${subtotalGeral.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+            document.getElementById('cart-resumo-frete').innerText = `R$ ${valorFrete.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+            document.getElementById('cart-resumo-total').innerText = `R$ ${totalFinal.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+
+            // PREVISÃO DE PRODUÇÃO (DATA ATUAL + 3 DIAS ÚTEIS)
+            const dataPrevisao = new Date();
+            dataPrevisao.setDate(dataPrevisao.getDate() + 3);
+            document.getElementById('cart-resumo-previsao').innerText = dataPrevisao.toLocaleDateString('pt-BR');
+
+            renderizarOpcoesFrete();
+        }
+
+        // LÓGICA DE ABAS E OPÇÕES DE FRETE
+        function alternarAbaFrete(aba) {
+            abaFreteAtiva = aba;
+            const btnEntrega = document.getElementById('tab-frete-entrega');
+            const btnBalcao = document.getElementById('tab-frete-balcao');
+
+            if (aba === 'entrega') {
+                btnEntrega.className = "px-5 py-2.5 bg-white border-t-2 border-purple-900 text-purple-950 font-black";
+                btnBalcao.className = "px-5 py-2.5 text-slate-600 hover:text-purple-900 font-bold";
+            } else {
+                btnBalcao.className = "px-5 py-2.5 bg-white border-t-2 border-purple-900 text-purple-950 font-black";
+                btnEntrega.className = "px-5 py-2.5 text-slate-600 hover:text-purple-900 font-bold";
+            }
+            renderizarOpcoesFrete();
+        }
+
+        function renderizarOpcoesFrete() {
+            const tbody = document.getElementById('tabela-opcoes-frete');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            let opcoes = [];
+            if (abaFreteAtiva === 'entrega') {
+                opcoes = [
+                    { tipo: 'PORTA A PORTA', prazo: '1 dia', valor: 0.00 },
+                    { tipo: 'DROPSHIPPING', prazo: '1 dia', valor: 0.00 },
+                    { tipo: 'UNIDADE JADLOG INDAIATUBA O2', prazo: '4 dias', valor: 10.80 }
+                ];
+            } else {
+                opcoes = [
+                    { tipo: 'BALCÃO DE RETIRADA - MAGÉ CENTRO', prazo: '1 dia', valor: 0.00 },
+                    { tipo: 'BALCÃO DE RETIRADA - SEROPÉDICA', prazo: '2 dias', valor: 0.00 }
+                ];
+            }
+
+            opcoes.forEach((op, idx) => {
+                const tr = document.createElement('tr');
+                const isSelected = freteSelecionado.tipo === op.tipo;
+
+                tr.innerHTML = `
+                    <td class="py-3 px-4">
+                        <label class="flex items-center gap-2.5 cursor-pointer">
+                            <input type="radio" name="opcao_frete" ${isSelected ? 'checked' : ''} onchange="selecionarFrete('${op.tipo}', '${op.prazo}', ${op.valor})" class="w-4 h-4 text-purple-900">
+                            <span>${op.tipo}</span>
+                        </label>
+                    </td>
+                    <td class="py-3 px-4 text-center">${op.prazo}</td>
+                    <td class="py-3 px-4 text-right font-bold">${op.valor === 0 ? (op.tipo === 'PORTA A PORTA' ? 'Na Entrega' : 'Grátis') : `R$ ${op.valor.toFixed(2)}`}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function selecionarFrete(tipo, prazo, valor) {
+            freteSelecionado = { tipo, prazo, valor };
+            renderizarPaginaCarrinho();
+        }
+
+        function aplicarCupom() {
+            const cupom = document.getElementById('input-cupom').value.trim();
+            if (cupom) {
+                mostrarToast(`Cupom "${cupom}" aplicado com sucesso!`);
+            }
+        }
+
+        // FINALIZAR PEDIDO COMPLETO VIA WHATSAPP
+        function finalizarCompraWhatsApp() {
+            if (carrinho.length === 0) {
+                mostrarToast("Seu carrinho está vazio!", "alerta");
+                return;
+            }
+
+            let texto = `🚀 *NOVO PEDIDO - PHSUBLIME GRÁFICA*\n\n`;
+
+            if (clienteIdentificado) {
+                texto += `👤 *Cliente:* ${clienteIdentificado.nome}\n`;
+                if (clienteIdentificado.cpf) texto += `🪪 *CPF/CNPJ:* ${clienteIdentificado.cpf}\n`;
+            } else {
+                texto += `👤 *Cliente:* Pedido de Visitante\n`;
+            }
+
+            const endereco = document.getElementById('input-endereco-completo').value;
+            texto += `📍 *Endereço:* ${endereco}\n\n`;
+
+            texto += `📦 *ITENS SOLICITADOS:*\n`;
+            let subtotal = 0;
+
+            carrinho.forEach((item, i) => {
+                const totalItem = item.preco * item.qtd;
+                subtotal += totalItem;
+                texto += `${i + 1}. *${item.nome}*\n`;
+                texto += `   • Ref: ${item.ref} | Qtd: ${item.qtd}x\n`;
+                texto += `   • Valor: R$ ${totalItem.toFixed(2)}\n`;
+                if (item.anexo) texto += `   • Arquivo: ${item.anexo}\n`;
+                if (item.obs) texto += `   • Obs: ${item.obs}\n`;
+            });
+
+            const totalGeral = subtotal + freteSelecionado.valor;
+
+            texto += `\n🚚 *FRETE / ENVIO:* ${freteSelecionado.tipo} (${freteSelecionado.prazo}) - R$ ${freteSelecionado.valor.toFixed(2)}\n`;
+            texto += `💳 *PAGAMENTO:* PIX (Liberação Imediata)\n`;
+            texto += `💰 *TOTAL DO PEDIDO:* R$ ${totalGeral.toFixed(2)}\n\n`;
+            texto += `Gostaria de confirmar os arquivos e o pagamento via Pix!`;
+
+            window.open(`https://api.whatsapp.com/send?phone=${WHATSAPP_ATENDIMENTO}&text=${encodeURIComponent(texto)}`, '_blank');
+        }
+
+
+        // ================= ALTERNAR ABAS PRINCIPAIS =================
         function alternarAba(aba) {
             document.getElementById('secao-catalogo').classList.add('hidden');
+            document.getElementById('secao-carrinho').classList.add('hidden');
             document.getElementById('secao-pedidos').classList.add('hidden');
             document.getElementById('secao-recompra').classList.add('hidden');
 
-            document.getElementById('tab-nav-catalogo').className = "px-4 py-3 hover:bg-blue-900 hover:text-amber-400 transition-all flex items-center gap-1.5";
-            document.getElementById('tab-nav-pedidos').className = "px-4 py-3 hover:bg-blue-900 hover:text-amber-400 transition-all flex items-center gap-1.5";
-            document.getElementById('tab-nav-recompra').className = "px-4 py-3 hover:bg-blue-900 hover:text-amber-400 transition-all flex items-center gap-1.5";
+            document.getElementById('tab-nav-catalogo').className = "px-4 py-3 hover:bg-purple-800 hover:text-amber-400 transition-all flex items-center gap-1.5";
+            document.getElementById('tab-nav-carrinho').className = "px-4 py-3 hover:bg-purple-800 hover:text-amber-400 transition-all flex items-center gap-1.5";
+            document.getElementById('tab-nav-pedidos').className = "px-4 py-3 hover:bg-purple-800 hover:text-amber-400 transition-all flex items-center gap-1.5";
+            document.getElementById('tab-nav-recompra').className = "px-4 py-3 hover:bg-purple-800 hover:text-amber-400 transition-all flex items-center gap-1.5";
 
             const secAlvo = document.getElementById(`secao-${aba}`);
             const tabAlvo = document.getElementById(`tab-nav-${aba}`);
 
             if (secAlvo) secAlvo.classList.remove('hidden');
-            if (tabAlvo) tabAlvo.className = "px-4 py-3 hover:bg-blue-900 text-amber-400 border-b-2 border-amber-400 transition-all flex items-center gap-1.5";
+            if (tabAlvo) tabAlvo.className = "px-4 py-3 hover:bg-purple-800 text-amber-400 border-b-2 border-amber-400 transition-all flex items-center gap-1.5";
 
+            if (aba === 'carrinho') renderizarPaginaCarrinho();
             if (aba === 'catalogo') renderizarCatalogo();
             if (aba === 'recompra') renderizarRecompra();
         }
@@ -438,7 +931,6 @@
             const linkWhats = `https://api.whatsapp.com/send?phone=${WHATSAPP_ATENDIMENTO}&text=${encodeURIComponent("Olá, equipe PHSUBLIME! Gostaria de tirar uma dúvida.")}`;
             if(document.getElementById('link-whats-topo')) document.getElementById('link-whats-topo').href = linkWhats;
             if(document.getElementById('link-whats-rodape')) document.getElementById('link-whats-rodape').href = linkWhats;
-            if(document.getElementById('btn-whats-sidebar')) document.getElementById('btn-whats-sidebar').href = linkWhats;
 
             const params = new URLSearchParams(window.location.search);
             const paramPedido = params.get('pedido');
@@ -455,8 +947,8 @@
                 await buscarPedidosECliente(termoParaBuscar);
             }
 
+            atualizarBadgeCarrinho();
             carregarEstoquePublico();
-            iniciarInscricaoRealtime();
         }
 
         async function confirmarIdentificacao(e) {
@@ -531,13 +1023,13 @@
                 const nomeExibicao = clienteIdentificado ? clienteIdentificado.nome : `Busca: #${identificacaoTermo}`;
                 
                 containerHeader.innerHTML = `
-                    <div class="text-right hidden sm:block">
-                        <span class="text-[9px] text-blue-200 font-bold block uppercase">Cliente Conectado:</span>
+                    <div class="text-right hidden lg:block">
+                        <span class="text-[9px] text-purple-200 font-bold block uppercase">Cliente Conectado:</span>
                         <strong class="text-xs text-amber-400 font-bold flex items-center gap-1 justify-end">
                             <i class="fa-solid fa-circle-user"></i> ${escapeAttr(nomeExibicao)}
                         </strong>
                     </div>
-                    <button onclick="sairEBuscarOutro()" class="bg-blue-950 hover:bg-blue-900 text-slate-200 p-2 rounded text-xs border border-blue-800 transition-all flex items-center gap-1" title="Sair / Buscar Outro">
+                    <button onclick="sairEBuscarOutro()" class="bg-purple-900 hover:bg-purple-800 text-slate-200 p-2 rounded text-xs border border-purple-700 transition-all flex items-center gap-1" title="Sair / Buscar Outro">
                         <i class="fa-solid fa-right-from-bracket"></i> <span class="hidden sm:inline">Trocar</span>
                     </button>
                 `;
@@ -547,8 +1039,8 @@
                 renderizarListaPedidos();
             } else {
                 containerHeader.innerHTML = `
-                    <button id="btn-login-header" onclick="abrirModalIdentificacao()" class="bg-amber-400 hover:bg-amber-300 text-blue-950 font-black text-xs px-4 py-2.5 rounded-lg transition-all shadow-md flex items-center gap-2">
-                        <i class="fa-solid fa-user-circle text-base"></i> <span>Acessar Meus Pedidos</span>
+                    <button id="btn-login-header" onclick="abrirModalIdentificacao()" class="bg-purple-800 hover:bg-purple-700 text-white font-bold text-xs px-4 py-2.5 rounded-lg transition-all shadow-md flex items-center gap-2 border border-purple-600">
+                        <i class="fa-solid fa-user-circle text-base"></i> <span class="hidden lg:inline">Olá, Entrar</span>
                     </button>
                 `;
 
@@ -566,7 +1058,6 @@
             mostrarToast("Sessão encerrada.");
         }
 
-        // RENDERIZAR LISTA DE RASTREIO DOS PEDIDOS
         function renderizarListaPedidos() {
             const container = document.getElementById('container-lista-pedidos');
             container.innerHTML = '';
@@ -577,7 +1068,7 @@
                         <i class="fa-solid fa-box-open text-4xl text-slate-300 block"></i>
                         <h4 class="text-base font-bold text-slate-800">Nenhum pedido encontrado para a busca realizada.</h4>
                         <p class="text-xs text-slate-500">Verifique se o CPF ou WhatsApp informado é o mesmo do cadastro do seu pedido.</p>
-                        <button onclick="abrirModalIdentificacao()" class="px-4 py-2 bg-amber-400 text-blue-950 font-black rounded text-xs transition-all shadow mt-2">Buscar Outro Número</button>
+                        <button onclick="abrirModalIdentificacao()" class="px-4 py-2 bg-amber-400 text-purple-950 font-black rounded text-xs transition-all shadow mt-2">Buscar Outro Número</button>
                     </div>
                 `;
                 return;
@@ -588,129 +1079,35 @@
                 const stPag = p.statusPagamento || 'Pendente';
                 const valorPago = parseFloat(p.valorPago !== undefined ? p.valorPago : (stPag === 'Pago 100%' ? total : (stPag === 'Sinal 50%' ? total * 0.5 : 0)));
                 const saldoPendente = Math.max(0, total - valorPago);
-
                 const descItens = p.itens ? p.itens.map(i => `${i.servico || 'Item'} (${i.qtd || 1}x)`).join(', ') : 'Produtos Personalizados';
 
-                const st = (p.status || 'AGUARDANDO').trim();
-                
-                let step = 1;
-                if (st === 'Em Produção') step = 2;
-                else if (st === 'Pronto p/ Retirada' || st === 'Concluído') step = 3;
-                else if (st === 'Entregue') step = 4;
-                else if (st === 'Cancelado') step = 0;
-
-                const isRetirada = (p.tipoEntrega === 'Retirada');
-
                 const card = document.createElement('div');
-                card.className = "bg-white border border-slate-200 rounded-xl p-6 space-y-6 shadow-md hover:shadow-lg transition-all";
+                card.className = "bg-white border border-slate-200 rounded-xl p-6 space-y-6 shadow-md";
 
                 card.innerHTML = `
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-100 pb-4">
                         <div class="space-y-1">
-                            <div class="flex items-center gap-2 flex-wrap">
-                                <strong class="text-lg font-black text-blue-950 font-heading">Pedido #${p.id}</strong>
-                                <span class="text-[10px] font-bold uppercase px-2.5 py-0.5 rounded ${isRetirada ? 'bg-blue-100 text-blue-800 border border-blue-200' : 'bg-purple-100 text-purple-800 border border-purple-200'} flex items-center gap-1">
-                                    <i class="fa-solid ${isRetirada ? 'fa-store' : 'fa-truck'} text-[10px]"></i> ${isRetirada ? 'Retirada no Balcão' : 'Entrega / Dropship'}
-                                </span>
-                            </div>
-                            <span class="text-xs text-slate-500 block">
-                                Solicitado em: <strong class="text-slate-700">${p.data || '--/--/----'}</strong> | Entrega Prevista: <strong class="text-blue-700">${p.dataEntrega || '--/--/----'}</strong>
-                            </span>
+                            <strong class="text-lg font-black text-purple-950 font-heading">Pedido #${p.id}</strong>
+                            <span class="text-xs text-slate-500 block">Solicitado em: <strong class="text-slate-700">${p.data || '--/--/----'}</strong></span>
                         </div>
-
-                        <div class="text-left sm:text-right">
-                            <span class="text-[10px] text-slate-400 uppercase font-bold block mb-0.5">Status Pagamento</span>
-                            <span class="px-2.5 py-1 text-xs rounded font-bold uppercase ${stPag === 'Pago 100%' ? 'bg-emerald-100 text-emerald-800 border border-emerald-200' : (stPag === 'Sinal 50%' ? 'bg-amber-100 text-amber-800 border border-amber-200' : 'bg-rose-100 text-rose-800 border border-rose-200')}">
-                                ${stPag}
-                            </span>
-                        </div>
+                        <span class="px-3 py-1 text-xs rounded font-bold uppercase ${stPag === 'Pago 100%' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">
+                            ${stPag}
+                        </span>
                     </div>
-
-                    ${st === 'Cancelado' ? `
-                        <div class="bg-rose-50 border border-rose-200 p-4 rounded-lg text-center space-y-1">
-                            <strong class="text-rose-700 font-bold text-sm flex items-center justify-center gap-2">
-                                <i class="fa-solid fa-circle-xmark"></i> Pedido Cancelado
-                            </strong>
-                            <p class="text-xs text-slate-600">Entre em contato com o atendimento pelo WhatsApp se precisar de suporte.</p>
-                        </div>
-                    ` : `
-                        <div class="space-y-2">
-                            <span class="text-xs font-bold text-blue-950 uppercase tracking-wider block">Progresso da Fabricação:</span>
-                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center text-xs">
-                                <div class="p-3 rounded-lg border ${step >= 1 ? 'bg-blue-50 border-blue-300 text-blue-900 font-bold' : 'bg-slate-50 border-slate-200 text-slate-400'}">
-                                    <i class="fa-solid fa-clock text-base block mb-1"></i>
-                                    <span class="text-[10px] block">1. Solicitado</span>
-                                </div>
-                                <div class="p-3 rounded-lg border ${step >= 2 ? 'bg-blue-50 border-blue-300 text-blue-900 font-bold' : 'bg-slate-50 border-slate-200 text-slate-400'}">
-                                    <i class="fa-solid fa-gears text-base block mb-1"></i>
-                                    <span class="text-[10px] block">2. Em Produção</span>
-                                </div>
-                                <div class="p-3 rounded-lg border ${step >= 3 ? 'bg-blue-50 border-blue-300 text-blue-900 font-bold' : 'bg-slate-50 border-slate-200 text-slate-400'}">
-                                    <i class="fa-solid ${isRetirada ? 'fa-boxes-packing' : 'fa-truck-fast'} text-base block mb-1"></i>
-                                    <span class="text-[10px] block">${isRetirada ? '3. Pronto Balcão' : '3. Em Rota'}</span>
-                                </div>
-                                <div class="p-3 rounded-lg border ${step >= 4 ? 'bg-emerald-50 border-emerald-300 text-emerald-800 font-bold' : 'bg-slate-50 border-slate-200 text-slate-400'}">
-                                    <i class="fa-solid fa-circle-check text-base block mb-1"></i>
-                                    <span class="text-[10px] block">4. Concluído</span>
-                                </div>
-                            </div>
-                        </div>
-                    `}
-
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 bg-slate-50 p-4 rounded-lg border border-slate-200 text-xs">
-                        <div class="md:col-span-2 space-y-1">
-                            <span class="text-[10px] text-slate-500 uppercase font-bold block">Itens Solicitados:</span>
-                            <strong class="text-slate-800 font-semibold block leading-relaxed">${escapeAttr(descItens)}</strong>
-                        </div>
-                        <div class="space-y-1 border-t md:border-t-0 md:border-l border-slate-200 pt-3 md:pt-0 md:pl-4">
-                            <div class="flex justify-between">
-                                <span class="text-slate-500">Total Pedido:</span>
-                                <strong class="text-slate-800">R$ ${total.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</strong>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-emerald-700">Valor Pago:</span>
-                                <strong class="text-emerald-700">R$ ${valorPago.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</strong>
-                            </div>
-                            <div class="flex justify-between border-t border-slate-200 pt-1">
-                                <span class="text-blue-950 font-bold">Saldo Pendente:</span>
-                                <strong class="text-blue-900 font-black">R$ ${saldoPendente.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</strong>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="flex flex-wrap items-center justify-end gap-3">
-                        ${saldoPendente > 0 ? `
-                            <button onclick="enviarComprovantePixModal('#${p.id}')" class="flex-1 sm:flex-none bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2.5 rounded text-xs shadow transition-all flex items-center justify-center gap-2">
-                                <i class="fa-brands fa-whatsapp text-sm"></i> Enviar Comprovante Pix
-                            </button>
-                        ` : ''}
-
-                        <button onclick="tirarDuvidaPedido('${p.id}', '${escapeAttr(st)}')" class="flex-1 sm:flex-none bg-slate-800 hover:bg-slate-700 text-white font-bold px-4 py-2.5 rounded text-xs transition-all flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-comment-dots text-sm"></i> Tirar Dúvida
-                        </button>
+                    <div class="bg-slate-50 p-4 rounded-lg border border-slate-200 text-xs">
+                        <strong class="text-slate-800 block">${escapeAttr(descItens)}</strong>
+                        <span class="text-purple-900 font-bold block mt-1">Total: R$ ${total.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</span>
                     </div>
                 `;
                 container.appendChild(card);
             });
         }
 
-        function tirarDuvidaPedido(pedidoId, status) {
-            const msg = `Olá, equipe PHSUBLIME! Gostaria de uma informação sobre o meu *Pedido #${pedidoId}* (Status Atual: *${status}*).`;
-            window.open(`https://api.whatsapp.com/send?phone=${WHATSAPP_ATENDIMENTO}&text=${encodeURIComponent(msg)}`, '_blank');
-        }
-
-        function enviarComprovantePixModal(pedidoRef) {
-            const msg = `Olá, equipe PHSUBLIME! Segue meu comprovante de pagamento referente ao *Pedido ${pedidoRef}*. Chave Pix efetuada!`;
-            window.open(`https://api.whatsapp.com/send?phone=${WHATSAPP_ATENDIMENTO}&text=${encodeURIComponent(msg)}`, '_blank');
-        }
-
-        // RENDERIZAR RECOMPRA RÁPIDA
         function renderizarRecompra() {
             const container = document.getElementById('container-recompra-lista');
             container.innerHTML = '';
 
             const produtosMap = {};
-
             pedidosDoCliente.forEach(p => {
                 if (p.itens && Array.isArray(p.itens)) {
                     p.itens.forEach(item => {
@@ -719,7 +1116,6 @@
                             produtosMap[nomeItem] = {
                                 nome: nomeItem,
                                 material: item.material || nomeItem,
-                                ultimaQtd: item.qtd || 1,
                                 ultimoValor: parseFloat(item.valor || 0)
                             };
                         }
@@ -734,7 +1130,6 @@
                     <div class="col-span-full bg-white border border-slate-200 p-8 rounded-xl text-center space-y-2 shadow-md">
                         <i class="fa-solid fa-rotate-right text-3xl text-slate-300 block"></i>
                         <h4 class="text-sm font-bold text-slate-800">Nenhum histórico de compra anterior localizado.</h4>
-                        <p class="text-xs text-slate-500">Assim que você realizar um pedido na PHSUBLIME, seus itens aparecerão aqui para repetição rápida.</p>
                     </div>
                 `;
                 return;
@@ -742,23 +1137,16 @@
 
             itensUnicos.forEach(item => {
                 const card = document.createElement('div');
-                card.className = "bg-white border border-slate-200 rounded-xl p-5 space-y-4 hover:border-blue-400 transition-all flex flex-col justify-between shadow-sm";
+                card.className = "bg-white border border-slate-200 rounded-xl p-5 space-y-4 shadow-sm flex flex-col justify-between";
                 card.innerHTML = `
-                    <div class="space-y-2">
-                        <span class="text-[9px] font-bold uppercase tracking-wider text-blue-900 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded inline-block">
-                            Comprado Anteriormente
-                        </span>
-                        <h4 class="text-sm font-black text-slate-800 leading-snug font-heading">${escapeAttr(item.nome)}</h4>
-                        <p class="text-xs text-slate-500">Especificação: <strong class="text-slate-700">${escapeAttr(item.material)}</strong></p>
+                    <div class="space-y-1">
+                        <h4 class="text-sm font-black text-slate-800 font-heading">${escapeAttr(item.nome)}</h4>
+                        <p class="text-xs text-slate-500">${escapeAttr(item.material)}</p>
                     </div>
-
-                    <div class="pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
-                        <div>
-                            <span class="text-[9px] text-slate-400 uppercase font-bold block">Último Valor:</span>
-                            <strong class="text-emerald-700 font-black text-base">R$ ${item.ultimoValor.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</strong>
-                        </div>
-                        <button onclick="solicitarRecompraWhats('${escapeAttr(item.nome)}', '${escapeAttr(item.material)}', ${item.ultimaQtd})" class="bg-amber-400 hover:bg-amber-300 text-blue-950 font-black text-xs px-3 py-2 rounded transition-all shadow flex items-center gap-1">
-                            <i class="fa-solid fa-cart-plus"></i> Repetir
+                    <div class="pt-3 border-t border-slate-100 flex items-center justify-between">
+                        <strong class="text-emerald-700 font-black">R$ ${item.ultimoValor.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</strong>
+                        <button onclick="adicionarAoCarrinho(${Date.now()}, '${escapeAttr(item.nome)}', ${item.ultimoValor})" class="bg-amber-400 text-purple-950 font-black text-xs px-3 py-2 rounded">
+                            <i class="fa-solid fa-cart-plus"></i> Recomprar
                         </button>
                     </div>
                 `;
@@ -766,16 +1154,6 @@
             });
         }
 
-        function solicitarRecompraWhats(nomeProduto, material, qtd) {
-            const msg = `Olá, PHSUBLIME! Gostaria de fazer a *RECOMPRA* do item:\n\n` +
-                        `• *Produto:* ${nomeProduto}\n` +
-                        `• *Material:* ${material}\n` +
-                        `• *Quantidade Solicitada:* ${qtd} un\n\n` +
-                        `Podemos confirmar o pedido e pagamento via Pix?`;
-            window.open(`https://api.whatsapp.com/send?phone=${WHATSAPP_ATENDIMENTO}&text=${encodeURIComponent(msg)}`, '_blank');
-        }
-
-        // CARREGAR E RENDERIZAR CATÁLOGO PÚBLICO ESTILO GRÁFICA
         async function carregarEstoquePublico() {
             try {
                 const { data, error } = await supabaseClient
@@ -784,10 +1162,18 @@
                     .gt('precoVenda', 0)
                     .order('nome', { ascending: true });
 
-                if (!error && data) {
+                if (!error && data && data.length > 0) {
                     catalogoEstoque = data;
-                    renderizarCatalogo();
+                } else {
+                    // MOCK DE PRODUTOS PADRÃO CASO NÃO TENHA NO BANCO
+                    catalogoEstoque = [
+                        { id: 101, nome: 'Cartão 250g | 4/0 | UV 1/0', categoria: 'Cartão', precoVenda: 13.72, obs: 'Ref: crt001 - 100 | 9x5 | Verniz UV 1/0 | Cartão DuoDesign 250g/m²' },
+                        { id: 102, nome: 'Banner Lona 440g c/ Tubete (100x70cm)', categoria: 'Banner', precoVenda: 45.00, obs: 'Lona Brilho alta resolução com acabamento completo' },
+                        { id: 103, nome: 'Panfletos 100g 10x14cm (1000un)', categoria: 'Folheto', precoVenda: 89.90, obs: 'Couché 100g impresso frente e verso 4/4' },
+                        { id: 104, nome: 'Adesivo Vinil Brilho Recortado (1m²)', categoria: 'Adesivo', precoVenda: 55.00, obs: 'Vinil impermeável de alta durabilidade' }
+                    ];
                 }
+                renderizarCatalogo();
             } catch (e) {
                 console.error("Erro ao carregar estoque público:", e);
             }
@@ -807,7 +1193,7 @@
             const busca = (document.getElementById('input-busca-catalogo')?.value || '').toLowerCase();
 
             const filtrados = catalogoEstoque.filter(item => {
-                const txt = `${item.nome} ${item.categoria} ${item.fornecedor}`.toLowerCase();
+                const txt = `${item.nome} ${item.categoria} ${item.obs || ''}`.toLowerCase();
                 const atendeBusca = !busca || txt.includes(busca);
                 const atendeCategoria = !categoriaFiltro || txt.includes(categoriaFiltro);
                 return atendeBusca && atendeCategoria;
@@ -817,8 +1203,7 @@
                 container.innerHTML = `
                     <div class="col-span-full bg-white border border-slate-200 p-8 rounded-xl text-center space-y-2 shadow-sm">
                         <i class="fa-solid fa-store text-3xl text-slate-300 block"></i>
-                        <h4 class="text-sm font-bold text-slate-800">Nenhum produto localizado no catálogo.</h4>
-                        <p class="text-xs text-slate-500">Tente buscar por termos como lona, adesivo, panfleto, caneca...</p>
+                        <h4 class="text-sm font-bold text-slate-800">Nenhum produto localizado.</h4>
                     </div>
                 `;
                 return;
@@ -828,66 +1213,35 @@
                 const preco = parseFloat(item.precoVenda || 0);
 
                 const card = document.createElement('div');
-                card.className = "bg-white border border-slate-200 rounded-lg p-4 space-y-3 hover:shadow-md hover:border-blue-400 transition-all flex flex-col justify-between";
+                card.className = "bg-white border border-slate-200 rounded-lg p-4 space-y-3 hover:shadow-md hover:border-purple-400 transition-all flex flex-col justify-between";
 
                 card.innerHTML = `
                     <div class="space-y-2">
-                        <!-- Imagem / Icone Ilustrativo do Produto -->
                         <div class="w-full h-28 bg-slate-100 rounded border border-slate-200 flex flex-col items-center justify-center text-slate-400 p-2 relative overflow-hidden">
-                            <span class="absolute top-2 left-2 bg-yellow-400 text-blue-950 text-[9px] font-black px-1.5 py-0.5 rounded uppercase">PÁG. 12/24</span>
+                            <span class="absolute top-2 left-2 bg-amber-400 text-purple-950 text-[9px] font-black px-1.5 py-0.5 rounded uppercase">TOP VENDAS</span>
                             <i class="fa-solid fa-print text-3xl mb-1 text-slate-300"></i>
                             <span class="text-[10px] font-bold uppercase text-slate-500">${escapeAttr(item.categoria || 'Gráfica')}</span>
                         </div>
 
                         <div class="space-y-1">
-                            <h4 class="text-xs font-black text-blue-950 leading-snug font-heading line-clamp-2">${escapeAttr(item.nome)}</h4>
+                            <h4 class="text-xs font-black text-purple-950 leading-snug font-heading line-clamp-2">${escapeAttr(item.nome)}</h4>
                             ${item.obs ? `<p class="text-[11px] text-slate-500 italic line-clamp-2">${escapeAttr(item.obs)}</p>` : ''}
                         </div>
                     </div>
 
                     <div class="pt-3 border-t border-slate-100 space-y-2">
                         <div class="text-center">
-                            <span class="text-[10px] text-slate-400 uppercase font-bold block">a partir de:</span>
-                            <strong class="text-red-600 font-black text-sm">R$ ${preco.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</strong>
+                            <span class="text-[10px] text-slate-400 uppercase font-bold block">A partir de:</span>
+                            <strong class="text-emerald-700 font-black text-sm">R$ ${preco.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</strong>
                         </div>
 
-                        <!-- BOTÕES ESTILO LOJA GRÁFICA -->
-                        <div class="grid grid-cols-2 gap-2">
-                            <button onclick="solicitarGabarito('${escapeAttr(item.nome)}')" class="bg-blue-600 hover:bg-blue-700 text-white font-bold text-[10px] py-1.5 rounded transition-all flex items-center justify-center gap-1" title="Baixar Gabarito">
-                                <i class="fa-solid fa-download"></i> Gabarito
-                            </button>
-
-                            <button onclick="solicitarOrcamentoProdutoCatalogo('${escapeAttr(item.nome)}', ${preco})" class="btn-comprar text-white font-black text-[10px] py-1.5 rounded shadow transition-all flex items-center justify-center gap-1 uppercase">
-                                COMPRAR <i class="fa-solid fa-cart-shopping"></i>
-                            </button>
-                        </div>
+                        <button onclick="adicionarAoCarrinho(${item.id || Date.now()}, '${escapeAttr(item.nome)}', ${preco}, 'crt001', '${escapeAttr(item.obs || 'Padrão')}')" class="w-full btn-comprar text-white font-black text-xs py-2 rounded shadow transition-all flex items-center justify-center gap-1 uppercase">
+                            COMPRAR <i class="fa-solid fa-cart-shopping"></i>
+                        </button>
                     </div>
                 `;
                 container.appendChild(card);
             });
-        }
-
-        function solicitarGabarito(nomeProduto) {
-            const msg = `Olá, PHSUBLIME! Gostaria de receber o *GABARITO / MOLDE* para produção do produto: *${nomeProduto}*.`;
-            window.open(`https://api.whatsapp.com/send?phone=${WHATSAPP_ATENDIMENTO}&text=${encodeURIComponent(msg)}`, '_blank');
-        }
-
-        function solicitarOrcamentoProdutoCatalogo(nomeProduto, preco) {
-            const msg = `Olá, PHSUBLIME! Vi no site o produto *${nomeProduto}* (A partir de R$ ${preco.toFixed(2)}) e gostaria de solicitar um orçamento/arte personalizada!`;
-            window.open(`https://api.whatsapp.com/send?phone=${WHATSAPP_ATENDIMENTO}&text=${encodeURIComponent(msg)}`, '_blank');
-        }
-
-        function iniciarInscricaoRealtime() {
-            if (canalRealtime) supabaseClient.removeChannel(canalRealtime);
-
-            canalRealtime = supabaseClient
-                .channel('mudancas-cliente-pedidos')
-                .on('postgres_changes', { event: '*', schema: 'public', table: 'pedidos' }, () => {
-                    if (identificacaoTermo) {
-                        buscarPedidosECliente(identificacaoTermo);
-                    }
-                })
-                .subscribe();
         }
 
         window.onload = inicializarPortal;
