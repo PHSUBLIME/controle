@@ -1826,21 +1826,26 @@
                     <input type="text" id="desp-nome" placeholder="Ex: Bobina de Papel, Tinta, Caixa de Canecas" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400">
                 </div>
                 <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="block text-neutral-400 text-xs font-semibold mb-1">Data Compra / 1ª Parcela</label>
-                        <input type="date" id="desp-data" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400">
-                    </div>
-                    <div>
-                        <label class="block text-neutral-400 text-xs font-semibold mb-1">Tipo Pagamento</label>
-                        <select id="desp-tipo-pagamento" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400">
-                            <option value="Pix">Pix</option>
-                            <option value="Dinheiro">Dinheiro</option>
-                            <option value="Cartão de Crédito">Cartão de Crédito</option>
-                            <option value="Cartão de Débito">Cartão de Débito</option>
-                            <option value="Boleto">Boleto</option>
-                        </select>
-                    </div>
-                </div>
+            <div>
+                <label class="block text-neutral-400 text-xs font-semibold mb-1">Data Compra / 1ª Parcela</label>
+                <input type="date" id="desp-data" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400">
+            </div>
+            <div>
+                <label class="block text-neutral-400 text-xs font-semibold mb-1">Tipo Pagamento</label>
+                <select id="desp-tipo-pagamento" onchange="alternarCampoFechamentoCartao()" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400">
+                    <option value="Pix">Pix</option>
+                    <option value="Dinheiro">Dinheiro</option>
+                    <option value="Cartão de Crédito">Cartão de Crédito</option>
+                    <option value="Cartão de Débito">Cartão de Débito</option>
+                    <option value="Boleto">Boleto</option>
+                </select>
+            </div>
+        </div>
+
+        <div id="container-fechamento-cartao" class="hidden">
+            <label class="block text-yellow-400 text-xs font-bold mb-1">Dia do Fechamento da Fatura (ex: 29)</label>
+            <input type="number" min="1" max="31" id="desp-dia-fechamento" placeholder="Ex: 29 (Opcional)" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white font-bold focus:outline-none focus:border-yellow-400">
+        </div>
                 <div>
                     <label class="block text-neutral-400 text-xs font-semibold mb-1">Onde Comprou (Loja / Fornecedor)</label>
                     <input type="text" id="desp-onde-comprou" placeholder="Ex: Kalunga, Mercado Livre, Distribuidor" class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-yellow-400">
@@ -4150,17 +4155,30 @@
         return `${y}-${m}-${d}`;
     }
 
+    function alternarCampoFechamentoCartao() {
+        const tipo = document.getElementById('desp-tipo-pagamento')?.value;
+        const container = document.getElementById('container-fechamento-cartao');
+        if (container) {
+            if (tipo === 'Cartão de Crédito') {
+                container.classList.remove('hidden');
+            } else {
+                container.classList.add('hidden');
+            }
+        }
+    }
+
     function abrirModalNovaDespesa() {
         document.getElementById('modal-despesa-titulo').innerHTML = `<i class="fa-solid fa-file-invoice-dollar"></i> Nova Despesa`;
         document.getElementById('form-nova-despesa').reset();
         document.getElementById('desp-id').value = '';
         document.getElementById('desp-data').value = appData.dataAtual;
         document.getElementById('desp-parcelas').value = '1';
+        if (document.getElementById('desp-dia-fechamento')) document.getElementById('desp-dia-fechamento').value = '';
+        if (document.getElementById('container-fechamento-cartao')) document.getElementById('container-fechamento-cartao').classList.add('hidden');
         document.getElementById('container-parcelas').classList.remove('hidden');
         document.getElementById('preview-parcela-info').classList.add('hidden');
         document.getElementById('modal-nova-despesa').classList.remove('hidden');
     }
-
     function fecharModalNovaDespesa() {
         document.getElementById('modal-nova-despesa').classList.add('hidden');
     }
@@ -4192,6 +4210,7 @@
         const loja = document.getElementById('desp-onde-comprou').value.trim() || 'Loja/Fornecedor';
         const valorTotal = parseFloat(document.getElementById('desp-valor').value || 0);
         const parcelas = parseInt(document.getElementById('desp-parcelas').value) || 1;
+        const diaFechamento = parseInt(document.getElementById('desp-dia-fechamento')?.value) || 0;
 
         if (valorTotal <= 0) {
             mostrarToast("Informe um valor válido para a despesa!", "erro");
@@ -4223,13 +4242,39 @@
             return;
         }
 
+        // Calcula a data da 1ª parcela considerando o fechamento da fatura do cartão
+        let dataPrimeiraParcela = dataInicial;
+        if (tipo === 'Cartão de Crédito' && diaFechamento > 0 && diaFechamento <= 31) {
+            let partes = dataInicial.split('-');
+            let ano = parseInt(partes[0]);
+            let mes = parseInt(partes[1]) - 1;
+            let diaCompra = parseInt(partes[2]);
+
+            if (diaCompra > diaFechamento) {
+                // Compra após o fechamento -> 1ª parcela cai no mês seguinte
+                let proximoMes = new Date(ano, mes + 1, Math.min(diaCompra, 28));
+                let y = proximoMes.getFullYear();
+                let m = String(proximoMes.getMonth() + 1).padStart(2, '0');
+                let d = String(proximoMes.getDate()).padStart(2, '0');
+                dataPrimeiraParcela = `${y}-${m}-${d}`;
+            }
+        }
+
         let listaDespesas = [];
+        const mesAnoAtual = appData.dataAtual.substring(0, 7);
 
         if (parcelas > 1) {
             const valorParcela = parseFloat((valorTotal / parcelas).toFixed(2));
 
             for (let i = 0; i < parcelas; i++) {
-                const dataVencimento = adicionarMesesISO(dataInicial, i);
+                const dataVencimento = adicionarMesesISO(dataPrimeiraParcela, i);
+                
+                // Se for a 1ª parcela (i===0) e cair no mês atual, nasce PAGA. Senão, fica Pendente.
+                let statusParcela = 'Pendente';
+                if (i === 0 && dataVencimento.startsWith(mesAnoAtual)) {
+                    statusParcela = 'Pago';
+                }
+
                 listaDespesas.push({
                     id: Math.floor(100000000 + Math.random() * 900000000) + i,
                     nome: `${nomeBase} (${i + 1}/${parcelas})`,
@@ -4238,14 +4283,14 @@
                     loja: loja,
                     valor: valorParcela,
                     registradoPor: usuarioAtualNome,
-                    status: 'Pendente'
+                    status: statusParcela
                 });
             }
         } else {
             listaDespesas.push({
                 id: Math.floor(100000000 + Math.random() * 900000000),
                 nome: nomeBase,
-                data: dataInicial,
+                data: dataPrimeiraParcela,
                 tipoPagamento: tipo,
                 loja: loja,
                 valor: valorTotal,
@@ -4269,7 +4314,6 @@
             mostrarToast(`Erro: ${error.message || 'Falha ao salvar despesa'}`, "erro");
         }
     }
-
     function filtrarDespesasAba(aba) {
         appData.abaDespesaFiltro = aba;
         const btnMes = document.getElementById('btn-desp-mes');
