@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PHSUBLIME - Área do Cliente & Rastreio de Pedidos</title>
+
+    <!-- FAVICON -->
+    <link rel="icon" type="image/png" href="FIVICOM.png">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Supabase JS Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #000000; }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0a0a0a; }
+        ::-webkit-scrollbar-thumb { background: #262626; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #facc15; }
+    </style>
+</head>
+<body class="bg-black text-slate-100 min-h-screen flex flex-col justify-between">
+
+    <!-- CABEÇALHO DA PÁGINA -->
+    <header class="bg-neutral-900 border-b border-neutral-800 sticky top-0 z-50 shadow-xl">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 shrink-0 flex items-center justify-center">
+                    <img src="FIVICOM.png" alt="PHSUBLIME" class="w-full h-full object-contain" onerror="this.outerHTML='<i class=\'fa-solid fa-crown text-yellow-400 text-2xl\'></i>'">
+                </div>
+                <div>
+                    <h1 class="text-lg font-black tracking-wider text-yellow-400 flex items-center gap-2">
+                        PHSUBLIME <span class="text-[10px] bg-yellow-400/10 text-yellow-400 border border-yellow-400/30 px-2 py-0.5 rounded-full uppercase font-bold">Portal do Cliente</span>
+                    </h1>
+                    <span class="text-[11px] text-neutral-400 font-medium block">Acompanhamento e Recompra Rápida</span>
+                </div>
+            </div>
+
+            <!-- Botão de Sair / Identificar -->
+            <div id="header-user-info" class="flex items-center gap-3">
+                <button id="btn-login-header" onclick="abrirModalIdentificacao()" class="bg-yellow-400 hover:bg-yellow-300 text-black font-bold text-xs px-4 py-2 rounded-xl transition-all shadow-md flex items-center gap-1.5">
+                    <i class="fa-solid fa-user-check"></i> <span>Acessar Meus Pedidos</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main class="max-w-6xl mx-auto px-4 py-6 w-full flex-1 space-y-8">
+
+        <!-- BANNER / BARRA DE CHAVE PIX RÁPIDA -->
+        <section class="bg-gradient-to-r from-neutral-900 via-neutral-900 to-neutral-950 border border-neutral-800 p-5 rounded-2xl shadow-2xl flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="space-y-1 text-center md:text-left">
+                <h2 class="text-sm font-bold text-yellow-400 uppercase tracking-wide flex items-center justify-center md:justify-start gap-2">
+                    <i class="fa-brands fa-pix text-emerald-400 text-base"></i> Pagamento Seguro via Pix
+                </h2>
+                <p class="text-xs text-neutral-300">Pagamentos com sinal de 50% iniciam a produção imediatamente na fábrica.</p>
+            </div>
+            
+            <div class="flex flex-wrap items-center justify-center gap-2 w-full md:w-auto">
+                <div class="bg-black/80 border border-neutral-700 px-3 py-2 rounded-xl text-xs text-neutral-300 font-mono flex items-center gap-2 select-all">
+                    <span class="text-neutral-500 font-sans text-[10px] uppercase font-bold">CNPJ/Pix:</span>
+                    <strong class="text-white" id="txt-chave-pix">60416979000105</strong>
+                </div>
+                <button onclick="copiarChavePix()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs px-4 py-2 rounded-xl transition-all shadow-lg flex items-center gap-1.5 shrink-0">
+                    <i class="fa-regular fa-copy"></i> Copiar Pix
+                </button>
+            </div>
+        </section>
+
+        <!-- SELETOR DE NAVEGAÇÃO DA ÁREA DO CLIENTE -->
+        <nav class="flex items-center gap-2 border-b border-neutral-800 pb-3 overflow-x-auto no-scrollbar">
+            <button onclick="alternarAba('pedidos')" id="tab-pedidos" class="tab-btn active px-4 py-2.5 rounded-xl font-bold text-xs transition-all flex items-center gap-2 bg-yellow-400 text-black shadow-md shrink-0">
+                <i class="fa-solid fa-box-open text-sm"></i> Meus Pedidos & Rastreio (<span id="badge-count-pedidos">0</span>)
+            </button>
+            <button onclick="alternarAba('recompra')" id="tab-recompra" class="tab-btn px-4 py-2.5 rounded-xl font-bold text-xs transition-all flex items-center gap-2 bg-neutral-900 text-neutral-400 hover:text-white border border-neutral-800 hover:bg-neutral-800 shrink-0">
+                <i class="fa-solid fa-rotate-right text-sm text-yellow-400"></i> Recompra Rápida (1-Clique)
+            </button>
+            <button onclick="alternarAba('catalogo')" id="tab-catalogo" class="tab-btn px-4 py-2.5 rounded-xl font-bold text-xs transition-all flex items-center gap-2 bg-neutral-900 text-neutral-400 hover:text-white border border-neutral-800 hover:bg-neutral-800 shrink-0">
+                <i class="fa-solid fa-store text-sm text-emerald-400"></i> Catálogo de Produtos
+            </button>
+        </nav>
+
+        <!-- ================= SEÇÃO 1: RASTREIO E MEUS PEDIDOS ================= -->
+        <section id="secao-pedidos" class="secao-cliente space-y-4">
+            <div id="msg-nao-identificado" class="bg-neutral-900 border border-neutral-800 p-8 rounded-2xl text-center space-y-4 max-w-xl mx-auto shadow-2xl">
+                <div class="w-16 h-16 bg-yellow-400/10 text-yellow-400 rounded-full flex items-center justify-center mx-auto text-2xl border border-yellow-400/20">
+                    <i class="fa-solid fa-magnifying-glass-location"></i>
+                </div>
+                <div>
+                    <h3 class="text-lg font-black text-white">Identifique-se para rastrear seus pedidos</h3>
+                    <p class="text-xs text-neutral-400 mt-1">Informe seu CPF/CNPJ ou o número do WhatsApp para visualizar o status de produção e entrega em tempo real.</p>
+                </div>
+                <button onclick="abrirModalIdentificacao()" class="w-full bg-yellow-400 hover:bg-yellow-300 text-black font-black py-3 rounded-xl text-xs transition-all shadow-lg shadow-yellow-950/40">
+                    DIGITAR MEU CPF OU WHATSAPP
+                </button>
+            </div>
+
+            <!-- Lista Dinâmica de Pedidos -->
+            <div id="container-lista-pedidos" class="hidden space-y-6"></div>
+        </section>
+
+        <!-- ================= SEÇÃO 2: RECOMPRA RÁPIDA ================= -->
+        <section id="secao-recompra" class="secao-cliente hidden space-y-4">
+            <div class="bg-neutral-900 p-5 rounded-2xl border border-neutral-800">
+                <h3 class="text-base font-black text-yellow-400 flex items-center gap-2">
+                    <i class="fa-solid fa-rotate-right"></i> Suas Últimas Compras
+                </h3>
+                <p class="text-xs text-neutral-400 mt-0.5">Faça um novo pedido do mesmo produto em 1 clique direto no WhatsApp do atendimento.</p>
+            </div>
+
+            <div id="container-recompra-lista" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+        </section>
+
+        <!-- ================= SEÇÃO 3: CATÁLOGO DE PRODUTOS ================= -->
+        <section id="secao-catalogo" class="secao-cliente hidden space-y-4">
+            <div class="bg-neutral-900 p-5 rounded-2xl border border-neutral-800 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                    <h3 class="text-base font-black text-yellow-400 flex items-center gap-2">
+                        <i class="fa-solid fa-store"></i> Nosso Catálogo & Serviços
+                    </h3>
+                    <p class="text-xs text-neutral-400 mt-0.5">Confira os materiais disponíveis para personalização e solicite seu orçamento.</p>
+                </div>
+
+                <div class="w-full md:w-72 bg-neutral-800 px-3 py-2 rounded-xl border border-neutral-700 flex items-center gap-2">
+                    <i class="fa-solid fa-magnifying-glass text-yellow-400 text-xs"></i>
+                    <input type="text" id="input-busca-catalogo" onkeyup="renderizarCatalogo()" placeholder="Buscar produto no catálogo..." class="bg-transparent text-white focus:outline-none text-xs w-full">
+                </div>
+            </div>
+
+            <div id="container-catalogo-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+        </section>
+
+    </main>
+
+    <!-- RODAPÉ DA PÁGINA -->
+    <footer class="bg-neutral-950 border-t border-neutral-900 py-6 mt-10">
+        <div class="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-neutral-500 text-center sm:text-left">
+            <div>
+                <strong class="text-yellow-400 font-bold block text-sm">PHSUBLIME — Gráfica Rápida & Personalizados</strong>
+                <p class="text-[11px] mt-0.5">Atendimento das 08h às 18h | Magé / Rio de Janeiro</p>
+            </div>
+            <div>
+                <a id="link-whats-rodape" href="#" target="_blank" class="inline-flex items-center gap-2 bg-emerald-600/20 hover:bg-emerald-600 text-emerald-400 hover:text-white border border-emerald-500/30 px-4 py-2 rounded-xl font-bold transition-all">
+                    <i class="fa-brands fa-whatsapp text-sm"></i> Atendimento WhatsApp
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- MODAL DE IDENTIFICAÇÃO DO CLIENTE -->
+    <div id="modal-identificacao" class="fixed inset-0 bg-black/85 backdrop-blur-md z-[990] hidden flex items-center justify-center p-4">
+        <div class="bg-neutral-900 border border-neutral-800 rounded-2xl max-w-md w-full p-6 space-y-5 shadow-2xl text-center relative">
+            <button onclick="fecharModalIdentificacao()" class="absolute top-4 right-4 text-neutral-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+
+            <div class="w-16 h-16 bg-yellow-400/10 text-yellow-400 rounded-full flex items-center justify-center mx-auto text-2xl border border-yellow-400/20">
+                <i class="fa-solid fa-user-lock"></i>
+            </div>
+
+            <div>
+                <h3 class="text-xl font-black text-yellow-400">Identificação do Cliente</h3>
+                <p class="text-xs text-neutral-400 mt-1">Digite seu CPF/CNPJ ou WhatsApp para acessar seus pedidos e histórico de compras.</p>
+            </div>
+
+            <form onsubmit="confirmarIdentificacao(event)" class="space-y-4 text-left">
+                <div>
+                    <label class="block text-xs font-bold text-neutral-400 mb-1">CPF, CNPJ ou WhatsApp com DDD</label>
+                    <input type="text" id="input-identificacao-cliente" required placeholder="Ex: 21999998888 ou CPF..." class="w-full bg-neutral-800 border border-neutral-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-yellow-400 font-bold">
+                </div>
+
+                <button type="submit" class="w-full bg-yellow-400 hover:bg-yellow-300 text-black font-black py-3.5 rounded-xl text-xs transition-all shadow-lg shadow-yellow-950/40">
+                    BUSCAR MEUS PEDIDOS
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- TOAST DE NOTIFICAÇÃO -->
+    <div id="toast" class="fixed bottom-5 right-5 bg-neutral-900 text-white border border-yellow-400 px-5 py-3 rounded-xl shadow-2xl transform translate-y-20 opacity-0 transition-all duration-300 flex items-center gap-3 z-[1001]">
+        <i id="toast-icon" class="fa-solid fa-circle-check text-yellow-400 text-lg"></i>
+        <span id="toast-message" class="font-medium text-sm">Ação realizada!</span>
+    </div>
+
+    <!-- LÓGICA E INTEGRAÇÃO SUPABASE -->
+    <script>
+        // CONFIGURAÇÕES DO SUPABASE
+        const SUPABASE_URL = 'https://qkcrimqakjsokdztzqxe.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_mF--YXTFkjyjbQ7Uw7Qq1w_ODzsJPA1'; 
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // CONTATO DE ATENDIMENTO PHSUBLIME
+        const WHATSAPP_ATENDIMENTO = '5521965404820';
+        const CHAVE_PIX_OFICIAL = '60416979000105';
+
+        // ESTADO DA APLICAÇÃO
+        let clienteIdentificado = null;
+        let identificacaoTermo = '';
+        let pedidosDoCliente = [];
+        let catalogoEstoque = [];
+        let canalRealtime = null;
+
+        // AUXILIARES DE ESCAPE
+        function escapeAttr(str) {
+            if (str === null || str === undefined) return '';
+            return String(str).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function mostrarToast(msg, tipo = 'sucesso') {
+            const toast = document.getElementById('toast');
+            const icon = document.getElementById('toast-icon');
+            const msgEl = document.getElementById('toast-message');
+
+            msgEl.innerText = msg;
+            if (tipo === 'erro' || tipo === 'alerta') {
+                toast.className = "fixed bottom-5 right-5 bg-neutral-900 text-white border border-rose-500 px-5 py-3 rounded-xl shadow-2xl transform translate-y-20 opacity-0 transition-all duration-300 flex items-center gap-3 z-[1001]";
+                icon.className = "fa-solid fa-triangle-exclamation text-rose-500 text-lg";
+            } else {
+                toast.className = "fixed bottom-5 right-5 bg-neutral-900 text-white border border-yellow-400 px-5 py-3 rounded-xl shadow-2xl transform translate-y-20 opacity-0 transition-all duration-300 flex items-center gap-3 z-[1001]";
+                icon.className = "fa-solid fa-circle-check text-yellow-400 text-lg";
+            }
+
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => toast.classList.add('translate-y-20', 'opacity-0'), 3500);
+        }
+
+        function copiarChavePix() {
+            navigator.clipboard.writeText(CHAVE_PIX_OFICIAL).then(() => {
+                mostrarToast("Chave Pix CNPJ copiada com sucesso!");
+            });
+        }
+
+        // ALTERNAR ABAS
+        function alternarAba(aba) {
+            document.querySelectorAll('.secao-cliente').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.className = "tab-btn px-4 py-2.5 rounded-xl font-bold text-xs transition-all flex items-center gap-2 bg-neutral-900 text-neutral-400 hover:text-white border border-neutral-800 hover:bg-neutral-800 shrink-0";
+            });
+
+            const secAlvo = document.getElementById(`secao-${aba}`);
+            const tabAlvo = document.getElementById(`tab-${aba}`);
+
+            if (secAlvo) secAlvo.classList.remove('hidden');
+            if (tabAlvo) tabAlvo.className = "tab-btn active px-4 py-2.5 rounded-xl font-bold text-xs transition-all flex items-center gap-2 bg-yellow-400 text-black shadow-md shrink-0";
+
+            if (aba === 'catalogo') renderizarCatalogo();
+            if (aba === 'recompra') renderizarRecompra();
+        }
+
+        // MODAL IDENTIFICAÇÃO
+        function abrirModalIdentificacao() {
+            document.getElementById('modal-identificacao').classList.remove('hidden');
+        }
+        function fecharModalIdentificacao() {
+            document.getElementById('modal-identificacao').classList.add('hidden');
+        }
+
+        // CARREGAMENTO E LEITURA DE URL PARAMS
+        async function inicializarPortal() {
+            // Configurar botão do WhatsApp do Rodapé
+            document.getElementById('link-whats-rodape').href = `https://api.whatsapp.com/send?phone=${WHATSAPP_ATENDIMENTO}&text=${encodeURIComponent("Olá, equipe PHSUBLIME! Gostaria de tirar uma dúvida.")}`;
+
+            // Ler Parâmetros de URL (?pedido=123 ou ?whats=... ou ?cpf=...)
+            const params = new URLSearchParams(window.location.search);
+            const paramPedido = params.get('pedido');
+            const paramWhats = params.get('whats') || params.get('whatsapp') || params.get('tel');
+            const paramCpf = params.get('cpf') || params.get('cnpj');
+
+            let termoParaBuscar = paramPedido || paramWhats || paramCpf;
+
+            // Verificar se já temos termo salvo no localStorage
+            if (!termoParaBuscar) {
+                termoParaBuscar = localStorage.getItem('phsublime_cliente_termo');
+            }
+
+            if (termoParaBuscar) {
+                await buscarPedidosECliente(termoParaBuscar);
+            }
+
+            // Carregar catálogo público em segundo plano
+            carregarEstoquePublico();
+            iniciarInscricaoRealtime();
+        }
+
+        async function confirmarIdentificacao(e) {
+            e.preventDefault();
+            const termo = document.getElementById('input-identificacao-cliente').value.trim();
+            if (!termo) return;
+
+            fecharModalIdentificacao();
+            await buscarPedidosECliente(termo);
+        }
+
+        function limparNumeros(str) {
+            return String(str || '').replace(/\D/g, '');
+        }
+
+        async function buscarPedidosECliente(termoOriginal) {
+            identificacaoTermo = termoOriginal.trim();
+            const termoLimpo = limparNumeros(identificacaoTermo);
+
+            mostrarToast("Buscando informações...", "info");
+
+            try {
+                // 1. Buscar base de clientes para localizar pelo CPF/CNPJ/WhatsApp/Telefone
+                const { data: clientesData } = await supabaseClient.from('clientes').select('id, nome, cpf, whatsapp, telefone, cidade, estado');
+
+                let clienteEncontrado = null;
+                if (clientesData) {
+                    clienteEncontrado = clientesData.find(c => {
+                        const cpfC = limparNumeros(c.cpf);
+                        const whatsC = limparNumeros(c.whatsapp);
+                        const telC = limparNumeros(c.telefone);
+                        
+                        return (termoLimpo && (cpfC === termoLimpo || whatsC.endsWith(termoLimpo) || telC.endsWith(termoLimpo))) ||
+                               (c.nome && c.nome.toLowerCase().includes(identificacaoTermo.toLowerCase()));
+                    });
+                }
+
+                clienteIdentificado = clienteEncontrado;
+
+                // 2. Buscar Pedidos (Filtro por ID do Pedido ou ID do Cliente ou Nome do Cliente)
+                const { data: pedidosData, error } = await supabaseClient
+                    .from('pedidos')
+                    .select('id, data, clienteId, clienteNome, itens, total, valorPago, statusPagamento, dataEntrega, status, tipoEntrega, formaPagamento, obs')
+                    .order('id', { ascending: false });
+
+                if (error) throw error;
+
+                if (pedidosData) {
+                    pedidosDoCliente = pedidosData.filter(p => {
+                        // Se o termo de busca for o ID numérico exato do pedido
+                        if (String(p.id) === identificacaoTermo || String(p.id) === termoLimpo) return true;
+
+                        // Se o cliente foi identificado
+                        if (clienteIdentificado && (p.clienteId == clienteIdentificado.id)) return true;
+
+                        // Se o nome do cliente no pedido coincide
+                        if (p.clienteNome && identificacaoTermo.length >= 3 && p.clienteNome.toLowerCase().includes(identificacaoTermo.toLowerCase())) return true;
+
+                        return false;
+                    });
+                } else {
+                    pedidosDoCliente = [];
+                }
+
+                // Salvar estado na sessão
+                localStorage.setItem('phsublime_cliente_termo', identificacaoTermo);
+
+                atualizarHeaderELista();
+
+            } catch (err) {
+                console.error("Erro ao buscar dados do cliente:", err);
+                mostrarToast("Erro ao conectar com o banco de dados.", "erro");
+            }
+        }
+
+        function atualizarHeaderELista() {
+            const containerHeader = document.getElementById('header-user-info');
+            const msgSemId = document.getElementById('msg-nao-identificado');
+            const containerLista = document.getElementById('container-lista-pedidos');
+            const badgeCount = document.getElementById('badge-count-pedidos');
+
+            badgeCount.innerText = pedidosDoCliente.length;
+
+            if (clienteIdentificado || pedidosDoCliente.length > 0) {
+                const nomeExibicao = clienteIdentificado ? clienteIdentificado.nome : `Busca: #${identificacaoTermo}`;
+                
+                containerHeader.innerHTML = `
+                    <div class="text-right">
+                        <span class="text-[10px] text-neutral-400 font-bold block uppercase">Cliente Conectado:</span>
+                        <strong class="text-xs text-yellow-400 font-bold flex items-center gap-1">
+                            <i class="fa-solid fa-circle-user"></i> ${escapeAttr(nomeExibicao)}
+                        </strong>
+                    </div>
+                    <button onclick="sairEBuscarOutro()" class="bg-neutral-800 hover:bg-neutral-700 text-neutral-300 p-2 rounded-xl text-xs" title="Sair / Buscar Outro">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                    </button>
+                `;
+
+                msgSemId.classList.add('hidden');
+                containerLista.classList.remove('hidden');
+                renderizarListaPedidos();
+            } else {
+                containerHeader.innerHTML = `
+                    <button id="btn-login-header" onclick="abrirModalIdentificacao()" class="bg-yellow-400 hover:bg-yellow-300 text-black font-bold text-xs px-4 py-2 rounded-xl transition-all shadow-md flex items-center gap-1.5">
+                        <i class="fa-solid fa-user-check"></i> <span>Acessar Meus Pedidos</span>
+                    </button>
+                `;
+
+                msgSemId.classList.remove('hidden');
+                containerLista.classList.add('hidden');
+            }
+        }
+
+        function sairEBuscarOutro() {
+            localStorage.removeItem('phsublime_cliente_termo');
+            clienteIdentificado = null;
+            identificacaoTermo = '';
+            pedidosDoCliente = [];
+            atualizarHeaderELista();
+            mostrarToast("Sessão finalizada com sucesso.");
+        }
+
+        // RENDERIZAR RASTREIO DE PEDIDOS
+        function renderizarListaPedidos() {
+            const container = document.getElementById('container-lista-pedidos');
+            container.innerHTML = '';
+
+            if (pedidosDoCliente.length === 0) {
+                container.innerHTML = `
+                    <div class="bg-neutral-900 border border-neutral-800 p-8 rounded-2xl text-center space-y-3">
+                        <i class="fa-solid fa-box-open text-4xl text-neutral-600 block"></i>
+                        <h4 class="text-base font-bold text-white">Nenhum pedido encontrado para o termo pesquisado.</h4>
+                        <p class="text-xs text-neutral-400">Verifique se digitou o CPF ou WhatsApp exatamente como cadastrado na loja.</p>
+                        <button onclick="abrirModalIdentificacao()" class="px-4 py-2 bg-yellow-400 text-black font-bold rounded-xl text-xs transition-all">Tentar Outro Número</button>
+                    </div>
+                `;
+                return;
+            }
+
+            pedidosDoCliente.forEach(p => {
+                const total = parseFloat(p.total || 0);
+                const stPag = p.statusPagamento || 'Pendente';
+                const valorPago = parseFloat(p.valorPago !== undefined ? p.valorPago : (stPag === 'Pago 100%' ? total : (stPag === 'Sinal 50%' ? total * 0.5 : 0)));
+                const saldoPendente = Math.max(0, total - valorPago);
+
+                const descItens = p.itens ? p.itens.map(i => `${i.servico || 'Item'} (${i.qtd || 1}x)`).join(', ') : 'Produtos Personalizados';
+
+                // Cálculo das Etapas do Progresso
+                const st = (p.status || 'AGUARDANDO').trim();
+                
+                let step = 1; // Default AGUARDANDO
+                if (st === 'Em Produção') step = 2;
+                else if (st === 'Pronto p/ Retirada' || st === 'Concluído') step = 3;
+                else if (st === 'Entregue') step = 4;
+                else if (st === 'Cancelado') step = 0;
+
+                const isRetirada = (p.tipoEntrega === 'Retirada');
+
+                const card = document.createElement('div');
+                card.className = "bg-neutral-900 border border-neutral-800 rounded-2xl p-5 md:p-6 space-y-6 shadow-2xl hover:border-neutral-700 transition-all";
+
+                card.innerHTML = `
+                    <!-- Cabeçalho do Card -->
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-neutral-800 pb-4">
+                        <div>
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <strong class="text-lg font-black text-yellow-400">Pedido #${p.id}</strong>
+                                <span class="text-[10px] font-bold uppercase px-2.5 py-0.5 rounded-full ${isRetirada ? 'bg-blue-500/20 text-blue-300 border border-blue-500/30' : 'bg-purple-500/20 text-purple-300 border border-purple-500/30'}">
+                                    <i class="fa-solid ${isRetirada ? 'fa-store' : 'fa-truck'} text-[9px]"></i> ${isRetirada ? 'Retirada no Balcão' : 'Entrega / Dropship'}
+                                </span>
+                            </div>
+                            <span class="text-xs text-neutral-400 block mt-0.5">Realizado em: <strong class="text-neutral-200">${p.data || '--/--/----'}</strong> | Previsão: <strong class="text-yellow-300">${p.dataEntrega || '--/--/----'}</strong></span>
+                        </div>
+
+                        <div class="text-left sm:text-right">
+                            <span class="text-[10px] text-neutral-400 uppercase font-bold block">Status do Pagamento</span>
+                            <span class="px-2.5 py-0.5 text-xs rounded-full font-bold uppercase ${stPag === 'Pago 100%' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40' : (stPag === 'Sinal 50%' ? 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/40' : 'bg-rose-500/20 text-rose-400 border border-rose-500/40')}">
+                                ${stPag}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- LINHA DO TEMPO / PROGRESSO DO PEDIDO -->
+                    ${st === 'Cancelado' ? `
+                        <div class="bg-rose-950/40 border border-rose-800 p-4 rounded-xl text-center space-y-1">
+                            <strong class="text-rose-400 font-bold text-sm flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-circle-xmark"></i> Pedido Cancelado
+                            </strong>
+                            <p class="text-xs text-neutral-300">Entre em contato com a equipe pelo WhatsApp para mais informações.</p>
+                        </div>
+                    ` : `
+                        <div class="space-y-2">
+                            <span class="text-xs font-bold text-yellow-400 uppercase tracking-wide block">Estágio de Produção em Tempo Real</span>
+                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center text-xs">
+                                <!-- Passo 1 -->
+                                <div class="p-3 rounded-xl border ${step >= 1 ? 'bg-yellow-400/10 border-yellow-400 text-yellow-400 font-bold' : 'bg-neutral-950 border-neutral-800 text-neutral-600'}">
+                                    <i class="fa-solid fa-clock text-base block mb-1"></i>
+                                    <span class="text-[11px] block">1. Solicitado</span>
+                                </div>
+                                <!-- Passo 2 -->
+                                <div class="p-3 rounded-xl border ${step >= 2 ? 'bg-yellow-400/10 border-yellow-400 text-yellow-400 font-bold' : 'bg-neutral-950 border-neutral-800 text-neutral-600'}">
+                                    <i class="fa-solid fa-gears text-base block mb-1"></i>
+                                    <span class="text-[11px] block">2. Em Produção</span>
+                                </div>
+                                <!-- Passo 3 -->
+                                <div class="p-3 rounded-xl border ${step >= 3 ? 'bg-yellow-400/10 border-yellow-400 text-yellow-400 font-bold' : 'bg-neutral-950 border-neutral-800 text-neutral-600'}">
+                                    <i class="fa-solid ${isRetirada ? 'fa-boxes-packing' : 'fa-truck-fast'} text-base block mb-1"></i>
+                                    <span class="text-[11px] block">${isRetirada ? '3. Pronto Balcão' : '3. Em Rota'}</span>
+                                </div>
+                                <!-- Passo 4 -->
+                                <div class="p-3 rounded-xl border ${step >= 4 ? 'bg-emerald-500/20 border-emerald-500 text-emerald-400 font-bold' : 'bg-neutral-950 border-neutral-800 text-neutral-600'}">
+                                    <i class="fa-solid fa-circle-check text-base block mb-1"></i>
+                                    <span class="text-[11px] block">4. Concluído</span>
+                                </div>
+                            </div>
+                        </div>
+                    `}
+
+                    <!-- Resumo dos Itens & Financeiro -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 bg-black/50 p-4 rounded-xl border border-neutral-800 text-xs">
+                        <div class="md:col-span-2 space-y-1">
+                            <span class="text-[10px] text-neutral-500 uppercase font-bold block">Itens Solicitados:</span>
+                            <strong class="text-white font-semibold block text-sm leading-relaxed">${escapeAttr(descItens)}</strong>
+                        </div>
+                        <div class="space-y-1 border-t md:border-t-0 md:border-l border-neutral-800 pt-2 md:pt-0 md:pl-4">
+                            <div class="flex justify-between">
+                                <span class="text-neutral-400">Total Pedido:</span>
+                                <strong class="text-white">R$ ${total.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</strong>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-emerald-400">Valor Pago / Sinal:</span>
+                                <strong class="text-emerald-400">R$ ${valorPago.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</strong>
+                            </div>
+                            <div class="flex justify-between border-t border-neutral-800 pt-1">
+                                <span class="text-amber-400 font-bold">Saldo Pendente:</span>
+                                <strong class="text-amber-400 font-bold text-sm">R$ ${saldoPendente.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Ações Rápidas via WhatsApp -->
+                    <div class="flex flex-wrap items-center justify-end gap-2.5 pt-2">
+                        ${saldoPendente > 0 ? `
+                            <button onclick="enviarComprovantePixModal('#${p.id}')" class="flex-1 sm:flex-none bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2.5 rounded-xl text-xs shadow-lg transition-all flex items-center justify-center gap-1.5">
+                                <i class="fa-brands fa-whatsapp text-sm"></i> Enviar Comprovante Pix
+                            </button>
+                        ` : ''}
+
+                        <button onclick="tirarDuvidaPedido('${p.id}', '${escapeAttr(st)}')" class="flex-1 sm:flex-none bg-neutral-800 hover:bg-neutral-700 text-yellow-400 border border-neutral-700 font-bold px-4 py-2.5 rounded-xl text-xs transition-all flex items-center justify-center gap-1.5">
+                            <i class="fa-solid fa-comment-dots text-sm"></i> Tirar Dúvida no Whats
+                        </button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function tirarDuvidaPedido(pedidoId, status) {
+            const msg = `Olá, equipe PHSUBLIME! Gostaria de uma informação sobre o meu *Pedido #${pedidoId}* (Status Atual: *${status}*).`;
+            window.open(`https://api.whatsapp.com/send?phone=${WHATSAPP_ATENDIMENTO}&text=${encodeURIComponent(msg)}`, '_blank');
+        }
+
+        function enviarComprovantePixModal(pedidoRef) {
+            const msg = `Olá, equipe PHSUBLIME! Segue meu comprovante de pagamento referente ao *Pedido ${pedidoRef}*. Chave Pix efetuada!`;
+            window.open(`https://api.whatsapp.com/send?phone=${WHATSAPP_ATENDIMENTO}&text=${encodeURIComponent(msg)}`, '_blank');
+        }
+
+        // RENDERIZAR RECOMPRA RÁPIDA (ITENS JÁ COMPRADOS NO PASSADO)
+        function renderizarRecompra() {
+            const container = document.getElementById('container-recompra-lista');
+            container.innerHTML = '';
+
+            const produtosMap = {};
+
+            pedidosDoCliente.forEach(p => {
+                if (p.itens && Array.isArray(p.itens)) {
+                    p.itens.forEach(item => {
+                        const nomeItem = item.servico || 'Produto';
+                        if (!produtosMap[nomeItem]) {
+                            produtosMap[nomeItem] = {
+                                nome: nomeItem,
+                                material: item.material || nomeItem,
+                                ultimaQtd: item.qtd || 1,
+                                ultimoValor: parseFloat(item.valor || 0)
+                            };
+                        }
+                    });
+                }
+            });
+
+            const itensUnicos = Object.values(produtosMap);
+
+            if (itensUnicos.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full bg-neutral-900 border border-neutral-800 p-8 rounded-2xl text-center space-y-2">
+                        <i class="fa-solid fa-rotate-right text-3xl text-neutral-600 block"></i>
+                        <h4 class="text-sm font-bold text-white">Nenhum histórico de compra anterior localizado.</h4>
+                        <p class="text-xs text-neutral-400">Assim que você realizar um pedido, seus itens aparecerão aqui para recompra rápida.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            itensUnicos.forEach(item => {
+                const card = document.createElement('div');
+                card.className = "bg-neutral-900 border border-neutral-800 rounded-2xl p-5 space-y-4 hover:border-yellow-400/40 transition-all flex flex-col justify-between";
+                card.innerHTML = `
+                    <div class="space-y-2">
+                        <span class="text-[10px] font-bold uppercase tracking-wider text-yellow-400 bg-yellow-400/10 border border-yellow-400/20 px-2 py-0.5 rounded-md inline-block">
+                            Comprado Anteriormente
+                        </span>
+                        <h4 class="text-base font-black text-white leading-snug">${escapeAttr(item.nome)}</h4>
+                        <p class="text-xs text-neutral-400">Material: <strong class="text-neutral-200">${escapeAttr(item.material)}</strong></p>
+                    </div>
+
+                    <div class="pt-3 border-t border-neutral-800 flex items-center justify-between gap-2">
+                        <div>
+                            <span class="text-[10px] text-neutral-500 uppercase font-bold block">Último Valor:</span>
+                            <strong class="text-emerald-400 font-black text-base">R$ ${item.ultimoValor.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</strong>
+                        </div>
+                        <button onclick="solicitarRecompraWhats('${escapeAttr(item.nome)}', '${escapeAttr(item.material)}', ${item.ultimaQtd})" class="bg-yellow-400 hover:bg-yellow-300 text-black font-black text-xs px-4 py-2.5 rounded-xl transition-all shadow-md flex items-center gap-1.5">
+                            <i class="fa-solid fa-cart-plus"></i> Pedir Novamente
+                        </button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function solicitarRecompraWhats(nomeProduto, material, qtd) {
+            const msg = `Olá, PHSUBLIME! Gostaria de fazer a *RECOMPRA* do item:\n\n` +
+                        `• *Produto:* ${nomeProduto}\n` +
+                        `• *Material:* ${material}\n` +
+                        `• *Quantidade Solicitada:* ${qtd} un\n\n` +
+                        `Podemos confirmar o pedido e pagamento via Pix?`;
+            window.open(`https://api.whatsapp.com/send?phone=${WHATSAPP_ATENDIMENTO}&text=${encodeURIComponent(msg)}`, '_blank');
+        }
+
+        // CARREGAR E RENDERIZAR CATÁLOGO PÚBLICO DO ESTOQUE
+        async function carregarEstoquePublico() {
+            try {
+                const { data, error } = await supabaseClient
+                    .from('estoque')
+                    .select('id, nome, categoria, unidade, precoVenda, fornecedor, obs')
+                    .gt('precoVenda', 0)
+                    .order('nome', { ascending: true });
+
+                if (!error && data) {
+                    catalogoEstoque = data;
+                    renderizarCatalogo();
+                }
+            } catch (e) {
+                console.error("Erro ao carregar estoque público:", e);
+            }
+        }
+
+        function renderizarCatalogo() {
+            const container = document.getElementById('container-catalogo-grid');
+            if (!container) return;
+            container.innerHTML = '';
+
+            const busca = (document.getElementById('input-busca-catalogo')?.value || '').toLowerCase();
+
+            const filtrados = catalogoEstoque.filter(item => {
+                const txt = `${item.nome} ${item.categoria} ${item.fornecedor}`.toLowerCase();
+                return !busca || txt.includes(busca);
+            });
+
+            if (filtrados.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full bg-neutral-900 border border-neutral-800 p-8 rounded-2xl text-center space-y-2">
+                        <i class="fa-solid fa-store text-3xl text-neutral-600 block"></i>
+                        <h4 class="text-sm font-bold text-white">Nenhum produto localizado no catálogo.</h4>
+                        <p class="text-xs text-neutral-400">Tente buscar por outros termos como banner, caneca, adesivo...</p>
+                    </div>
+                `;
+                return;
+            }
+
+            filtrados.forEach(item => {
+                const preco = parseFloat(item.precoVenda || 0);
+                const card = document.createElement('div');
+                card.className = "bg-neutral-900 border border-neutral-800 rounded-2xl p-5 space-y-4 hover:border-yellow-400/40 transition-all flex flex-col justify-between";
+
+                card.innerHTML = `
+                    <div class="space-y-2">
+                        <div class="flex items-center justify-between gap-2">
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-yellow-400 bg-yellow-400/10 border border-yellow-400/20 px-2 py-0.5 rounded-md">
+                                ${escapeAttr(item.categoria || 'Geral')}
+                            </span>
+                            <span class="text-[10px] text-neutral-500 font-bold uppercase">${escapeAttr(item.unidade || 'Un')}</span>
+                        </div>
+                        <h4 class="text-base font-black text-white leading-snug">${escapeAttr(item.nome)}</h4>
+                        ${item.obs ? `<p class="text-xs text-neutral-400 italic line-clamp-2">${escapeAttr(item.obs)}</p>` : ''}
+                    </div>
+
+                    <div class="pt-3 border-t border-neutral-800 flex items-center justify-between gap-2">
+                        <div>
+                            <span class="text-[10px] text-neutral-500 uppercase font-bold block">Preço de Tabela:</span>
+                            <strong class="text-yellow-400 font-black text-base">R$ ${preco.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</strong>
+                        </div>
+                        <button onclick="solicitarOrcamentoProdutoCatalogo('${escapeAttr(item.nome)}', ${preco})" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs px-4 py-2.5 rounded-xl transition-all shadow-md flex items-center gap-1.5">
+                            <i class="fa-brands fa-whatsapp"></i> Pedir no Whats
+                        </button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function solicitarOrcamentoProdutoCatalogo(nomeProduto, preco) {
+            const msg = `Olá, PHSUBLIME! Vi no site o produto *${nomeProduto}* (R$ ${preco.toFixed(2)}) e gostaria de solicitar um orçamento/arte personalizada!`;
+            window.open(`https://api.whatsapp.com/send?phone=${WHATSAPP_ATENDIMENTO}&text=${encodeURIComponent(msg)}`, '_blank');
+        }
+
+        // REALTIME SUBSCRIPTION
+        function iniciarInscricaoRealtime() {
+            if (canalRealtime) supabaseClient.removeChannel(canalRealtime);
+
+            canalRealtime = supabaseClient
+                .channel('mudancas-cliente-pedidos')
+                .on('postgres_changes', { event: '*', schema: 'public', table: 'pedidos' }, () => {
+                    if (identificacaoTermo) {
+                        buscarPedidosECliente(identificacaoTermo);
+                    }
+                })
+                .subscribe();
+        }
+
+        // INICIALIZAÇÃO AO CARREGAR PÁGINA
+        window.onload = inicializarPortal;
+    </script>
+</body>
+</html>
