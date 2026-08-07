@@ -4346,6 +4346,8 @@
                     </tr>`;
             }
 
+            let listaUnificada = [];
+
             // 1. Custo de produção dos Pedidos do Mês Ativo
             appData.pedidos.forEach(p => {
                 if (p.despesa > 0 && p.status !== 'Cancelado') {
@@ -4354,21 +4356,178 @@
                     const descProdutos = p.itens ? p.itens.map(i => i.servico).join(', ') : 'Insumos do Pedido';
                     const resp = p.responsavel || 'N/I';
                     const buscaTexto = `pedido #${p.id} ${p.clienteNome} ${descProdutos} ${resp} custo producao`.toLowerCase();
+                    
                     if (!filtro || buscaTexto.includes(filtro)) {
-                        const tr = document.createElement('tr');
-                        tr.innerHTML = `
-                            <td class="p-3 font-semibold text-white">Custo Pedido #${p.id} (${escapeAttr(p.clienteNome)} - ${escapeAttr(descProdutos)})</td>
-                            <td class="p-3 text-neutral-400">${escapeAttr(p.data)}</td>
-                            <td class="p-3 text-xs font-bold text-yellow-400"><i class="fa-solid fa-user text-[10px]"></i> ${escapeAttr(resp)}</td>
-                            <td class="p-3 text-xs text-neutral-400">Interno Pedido</td>
-                            <td class="p-3 text-neutral-400">Produção/Fábrica</td>
-                            <td class="p-3 font-bold text-rose-400">R$ ${parseFloat(p.despesa).toLocaleString('pt-BR', {minimumFractionDigits: 2})}</td>
-                            <td class="p-3 text-right"><span class="text-xs text-neutral-500 font-mono">Via Pedido</span></td>
-                        `;
-                        tbody.appendChild(tr);
+                        listaUnificada.push({
+                            tipoOrigem: 'pedido',
+                            id: p.id,
+                            nome: `Custo Pedido #${p.id} (${p.clienteNome} - ${descProdutos})`,
+                            data: p.data,
+                            registradoPor: resp,
+                            tipoPagamento: 'Interno Pedido',
+                            loja: 'Produção/Fábrica',
+                            valor: parseFloat(p.despesa || 0)
+                        });
                     }
                 }
             });
+
+            // 2. Despesas avulsas e parcelas do Mês Ativo
+            const despesasMes = obterDespesasMesAtivo();
+            despesasMes.forEach(d => {
+                const regPor = d.registradoPor || 'N/I';
+                const buscaTexto = `${d.nome} ${d.loja} ${d.tipoPagamento} ${regPor}`.toLowerCase();
+                
+                if (!filtro || buscaTexto.includes(filtro)) {
+                    const info = extrairInfoParcela(d.nome);
+                    listaUnificada.push({
+                        tipoOrigem: 'avulso',
+                        id: d.id,
+                        nome: d.nome,
+                        baseNome: info.base,
+                        isParcelado: info.total > 1,
+                        data: d.data,
+                        registradoPor: regPor,
+                        tipoPagamento: d.tipoPagamento,
+                        loja: d.loja,
+                        valor: parseFloat(d.valor || 0)
+                    });
+                }
+            });
+
+            // 3. Ordena tudo por data mais recente primeiro (decrescente) e ID mais recente em seguida
+            listaUnificada.sort((a, b) => {
+                const compData = (b.data || '').localeCompare(a.data || '');
+                if (compData !== 0) return compData;
+                return (b.id || 0) - (a.id || 0);
+            });
+
+            if (listaUnificada.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" class="p-6 text-center text-neutral-500 text-xs italic">Nenhuma despesa ou custo encontrado para este mês.</td></tr>`;
+                return;
+            }
+
+            // 4. Renderiza as linhas na tabela
+            listaUnificada.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-neutral-800/40 transition-all";
+
+                if (item.tipoOrigem === 'pedido') {
+                    tr.innerHTML = `
+                        <td class="p-3 font-semibold text-white">${escapeAttr(item.nome)}</td>
+                        <td class="p-3 text-neutral-400">${escapeAttr(item.data)}</td>
+                        <td class="p-3 text-xs font-bold text-yellow-400"><i class="fa-solid fa-user text-[10px]"></i> ${escapeAttr(item.registradoPor)}</td>
+                        <td class="p-3 text-xs text-neutral-400">${escapeAttr(item.tipoPagamento)}</td>
+                        <td class="p-3 text-neutral-400">${escapeAttr(item.loja)}</td>
+                        <td class="p-3 font-bold text-rose-400">R$ ${item.valor.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</td>
+                        <td class="p-3 text-right"><span class="text-xs text-neutral-500 font-mono">Via Pedido</span></td>
+                    `;
+                } else {
+                    tr.innerHTML = `
+                        <td class="p-3 font-semibold text-white">
+                            ${escapeAttr(item.nome)}
+                            ${item.isParcelado ? `<span class="ml-1.5 px-2 py-0.5 text-[10px] rounded-full font-bold bg-yellow-400/10 text-yellow-400 border border-yellow-400/30"><i class="fa-solid fa-credit-card text-[9px]"></i> Parcela</span>` : ''}
+                        </td>
+                        <td class="p-3 text-neutral-400">${escapeAttr(item.data)}</td>
+                        <td class="p-3 text-xs font-bold text-yellow-400"><i class="fa-solid fa-user text-[10px]"></i> ${escapeAttr(item.registradoPor)}</td>
+                        <td class="p-3 text-xs text-neutral-400">${escapeAttr(item.tipoPagamento)}</td>
+                        <td class="p-3 text-neutral-300">${escapeAttr(item.loja)}</td>
+                        <td class="p-3 font-bold text-rose-400">R$ ${item.valor.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</td>
+                        <td class="p-3 text-right space-x-1">
+                            ${item.isParcelado ? `
+                                <button onclick="abrirModalDetalhesParcelamento('${escapeAttr(item.baseNome)}', '${escapeAttr(item.loja)}')" class="bg-yellow-400/20 hover:bg-yellow-400 text-yellow-400 hover:text-black px-2 py-1.5 rounded-lg text-xs font-bold border border-yellow-400/30" title="Ver Todas as Parcelas">
+                                    <i class="fa-solid fa-eye"></i> Parcelas
+                                </button>
+                            ` : ''}
+                            <button onclick="editarDespesa(${item.id})" class="bg-neutral-800 hover:bg-neutral-700 text-neutral-200 p-2 rounded-lg text-xs" title="Editar Despesa">
+                                <i class="fa-solid fa-pen"></i>
+                            </button>
+                            <button onclick="excluirDespesaAvulsa(${item.id})" class="bg-rose-950/50 hover:bg-rose-900 text-rose-400 p-2 rounded-lg text-xs" title="Excluir Despesa">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </td>
+                    `;
+                }
+                tbody.appendChild(tr);
+            });
+
+        } else {
+            // VISÃO AGRUPADA DE COMPRAS PARCELADAS
+            if (thead) {
+                thead.innerHTML = `
+                    <tr>
+                        <th class="p-3">Compra / Item</th>
+                        <th class="p-3">Loja/Fornecedor</th>
+                        <th class="p-3">Parcelamento</th>
+                        <th class="p-3">Valor da Parcela</th>
+                        <th class="p-3">Valor Total Compra</th>
+                        <th class="p-3">Status Progresso</th>
+                        <th class="p-3 text-right">Ações</th>
+                    </tr>`;
+            }
+
+            const grupos = {};
+            appData.despesasOutras.forEach(d => {
+                const info = extrairInfoParcela(d.nome);
+                if (info.total > 1) {
+                    const chave = `${info.base}___${d.loja || ''}`;
+                    if (!grupos[chave]) {
+                        grupos[chave] = {
+                            baseNome: info.base,
+                            loja: d.loja || '',
+                            tipoPagamento: d.tipoPagamento || 'Cartão de Crédito',
+                            valorParcela: parseFloat(d.valor || 0),
+                            totalParcelas: info.total,
+                            parcelas: []
+                        };
+                    }
+                    grupos[chave].parcelas.push({ ...d, num: info.atual });
+                }
+            });
+
+            const listaGrupos = Object.values(grupos);
+
+            if (listaGrupos.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" class="p-6 text-center text-neutral-500 text-xs italic">Nenhuma compra parcelada encontrada.</td></tr>`;
+                return;
+            }
+
+            listaGrupos.forEach(g => {
+                const buscaTexto = `${g.baseNome} ${g.loja} ${g.tipoPagamento}`.toLowerCase();
+                if (filtro && !buscaTexto.includes(filtro)) return;
+
+                const totalCompra = g.valorParcela * g.totalParcelas;
+                const pagasCount = g.parcelas.filter(p => p.status === 'Pago' || (p.data && p.data < appData.dataAtual)).length;
+
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-neutral-800/40 transition-all";
+                tr.innerHTML = `
+                    <td class="p-3 font-semibold text-white">
+                        <strong class="text-sm block text-yellow-400">${escapeAttr(g.baseNome)}</strong>
+                        <span class="text-[11px] text-neutral-400">${escapeAttr(g.tipoPagamento)}</span>
+                    </td>
+                    <td class="p-3 text-neutral-300">${escapeAttr(g.loja || '-')}</td>
+                    <td class="p-3 font-bold text-white">${g.totalParcelas}x</td>
+                    <td class="p-3 font-bold text-rose-400">R$ ${g.valorParcela.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</td>
+                    <td class="p-3 font-black text-rose-300">R$ ${totalCompra.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</td>
+                    <td class="p-3 text-xs">
+                        <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-neutral-800 text-yellow-400 border border-neutral-700">
+                            ${pagasCount} de ${g.totalParcelas} pagas
+                        </span>
+                    </td>
+                    <td class="p-3 text-right space-x-1">
+                        <button onclick="abrirModalDetalhesParcelamento('${escapeAttr(g.baseNome)}', '${escapeAttr(g.loja)}')" class="bg-yellow-400 hover:bg-yellow-300 text-black font-bold px-3 py-1.5 rounded-lg text-xs shadow-md transition-all">
+                            <i class="fa-solid fa-eye"></i> Ver Parcelas
+                        </button>
+                        <button onclick="excluirCompraParcelada('${escapeAttr(g.baseNome)}', '${escapeAttr(g.loja)}')" class="bg-rose-950/50 hover:bg-rose-900 text-rose-400 p-1.5 rounded-lg text-xs" title="Excluir Toda a Compra">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+    }
 
             // 2. Despesas avulsas e parcelas do Mês Ativo
             const despesasMes = obterDespesasMesAtivo();
