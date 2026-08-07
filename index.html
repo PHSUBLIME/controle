@@ -3938,8 +3938,15 @@ appData.pedidos.forEach(p => {
             obs: document.getElementById('ped-obs').value
         };
 
-        const { data, error } = await supabaseClient.from('pedidos').upsert([pedData]);
+        let { data, error } = await supabaseClient.from('pedidos').upsert([pedData]);
 
+        // Trava de segurança: Se a coluna 'pagamentos' não existir no Supabase, salva sem ela para não dar erro
+        if (error && error.message && error.message.includes('pagamentos')) {
+            console.warn("Coluna 'pagamentos' não encontrada no banco. Salvando sem a coluna...");
+            delete pedData.pagamentos;
+            const retry = await supabaseClient.from('pedidos').upsert([pedData]);
+            error = retry.error;
+        }
         if (!error) {
             if (!pedId) {
                 await abaterEstoquePorPedido(pedData.itens);
@@ -4084,16 +4091,45 @@ appData.pedidos.forEach(p => {
     async function alterarStatusPagamentoPedido(id, novoStatusPag) {
         const p = appData.pedidos.find(x => x.id == id);
         let novoValorPago = 0;
+        let historico = [];
+
         if (p) {
             const totalP = parseFloat(p.total || 0);
-            if (novoStatusPag === 'Pago 100%') novoValorPago = totalP;
-            else if (novoStatusPag === 'Sinal 50%') novoValorPago = totalP * 0.5;
+            const jaPago = parseFloat(p.valorPago || 0);
+            historico = Array.isArray(p.pagamentos) ? [...p.pagamentos] : [];
+
+            if (novoStatusPag === 'Pago 100%') {
+                novoValorPago = totalP;
+                const saldoRestante = Math.max(0, totalP - jaPago);
+                if (saldoRestante > 0) {
+                    historico.push({
+                        id: Date.now(),
+                        data: appData.dataAtual,
+                        valor: saldoRestante,
+                        tipo: 'Quitação / Alteração Status',
+                        forma: p.formaPagamento || 'Pix',
+                        registradoPor: usuarioAtualNome
+                    });
+                }
+            } else if (novoStatusPag === 'Sinal 50%') {
+                novoValorPago = totalP * 0.5;
+            }
         }
 
-        const { error } = await supabaseClient.from('pedidos').update({
+        let { error } = await supabaseClient.from('pedidos').update({
             statusPagamento: novoStatusPag,
-            valorPago: novoValorPago
+            valorPago: novoValorPago,
+            pagamentos: historico
         }).eq('id', id);
+
+        // Trava de segurança para a coluna pagamentos
+        if (error && error.message && error.message.includes('pagamentos')) {
+            const retry = await supabaseClient.from('pedidos').update({
+                statusPagamento: novoStatusPag,
+                valorPago: novoValorPago
+            }).eq('id', id);
+            error = retry.error;
+        }
 
         if (!error) {
             await carregarDados();
@@ -4102,7 +4138,6 @@ appData.pedidos.forEach(p => {
             mostrarToast(`Erro: ${error.message}`, "erro");
         }
     }
-
     async function quitarSaldoRapido(pedidoId) {
         const p = appData.pedidos.find(x => x.id == pedidoId);
         if (!p) return;
