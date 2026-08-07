@@ -948,7 +948,23 @@
                         </table>
                     </div>
                 </div>
-
+<!-- HISTÓRICO DE PAGAMENTOS NO COMPROVANTE -->
+                <div class="space-y-1.5 my-3" id="recibo-bloco-historico-pagamentos">
+                    <span class="text-[10px] text-yellow-400 font-bold uppercase tracking-wider block">Histórico de Lançamentos de Pagamento</span>
+                    <div class="overflow-x-auto border border-neutral-800 rounded-xl">
+                        <table class="w-full text-left text-xs text-neutral-300">
+                            <thead class="bg-neutral-800 text-yellow-400 uppercase text-[10px]">
+                                <tr>
+                                    <th class="p-2">Data Entrada</th>
+                                    <th class="p-2">Tipo / Lançamento</th>
+                                    <th class="p-2">Forma</th>
+                                    <th class="p-2 text-right">Valor Pago</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recibo-pagamentos-body" class="divide-y divide-neutral-800"></tbody>
+                        </table>
+                    </div>
+                </div>
                 <div class="bg-neutral-900 p-3 rounded-xl border border-neutral-800 space-y-1.5 text-xs">
                     <div class="flex justify-between" id="recibo-linha-arte">
                         <span class="text-neutral-400">Taxa de Criação de Arte:</span>
@@ -2312,27 +2328,44 @@
             let despesaOutrasGeral = 0;
 
             appData.pedidos.forEach(p => {
-                const pTotal = parseFloat(p.total || 0);
-                const pDespesa = parseFloat(p.despesa || 0);
-                const pPago = parseFloat(p.valorPago !== undefined ? p.valorPago : (p.statusPagamento === 'Pago 100%' ? pTotal : (p.statusPagamento === 'Sinal 50%' ? pTotal * 0.5 : 0)));
-                const pPendente = Math.max(0, pTotal - pPago);
+            const pTotal = parseFloat(p.total || 0);
+            const pDespesa = parseFloat(p.despesa || 0);
 
-                if (p.status !== 'Cancelado') {
+            if (p.status !== 'Cancelado') {
+                despesaPedidosGeral += pDespesa;
+
+                // Somar histórico de pagamentos de acordo com a data em que o dinheiro realmente entrou
+                if (p.pagamentos && Array.isArray(p.pagamentos) && p.pagamentos.length > 0) {
+                    p.pagamentos.forEach(pag => {
+                        const valPag = parseFloat(pag.valor || 0);
+                        totalReceitaRealizada += valPag;
+
+                        if (pag.data === hojeStr) {
+                            fatDia += valPag;
+                        }
+                    });
+                } else {
+                    // Fallback para pedidos antigos sem histórico
+                    const pPago = parseFloat(p.valorPago !== undefined ? p.valorPago : (p.statusPagamento === 'Pago 100%' ? pTotal : (p.statusPagamento === 'Sinal 50%' ? pTotal * 0.5 : 0)));
                     totalReceitaRealizada += pPago;
-                    totalPendenteReceber += pPendente;
-                    despesaPedidosGeral += pDespesa;
+                    if (p.data === hojeStr) {
+                        fatDia += pPago;
+                    }
                 }
 
-                if (p.data === hojeStr && p.status !== 'Cancelado') {
-                    fatDia += pPago;
-                    pedDiaCount++;
-                }
+                const pPagoGeral = parseFloat(p.valorPago || 0);
+                totalPendenteReceber += Math.max(0, pTotal - pPagoGeral);
+            }
 
-                if (p.status === 'Em Produção') producaoCount++;
-                if (p.status === 'AGUARDANDO') pendentesCount++;
-            });
+            if (p.data === hojeStr && p.status !== 'Cancelado') {
+        pedDiaCount++;
+    }
 
-            appData.pedidos.forEach(p => {
+    if (p.status === 'Em Produção') producaoCount++;
+    if (p.status === 'AGUARDANDO') pendentesCount++;
+});
+
+appData.pedidos.forEach(p => {
                 if (p.status !== 'Cancelado' && (p.status === 'Entregue' || p.status === 'Concluído')) {
                     if (p.dataEntrega === hojeStr || p.data === hojeStr) {
                         entreguesDiaCount++;
@@ -3862,9 +3895,29 @@
 
         const idSeguro = pedId ? parseInt(pedId) : Math.floor(100000000 + Math.random() * 900000000);
 
+        // 1. Manter a data original de criação se for uma edição de pedido
+        const pExistente = pedId ? appData.pedidos.find(x => x.id == pedId) : null;
+        const dataCriacaoOriginal = pExistente ? (pExistente.data || appData.dataAtual) : appData.dataAtual;
+
+        // 2. Histórico de Pagamentos
+        let historicoPagamentos = pExistente && Array.isArray(pExistente.pagamentos) ? [...pExistente.pagamentos] : [];
+
+        // Registra o primeiro pagamento se for um novo pedido com valor
+        if (!pExistente && valorPagoCalc > 0) {
+            historicoPagamentos.push({
+                id: Date.now(),
+                data: appData.dataAtual,
+                valor: valorPagoCalc,
+                tipo: stPag === 'Pago 100%' ? 'Quitação Integral' : (stPag === 'Sinal 50%' ? 'Sinal 50%' : 'Pagamento Parcial'),
+                forma: detalhePag,
+                registradoPor: usuarioAtualNome
+            });
+        }
+
+        // 3. Montar a estrutura do pedData
         const pedData = {
             id: idSeguro,
-            data: appData.dataAtual,
+            data: dataCriacaoOriginal,
             clienteId: clienteId,
             clienteNome: nomeClienteFinal,
             codigoExterno: document.getElementById('ped-codigo-externo').value.trim(),
@@ -3877,6 +3930,7 @@
             valorEntrega: valEntrega,
             statusPagamento: stPag,
             valorPago: valorPagoCalc,
+            pagamentos: historicoPagamentos,
             dataEntrega: document.getElementById('ped-data-entrega').value || appData.dataAtual,
             responsavel: document.getElementById('ped-responsavel').value || usuarioAtualNome,
             formaPagamento: detalhePag,
@@ -4053,24 +4107,45 @@
         const p = appData.pedidos.find(x => x.id == pedidoId);
         if (!p) return;
 
+        const total = parseFloat(p.total || 0);
+        const jaPago = parseFloat(p.valorPago || 0);
+        const saldoRestante = Math.max(0, total - jaPago);
+
+        if (saldoRestante <= 0) {
+            mostrarToast("Este pedido já está totalmente quitado!", "alerta");
+            return;
+        }
+
         const confirmou = await confirmarAcao(
             "💵 QUITAR SALDO DO PEDIDO",
-            `Deseja registrar que o saldo do pedido #${pedidoId} foi 100% quitado?`,
+            `Deseja registrar o recebimento do saldo restante (R$ ${saldoRestante.toFixed(2)}) no caixa de HOJE?`,
             "Sim, Quitar Agora",
             "fa-dollar-sign",
             "yellow"
         );
 
         if (confirmou) {
-            const total = parseFloat(p.total || 0);
+            let historico = Array.isArray(p.pagamentos) ? [...p.pagamentos] : [];
+            
+            // Registra a quitação no caixa com a data de HOJE
+            historico.push({
+                id: Date.now(),
+                data: appData.dataAtual,
+                valor: saldoRestante,
+                tipo: 'Quitação de Saldo',
+                forma: p.formaPagamento || 'Pix',
+                registradoPor: usuarioAtualNome
+            });
+
             const { error } = await supabaseClient.from('pedidos').update({
                 statusPagamento: 'Pago 100%',
-                valorPago: total
+                valorPago: total,
+                pagamentos: historico
             }).eq('id', pedidoId);
 
             if (!error) {
                 await carregarDados();
-                mostrarToast(`Pedido #${pedidoId} quitado com sucesso!`);
+                mostrarToast(`Saldo de R$ ${saldoRestante.toFixed(2)} quitado e registrado no caixa de hoje!`);
             } else {
                 mostrarToast(`Erro: ${error.message}`, "erro");
             }
@@ -4107,7 +4182,26 @@
                 tbody.appendChild(tr);
             });
         }
+const tbodyPag = document.getElementById('recibo-pagamentos-body');
+        if (tbodyPag) {
+            tbodyPag.innerHTML = '';
+            const pagamentos = p.pagamentos && Array.isArray(p.pagamentos) ? p.pagamentos : [];
 
+            if (pagamentos.length === 0) {
+                tbodyPag.innerHTML = `<tr><td colspan="4" class="p-2 text-center text-neutral-500">Pagamento registrado na emissão do pedido (${p.data || '--/--/----'}).</td></tr>`;
+            } else {
+                pagamentos.forEach(pag => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td class="p-2 font-bold text-white">${escapeAttr(pag.data)}</td>
+                        <td class="p-2 text-neutral-300">${escapeAttr(pag.tipo)}</td>
+                        <td class="p-2 text-neutral-400">${escapeAttr(pag.forma)}</td>
+                        <td class="p-2 text-right font-bold text-emerald-400">R$ ${parseFloat(pag.valor||0).toLocaleString('pt-BR', {minimumFractionDigits: 2})}</td>
+                    `;
+                    tbodyPag.appendChild(tr);
+                });
+            }
+        }
         const total = parseFloat(p.total || 0);
         const vArte = parseFloat(p.valorArte || 0);
         const vEntrega = parseFloat(p.valorEntrega || 0);
