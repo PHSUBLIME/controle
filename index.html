@@ -2194,17 +2194,12 @@
         }
 
         function obterDespesasMesAtivo() {
-            const mesAnoAtual = appData.dataAtual.substring(0, 7);
-            return appData.despesasOutras.filter(d => {
-                if (!d.data) return false;
-                
-                if (d.data.startsWith(mesAnoAtual)) return true;
-
-                if (d.data_pagamento && d.data_pagamento.startsWith(mesAnoAtual)) return true;
-
-                return false;
-            });
-        }
+        const mesAnoAtual = appData.dataAtual.substring(0, 7);
+        return appData.despesasOutras.filter(d => {
+            if (!d.data) return false;
+            return d.data.startsWith(mesAnoAtual);
+        });
+    }
 
         function atualizarInterfaceCompleta() {
             const hojeStr = appData.dataAtual;
@@ -4478,15 +4473,13 @@
 
         parcelas.forEach(p => {
             const info = extrairInfoParcela(p.nome);
-            const mesAnoAtual = appData.dataAtual.substring(0, 7);
-            const isPaga = p.status === 'Pago' || (p.data_pagamento && p.data_pagamento.startsWith(mesAnoAtual));
-            const dtExibicao = p.data_pagamento || p.data;
+            const isPaga = p.status === 'Pago' || (p.data && p.data < appData.dataAtual);
 
             const tr = document.createElement('tr');
             tr.className = "hover:bg-neutral-900 transition-all";
             tr.innerHTML = `
                 <td class="p-2.5 font-bold text-white">Parcela ${info.atual}/${info.total}</td>
-                <td class="p-2.5 text-neutral-300">${escapeAttr(dtExibicao)}</td>
+                <td class="p-2.5 text-neutral-300">${escapeAttr(p.data)}</td>
                 <td class="p-2.5 font-bold text-rose-400">R$ ${parseFloat(p.valor||0).toLocaleString('pt-BR', {minimumFractionDigits: 2})}</td>
                 <td class="p-2.5">
                     ${isPaga ? `
@@ -4514,13 +4507,12 @@
 
         document.getElementById('modal-detalhes-parcelamento').classList.remove('hidden');
     }
-
     function fecharModalDetalhesParcelamento() {
         document.getElementById('modal-detalhes-parcelamento').classList.add('hidden');
         compraAgrupadaModalAtual = null;
     }
 
-    async function darBaixaParcela(id) {
+   async function darBaixaParcela(id) {
         const confirmou = await confirmarAcao(
             "💵 DAR BAIXA / ADIANTAR PARCELA",
             "Deseja marcar esta parcela como PAGA no mês ativo atual?",
@@ -4532,7 +4524,6 @@
         if (confirmou) {
             const { error } = await supabaseClient.from('despesas').update({
                 status: 'Pago',
-                data_pagamento: appData.dataAtual,
                 data: appData.dataAtual
             }).eq('id', id);
 
