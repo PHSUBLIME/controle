@@ -227,7 +227,7 @@
                     </div>
                 </aside>
 
-                <!-- GRID DE PRODUTOS MAIS VENDIDOS -->
+                <!-- GRID DE 9 PRODUTOS MAIS VENDIDOS -->
                 <div class="flex-1 space-y-4">
                     <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex items-center justify-between">
                         <h3 class="text-base font-black text-purple-950 uppercase font-heading flex items-center gap-2">
@@ -324,7 +324,7 @@
                         </div>
                     </div>
 
-                    <!-- FORMAS DE PAGAMENTO -->
+                    <!-- FORMAS DE PAGAMENTO (SEM DINHEIRO) -->
                     <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-4">
                         <h3 class="text-xs font-black text-purple-950 uppercase font-heading flex items-center gap-2">
                             <i class="fa-solid fa-credit-card text-amber-500"></i> Forma de Pagamento
@@ -347,7 +347,7 @@
                             </button>
                         </div>
 
-                        <!-- OPÇÕES DE PAGAMENTO -->
+                        <!-- OPÇÕES DE RÁDIO DE PAGAMENTO -->
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-bold text-slate-800">
                             <label class="border border-slate-200 p-3 rounded-xl flex items-center gap-2.5 bg-slate-50 cursor-pointer hover:border-purple-600 transition-all">
                                 <input type="radio" name="forma_pagamento" value="pix" checked onchange="selecionarFormaPagamento('Pix')" class="w-4 h-4 text-purple-900">
@@ -550,67 +550,65 @@
             <form onsubmit="salvarCadastroCliente(event)" id="form-cadastro-cliente" class="space-y-4 text-xs font-bold text-slate-700">
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     
-                    <!-- NOME / EMPRESA -->
                     <div class="sm:col-span-2 space-y-1">
                         <label class="block">Nome Completo ou Razão Social <span class="text-red-500">*</span></label>
                         <input type="text" id="cad-nome" required placeholder="Digite seu nome completo ou empresa..." class="w-full border border-slate-300 rounded-lg px-3.5 py-2.5 text-slate-800 focus:outline-none focus:border-purple-600 bg-slate-50">
                     </div>
 
-                    <!-- CPF / CNPJ -->
                     <div class="space-y-1">
                         <label class="block">CPF ou CNPJ <span class="text-red-500">*</span></label>
                         <input type="text" id="cad-cpf" required placeholder="000.000.000-00" class="w-full border border-slate-300 rounded-lg px-3.5 py-2.5 text-slate-800 focus:outline-none focus:border-purple-600 bg-slate-50">
                     </div>
 
-                    <!-- WHATSAPP -->
                     <div class="space-y-1">
                         <label class="block">WhatsApp (com DDD) <span class="text-red-500">*</span></label>
                         <input type="text" id="cad-whatsapp" required placeholder="(21) 98614-7221" class="w-full border border-slate-300 rounded-lg px-3.5 py-2.5 text-slate-800 focus:outline-none focus:border-purple-600 bg-slate-50">
                     </div>
 
-                    <!-- TELEFONE -->
+                    <!-- CAMPO DE SENHA DE ACESSO PROTEGIDA -->
+                    <div class="sm:col-span-2 space-y-1 bg-purple-50 p-3 rounded-xl border border-purple-200">
+                        <label class="block text-purple-950 font-black flex items-center gap-1.5">
+                            <i class="fa-solid fa-lock text-purple-700"></i> Criar Senha de Acesso Secreta <span class="text-red-500">*</span>
+                        </label>
+                        <input type="password" id="cad-senha" required placeholder="Digite uma senha secreta para proteger seus dados..." class="w-full border border-slate-300 rounded-lg px-3.5 py-2.5 text-slate-800 focus:outline-none focus:border-purple-600 bg-white font-bold">
+                        <p class="text-[10px] text-slate-500 font-normal">* Esta senha protegerá suas informações pessoais e impedirá acessos não autorizados.</p>
+                    </div>
+
                     <div class="space-y-1">
                         <label class="block">Telefone Fixo / Recado</label>
                         <input type="text" id="cad-telefone" placeholder="(21) 0000-0000" class="w-full border border-slate-300 rounded-lg px-3.5 py-2.5 text-slate-800 focus:outline-none focus:border-purple-600 bg-slate-50">
                     </div>
 
-                    <!-- E-MAIL -->
                     <div class="space-y-1">
                         <label class="block">E-mail</label>
                         <input type="email" id="cad-email" placeholder="seuemail@exemplo.com" class="w-full border border-slate-300 rounded-lg px-3.5 py-2.5 text-slate-800 focus:outline-none focus:border-purple-600 bg-slate-50">
                     </div>
 
-                    <!-- ENDEREÇO COMPLETO -->
                     <div class="sm:col-span-2 space-y-1">
                         <label class="block">Endereço Completo (Rua, nº, complemento) <span class="text-red-500">*</span></label>
                         <input type="text" id="cad-endereco" required placeholder="Rua, número, bloco, apto..." class="w-full border border-slate-300 rounded-lg px-3.5 py-2.5 text-slate-800 focus:outline-none focus:border-purple-600 bg-slate-50">
                     </div>
 
-                    <!-- BAIRRO -->
                     <div class="space-y-1">
                         <label class="block">Bairro <span class="text-red-500">*</span></label>
                         <input type="text" id="cad-bairro" required placeholder="Digite o bairro..." class="w-full border border-slate-300 rounded-lg px-3.5 py-2.5 text-slate-800 focus:outline-none focus:border-purple-600 bg-slate-50">
                     </div>
 
-                    <!-- CIDADE -->
                     <div class="space-y-1">
                         <label class="block">Cidade <span class="text-red-500">*</span></label>
                         <input type="text" id="cad-cidade" required placeholder="Digite a cidade..." class="w-full border border-slate-300 rounded-lg px-3.5 py-2.5 text-slate-800 focus:outline-none focus:border-purple-600 bg-slate-50">
                     </div>
 
-                    <!-- ESTADO -->
                     <div class="space-y-1">
                         <label class="block">Estado</label>
                         <input type="text" id="cad-estado" value="Rio de Janeiro" class="w-full border border-slate-300 rounded-lg px-3.5 py-2.5 text-slate-800 focus:outline-none focus:border-purple-600 bg-slate-50">
                     </div>
 
-                    <!-- PONTO DE REFERÊNCIA -->
                     <div class="space-y-1">
                         <label class="block">Ponto de Referência</label>
                         <input type="text" id="cad-ponto-ref" placeholder="Ex: Em frente ao mercado..." class="w-full border border-slate-300 rounded-lg px-3.5 py-2.5 text-slate-800 focus:outline-none focus:border-purple-600 bg-slate-50">
                     </div>
 
-                    <!-- OBSERVAÇÕES -->
                     <div class="sm:col-span-2 space-y-1">
                         <label class="block">Observações para Entrega / Produção</label>
                         <textarea id="cad-obs" rows="2" placeholder="Digite observações adicionais..." class="w-full border border-slate-300 rounded-lg px-3.5 py-2.5 text-slate-800 focus:outline-none focus:border-purple-600 bg-slate-50 resize-none"></textarea>
@@ -623,7 +621,7 @@
                         Cancelar
                     </button>
                     <button type="submit" class="px-7 py-3 bg-purple-900 hover:bg-purple-800 text-white font-black rounded-xl transition-all shadow-lg flex items-center gap-2">
-                        <i class="fa-solid fa-floppy-disk"></i> SALVAR CADASTRO
+                        <i class="fa-solid fa-floppy-disk"></i> SALVAR CADASTRO PROTEGIDO
                     </button>
                 </div>
             </form>
@@ -685,32 +683,44 @@
         </div>
     </div>
 
-    <!-- MODAL DE IDENTIFICAÇÃO RÁPIDA DO CLIENTE -->
+    <!-- MODAL DE LOGIN PROTEGIDO POR SENHA -->
     <div id="modal-identificacao" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-[990] hidden flex items-center justify-center p-4">
         <div class="bg-white border border-slate-200 rounded-2xl max-w-md w-full p-6 sm:p-8 space-y-6 shadow-2xl text-center relative">
             <button onclick="fecharModalIdentificacao()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-700 text-lg"><i class="fa-solid fa-xmark"></i></button>
 
             <div class="w-16 h-16 bg-purple-100 text-purple-900 rounded-2xl flex items-center justify-center mx-auto text-2xl shadow-inner">
-                <i class="fa-solid fa-user-check"></i>
+                <i class="fa-solid fa-user-lock"></i>
             </div>
 
             <div class="space-y-1">
-                <h3 class="text-lg font-black text-purple-950 font-heading">Acessar Meus Pedidos</h3>
+                <h3 class="text-lg font-black text-purple-950 font-heading">Login do Cliente Protegido</h3>
                 <p class="text-xs text-slate-500 leading-relaxed">
-                    Digite seu CPF, CNPJ ou WhatsApp com DDD para localizar seu histórico na PHSUBLIME.
+                    Informe seu CPF/WhatsApp e sua senha cadastrada para ter acesso seguro.
                 </p>
             </div>
 
             <form onsubmit="confirmarIdentificacao(event)" class="space-y-4 text-left">
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">CPF, CNPJ ou WhatsApp com DDD</label>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">CPF, CNPJ ou WhatsApp com DDD <span class="text-red-500">*</span></label>
                     <input type="text" id="input-identificacao-cliente" required placeholder="Ex: 21986147221 ou CPF..." class="w-full bg-slate-50 border border-slate-300 rounded-lg px-4 py-3 text-slate-800 text-sm focus:outline-none focus:border-purple-600 font-bold placeholder-slate-400">
                 </div>
 
-                <button type="submit" class="w-full bg-amber-400 hover:bg-amber-300 text-purple-950 font-black py-3.5 rounded-lg text-xs transition-all shadow-md tracking-wider">
-                    BUSCAR MEUS PEDIDOS
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Sua Senha de Acesso <span class="text-red-500">*</span></label>
+                    <input type="password" id="input-senha-login" required placeholder="Digite sua senha cadastrada..." class="w-full bg-slate-50 border border-slate-300 rounded-lg px-4 py-3 text-slate-800 text-sm focus:outline-none focus:border-purple-600 font-bold placeholder-slate-400">
+                </div>
+
+                <button type="submit" class="w-full bg-amber-400 hover:bg-amber-300 text-purple-950 font-black py-3.5 rounded-lg text-xs transition-all shadow-md tracking-wider uppercase">
+                    <i class="fa-solid fa-right-to-bracket mr-1"></i> ENTRAR E VER MEUS PEDIDOS
                 </button>
             </form>
+
+            <div class="border-t border-slate-100 pt-3 text-xs">
+                <p class="text-slate-500">Ainda não possui conta?</p>
+                <button onclick="fecharModalIdentificacao(); abrirModalCadastro();" class="text-purple-900 font-black hover:underline mt-1">
+                    Cadastrar-se Agora gratuitamente
+                </button>
+            </div>
         </div>
     </div>
 
@@ -786,7 +796,7 @@
             }
         });
 
-        // CADASTRO DE CLIENTE COMPLETO
+        // CADASTRO DE CLIENTE COMPLETO E PROTEGIDO POR SENHA
         function abrirModalCadastro() {
             toggleUserDropdown();
             const modal = document.getElementById('modal-cadastro-cliente');
@@ -797,6 +807,7 @@
                 document.getElementById('cad-cpf').value = clienteIdentificado.cpf || clienteIdentificado.cpf_cnpj || '';
                 document.getElementById('cad-telefone').value = clienteIdentificado.telefone || '';
                 document.getElementById('cad-whatsapp').value = clienteIdentificado.whatsapp || '';
+                document.getElementById('cad-senha').value = clienteIdentificado.senha || '';
                 document.getElementById('cad-email').value = clienteIdentificado.email || '';
                 document.getElementById('cad-endereco').value = clienteIdentificado.endereco || '';
                 document.getElementById('cad-bairro').value = clienteIdentificado.bairro || '';
@@ -824,6 +835,7 @@
             const cpf = document.getElementById('cad-cpf').value.trim();
             const telefone = document.getElementById('cad-telefone').value.trim();
             const whatsapp = document.getElementById('cad-whatsapp').value.trim();
+            const senha = document.getElementById('cad-senha').value.trim();
             const email = document.getElementById('cad-email').value.trim();
             const endereco = document.getElementById('cad-endereco').value.trim();
             const bairro = document.getElementById('cad-bairro').value.trim();
@@ -832,11 +844,17 @@
             const pontoRef = document.getElementById('cad-ponto-ref').value.trim();
             const obs = document.getElementById('cad-obs').value.trim();
 
+            if (!senha) {
+                mostrarToast("Por favor, crie uma senha para proteger seu cadastro!", "alerta");
+                return;
+            }
+
             const dadosCliente = {
                 nome,
                 cpf,
                 telefone,
                 whatsapp,
+                senha,
                 email,
                 endereco,
                 bairro,
@@ -846,7 +864,7 @@
                 obs
             };
 
-            mostrarToast("Salvando cadastro...", "info");
+            mostrarToast("Salvando cadastro protegido...", "info");
 
             try {
                 const { data, error } = await supabaseClient.from('clientes').upsert([dadosCliente], { onConflict: 'cpf' }).select();
@@ -861,6 +879,7 @@
 
             identificacaoTermo = cpf || whatsapp || nome;
             localStorage.setItem('phsublime_cliente_termo', identificacaoTermo);
+            localStorage.setItem('phsublime_cliente_dados', JSON.stringify(clienteIdentificado));
 
             const inputEndCarrinho = document.getElementById('input-endereco-completo');
             if (inputEndCarrinho) {
@@ -1237,6 +1256,11 @@
                 termoParaBuscar = localStorage.getItem('phsublime_cliente_termo');
             }
 
+            const dadosSalvos = localStorage.getItem('phsublime_cliente_dados');
+            if (dadosSalvos) {
+                try { clienteIdentificado = JSON.parse(dadosSalvos); } catch(e){}
+            }
+
             if (termoParaBuscar) {
                 await buscarPedidosECliente(termoParaBuscar);
             } else {
@@ -1250,24 +1274,29 @@
         async function confirmarIdentificacao(e) {
             e.preventDefault();
             const termo = document.getElementById('input-identificacao-cliente').value.trim();
-            if (!termo) return;
+            const senhaDigitada = document.getElementById('input-senha-login').value.trim();
+
+            if (!termo || !senhaDigitada) {
+                mostrarToast("Informe seu CPF/WhatsApp e sua senha cadastrada!", "alerta");
+                return;
+            }
 
             fecharModalIdentificacao();
-            await buscarPedidosECliente(termo);
+            await buscarPedidosECliente(termo, senhaDigitada);
         }
 
         function limparNumeros(str) {
             return String(str || '').replace(/\D/g, '');
         }
 
-        async function buscarPedidosECliente(termoOriginal) {
+        async function buscarPedidosECliente(termoOriginal, senhaDigitada = '') {
             identificacaoTermo = termoOriginal.trim();
             const termoLimpo = limparNumeros(identificacaoTermo);
 
-            mostrarToast("Buscando informações...", "info");
+            mostrarToast("Buscando informações com segurança...", "info");
 
             try {
-                const { data: clientesData } = await supabaseClient.from('clientes').select('id, nome, cpf, whatsapp, telefone, cidade, estado');
+                const { data: clientesData } = await supabaseClient.from('clientes').select('*');
 
                 let clienteEncontrado = null;
                 if (clientesData) {
@@ -1279,6 +1308,18 @@
                         return (termoLimpo && (cpfC === termoLimpo || whatsC.endsWith(termoLimpo) || telC.endsWith(termoLimpo))) ||
                                (c.nome && c.nome.toLowerCase().includes(identificacaoTermo.toLowerCase()));
                     });
+                }
+
+                // VALIDAÇÃO DE SENHA PROTEGIDA
+                if (clienteEncontrado) {
+                    if (clienteEncontrado.senha) {
+                        if (senhaDigitada && clienteEncontrado.senha !== senhaDigitada) {
+                            mostrarToast("Senha incorreta! Acesso negado por segurança.", "erro");
+                            clienteIdentificado = null;
+                            atualizarHeaderELista();
+                            return;
+                        }
+                    }
                 }
 
                 clienteIdentificado = clienteEncontrado;
@@ -1302,6 +1343,9 @@
                 }
 
                 localStorage.setItem('phsublime_cliente_termo', identificacaoTermo);
+                if (clienteIdentificado) {
+                    localStorage.setItem('phsublime_cliente_dados', JSON.stringify(clienteIdentificado));
+                }
                 atualizarHeaderELista();
 
             } catch (err) {
@@ -1391,12 +1435,13 @@
 
         function sairEBuscarOutro() {
             localStorage.removeItem('phsublime_cliente_termo');
+            localStorage.removeItem('phsublime_cliente_dados');
             clienteIdentificado = null;
             identificacaoTermo = '';
             pedidosDoCliente = [];
             atualizarHeaderELista();
             toggleUserDropdown();
-            mostrarToast("Sessão encerrada.");
+            mostrarToast("Sessão encerrada com segurança.");
         }
 
         function renderizarListaPedidos() {
