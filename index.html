@@ -910,10 +910,14 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-2 gap-2 text-xs border-b border-neutral-800 pb-3">
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs border-b border-neutral-800 pb-3">
                     <div>
                         <span class="text-[10px] text-neutral-500 uppercase font-bold block">Cliente</span>
                         <strong class="text-white text-sm" id="recibo-cli-nome">--</strong>
+                    </div>
+                    <div>
+                        <span class="text-[10px] text-neutral-500 uppercase font-bold block">CPF / CNPJ</span>
+                        <span class="text-neutral-300 font-bold" id="recibo-cli-cpf">--</span>
                     </div>
                     <div>
                         <span class="text-[10px] text-neutral-500 uppercase font-bold block">Telefone/Whats</span>
@@ -928,7 +932,6 @@
                         <span class="text-neutral-300" id="recibo-ped-resp">--</span>
                     </div>
                 </div>
-
                 <div class="space-y-2">
                     <span class="text-[10px] text-yellow-400 uppercase font-bold block">Itens do Pedido</span>
                     <div class="overflow-x-auto border border-neutral-800 rounded-xl">
@@ -4083,6 +4086,7 @@
         document.getElementById('recibo-ped-id').innerText = `#${p.id}`;
         document.getElementById('recibo-ped-data').innerText = `Data: ${p.data || '--/--/----'}`;
         document.getElementById('recibo-cli-nome').innerText = p.clienteNome || 'Cliente';
+        document.getElementById('recibo-cli-cpf').innerText = cli ? (cli.cpf || 'Não informado') : 'Não informado';
         document.getElementById('recibo-cli-tel').innerText = cli ? (cli.whatsapp || cli.telefone || '-') : '-';
         document.getElementById('recibo-ped-entrega').innerText = p.dataEntrega || '--/--/----';
         document.getElementById('recibo-ped-resp').innerText = p.responsavel || usuarioAtualNome;
@@ -4137,7 +4141,6 @@
 
         document.getElementById('modal-comprovante-pedido').classList.remove('hidden');
     }
-
     function fecharModalComprovante() {
         document.getElementById('modal-comprovante-pedido').classList.add('hidden');
         pedidoReciboAtual = null;
