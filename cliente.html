@@ -71,28 +71,66 @@
             <!-- BARRA DE PESQUISA CENTRAL -->
             <div class="w-full md:w-1/3 relative">
                 <div class="flex items-center bg-white rounded-lg overflow-hidden shadow-inner border border-slate-300">
-                    <input type="text" id="input-busca-catalogo" onkeyup="renderizarCatalogo()" placeholder="Buscar cartões, banners, folhetos, canecas, adesivos..." class="w-full px-4 py-2.5 text-slate-800 text-xs sm:text-sm focus:outline-none">
+                    <input type="text" id="input-busca-catalogo" onkeyup="renderizarCatalogo()" placeholder="Buscar produtos, lonas, cartões, adesivos..." class="w-full px-4 py-2.5 text-slate-800 text-xs sm:text-sm focus:outline-none">
                     <button onclick="renderizarCatalogo()" class="bg-amber-400 hover:bg-amber-300 text-purple-950 px-4 py-2.5 font-bold transition-all flex items-center gap-1.5">
                         <i class="fa-solid fa-magnifying-glass"></i>
                     </button>
                 </div>
             </div>
 
-            <!-- ÁREA DE CONTA E BOTÃO DO CARRINHO -->
-            <div class="flex items-center gap-3 shrink-0">
-                <!-- BOTÃO DO CARRINHO DE COMPRAS -->
-                <button onclick="alternarAba('carrinho')" class="relative bg-amber-400 hover:bg-amber-300 text-purple-950 font-black text-xs px-4 py-2.5 rounded-lg transition-all shadow-md flex items-center gap-2">
-                    <i class="fa-solid fa-cart-shopping text-base"></i>
-                    <span>MEU CARRINHO</span>
-                    <span id="badge-carrinho-qtd" class="bg-purple-900 text-white font-bold px-2 py-0.5 rounded-full text-[11px]">0</span>
+            <!-- ÁREA DE USUÁRIO, MEUS PEDIDOS E CARRINHO (IGUAL AO PRINT) -->
+            <div class="flex items-center gap-4 shrink-0">
+                
+                <!-- DROPDOWN DE USUÁRIO (OLÁ, DANIEL) -->
+                <div id="header-user-info" class="relative">
+                    <button onclick="toggleUserDropdown()" class="flex items-center gap-1.5 text-white hover:text-amber-400 font-bold text-xs transition-all py-2">
+                        <i class="fa-regular fa-circle-user text-base"></i>
+                        <span id="txt-user-nome">Olá, Entrar</span>
+                        <i class="fa-solid fa-caret-down text-[10px]"></i>
+                    </button>
+
+                    <!-- MENU DROPDOWN FLUTUANTE (IGUAL AO PRINT) -->
+                    <div id="user-menu-dropdown" class="hidden absolute right-0 top-full mt-2 w-56 bg-white text-slate-800 rounded-xl shadow-2xl border border-slate-200 z-[100] overflow-hidden text-xs">
+                        <div class="p-2 space-y-1">
+                            <a href="javascript:void(0)" onclick="abrirModalIdentificacao()" class="px-3 py-2 hover:bg-purple-50 hover:text-purple-950 font-bold rounded flex items-center gap-2 transition-all">
+                                <i class="fa-solid fa-user text-slate-400"></i> Minha conta
+                            </a>
+                            <a href="javascript:void(0)" onclick="alternarAba('pedidos'); toggleUserDropdown();" class="px-3 py-2 hover:bg-purple-50 hover:text-purple-950 font-bold rounded flex items-center gap-2 transition-all">
+                                <i class="fa-solid fa-box text-slate-400"></i> Meus pedidos
+                            </a>
+                            <div class="px-3 py-2 font-bold text-slate-700 flex items-center justify-between border-t border-slate-100 mt-1 pt-2">
+                                <span>Créditos:</span>
+                                <strong class="text-emerald-600">R$ 0,00</strong>
+                            </div>
+                            <a href="javascript:void(0)" onclick="location.reload()" class="px-3 py-2 hover:bg-purple-50 hover:text-purple-950 font-bold rounded flex items-center gap-2 transition-all text-slate-600">
+                                <i class="fa-solid fa-rotate text-slate-400"></i> Atualizar Cache
+                            </a>
+                        </div>
+                        
+                        <div class="p-3 bg-slate-50 border-t border-slate-200 flex items-center justify-between">
+                            <span class="text-xs font-bold text-slate-600">Não é você?</span>
+                            <button onclick="sairEBuscarOutro()" class="bg-purple-900 hover:bg-purple-800 text-white p-2 rounded-lg transition-all" title="Sair da Conta">
+                                <i class="fa-solid fa-right-from-bracket text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ÍCONE/BOTÃO MEUS PEDIDOS EM PRODUÇÃO -->
+                <button onclick="alternarAba('pedidos')" class="flex items-center gap-2 hover:text-amber-400 text-xs font-bold transition-all text-left">
+                    <i class="fa-solid fa-desktop text-lg"></i>
+                    <div class="hidden lg:block leading-tight">
+                        <span class="block text-[11px] font-black uppercase tracking-wider">MEUS PEDIDOS</span>
+                        <span id="txt-pedidos-producao-count" class="block text-[9px] text-purple-200 font-normal">0 PEDIDOS EM PRODUÇÃO</span>
+                    </div>
                 </button>
 
-                <!-- IDENTIFICAÇÃO DO CLIENTE -->
-                <div id="header-user-info" class="flex items-center gap-3">
-                    <button id="btn-login-header" onclick="abrirModalIdentificacao()" class="bg-purple-800 hover:bg-purple-700 text-white font-bold text-xs px-4 py-2.5 rounded-lg transition-all shadow-md flex items-center gap-2 border border-purple-600">
-                        <i class="fa-solid fa-user-circle text-base"></i> <span class="hidden lg:inline">Olá, Entrar</span>
-                    </button>
-                </div>
+                <!-- BOTÃO DO CARRINHO DE COMPRAS AO LADO DE MEUS PEDIDOS -->
+                <button onclick="alternarAba('carrinho')" class="relative bg-amber-400 hover:bg-amber-300 text-purple-950 font-black text-xs p-2.5 rounded-xl transition-all shadow-md flex items-center justify-center">
+                    <i class="fa-solid fa-cart-shopping text-base"></i>
+                    <span id="badge-carrinho-qtd" class="absolute -top-2 -right-2 bg-purple-900 text-white font-bold px-1.5 py-0.5 rounded-full text-[10px] border-2 border-purple-950">0</span>
+                </button>
+
             </div>
 
         </div>
@@ -126,7 +164,7 @@
     <!-- CONTEÚDO PRINCIPAL -->
     <main class="max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full flex-1">
 
-        <!-- ================= SEÇÃO 1: CATÁLOGO / VITRINE (PÁGINA INICIAL) ================= -->
+        <!-- ================= SEÇÃO 1: CATÁLOGO / VITRINE ================= -->
         <div id="secao-catalogo" class="space-y-8">
             
             <!-- BANNERS PROMOCIONAIS -->
@@ -134,14 +172,11 @@
                 <!-- HERO BANNER PRINCIPAL -->
                 <div class="relative overflow-hidden bg-gradient-to-r from-purple-900 via-indigo-900 to-purple-950 text-white rounded-2xl shadow-xl p-8 border border-purple-700/60 flex flex-col lg:flex-row items-center justify-between gap-6">
                     <div class="space-y-3 max-w-3xl">
-                        <span class="bg-amber-400 text-purple-950 font-black text-xs px-3 py-1 rounded-full uppercase tracking-wider inline-block">
-                            SEROPÉDICA & RIO DE JANEIRO
-                        </span>
                         <h2 class="text-2xl sm:text-4xl font-black font-heading leading-tight text-white">
                             IMPRESSÃO GRÁFICA DE ALTA QUALIDADE E COMUNICAÇÃO VISUAL!
                         </h2>
                         <p class="text-sm text-purple-200 leading-relaxed">
-                            Entregamos em todo o Rio de Janeiro por meios próprios e Brasil via Mercado Livre, Shopee e Jadlog.
+                            Entregamos em todo Rio de Janeiro por meios próprios e Brasil por Mercado Livre, Shopee e Jadlog.
                         </p>
                         <div class="pt-2">
                             <button onclick="filtrarCategoria('banner')" class="bg-amber-400 hover:bg-amber-300 text-purple-950 font-black px-6 py-3 rounded-xl shadow-lg text-xs uppercase tracking-wider transition-all">
@@ -317,13 +352,13 @@
                         </div>
                     </div>
 
-                    <!-- FORMAS DE PAGAMENTO AMPLIADAS -->
+                    <!-- FORMAS DE PAGAMENTO AMPLIADAS (SEM DINHEIRO) -->
                     <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-4">
                         <h3 class="text-xs font-black text-purple-950 uppercase font-heading flex items-center gap-2">
                             <i class="fa-solid fa-credit-card text-amber-500"></i> Forma de Pagamento
                         </h3>
 
-                        <!-- DADOS DA CHAVE PIX EM DESTAQUE DENTRO DO PAGAMENTO -->
+                        <!-- DADOS DA CHAVE PIX EM DESTAQUE -->
                         <div class="bg-purple-950 text-white p-4 rounded-xl space-y-2 border border-purple-800">
                             <div class="flex items-center justify-between text-xs">
                                 <strong class="text-emerald-400 font-black flex items-center gap-1.5">
@@ -370,17 +405,10 @@
                                 </div>
                             </label>
 
-                            <label class="border border-slate-200 p-3 rounded-xl flex items-center gap-2.5 bg-slate-50 cursor-pointer hover:border-purple-600 transition-all">
+                            <label class="border border-slate-200 p-3 rounded-xl flex items-center gap-2.5 bg-slate-50 cursor-pointer hover:border-purple-600 transition-all sm:col-span-2">
                                 <input type="radio" name="forma_pagamento" value="boleto" onchange="selecionarFormaPagamento('Boleto')" class="w-4 h-4 text-purple-900">
                                 <div class="flex items-center gap-2">
                                     <i class="fa-solid fa-barcode text-slate-700 text-lg"></i> Boleto Bancário
-                                </div>
-                            </label>
-
-                            <label class="border border-slate-200 p-3 rounded-xl flex items-center gap-2.5 bg-slate-50 cursor-pointer hover:border-purple-600 transition-all">
-                                <input type="radio" name="forma_pagamento" value="dinheiro" onchange="selecionarFormaPagamento('Dinheiro')" class="w-4 h-4 text-purple-900">
-                                <div class="flex items-center gap-2">
-                                    <i class="fa-solid fa-money-bill-wave text-emerald-600 text-lg"></i> Dinheiro
                                 </div>
                             </label>
                         </div>
@@ -488,7 +516,7 @@
 
     </main>
 
-    <!-- RODAPÉ DA LOJA -->
+    <!-- RODAPÉ DA LOJA COM LOGOS ATUALIZADAS -->
     <footer class="bg-purple-950 text-white border-t-4 border-amber-400 pt-10 pb-6 mt-12 text-xs">
         <div class="max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 pb-8 border-b border-purple-800">
@@ -497,21 +525,19 @@
                     <p class="text-xs text-purple-200 leading-relaxed">
                         Especialista em Comunicação Visual, Materiais Gráficos Promocionais e Personalizados em Geral.
                     </p>
-                    <p class="text-xs text-purple-300 leading-relaxed">
-                        Seropédica. Entregamos em todo Rio de Janeiro por meios próprios e Brasil por Mercado Livre, Shopee e Jadlog.
+                    <p class="text-xs text-purple-300 leading-relaxed font-semibold">
+                        Entregamos em todo Rio de Janeiro por meios próprios e Brasil por Mercado Livre, Shopee e Jadlog.
                     </p>
                 </div>
 
                 <div class="space-y-2">
                     <strong class="text-white font-bold uppercase block text-xs">Formas de Pagamento:</strong>
-                    <div class="flex items-center gap-2 text-2xl text-purple-300 flex-wrap">
-                        <i class="fa-brands fa-pix text-emerald-400" title="Pix"></i>
-                        <i class="fa-brands fa-cc-visa text-blue-400" title="Visa"></i>
-                        <i class="fa-brands fa-cc-mastercard text-red-400" title="Mastercard"></i>
-                        <span class="text-xs font-bold border border-purple-700 px-2 py-0.5 rounded text-white">DÉBITO</span>
-                        <span class="text-xs font-bold border border-purple-700 px-2 py-0.5 rounded text-white">LINK</span>
-                        <span class="text-xs font-bold border border-purple-700 px-2 py-0.5 rounded text-white">BOLETO</span>
-                        <span class="text-xs font-bold border border-purple-700 px-2 py-0.5 rounded text-white">DINHEIRO</span>
+                    <div class="flex items-center gap-2 text-xs font-bold text-white flex-wrap">
+                        <span class="bg-emerald-600 px-2.5 py-1 rounded border border-emerald-500 flex items-center gap-1"><i class="fa-brands fa-pix"></i> PIX</span>
+                        <span class="bg-blue-600 px-2.5 py-1 rounded border border-blue-500 flex items-center gap-1"><i class="fa-solid fa-credit-card"></i> CRÉDITO</span>
+                        <span class="bg-indigo-600 px-2.5 py-1 rounded border border-indigo-500 flex items-center gap-1"><i class="fa-solid fa-credit-card"></i> DÉBITO</span>
+                        <span class="bg-amber-600 px-2.5 py-1 rounded border border-amber-500 flex items-center gap-1"><i class="fa-solid fa-link"></i> LINK</span>
+                        <span class="bg-slate-700 px-2.5 py-1 rounded border border-slate-600 flex items-center gap-1"><i class="fa-solid fa-barcode"></i> BOLETO</span>
                     </div>
                 </div>
 
@@ -520,9 +546,9 @@
                     <div class="flex items-center gap-2 text-xs font-bold text-slate-200 flex-wrap">
                         <span class="bg-purple-900 border border-purple-700 px-2.5 py-1 rounded">ENTREGA</span>
                         <span class="bg-purple-900 border border-purple-700 px-2.5 py-1 rounded">RETIRADA</span>
-                        <span class="bg-purple-900 border border-purple-700 px-2.5 py-1 rounded">MERCADO LIVRE</span>
-                        <span class="bg-purple-900 border border-purple-700 px-2.5 py-1 rounded">SHOPEE</span>
-                        <span class="bg-purple-900 border border-purple-700 px-2.5 py-1 rounded">JADLOG</span>
+                        <span class="bg-amber-500 text-purple-950 font-black px-2.5 py-1 rounded flex items-center gap-1"><i class="fa-solid fa-handshake"></i> MERCADO LIVRE</span>
+                        <span class="bg-orange-600 text-white font-black px-2.5 py-1 rounded flex items-center gap-1"><i class="fa-solid fa-bag-shopping"></i> SHOPEE</span>
+                        <span class="bg-indigo-900 text-white font-black px-2.5 py-1 rounded flex items-center gap-1"><i class="fa-solid fa-truck-fast"></i> JADLOG</span>
                     </div>
                 </div>
             </div>
@@ -647,7 +673,7 @@
         let categoriaFiltro = '';
         let itemIndexAnexoAtual = null;
 
-        let freteSelecionado = { tipo: 'ENTREGA RIO DE JANEIRO', prazo: '1 a 2 dias', valor: 0.00 };
+        let freteSelecionado = { tipo: 'ENTREGA PRÓPRIA (RIO DE JANEIRO)', prazo: '1 a 2 dias', valor: 0.00 };
         let abaFreteAtiva = 'entrega';
         let formaPagamentoEscolhida = 'Pix';
 
@@ -681,6 +707,20 @@
                 mostrarToast("Chave Pix CNPJ (58658668000100) copiada com sucesso!");
             });
         }
+
+        function toggleUserDropdown() {
+            const dropdown = document.getElementById('user-menu-dropdown');
+            if (dropdown) dropdown.classList.toggle('hidden');
+        }
+
+        // Fechar dropdown ao clicar fora
+        window.addEventListener('click', function(e) {
+            const userInfo = document.getElementById('header-user-info');
+            const dropdown = document.getElementById('user-menu-dropdown');
+            if (userInfo && dropdown && !userInfo.contains(e.target)) {
+                dropdown.classList.add('hidden');
+            }
+        });
 
         function selecionarFormaPagamento(nomeForma) {
             formaPagamentoEscolhida = nomeForma;
@@ -917,8 +957,7 @@
                 ];
             } else {
                 opcoes = [
-                    { tipo: 'RETIRADA EM SEROPÉDICA', prazo: '1 dia', valor: 0.00 },
-                    { tipo: 'RETIRADA MAGÉ CENTRO', prazo: '1 a 2 dias', valor: 0.00 }
+                    { tipo: 'RETIRADA EM BALCÃO PRÓPRIO', prazo: '1 dia', valor: 0.00 }
                 ];
             }
 
@@ -1116,37 +1155,30 @@
         }
 
         function atualizarHeaderELista() {
-            const containerHeader = document.getElementById('header-user-info');
+            const txtUserNome = document.getElementById('txt-user-nome');
+            const txtPedidosProducaoCount = document.getElementById('txt-pedidos-producao-count');
             const msgSemId = document.getElementById('msg-nao-identificado');
             const containerLista = document.getElementById('container-lista-pedidos');
 
+            // Calcular quantos pedidos estão em produção
+            const pedidosEmProducao = pedidosDoCliente.filter(p => (p.status || '').trim() === 'Em Produção').length;
+            if (txtPedidosProducaoCount) {
+                txtPedidosProducaoCount.innerText = `${pedidosEmProducao} PEDIDOS EM PRODUÇÃO`;
+            }
+
             if (clienteIdentificado || pedidosDoCliente.length > 0) {
                 const nomeExibicao = clienteIdentificado ? clienteIdentificado.nome : `Busca: #${identificacaoTermo}`;
-                
-                containerHeader.innerHTML = `
-                    <div class="text-right hidden lg:block">
-                        <span class="text-[9px] text-purple-200 font-bold block uppercase">Cliente Conectado:</span>
-                        <strong class="text-xs text-amber-400 font-bold flex items-center gap-1 justify-end">
-                            <i class="fa-solid fa-circle-user"></i> ${escapeAttr(nomeExibicao)}
-                        </strong>
-                    </div>
-                    <button onclick="sairEBuscarOutro()" class="bg-purple-900 hover:bg-purple-800 text-slate-200 p-2 rounded text-xs border border-purple-700 transition-all flex items-center gap-1" title="Sair / Buscar Outro">
-                        <i class="fa-solid fa-right-from-bracket"></i> <span class="hidden sm:inline">Trocar</span>
-                    </button>
-                `;
+                if (txtUserNome) txtUserNome.innerText = `Olá, ${nomeExibicao}`;
 
-                msgSemId.classList.add('hidden');
-                containerLista.classList.remove('hidden');
-                renderizarListaPedidos();
+                if (msgSemId) msgSemId.classList.add('hidden');
+                if (containerLista) {
+                    containerLista.classList.remove('hidden');
+                    renderizarListaPedidos();
+                }
             } else {
-                containerHeader.innerHTML = `
-                    <button id="btn-login-header" onclick="abrirModalIdentificacao()" class="bg-purple-800 hover:bg-purple-700 text-white font-bold text-xs px-4 py-2.5 rounded-lg transition-all shadow-md flex items-center gap-2 border border-purple-600">
-                        <i class="fa-solid fa-user-circle text-base"></i> <span class="hidden lg:inline">Olá, Entrar</span>
-                    </button>
-                `;
-
-                msgSemId.classList.remove('hidden');
-                containerLista.classList.add('hidden');
+                if (txtUserNome) txtUserNome.innerText = 'Olá, Entrar';
+                if (msgSemId) msgSemId.classList.remove('hidden');
+                if (containerLista) containerLista.classList.add('hidden');
             }
         }
 
@@ -1156,6 +1188,7 @@
             identificacaoTermo = '';
             pedidosDoCliente = [];
             atualizarHeaderELista();
+            toggleUserDropdown();
             mostrarToast("Sessão encerrada.");
         }
 
@@ -1262,7 +1295,6 @@
                 if (!error && data && data.length > 0) {
                     catalogoEstoque = data;
                 } else {
-                    // BASE DE 9 PRODUTOS MAIS VENDIDOS DA GRAFICANAUTA
                     catalogoEstoque = [
                         { id: 201, nome: 'adesivo corte contorno m²', categoria: 'Adesivo', precoVenda: 69.90, ref: 'crt003', producao: '24 horas', tag: '' },
                         { id: 202, nome: 'lona 300g m²', categoria: 'Banner', precoVenda: 65.00, ref: 'crt003', producao: '24 horas', tag: '' },
@@ -1319,23 +1351,19 @@
 
                 card.innerHTML = `
                     <div class="space-y-3">
-                        <!-- CAIXA DA IMAGEM MAIOR E MAIS IMPONENTE -->
                         <div class="w-full h-48 sm:h-52 bg-slate-100 rounded-xl border border-slate-200 flex flex-col items-center justify-center text-slate-400 p-3 relative overflow-hidden">
                             ${item.tag ? `<span class="absolute bottom-2 right-2 bg-purple-900 text-amber-400 text-[10px] font-black px-2 py-0.5 rounded shadow uppercase tracking-wider">${escapeAttr(item.tag)}</span>` : ''}
                             <i class="fa-solid fa-box-open text-5xl text-slate-300"></i>
                         </div>
 
-                        <!-- TÍTULO DO PRODUTO -->
                         <h4 class="text-sm font-black text-purple-950 font-heading leading-snug line-clamp-2">${escapeAttr(item.nome)}</h4>
 
-                        <!-- LINHA DUPLA DE SPECS EXATA DO PRINT -->
                         <div class="bg-slate-100 px-3 py-1.5 rounded-lg text-xs flex justify-between text-slate-500 font-semibold border border-slate-200/60">
                             <span>Ref.: ${escapeAttr(item.ref || 'crt003')}</span>
                             <span>Produção: ${escapeAttr(item.producao || '24 horas')}</span>
                         </div>
                     </div>
 
-                    <!-- BLOCO DE PREÇO E BOTÃO COMPRAR -->
                     <div class="pt-3 border-t border-slate-100 space-y-2.5">
                         <div class="text-center">
                             <span class="text-xs text-slate-400 font-bold block">à partir de:</span>
