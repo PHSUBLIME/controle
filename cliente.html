@@ -81,7 +81,7 @@
             <!-- ÁREA DE USUÁRIO, MEUS PEDIDOS E CARRINHO -->
             <div class="flex items-center gap-4 shrink-0">
                 
-                <!-- DROPDOWN DE USUÁRIO (OLÁ, DANIEL / OLÁ, ENTRAR) -->
+                <!-- DROPDOWN DE USUÁRIO -->
                 <div id="header-user-info" class="relative">
                     <button onclick="toggleUserDropdown()" class="flex items-center gap-1.5 text-white hover:text-amber-400 font-bold text-xs transition-all py-2">
                         <i class="fa-regular fa-circle-user text-base"></i>
@@ -89,15 +89,15 @@
                         <i class="fa-solid fa-caret-down text-[10px]"></i>
                     </button>
 
-                    <!-- MENU DROPDOWN FLUTUANTE DINÂMICO -->
-                    <div id="user-menu-dropdown" class="hidden absolute right-0 top-full mt-2 w-60 bg-white text-slate-800 rounded-xl shadow-2xl border border-slate-200 z-[100] overflow-hidden text-xs">
+                    <!-- MENU DROPDOWN FLUTUANTE PROTEGIDO -->
+                    <div id="user-menu-dropdown" class="hidden absolute right-0 top-full mt-2 w-64 bg-white text-slate-800 rounded-xl shadow-2xl border border-slate-200 z-[100] overflow-hidden text-xs">
                         <div id="user-menu-dropdown-items">
-                            <!-- Preenchido via JS baseado se está logado ou não -->
+                            <!-- Conteúdo renderizado via JS sem expor dados -->
                         </div>
                     </div>
                 </div>
 
-                <!-- ÍCONE/BOTÃO MEUS PEDIDOS EM PRODUÇÃO -->
+                <!-- ÍCONE MEUS PEDIDOS EM PRODUÇÃO -->
                 <button onclick="alternarAba('pedidos')" class="flex items-center gap-2 hover:text-amber-400 text-xs font-bold transition-all text-left">
                     <i class="fa-solid fa-desktop text-lg"></i>
                     <div class="hidden lg:block leading-tight">
@@ -193,7 +193,7 @@
                 </div>
             </div>
 
-            <!-- LAYOUT PRINCIPAL EM 2 COLUNAS (SIDEBAR + GRID DE PRODUTOS MAIS VENDIDOS) -->
+            <!-- LAYOUT PRINCIPAL EM 2 COLUNAS (SIDEBAR + GRID DE PRODUTOS) -->
             <div class="flex flex-col lg:flex-row gap-6 pt-2">
                 
                 <!-- SIDEBAR ESQUERDA (CATEGORIAS) -->
@@ -227,7 +227,7 @@
                     </div>
                 </aside>
 
-                <!-- GRID DE 9 PRODUTOS MAIS VENDIDOS -->
+                <!-- GRID DE PRODUTOS MAIS VENDIDOS -->
                 <div class="flex-1 space-y-4">
                     <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex items-center justify-between">
                         <h3 class="text-base font-black text-purple-950 uppercase font-heading flex items-center gap-2">
@@ -324,7 +324,7 @@
                         </div>
                     </div>
 
-                    <!-- FORMAS DE PAGAMENTO (SEM DINHEIRO) -->
+                    <!-- FORMAS DE PAGAMENTO -->
                     <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-4">
                         <h3 class="text-xs font-black text-purple-950 uppercase font-heading flex items-center gap-2">
                             <i class="fa-solid fa-credit-card text-amber-500"></i> Forma de Pagamento
@@ -565,7 +565,6 @@
                         <input type="text" id="cad-whatsapp" required placeholder="(21) 98614-7221" class="w-full border border-slate-300 rounded-lg px-3.5 py-2.5 text-slate-800 focus:outline-none focus:border-purple-600 bg-slate-50">
                     </div>
 
-                    <!-- CAMPO DE SENHA DE ACESSO PROTEGIDA -->
                     <div class="sm:col-span-2 space-y-1 bg-purple-50 p-3 rounded-xl border border-purple-200">
                         <label class="block text-purple-950 font-black flex items-center gap-1.5">
                             <i class="fa-solid fa-lock text-purple-700"></i> Criar Senha de Acesso Secreta <span class="text-red-500">*</span>
@@ -796,31 +795,22 @@
             }
         });
 
-        // CADASTRO DE CLIENTE COMPLETO E PROTEGIDO POR SENHA
+        // CADASTRO DE CLIENTE COMPLETO - DADOS PROTEGIDOS APÓS SALVAR
         function abrirModalCadastro() {
             toggleUserDropdown();
+
+            // Proteção: Se o cliente já está cadastrado/logado, não exibir formulário preenchido com dados expostos
+            if (clienteIdentificado && (clienteIdentificado.cpf || clienteIdentificado.whatsapp)) {
+                mostrarToast("Seu cadastro já foi concluído e está protegido com segurança no sistema!", "info");
+                return;
+            }
+
             const modal = document.getElementById('modal-cadastro-cliente');
             if (!modal) return;
 
-            if (clienteIdentificado) {
-                document.getElementById('cad-nome').value = clienteIdentificado.nome || '';
-                document.getElementById('cad-cpf').value = clienteIdentificado.cpf || clienteIdentificado.cpf_cnpj || '';
-                document.getElementById('cad-telefone').value = clienteIdentificado.telefone || '';
-                document.getElementById('cad-whatsapp').value = clienteIdentificado.whatsapp || '';
-                document.getElementById('cad-senha').value = clienteIdentificado.senha || '';
-                document.getElementById('cad-email').value = clienteIdentificado.email || '';
-                document.getElementById('cad-endereco').value = clienteIdentificado.endereco || '';
-                document.getElementById('cad-bairro').value = clienteIdentificado.bairro || '';
-                document.getElementById('cad-cidade').value = clienteIdentificado.cidade || '';
-                document.getElementById('cad-estado').value = clienteIdentificado.estado || 'Rio de Janeiro';
-                document.getElementById('cad-ponto-ref').value = clienteIdentificado.ponto_referencia || '';
-                document.getElementById('cad-obs').value = clienteIdentificado.obs || '';
-                document.getElementById('txt-modal-cad-titulo').innerText = 'Meus Dados / Alterar Cadastro';
-            } else {
-                document.getElementById('form-cadastro-cliente').reset();
-                document.getElementById('cad-estado').value = 'Rio de Janeiro';
-                document.getElementById('txt-modal-cad-titulo').innerText = 'Cadastro de Novo Cliente';
-            }
+            document.getElementById('form-cadastro-cliente').reset();
+            document.getElementById('cad-estado').value = 'Rio de Janeiro';
+            document.getElementById('txt-modal-cad-titulo').innerText = 'Cadastro de Novo Cliente';
 
             modal.classList.remove('hidden');
         }
@@ -890,9 +880,12 @@
                 inputEndCarrinho.value = endFormatado;
             }
 
+            // LIMPAR O FORMULÁRIO DO DOM APÓS SALVAR PARA NÃO EXPOR OS DADOS
+            document.getElementById('form-cadastro-cliente').reset();
+
             fecharModalCadastro();
             atualizarHeaderELista();
-            mostrarToast("Cadastro salvo com sucesso!");
+            mostrarToast("Cadastro salvo com sucesso e protegido com segurança!");
         }
 
         function selecionarFormaPagamento(nomeForma) {
@@ -1310,7 +1303,6 @@
                     });
                 }
 
-                // VALIDAÇÃO DE SENHA PROTEGIDA
                 if (clienteEncontrado) {
                     if (clienteEncontrado.senha) {
                         if (senhaDigitada && clienteEncontrado.senha !== senhaDigitada) {
@@ -1367,15 +1359,15 @@
             }
 
             if (clienteIdentificado || pedidosDoCliente.length > 0) {
-                const nomeExibicao = clienteIdentificado ? clienteIdentificado.nome : `Busca: #${identificacaoTermo}`;
+                const nomeExibicao = clienteIdentificado ? clienteIdentificado.nome.split(' ')[0] : `#${identificacaoTermo}`;
                 if (txtUserNome) txtUserNome.innerText = `Olá, ${nomeExibicao}`;
 
                 if (dropdownContent) {
                     dropdownContent.innerHTML = `
                         <div class="p-2 space-y-1">
-                            <a href="javascript:void(0)" onclick="abrirModalCadastro()" class="px-3 py-2 hover:bg-purple-50 hover:text-purple-950 font-bold rounded flex items-center gap-2 transition-all text-purple-900">
-                                <i class="fa-solid fa-user-gear text-purple-700"></i> Minha conta / Meus Dados
-                            </a>
+                            <div class="px-3 py-2 bg-emerald-50 text-emerald-900 border border-emerald-200 font-bold rounded flex items-center gap-2 text-xs">
+                                <i class="fa-solid fa-user-check text-emerald-600"></i> Cadastro Concluído & Protegido
+                            </div>
                             <a href="javascript:void(0)" onclick="alternarAba('pedidos'); toggleUserDropdown();" class="px-3 py-2 hover:bg-purple-50 hover:text-purple-950 font-bold rounded flex items-center gap-2 transition-all">
                                 <i class="fa-solid fa-box text-slate-400"></i> Meus pedidos
                             </a>
@@ -1439,6 +1431,10 @@
             clienteIdentificado = null;
             identificacaoTermo = '';
             pedidosDoCliente = [];
+            
+            const formCad = document.getElementById('form-cadastro-cliente');
+            if (formCad) formCad.reset();
+
             atualizarHeaderELista();
             toggleUserDropdown();
             mostrarToast("Sessão encerrada com segurança.");
