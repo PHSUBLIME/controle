@@ -834,12 +834,17 @@
             const pontoRef = document.getElementById('cad-ponto-ref').value.trim();
             const obs = document.getElementById('cad-obs').value.trim();
 
+            if (!nome || !cpf || !whatsapp) {
+                mostrarToast("Preencha os campos obrigatórios (*)", "alerta");
+                return;
+            }
+
             if (!senha) {
                 mostrarToast("Por favor, crie uma senha para proteger seu cadastro!", "alerta");
                 return;
             }
 
-            const dadosCliente = {
+            const dadosCompletos = {
                 nome,
                 cpf,
                 telefone,
@@ -857,14 +862,66 @@
             mostrarToast("Salvando cadastro protegido...", "info");
 
             try {
-                const { data, error } = await supabaseClient.from('clientes').upsert([dadosCliente], { onConflict: 'cpf' }).select();
-                if (!error && data && data.length > 0) {
-                    clienteIdentificado = data[0];
-                } else {
-                    clienteIdentificado = { id: Date.now(), ...dadosCliente };
+                const cpfLimpo = limparNumeros(cpf);
+                const whatsLimpo = limparNumeros(whatsapp);
+
+                // 1. Verificar se já existe no Supabase por CPF ou WhatsApp
+                const { data: existentes } = await supabaseClient.from('clientes').select('*');
+                let existente = null;
+
+                if (existentes && existentes.length > 0) {
+                    existente = existentes.find(c => {
+                        const cCpf = limparNumeros(c.cpf);
+                        const cWhats = limparNumeros(c.whatsapp);
+                        return (cpfLimpo && cCpf === cpfLimpo) || (whatsLimpo && cWhats === whatsLimpo);
+                    });
                 }
+
+                let clienteSalvo = null;
+
+                if (existente && existente.id) {
+                    // Tentar UPDATE no registro existente
+                    let resUp = await supabaseClient.from('clientes').update(dadosCompletos).eq('id', existente.id).select();
+                    
+                    if (resUp.error) {
+                        const dadosPadrao = { nome, cpf, whatsapp, telefone, email, endereco, bairro, cidade, estado, obs };
+                        resUp = await supabaseClient.from('clientes').update(dadosPadrao).eq('id', existente.id).select();
+                    }
+
+                    if (!resUp.error && resUp.data && resUp.data.length > 0) {
+                        clienteSalvo = resUp.data[0];
+                    } else {
+                        clienteSalvo = { id: existente.id, ...dadosCompletos };
+                    }
+                } else {
+                    // Tentar INSERT novo cliente
+                    const idNovo = Math.floor(100000000 + Math.random() * 900000000);
+                    const objetoInsert = { id: idNovo, ...dadosCompletos };
+
+                    let resIns = await supabaseClient.from('clientes').insert([objetoInsert]).select();
+
+                    if (resIns.error) {
+                        console.warn("Insert completo falhou, tentando colunas básicas:", resIns.error);
+                        const objetoBasico = { id: idNovo, nome, cpf, whatsapp, telefone, email, endereco, bairro, cidade, estado, obs };
+                        resIns = await supabaseClient.from('clientes').insert([objetoBasico]).select();
+                    }
+
+                    if (!resIns.error && resIns.data && resIns.data.length > 0) {
+                        clienteSalvo = resIns.data[0];
+                    } else {
+                        clienteSalvo = objetoInsert;
+                    }
+                }
+
+                if (!clienteSalvo.senha && senha) {
+                    clienteSalvo.senha = senha;
+                }
+
+                clienteIdentificado = clienteSalvo;
+
             } catch (err) {
-                clienteIdentificado = { id: Date.now(), ...dadosCliente };
+                console.error("Erro no salvamento:", err);
+                clienteIdentificado = { id: Date.now(), ...dadosCompletos };
             }
 
             identificacaoTermo = cpf || whatsapp || nome;
@@ -880,12 +937,11 @@
                 inputEndCarrinho.value = endFormatado;
             }
 
-            // LIMPAR O FORMULÁRIO DO DOM APÓS SALVAR PARA NÃO EXPOR OS DADOS
             document.getElementById('form-cadastro-cliente').reset();
 
             fecharModalCadastro();
             atualizarHeaderELista();
-            mostrarToast("Cadastro salvo com sucesso e protegido com segurança!");
+            mostrarToast(`Cadastro salvo com sucesso! Bem-vindo(a), ${nome.split(' ')[0]}!`);
         }
 
         function selecionarFormaPagamento(nomeForma) {
@@ -1269,8 +1325,8 @@
             const termo = document.getElementById('input-identificacao-cliente').value.trim();
             const senhaDigitada = document.getElementById('input-senha-login').value.trim();
 
-            if (!termo || !senhaDigitada) {
-                mostrarToast("Informe seu CPF/WhatsApp e sua senha cadastrada!", "alerta");
+            if (!termo) {
+                mostrarToast("Informe seu CPF ou WhatsApp!", "alerta");
                 return;
             }
 
@@ -1286,36 +1342,26 @@
             identificacaoTermo = termoOriginal.trim();
             const termoLimpo = limparNumeros(identificacaoTermo);
 
-            mostrarToast("Buscando informações com segurança...", "info");
+            if (!identificacaoTermo) return;
+
+            mostrarToast("Buscando informações...", "info");
 
             try {
                 const { data: clientesData } = await supabaseClient.from('clientes').select('*');
 
                 let clienteEncontrado = null;
-                if (clientesData) {
+                if (clientesData && clientesData.length > 0) {
                     clienteEncontrado = clientesData.find(c => {
-                        const cpfC = limparNumeros(c.cpf);
+                        const cpfC = limparNumeros(c.cpf || c.cpf_cnpj);
                         const whatsC = limparNumeros(c.whatsapp);
                         const telC = limparNumeros(c.telefone);
                         
                         return (termoLimpo && (cpfC === termoLimpo || whatsC.endsWith(termoLimpo) || telC.endsWith(termoLimpo))) ||
-                               (c.nome && c.nome.toLowerCase().includes(identificacaoTermo.toLowerCase()));
+                               (c.nome && c.nome.toLowerCase() === identificacaoTermo.toLowerCase());
                     });
                 }
 
-                if (clienteEncontrado) {
-                    if (clienteEncontrado.senha && senhaDigitada) {
-                        if (clienteEncontrado.senha !== senhaDigitada) {
-                            mostrarToast("Senha incorreta! Acesso negado por segurança.", "erro");
-                            clienteIdentificado = null;
-                            atualizarHeaderELista();
-                            return;
-                        }
-                    }
-                    clienteIdentificado = clienteEncontrado;
-                    localStorage.setItem('phsublime_cliente_dados', JSON.stringify(clienteIdentificado));
-                } else {
-                    // Preservar o cliente salvo no LocalStorage se coincidir
+                if (!clienteEncontrado) {
                     const dadosSalvos = localStorage.getItem('phsublime_cliente_dados');
                     if (dadosSalvos) {
                         try {
@@ -1323,21 +1369,47 @@
                             const cpfL = limparNumeros(cliLocal.cpf || cliLocal.cpf_cnpj);
                             const whatsL = limparNumeros(cliLocal.whatsapp);
                             if ((termoLimpo && (cpfL === termoLimpo || whatsL.endsWith(termoLimpo))) ||
-                                (cliLocal.nome && cliLocal.nome.toLowerCase().includes(identificacaoTermo.toLowerCase()))) {
-                                clienteIdentificado = cliLocal;
-                            } else if (!identificacaoTermo) {
-                                clienteIdentificado = cliLocal;
+                                (cliLocal.nome && cliLocal.nome.toLowerCase() === identificacaoTermo.toLowerCase())) {
+                                clienteEncontrado = cliLocal;
                             }
                         } catch(e){}
                     }
                 }
 
-                const { data: pedidosData, error } = await supabaseClient
+                if (clienteEncontrado) {
+                    const senhaCadastrada = clienteEncontrado.senha || clienteEncontrado.cad_senha;
+
+                    if (senhaCadastrada && senhaDigitada) {
+                        if (senhaCadastrada !== senhaDigitada) {
+                            mostrarToast("Senha incorreta! Verifique sua senha.", "erro");
+                            clienteIdentificado = null;
+                            atualizarHeaderELista();
+                            return;
+                        }
+                    } else if (!senhaCadastrada && senhaDigitada) {
+                        clienteEncontrado.senha = senhaDigitada;
+                        if (clienteEncontrado.id) {
+                            await supabaseClient.from('clientes').update({ senha: senhaDigitada }).eq('id', clienteEncontrado.id);
+                        }
+                    }
+
+                    clienteIdentificado = clienteEncontrado;
+                    localStorage.setItem('phsublime_cliente_dados', JSON.stringify(clienteIdentificado));
+                    localStorage.setItem('phsublime_cliente_termo', identificacaoTermo);
+                    mostrarToast(`Bem-vindo(a), ${clienteIdentificado.nome.split(' ')[0]}!`);
+                } else {
+                    mostrarToast("Cliente não encontrado! Verifique o CPF/WhatsApp ou faça seu cadastro.", "alerta");
+                    clienteIdentificado = null;
+                    atualizarHeaderELista();
+                    return;
+                }
+
+                const { data: pedidosData } = await supabaseClient
                     .from('pedidos')
-                    .select('id, data, clienteId, clienteNome, itens, total, valorPago, statusPagamento, dataEntrega, status, tipoEntrega, formaPagamento, obs')
+                    .select('*')
                     .order('id', { ascending: false });
 
-                if (!error && pedidosData) {
+                if (pedidosData) {
                     pedidosDoCliente = pedidosData.filter(p => {
                         if (String(p.id) === identificacaoTermo || String(p.id) === termoLimpo) return true;
                         if (clienteIdentificado && (p.clienteId == clienteIdentificado.id)) return true;
@@ -1348,7 +1420,6 @@
                     pedidosDoCliente = [];
                 }
 
-                localStorage.setItem('phsublime_cliente_termo', identificacaoTermo);
                 atualizarHeaderELista();
 
             } catch (err) {
