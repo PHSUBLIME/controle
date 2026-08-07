@@ -4172,13 +4172,24 @@ appData.pedidos.forEach(p => {
                 registradoPor: usuarioAtualNome
             });
 
-            const { error } = await supabaseClient.from('pedidos').update({
+            let { error } = await supabaseClient.from('pedidos').update({
                 statusPagamento: 'Pago 100%',
                 valorPago: total,
                 pagamentos: historico
             }).eq('id', pedidoId);
 
+            // Trava de segurança: se a coluna 'pagamentos' não existir no banco, quita sem travar
+            if (error && error.message && error.message.includes('pagamentos')) {
+                console.warn("Coluna 'pagamentos' ausente no banco. Quitante sem a coluna...");
+                const retry = await supabaseClient.from('pedidos').update({
+                    statusPagamento: 'Pago 100%',
+                    valorPago: total
+                }).eq('id', pedidoId);
+                error = retry.error;
+            }
+
             if (!error) {
+                p.pagamentos = historico;
                 await carregarDados();
                 mostrarToast(`Saldo de R$ ${saldoRestante.toFixed(2)} quitado e registrado no caixa de hoje!`);
             } else {
