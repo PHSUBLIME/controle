@@ -78,10 +78,10 @@
                 </div>
             </div>
 
-            <!-- ÁREA DE USUÁRIO, MEUS PEDIDOS E CARRINHO (IGUAL AO PRINT) -->
+            <!-- ÁREA DE USUÁRIO, MEUS PEDIDOS E CARRINHO -->
             <div class="flex items-center gap-4 shrink-0">
                 
-                <!-- DROPDOWN DE USUÁRIO (OLÁ, DANIEL) -->
+                <!-- DROPDOWN DE USUÁRIO (OLÁ, DANIEL / OLÁ, ENTRAR) -->
                 <div id="header-user-info" class="relative">
                     <button onclick="toggleUserDropdown()" class="flex items-center gap-1.5 text-white hover:text-amber-400 font-bold text-xs transition-all py-2">
                         <i class="fa-regular fa-circle-user text-base"></i>
@@ -89,29 +89,10 @@
                         <i class="fa-solid fa-caret-down text-[10px]"></i>
                     </button>
 
-                    <!-- MENU DROPDOWN FLUTUANTE (IGUAL AO PRINT) -->
-                    <div id="user-menu-dropdown" class="hidden absolute right-0 top-full mt-2 w-56 bg-white text-slate-800 rounded-xl shadow-2xl border border-slate-200 z-[100] overflow-hidden text-xs">
-                        <div class="p-2 space-y-1">
-                            <a href="javascript:void(0)" onclick="abrirModalIdentificacao()" class="px-3 py-2 hover:bg-purple-50 hover:text-purple-950 font-bold rounded flex items-center gap-2 transition-all">
-                                <i class="fa-solid fa-user text-slate-400"></i> Minha conta
-                            </a>
-                            <a href="javascript:void(0)" onclick="alternarAba('pedidos'); toggleUserDropdown();" class="px-3 py-2 hover:bg-purple-50 hover:text-purple-950 font-bold rounded flex items-center gap-2 transition-all">
-                                <i class="fa-solid fa-box text-slate-400"></i> Meus pedidos
-                            </a>
-                            <div class="px-3 py-2 font-bold text-slate-700 flex items-center justify-between border-t border-slate-100 mt-1 pt-2">
-                                <span>Créditos:</span>
-                                <strong class="text-emerald-600">R$ 0,00</strong>
-                            </div>
-                            <a href="javascript:void(0)" onclick="location.reload()" class="px-3 py-2 hover:bg-purple-50 hover:text-purple-950 font-bold rounded flex items-center gap-2 transition-all text-slate-600">
-                                <i class="fa-solid fa-rotate text-slate-400"></i> Atualizar Cache
-                            </a>
-                        </div>
-                        
-                        <div class="p-3 bg-slate-50 border-t border-slate-200 flex items-center justify-between">
-                            <span class="text-xs font-bold text-slate-600">Não é você?</span>
-                            <button onclick="sairEBuscarOutro()" class="bg-purple-900 hover:bg-purple-800 text-white p-2 rounded-lg transition-all" title="Sair da Conta">
-                                <i class="fa-solid fa-right-from-bracket text-xs"></i>
-                            </button>
+                    <!-- MENU DROPDOWN FLUTUANTE DINÂMICO -->
+                    <div id="user-menu-dropdown" class="hidden absolute right-0 top-full mt-2 w-60 bg-white text-slate-800 rounded-xl shadow-2xl border border-slate-200 z-[100] overflow-hidden text-xs">
+                        <div id="user-menu-dropdown-items">
+                            <!-- Preenchido via JS baseado se está logado ou não -->
                         </div>
                     </div>
                 </div>
@@ -125,7 +106,7 @@
                     </div>
                 </button>
 
-                <!-- BOTÃO DO CARRINHO DE COMPRAS AO LADO DE MEUS PEDIDOS -->
+                <!-- BOTÃO DO CARRINHO DE COMPRAS -->
                 <button onclick="alternarAba('carrinho')" class="relative bg-amber-400 hover:bg-amber-300 text-purple-950 font-black text-xs p-2.5 rounded-xl transition-all shadow-md flex items-center justify-center">
                     <i class="fa-solid fa-cart-shopping text-base"></i>
                     <span id="badge-carrinho-qtd" class="absolute -top-2 -right-2 bg-purple-900 text-white font-bold px-1.5 py-0.5 rounded-full text-[10px] border-2 border-purple-950">0</span>
@@ -169,7 +150,6 @@
             
             <!-- BANNERS PROMOCIONAIS -->
             <div class="space-y-4">
-                <!-- HERO BANNER PRINCIPAL -->
                 <div class="relative overflow-hidden bg-gradient-to-r from-purple-900 via-indigo-900 to-purple-950 text-white rounded-2xl shadow-xl p-8 border border-purple-700/60 flex flex-col lg:flex-row items-center justify-between gap-6">
                     <div class="space-y-3 max-w-3xl">
                         <h2 class="text-2xl sm:text-4xl font-black font-heading leading-tight text-white">
@@ -186,7 +166,6 @@
                     </div>
                 </div>
 
-                <!-- SUB-BANNERS (3 CARDS EM LINHA) -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div class="bg-gradient-to-r from-blue-900 to-indigo-900 text-white p-4 rounded-xl border border-blue-700 shadow-md flex items-center justify-between">
                         <div>
@@ -219,7 +198,6 @@
                 
                 <!-- SIDEBAR ESQUERDA (CATEGORIAS) -->
                 <aside class="w-full lg:w-64 shrink-0 space-y-4">
-                    <!-- BLOCO MAIS VENDIDOS -->
                     <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
                         <div class="bg-purple-950 text-white font-black text-xs px-4 py-3 uppercase tracking-wider flex items-center justify-between border-b border-purple-900">
                             <span>MAIS VENDIDOS</span>
@@ -236,7 +214,6 @@
                         </ul>
                     </div>
 
-                    <!-- BLOCO TODOS OS PRODUTOS -->
                     <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
                         <div class="bg-purple-900 text-white font-black text-xs px-4 py-3 uppercase tracking-wider">
                             TODOS OS PRODUTOS
@@ -250,7 +227,7 @@
                     </div>
                 </aside>
 
-                <!-- GRID DE 9 PRODUTOS MAIS VENDIDOS -->
+                <!-- GRID DE PRODUTOS MAIS VENDIDOS -->
                 <div class="flex-1 space-y-4">
                     <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex items-center justify-between">
                         <h3 class="text-base font-black text-purple-950 uppercase font-heading flex items-center gap-2">
@@ -258,7 +235,6 @@
                         </h3>
                     </div>
 
-                    <!-- GRID COM CAIXAS MAIORES (3 COLUNAS EM DESKTOP = 9 PRODUTOS) -->
                     <div id="container-catalogo-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
                 </div>
 
@@ -269,14 +245,12 @@
         <!-- ================= SEÇÃO 2: PÁGINA DO CARRINHO (CHECKOUT) ================= -->
         <div id="secao-carrinho" class="hidden space-y-6">
             
-            <!-- BREADCRUMB -->
             <div class="text-xs text-slate-500 flex items-center gap-2 bg-slate-200/60 px-4 py-2.5 rounded-lg border border-slate-300/50">
                 <a href="javascript:void(0)" onclick="alternarAba('catalogo')" class="hover:underline text-purple-900 font-bold">Início</a>
                 <span>/</span>
                 <span class="font-bold text-slate-700">Carrinho</span>
             </div>
 
-            <!-- CONTAINER DE PRODUTOS VAZIO -->
             <div id="carrinho-vazio-msg" class="hidden bg-white border border-slate-200 p-12 rounded-xl text-center space-y-3 shadow-sm">
                 <i class="fa-solid fa-cart-flatbed text-5xl text-slate-300 block"></i>
                 <h3 class="text-lg font-black text-slate-800">Seu carrinho de compras está vazio.</h3>
@@ -286,13 +260,11 @@
                 </button>
             </div>
 
-            <!-- CONTEÚDO DO CARRINHO EM 2 COLUNAS -->
             <div id="carrinho-conteudo-box" class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
 
                 <!-- COLUNA DA ESQUERDA -->
                 <div class="lg:col-span-8 space-y-6">
 
-                    <!-- TABELA DE PRODUTOS DO CARRINHO -->
                     <div class="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
                         <div class="bg-purple-950 text-white px-4 py-3 font-bold text-xs uppercase flex items-center justify-between border-b border-purple-900">
                             <span class="flex items-center gap-2"><i class="fa-solid fa-boxes-packing text-amber-400"></i> Itens Adicionados ao Carrinho</span>
@@ -329,7 +301,7 @@
                         </div>
                     </div>
 
-                    <!-- MÉTODOS DE ENVIO (ENTREGA OU RETIRADA) -->
+                    <!-- MÉTODOS DE ENVIO -->
                     <div class="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
                         <div class="flex border-b border-slate-200 bg-slate-100 text-xs font-bold">
                             <button onclick="alternarAbaFrete('entrega')" id="tab-frete-entrega" class="px-5 py-2.5 bg-white border-t-2 border-purple-900 text-purple-950 font-black">Entrega</button>
@@ -352,7 +324,7 @@
                         </div>
                     </div>
 
-                    <!-- FORMAS DE PAGAMENTO AMPLIADAS (SEM DINHEIRO) -->
+                    <!-- FORMAS DE PAGAMENTO -->
                     <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-4">
                         <h3 class="text-xs font-black text-purple-950 uppercase font-heading flex items-center gap-2">
                             <i class="fa-solid fa-credit-card text-amber-500"></i> Forma de Pagamento
@@ -375,7 +347,7 @@
                             </button>
                         </div>
 
-                        <!-- OPÇÕES DE RÁDIO DE PAGAMENTO -->
+                        <!-- OPÇÕES DE PAGAMENTO -->
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-bold text-slate-800">
                             <label class="border border-slate-200 p-3 rounded-xl flex items-center gap-2.5 bg-slate-50 cursor-pointer hover:border-purple-600 transition-all">
                                 <input type="radio" name="forma_pagamento" value="pix" checked onchange="selecionarFormaPagamento('Pix')" class="w-4 h-4 text-purple-900">
@@ -416,7 +388,7 @@
 
                 </div>
 
-                <!-- COLUNA DA DIREITA (CARD RESUMO) -->
+                <!-- COLUNA DA DIREITA -->
                 <div class="lg:col-span-4 space-y-5 lg:sticky lg:top-24">
 
                     <div class="bg-white border-2 border-purple-900 rounded-xl shadow-lg p-5 space-y-4">
@@ -424,7 +396,6 @@
                             <i class="fa-solid fa-receipt text-amber-500"></i> Resumo do Pedido
                         </h3>
 
-                        <!-- EXTRATO FINANCEIRO -->
                         <div class="space-y-2.5 text-xs">
                             <div class="flex justify-between text-slate-600">
                                 <span>Subtotal:</span>
@@ -445,7 +416,6 @@
                             </div>
                         </div>
 
-                        <!-- CUPOM DE DESCONTO -->
                         <div class="pt-3 border-t border-slate-100 space-y-1.5">
                             <label class="block text-[11px] font-bold text-slate-700">Cupom de Desconto:</label>
                             <div class="flex gap-1.5">
@@ -456,13 +426,11 @@
                             </div>
                         </div>
 
-                        <!-- BOTÃO CHECKOUT -->
                         <button onclick="finalizarCompraWhatsApp()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-black text-sm py-4 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 uppercase tracking-wide">
                             <i class="fa-brands fa-whatsapp text-xl"></i> FINALIZAR PEDIDO AGORA
                         </button>
                     </div>
 
-                    <!-- BOX SUPORTE -->
                     <div class="bg-purple-50 border border-purple-200 rounded-xl p-4 text-center text-xs space-y-1">
                         <strong class="text-purple-950 font-bold block"><i class="fa-solid fa-headset mr-1"></i> Precisa de ajuda com a arte?</strong>
                         <p class="text-slate-600 text-[11px]">Nossa equipe analisa seu arquivo antes de mandar para impressão final.</p>
@@ -516,7 +484,7 @@
 
     </main>
 
-    <!-- RODAPÉ DA LOJA COM LOGOS ATUALIZADAS -->
+    <!-- RODAPÉ DA LOJA -->
     <footer class="bg-purple-950 text-white border-t-4 border-amber-400 pt-10 pb-6 mt-12 text-xs">
         <div class="max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 pb-8 border-b border-purple-800">
@@ -563,6 +531,104 @@
     </footer>
 
     <!-- MODAIS DA APLICAÇÃO -->
+
+    <!-- MODAL COMPLETO DE CADASTRO DE CLIENTE / MEUS DADOS -->
+    <div id="modal-cadastro-cliente" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-[999] hidden flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white rounded-2xl max-w-2xl w-full p-6 sm:p-8 space-y-6 shadow-2xl relative border border-purple-200 my-8">
+            <button onclick="fecharModalCadastro()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-700 text-xl"><i class="fa-solid fa-xmark"></i></button>
+
+            <div class="flex items-center gap-3 border-b border-slate-100 pb-4">
+                <div class="w-12 h-12 bg-purple-100 text-purple-900 rounded-xl flex items-center justify-center text-2xl shadow-inner">
+                    <i class="fa-solid fa-user-plus"></i>
+                </div>
+                <div>
+                    <h3 id="txt-modal-cad-titulo" class="text-lg font-black text-purple-950 font-heading">Cadastro de Cliente</h3>
+                    <p class="text-xs text-slate-500">Preencha seus dados completos para pedidos e entregas rápidas</p>
+                </div>
+            </div>
+
+            <form onsubmit="salvarCadastroCliente(event)" id="form-cadastro-cliente" class="space-y-4 text-xs font-bold text-slate-700">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    
+                    <!-- NOME / EMPRESA -->
+                    <div class="sm:col-span-2 space-y-1">
+                        <label class="block">Nome Completo ou Razão Social <span class="text-red-500">*</span></label>
+                        <input type="text" id="cad-nome" required placeholder="Digite seu nome completo ou empresa..." class="w-full border border-slate-300 rounded-lg px-3.5 py-2.5 text-slate-800 focus:outline-none focus:border-purple-600 bg-slate-50">
+                    </div>
+
+                    <!-- CPF / CNPJ -->
+                    <div class="space-y-1">
+                        <label class="block">CPF ou CNPJ <span class="text-red-500">*</span></label>
+                        <input type="text" id="cad-cpf" required placeholder="000.000.000-00" class="w-full border border-slate-300 rounded-lg px-3.5 py-2.5 text-slate-800 focus:outline-none focus:border-purple-600 bg-slate-50">
+                    </div>
+
+                    <!-- WHATSAPP -->
+                    <div class="space-y-1">
+                        <label class="block">WhatsApp (com DDD) <span class="text-red-500">*</span></label>
+                        <input type="text" id="cad-whatsapp" required placeholder="(21) 98614-7221" class="w-full border border-slate-300 rounded-lg px-3.5 py-2.5 text-slate-800 focus:outline-none focus:border-purple-600 bg-slate-50">
+                    </div>
+
+                    <!-- TELEFONE -->
+                    <div class="space-y-1">
+                        <label class="block">Telefone Fixo / Recado</label>
+                        <input type="text" id="cad-telefone" placeholder="(21) 0000-0000" class="w-full border border-slate-300 rounded-lg px-3.5 py-2.5 text-slate-800 focus:outline-none focus:border-purple-600 bg-slate-50">
+                    </div>
+
+                    <!-- E-MAIL -->
+                    <div class="space-y-1">
+                        <label class="block">E-mail</label>
+                        <input type="email" id="cad-email" placeholder="seuemail@exemplo.com" class="w-full border border-slate-300 rounded-lg px-3.5 py-2.5 text-slate-800 focus:outline-none focus:border-purple-600 bg-slate-50">
+                    </div>
+
+                    <!-- ENDEREÇO COMPLETO -->
+                    <div class="sm:col-span-2 space-y-1">
+                        <label class="block">Endereço Completo (Rua, nº, complemento) <span class="text-red-500">*</span></label>
+                        <input type="text" id="cad-endereco" required placeholder="Rua, número, bloco, apto..." class="w-full border border-slate-300 rounded-lg px-3.5 py-2.5 text-slate-800 focus:outline-none focus:border-purple-600 bg-slate-50">
+                    </div>
+
+                    <!-- BAIRRO -->
+                    <div class="space-y-1">
+                        <label class="block">Bairro <span class="text-red-500">*</span></label>
+                        <input type="text" id="cad-bairro" required placeholder="Digite o bairro..." class="w-full border border-slate-300 rounded-lg px-3.5 py-2.5 text-slate-800 focus:outline-none focus:border-purple-600 bg-slate-50">
+                    </div>
+
+                    <!-- CIDADE -->
+                    <div class="space-y-1">
+                        <label class="block">Cidade <span class="text-red-500">*</span></label>
+                        <input type="text" id="cad-cidade" required placeholder="Digite a cidade..." class="w-full border border-slate-300 rounded-lg px-3.5 py-2.5 text-slate-800 focus:outline-none focus:border-purple-600 bg-slate-50">
+                    </div>
+
+                    <!-- ESTADO -->
+                    <div class="space-y-1">
+                        <label class="block">Estado</label>
+                        <input type="text" id="cad-estado" value="Rio de Janeiro" class="w-full border border-slate-300 rounded-lg px-3.5 py-2.5 text-slate-800 focus:outline-none focus:border-purple-600 bg-slate-50">
+                    </div>
+
+                    <!-- PONTO DE REFERÊNCIA -->
+                    <div class="space-y-1">
+                        <label class="block">Ponto de Referência</label>
+                        <input type="text" id="cad-ponto-ref" placeholder="Ex: Em frente ao mercado..." class="w-full border border-slate-300 rounded-lg px-3.5 py-2.5 text-slate-800 focus:outline-none focus:border-purple-600 bg-slate-50">
+                    </div>
+
+                    <!-- OBSERVAÇÕES -->
+                    <div class="sm:col-span-2 space-y-1">
+                        <label class="block">Observações para Entrega / Produção</label>
+                        <textarea id="cad-obs" rows="2" placeholder="Digite observações adicionais..." class="w-full border border-slate-300 rounded-lg px-3.5 py-2.5 text-slate-800 focus:outline-none focus:border-purple-600 bg-slate-50 resize-none"></textarea>
+                    </div>
+
+                </div>
+
+                <div class="pt-4 flex justify-end gap-3">
+                    <button type="button" onclick="fecharModalCadastro()" class="px-5 py-3 bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold rounded-xl transition-all">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="px-7 py-3 bg-purple-900 hover:bg-purple-800 text-white font-black rounded-xl transition-all shadow-lg flex items-center gap-2">
+                        <i class="fa-solid fa-floppy-disk"></i> SALVAR CADASTRO
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <!-- POP-UP PERSONALIZADO: PRODUTO ADICIONADO AO CARRINHO -->
     <div id="modal-pos-adicao" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-[999] hidden flex items-center justify-center p-4">
@@ -619,7 +685,7 @@
         </div>
     </div>
 
-    <!-- MODAL DE IDENTIFICAÇÃO DO CLIENTE -->
+    <!-- MODAL DE IDENTIFICAÇÃO RÁPIDA DO CLIENTE -->
     <div id="modal-identificacao" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-[990] hidden flex items-center justify-center p-4">
         <div class="bg-white border border-slate-200 rounded-2xl max-w-md w-full p-6 sm:p-8 space-y-6 shadow-2xl text-center relative">
             <button onclick="fecharModalIdentificacao()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-700 text-lg"><i class="fa-solid fa-xmark"></i></button>
@@ -661,7 +727,6 @@
         const SUPABASE_ANON_KEY = 'sb_publishable_mF--YXTFkjyjbQ7Uw7Qq1w_ODzsJPA1'; 
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // CONTATOS E PIX OFICIAIS ATUALIZADOS
         const WHATSAPP_ATENDIMENTO = '5521986147221';
         const CHAVE_PIX_OFICIAL = '58658668000100';
         const NOME_BENEFICIARIO_PIX = 'Daniel Henrique Vieira de Sousa';
@@ -713,7 +778,6 @@
             if (dropdown) dropdown.classList.toggle('hidden');
         }
 
-        // Fechar dropdown ao clicar fora
         window.addEventListener('click', function(e) {
             const userInfo = document.getElementById('header-user-info');
             const dropdown = document.getElementById('user-menu-dropdown');
@@ -721,6 +785,96 @@
                 dropdown.classList.add('hidden');
             }
         });
+
+        // CADASTRO DE CLIENTE COMPLETO
+        function abrirModalCadastro() {
+            toggleUserDropdown();
+            const modal = document.getElementById('modal-cadastro-cliente');
+            if (!modal) return;
+
+            if (clienteIdentificado) {
+                document.getElementById('cad-nome').value = clienteIdentificado.nome || '';
+                document.getElementById('cad-cpf').value = clienteIdentificado.cpf || clienteIdentificado.cpf_cnpj || '';
+                document.getElementById('cad-telefone').value = clienteIdentificado.telefone || '';
+                document.getElementById('cad-whatsapp').value = clienteIdentificado.whatsapp || '';
+                document.getElementById('cad-email').value = clienteIdentificado.email || '';
+                document.getElementById('cad-endereco').value = clienteIdentificado.endereco || '';
+                document.getElementById('cad-bairro').value = clienteIdentificado.bairro || '';
+                document.getElementById('cad-cidade').value = clienteIdentificado.cidade || '';
+                document.getElementById('cad-estado').value = clienteIdentificado.estado || 'Rio de Janeiro';
+                document.getElementById('cad-ponto-ref').value = clienteIdentificado.ponto_referencia || '';
+                document.getElementById('cad-obs').value = clienteIdentificado.obs || '';
+                document.getElementById('txt-modal-cad-titulo').innerText = 'Meus Dados / Alterar Cadastro';
+            } else {
+                document.getElementById('form-cadastro-cliente').reset();
+                document.getElementById('cad-estado').value = 'Rio de Janeiro';
+                document.getElementById('txt-modal-cad-titulo').innerText = 'Cadastro de Novo Cliente';
+            }
+
+            modal.classList.remove('hidden');
+        }
+
+        function fecharModalCadastro() {
+            document.getElementById('modal-cadastro-cliente').classList.add('hidden');
+        }
+
+        async function salvarCadastroCliente(e) {
+            e.preventDefault();
+            const nome = document.getElementById('cad-nome').value.trim();
+            const cpf = document.getElementById('cad-cpf').value.trim();
+            const telefone = document.getElementById('cad-telefone').value.trim();
+            const whatsapp = document.getElementById('cad-whatsapp').value.trim();
+            const email = document.getElementById('cad-email').value.trim();
+            const endereco = document.getElementById('cad-endereco').value.trim();
+            const bairro = document.getElementById('cad-bairro').value.trim();
+            const cidade = document.getElementById('cad-cidade').value.trim();
+            const estado = document.getElementById('cad-estado').value.trim() || 'Rio de Janeiro';
+            const pontoRef = document.getElementById('cad-ponto-ref').value.trim();
+            const obs = document.getElementById('cad-obs').value.trim();
+
+            const dadosCliente = {
+                nome,
+                cpf,
+                telefone,
+                whatsapp,
+                email,
+                endereco,
+                bairro,
+                cidade,
+                estado,
+                ponto_referencia: pontoRef,
+                obs
+            };
+
+            mostrarToast("Salvando cadastro...", "info");
+
+            try {
+                const { data, error } = await supabaseClient.from('clientes').upsert([dadosCliente], { onConflict: 'cpf' }).select();
+                if (!error && data && data.length > 0) {
+                    clienteIdentificado = data[0];
+                } else {
+                    clienteIdentificado = { id: Date.now(), ...dadosCliente };
+                }
+            } catch (err) {
+                clienteIdentificado = { id: Date.now(), ...dadosCliente };
+            }
+
+            identificacaoTermo = cpf || whatsapp || nome;
+            localStorage.setItem('phsublime_cliente_termo', identificacaoTermo);
+
+            const inputEndCarrinho = document.getElementById('input-endereco-completo');
+            if (inputEndCarrinho) {
+                let endFormatado = `${endereco}`;
+                if (bairro) endFormatado += `, ${bairro}`;
+                if (cidade) endFormatado += ` - ${cidade}/${estado}`;
+                if (pontoRef) endFormatado += ` (Ref: ${pontoRef})`;
+                inputEndCarrinho.value = endFormatado;
+            }
+
+            fecharModalCadastro();
+            atualizarHeaderELista();
+            mostrarToast("Cadastro salvo com sucesso!");
+        }
 
         function selecionarFormaPagamento(nomeForma) {
             formaPagamentoEscolhida = nomeForma;
@@ -1085,6 +1239,8 @@
 
             if (termoParaBuscar) {
                 await buscarPedidosECliente(termoParaBuscar);
+            } else {
+                atualizarHeaderELista();
             }
 
             atualizarBadgeCarrinho();
@@ -1159,8 +1315,8 @@
             const txtPedidosProducaoCount = document.getElementById('txt-pedidos-producao-count');
             const msgSemId = document.getElementById('msg-nao-identificado');
             const containerLista = document.getElementById('container-lista-pedidos');
+            const dropdownContent = document.getElementById('user-menu-dropdown-items');
 
-            // Calcular quantos pedidos estão em produção
             const pedidosEmProducao = pedidosDoCliente.filter(p => (p.status || '').trim() === 'Em Produção').length;
             if (txtPedidosProducaoCount) {
                 txtPedidosProducaoCount.innerText = `${pedidosEmProducao} PEDIDOS EM PRODUÇÃO`;
@@ -1170,6 +1326,33 @@
                 const nomeExibicao = clienteIdentificado ? clienteIdentificado.nome : `Busca: #${identificacaoTermo}`;
                 if (txtUserNome) txtUserNome.innerText = `Olá, ${nomeExibicao}`;
 
+                if (dropdownContent) {
+                    dropdownContent.innerHTML = `
+                        <div class="p-2 space-y-1">
+                            <a href="javascript:void(0)" onclick="abrirModalCadastro()" class="px-3 py-2 hover:bg-purple-50 hover:text-purple-950 font-bold rounded flex items-center gap-2 transition-all text-purple-900">
+                                <i class="fa-solid fa-user-gear text-purple-700"></i> Minha conta / Meus Dados
+                            </a>
+                            <a href="javascript:void(0)" onclick="alternarAba('pedidos'); toggleUserDropdown();" class="px-3 py-2 hover:bg-purple-50 hover:text-purple-950 font-bold rounded flex items-center gap-2 transition-all">
+                                <i class="fa-solid fa-box text-slate-400"></i> Meus pedidos
+                            </a>
+                            <div class="px-3 py-2 font-bold text-slate-700 flex items-center justify-between border-t border-slate-100 mt-1 pt-2">
+                                <span>Créditos:</span>
+                                <strong class="text-emerald-600">R$ 0,00</strong>
+                            </div>
+                            <a href="javascript:void(0)" onclick="location.reload()" class="px-3 py-2 hover:bg-purple-50 hover:text-purple-950 font-bold rounded flex items-center gap-2 transition-all text-slate-600">
+                                <i class="fa-solid fa-rotate text-slate-400"></i> Atualizar Cache
+                            </a>
+                        </div>
+                        
+                        <div class="p-3 bg-slate-50 border-t border-slate-200 flex items-center justify-between">
+                            <span class="text-xs font-bold text-slate-600">Não é você?</span>
+                            <button onclick="sairEBuscarOutro()" class="bg-purple-900 hover:bg-purple-800 text-white p-2 rounded-lg transition-all" title="Sair da Conta">
+                                <i class="fa-solid fa-right-from-bracket text-xs"></i>
+                            </button>
+                        </div>
+                    `;
+                }
+
                 if (msgSemId) msgSemId.classList.add('hidden');
                 if (containerLista) {
                     containerLista.classList.remove('hidden');
@@ -1177,6 +1360,30 @@
                 }
             } else {
                 if (txtUserNome) txtUserNome.innerText = 'Olá, Entrar';
+
+                if (dropdownContent) {
+                    dropdownContent.innerHTML = `
+                        <div class="p-2 space-y-1">
+                            <a href="javascript:void(0)" onclick="abrirModalIdentificacao(); toggleUserDropdown();" class="px-3 py-2 hover:bg-purple-50 hover:text-purple-950 font-bold rounded flex items-center gap-2 transition-all text-purple-900">
+                                <i class="fa-solid fa-right-to-bracket text-purple-700"></i> Entrar (Já tenho conta)
+                            </a>
+                            <a href="javascript:void(0)" onclick="abrirModalCadastro()" class="px-3 py-2 hover:bg-amber-100 text-amber-950 font-black rounded flex items-center gap-2 transition-all bg-amber-50 border border-amber-200">
+                                <i class="fa-solid fa-user-plus text-amber-600"></i> Cadastrar-se (Criar conta)
+                            </a>
+                            <a href="javascript:void(0)" onclick="alternarAba('pedidos'); toggleUserDropdown();" class="px-3 py-2 hover:bg-purple-50 hover:text-purple-950 font-bold rounded flex items-center gap-2 transition-all">
+                                <i class="fa-solid fa-box text-slate-400"></i> Meus pedidos
+                            </a>
+                            <div class="px-3 py-2 font-bold text-slate-700 flex items-center justify-between border-t border-slate-100 mt-1 pt-2">
+                                <span>Créditos:</span>
+                                <strong class="text-emerald-600">R$ 0,00</strong>
+                            </div>
+                            <a href="javascript:void(0)" onclick="location.reload()" class="px-3 py-2 hover:bg-purple-50 hover:text-purple-950 font-bold rounded flex items-center gap-2 transition-all text-slate-600">
+                                <i class="fa-solid fa-rotate text-slate-400"></i> Atualizar Cache
+                            </a>
+                        </div>
+                    `;
+                }
+
                 if (msgSemId) msgSemId.classList.remove('hidden');
                 if (containerLista) containerLista.classList.add('hidden');
             }
