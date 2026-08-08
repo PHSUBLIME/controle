@@ -117,29 +117,41 @@
         </div>
 
         <!-- MENU DE NAVEGAÇÃO HORIZONTAL DE CATEGORIAS -->
-        <nav class="bg-purple-900 border-t border-purple-800/60 text-xs font-bold text-slate-100">
-            <div class="max-w-[1536px] mx-auto px-4 flex items-center justify-between overflow-x-auto no-scrollbar">
-                <div class="flex items-center whitespace-nowrap">
-                    <button onclick="alternarAba('catalogo')" id="tab-nav-catalogo" class="px-4 py-3 hover:bg-purple-800 text-amber-400 border-b-2 border-amber-400 transition-all flex items-center gap-1.5">
-                        <i class="fa-solid fa-store"></i> INÍCIO / CATÁLOGO
-                    </button>
-                    <button onclick="alternarAba('carrinho')" id="tab-nav-carrinho" class="px-4 py-3 hover:bg-purple-800 hover:text-amber-400 transition-all flex items-center gap-1.5">
-                        <i class="fa-solid fa-cart-shopping"></i> MEU CARRINHO
-                    </button>
-                    <button onclick="alternarAba('pedidos')" id="tab-nav-pedidos" class="px-4 py-3 hover:bg-purple-800 hover:text-amber-400 transition-all flex items-center gap-1.5">
-                        <i class="fa-solid fa-truck-ramp-box"></i> RASTREAR PEDIDO
-                    </button>
-                    <button onclick="alternarAba('recompra')" id="tab-nav-recompra" class="px-4 py-3 hover:bg-purple-800 hover:text-amber-400 transition-all flex items-center gap-1.5">
-                        <i class="fa-solid fa-rotate-right"></i> RECOMPRA RÁPIDA
-                    </button>
-                </div>
-                <div class="hidden lg:flex items-center gap-2 text-[11px] text-amber-300 font-semibold px-2">
-                    <a id="link-whats-nav" href="#" target="_blank" class="hover:underline flex items-center gap-1 text-emerald-400">
-                        <i class="fa-brands fa-whatsapp text-sm"></i> WhatsApp: (21) 98614-7221
-                    </a>
-                </div>
-            </div>
-        </nav>
+       <nav class="bg-purple-900 border-t border-purple-800/60 text-xs font-bold text-slate-100">
+    <div class="max-w-[1536px] mx-auto px-2 sm:px-4 flex flex-col lg:flex-row items-center justify-between">
+        
+        <!-- GRADE DE BOTÕES (4 COLUNAS COMPACTAS NO CELULAR) -->
+        <div class="grid grid-cols-4 lg:flex items-center w-full lg:w-auto text-[10px] sm:text-xs">
+            <button onclick="alternarAba('catalogo')" id="tab-nav-catalogo" class="px-1.5 sm:px-4 py-2.5 hover:bg-purple-800 text-amber-400 border-b-2 border-amber-400 transition-all flex flex-col sm:flex-row items-center justify-center gap-1 text-center">
+                <i class="fa-solid fa-store text-sm sm:text-xs"></i> 
+                <span class="truncate">CATÁLOGO</span>
+            </button>
+            
+            <button onclick="alternarAba('carrinho')" id="tab-nav-carrinho" class="px-1.5 sm:px-4 py-2.5 hover:bg-purple-800 hover:text-amber-400 transition-all flex flex-col sm:flex-row items-center justify-center gap-1 text-center">
+                <i class="fa-solid fa-cart-shopping text-sm sm:text-xs"></i> 
+                <span class="truncate">CARRINHO</span>
+            </button>
+            
+            <button onclick="alternarAba('pedidos')" id="tab-nav-pedidos" class="px-1.5 sm:px-4 py-2.5 hover:bg-purple-800 hover:text-amber-400 transition-all flex flex-col sm:flex-row items-center justify-center gap-1 text-center">
+                <i class="fa-solid fa-truck-ramp-box text-sm sm:text-xs"></i> 
+                <span class="truncate">RASTREAR</span>
+            </button>
+            
+            <button onclick="alternarAba('recompra')" id="tab-nav-recompra" class="px-1.5 sm:px-4 py-2.5 hover:bg-purple-800 hover:text-amber-400 transition-all flex flex-col sm:flex-row items-center justify-center gap-1 text-center">
+                <i class="fa-solid fa-rotate-right text-sm sm:text-xs"></i> 
+                <span class="truncate">RECOMPRA</span>
+            </button>
+        </div>
+
+        <!-- LINK DO WHATSAPP -->
+        <div class="hidden lg:flex items-center gap-2 text-[11px] text-amber-300 font-semibold px-2">
+            <a id="link-whats-nav" href="#" target="_blank" class="hover:underline flex items-center gap-1 text-emerald-400">
+                <i class="fa-brands fa-whatsapp text-sm"></i> WhatsApp: (21) 98614-7221
+            </a>
+        </div>
+
+    </div>
+</nav>
     </header>
 
     <!-- CONTEÚDO PRINCIPAL -->
