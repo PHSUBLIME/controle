@@ -80,7 +80,7 @@
             <!-- BARRA DE PESQUISA CENTRAL -->
             <div class="w-full md:w-1/3 relative">
                 <div class="flex items-center bg-white rounded-lg overflow-hidden shadow-inner border border-slate-300">
-                    <input type="text" id="input-busca-catalogo" onkeyup="renderizarCatalogo()" placeholder="Buscar produtos, lonas, cartões, adesivos..." class="w-full px-4 py-2.5 text-slate-800 text-xs sm:text-sm focus:outline-none">
+                    <input type="text" id="input-busca-catalogo" onkeyup="renderizarCatalogo()" placeholder="Buscar produtos, lonas, cartões, copos, DTF..." class="w-full px-4 py-2.5 text-slate-800 text-xs sm:text-sm focus:outline-none">
                     <button onclick="renderizarCatalogo()" class="bg-amber-400 hover:bg-amber-300 text-purple-950 px-4 py-2.5 font-bold transition-all flex items-center gap-1.5">
                         <i class="fa-solid fa-magnifying-glass"></i>
                     </button>
@@ -128,7 +128,7 @@
 
         </div>
 
-        <!-- MENU DE NAVEGAÇÃO COMPACTO (3 BOTÕES) -->
+        <!-- MENU DE NAVEGAÇÃO COMPACTO -->
         <nav class="bg-purple-900 border-t border-purple-800/60 text-xs font-bold text-slate-100">
             <div class="max-w-[1536px] mx-auto px-2 sm:px-4 flex items-center justify-between">
                 <div class="grid grid-cols-3 lg:flex items-center w-full lg:w-auto text-[10px] sm:text-xs">
@@ -162,7 +162,7 @@
             
             <!-- BANNERS PROMOCIONAIS -->
             <div class="space-y-4">
-                <!-- CARROSSEL DINÂMICO E DISCRETO -->
+                <!-- CARROSSEL DINÂMICO -->
                 <div class="max-w-4xl mx-auto relative w-full overflow-hidden rounded-xl shadow-md bg-purple-950 group">
                     <div id="banner-slider-container" class="flex transition-transform duration-500 ease-in-out w-full"></div>
 
@@ -208,7 +208,7 @@
             <!-- LAYOUT PRINCIPAL EM 2 COLUNAS -->
             <div class="flex flex-col lg:flex-row gap-6 pt-2">
                 
-                <!-- SIDEBAR ESQUERDA (VISÍVEL APENAS EM PC) -->
+                <!-- SIDEBAR ESQUERDA (DESKTOP) -->
                 <aside class="hidden lg:block w-full lg:w-64 shrink-0 space-y-4">
                     <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
                         <div class="bg-purple-950 text-white font-black text-xs px-4 py-3 uppercase tracking-wider flex items-center justify-between border-b border-purple-900">
@@ -222,22 +222,24 @@
                             <li><a href="javascript:void(0)" onclick="filtrarCategoria('cartao')" class="px-4 py-2.5 hover:bg-purple-50 hover:text-purple-900 flex items-center justify-between transition-all"><span>Cartão de Visita</span> <i class="fa-solid fa-chevron-right text-[10px] text-slate-400"></i></a></li>
                             <li><a href="javascript:void(0)" onclick="filtrarCategoria('dtf')" class="px-4 py-2.5 hover:bg-purple-50 hover:text-purple-900 flex items-center justify-between transition-all"><span>DTF Transfer Digital</span> <i class="fa-solid fa-chevron-right text-[10px] text-slate-400"></i></a></li>
                             <li><a href="javascript:void(0)" onclick="filtrarCategoria('folheto')" class="px-4 py-2.5 hover:bg-purple-50 hover:text-purple-900 flex items-center justify-between transition-all"><span>Folheto & Panfleto</span> <i class="fa-solid fa-chevron-right text-[10px] text-slate-400"></i></a></li>
+                            <li><a href="javascript:void(0)" onclick="filtrarCategoria('copo')" class="px-4 py-2.5 hover:bg-purple-50 hover:text-purple-900 flex items-center justify-between transition-all"><span>Copos, Taças & Baldes</span> <i class="fa-solid fa-chevron-right text-[10px] text-slate-400"></i></a></li>
                             <li><a href="javascript:void(0)" onclick="filtrarCategoria('wind')" class="px-4 py-2.5 hover:bg-purple-50 hover:text-purple-900 flex items-center justify-between transition-all"><span>Wind Banner</span> <i class="fa-solid fa-chevron-right text-[10px] text-slate-400"></i></a></li>
                         </ul>
                     </div>
 
                     <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
                         <div class="bg-purple-900 text-white font-black text-xs px-4 py-3 uppercase tracking-wider">
-                            TODOS OS PRODUTOS
+                            CATEGORIAS ESPECIAIS
                         </div>
                         <ul class="divide-y divide-slate-100 text-xs font-semibold text-slate-700">
                             <li><a href="javascript:void(0)" onclick="filtrarCategoria('')" class="px-4 py-2.5 hover:bg-purple-50 hover:text-purple-900 flex items-center justify-between"><span>Ver Todo o Catálogo</span> <i class="fa-solid fa-border-all text-[10px] text-slate-400"></i></a></li>
                             <li><a href="javascript:void(0)" onclick="filtrarCategoria('acrilico')" class="px-4 py-2.5 hover:bg-purple-50 hover:text-purple-900 flex items-center justify-between"><span>Acrílicos & Troféus</span> <i class="fa-solid fa-chevron-right text-[10px] text-slate-400"></i></a></li>
                             <li><a href="javascript:void(0)" onclick="filtrarCategoria('bloco')" class="px-4 py-2.5 hover:bg-purple-50 hover:text-purple-900 flex items-center justify-between"><span>Blocos & Talões</span> <i class="fa-solid fa-chevron-right text-[10px] text-slate-400"></i></a></li>
-                            <li><a href="javascript:void(0)" onclick="filtrarCategoria('copo')" class="px-4 py-2.5 hover:bg-purple-50 hover:text-purple-900 flex items-center justify-between"><span>Copos, Taças & Baldes</span> <i class="fa-solid fa-chevron-right text-[10px] text-slate-400"></i></a></li>
                             <li><a href="javascript:void(0)" onclick="filtrarCategoria('agenda')" class="px-4 py-2.5 hover:bg-purple-50 hover:text-purple-900 flex items-center justify-between"><span>Agendas & Planners</span> <i class="fa-solid fa-chevron-right text-[10px] text-slate-400"></i></a></li>
                             <li><a href="javascript:void(0)" onclick="filtrarCategoria('envelope')" class="px-4 py-2.5 hover:bg-purple-50 hover:text-purple-900 flex items-center justify-between"><span>Envelopes & Pastas</span> <i class="fa-solid fa-chevron-right text-[10px] text-slate-400"></i></a></li>
                             <li><a href="javascript:void(0)" onclick="filtrarCategoria('embalagem')" class="px-4 py-2.5 hover:bg-purple-50 hover:text-purple-900 flex items-center justify-between"><span>Embalagens & Sacos Kraft</span> <i class="fa-solid fa-chevron-right text-[10px] text-slate-400"></i></a></li>
+                            <li><a href="javascript:void(0)" onclick="filtrarCategoria('casa')" class="px-4 py-2.5 hover:bg-purple-50 hover:text-purple-900 flex items-center justify-between"><span>Casa, Decoração & Puffs</span> <i class="fa-solid fa-chevron-right text-[10px] text-slate-400"></i></a></li>
+                            <li><a href="javascript:void(0)" onclick="filtrarCategoria('eleitoral')" class="px-4 py-2.5 hover:bg-purple-50 hover:text-purple-900 flex items-center justify-between"><span>Eleitoral & Santinhos</span> <i class="fa-solid fa-chevron-right text-[10px] text-slate-400"></i></a></li>
                         </ul>
                     </div>
                 </aside>
@@ -304,8 +306,8 @@
 
                     <div class="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
                         <div class="flex border-b border-slate-200 bg-slate-100 text-xs font-bold">
-                            <button onclick="alternarAbaFrete('entrega')" id="tab-frete-entrega" class="px-5 py-2.5 bg-white border-t-2 border-purple-900 text-purple-950 font-black">Entrega</button>
-                            <button onclick="alternarAbaFrete('balcao')" id="tab-frete-balcao" class="px-5 py-2.5 text-slate-600 hover:text-purple-900">Retirada</button>
+                            <button onclick="alternarAbaFrete('entrega')" id="tab-frete-entrega" class="px-5 py-2.5 bg-white border-t-2 border-purple-900 text-purple-950 font-black">Entrega Própria / Correios</button>
+                            <button onclick="alternarAbaFrete('balcao')" id="tab-frete-balcao" class="px-5 py-2.5 text-slate-600 hover:text-purple-900">Retirada em Balcão</button>
                         </div>
                         <div class="p-4 overflow-x-auto">
                             <table class="w-full text-left text-xs">
@@ -432,7 +434,6 @@
                 </div>
             </div>
 
-            <!-- CONTAINER DA DESCRIÇÃO FORMATADA EM HTML -->
             <div id="txt-modal-descricao-html" class="conteudo-html-descricao max-h-72 overflow-y-auto pr-2 border-b border-slate-100 pb-4"></div>
 
             <div class="flex justify-end gap-3 pt-2">
@@ -446,7 +447,7 @@
         </div>
     </div>
 
-    <!-- MENU GAVETA DE CATEGORIAS (MOBILE) -->
+    <!-- MENU GAVETA MOBILE -->
     <div id="drawer-categorias" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-[999] hidden flex justify-start">
         <div class="bg-white w-80 max-w-[80vw] h-full shadow-2xl flex flex-col justify-between overflow-y-auto">
             <div>
@@ -469,6 +470,7 @@
                             <li><a href="javascript:void(0)" onclick="filtrarCategoria('cartao'); toggleMenuCategorias();" class="px-3 py-2.5 hover:bg-purple-50 block">Cartão de Visita</a></li>
                             <li><a href="javascript:void(0)" onclick="filtrarCategoria('dtf'); toggleMenuCategorias();" class="px-3 py-2.5 hover:bg-purple-50 block">DTF Transfer Digital</a></li>
                             <li><a href="javascript:void(0)" onclick="filtrarCategoria('folheto'); toggleMenuCategorias();" class="px-3 py-2.5 hover:bg-purple-50 block">Folheto & Panfleto</a></li>
+                            <li><a href="javascript:void(0)" onclick="filtrarCategoria('copo'); toggleMenuCategorias();" class="px-3 py-2.5 hover:bg-purple-50 block">Copos, Taças & Baldes</a></li>
                             <li><a href="javascript:void(0)" onclick="filtrarCategoria('wind'); toggleMenuCategorias();" class="px-3 py-2.5 hover:bg-purple-50 block">Wind Banner</a></li>
                         </ul>
                     </div>
@@ -479,7 +481,6 @@
                             <li><a href="javascript:void(0)" onclick="filtrarCategoria(''); toggleMenuCategorias();" class="px-3 py-2.5 hover:bg-purple-50 block font-bold text-purple-900">Ver Todo o Catálogo</a></li>
                             <li><a href="javascript:void(0)" onclick="filtrarCategoria('acrilico'); toggleMenuCategorias();" class="px-3 py-2.5 hover:bg-purple-50 block">Acrílicos & Troféus</a></li>
                             <li><a href="javascript:void(0)" onclick="filtrarCategoria('bloco'); toggleMenuCategorias();" class="px-3 py-2.5 hover:bg-purple-50 block">Blocos & Talões</a></li>
-                            <li><a href="javascript:void(0)" onclick="filtrarCategoria('copo'); toggleMenuCategorias();" class="px-3 py-2.5 hover:bg-purple-50 block">Copos, Taças & Baldes</a></li>
                             <li><a href="javascript:void(0)" onclick="filtrarCategoria('agenda'); toggleMenuCategorias();" class="px-3 py-2.5 hover:bg-purple-50 block">Agendas & Planners</a></li>
                             <li><a href="javascript:void(0)" onclick="filtrarCategoria('envelope'); toggleMenuCategorias();" class="px-3 py-2.5 hover:bg-purple-50 block">Envelopes & Pastas</a></li>
                             <li><a href="javascript:void(0)" onclick="filtrarCategoria('embalagem'); toggleMenuCategorias();" class="px-3 py-2.5 hover:bg-purple-50 block">Embalagens & Sacos Kraft</a></li>
@@ -915,7 +916,6 @@
             }
         }
 
-        // MODAL DE DETALHES DO PRODUTO (ABRIR E FECHAR)
         function abrirModalDetalhes(id) {
             const item = catalogoEstoque.find(p => p.id === id);
             if (!item) return;
@@ -1047,156 +1047,33 @@
 
         async function carregarEstoquePublico() {
             catalogoEstoque = [
-                { 
-                    id: 1, 
-                    nome: 'Cartão de Visita 250g | 4/0 | Verniz UV Frente', 
-                    categoria: 'Cartão', 
-                    precoVenda: 21.56, 
-                    ref: 'crt001', 
-                    producao: '24 horas',
-                    imagem: '20250911_1_20250721_1_GRAFICONAUTA---Mockup-Cartao-HotStamp-Graficonauta-4-0MOD-1-GRAFICONAUTA-copiar.png',
-                    descricao: `<p>Cartão de visita clássico em papel Couché 250g com verniz total brilhante na frente. Ótimo custo-benefício.</p>`
-                },
-                { 
-                    id: 2, 
-                    nome: 'Troféu de Acrílico Personalizado 15x21cm', 
-                    categoria: 'Acrílico', 
-                    precoVenda: 68.00, 
-                    ref: 'TROF004', 
-                    producao: '48 horas',
-                    imagem: '20250911_2_20190527_imprimir-cartao-de-visita-personalizado-em-pvc-transparente-03.jpg',
-                    descricao: `<p>Troféu em acrílico cristal de alta transparência com impressão colorida UV direta e base reforçada.</p>`
-                },
-                { 
-                    id: 3, 
-                    nome: 'Placa de Acrílico A4 (Espelhado Prata/Dourado/Branco)', 
-                    categoria: 'Acrílico', 
-                    precoVenda: 85.00, 
-                    ref: 'PACR001', 
-                    producao: '48 horas',
-                    imagem: '20250911_2_20190314_imprimir_placa_de_pvc_personalizada_adesivada_03.jpg',
-                    descricao: `<p>Placa decorativa e corporativa em acrílico 2mm ou 3mm com corte a laser perfeito e personalização exclusiva.</p>`
-                },
-                { 
-                    id: 4, 
-                    nome: 'Adesivo Vinil Brilho m² (Impressão Solvente)', 
-                    categoria: 'Adesivo', 
-                    precoVenda: 29.40, 
-                    ref: 'sign01', 
-                    producao: '24 horas',
-                    imagem: '20250911_0_20190313_imprimir_adesivo_personalizado.jpg',
-                    descricao: `<p>Adesivo em vinil brilho com impressão solvente impermeável, resistente ao sol e umidade.</p>`
-                },
-                { 
-                    id: 5, 
-                    nome: 'Adesivo Microperfurado Rolo para Vitrines e Veículos', 
-                    categoria: 'Adesivo', 
-                    precoVenda: 48.00, 
-                    ref: 'sign013', 
-                    producao: '24 horas',
-                    imagem: '20250922_2_adesivorolomicroperfurado.png',
-                    descricao: `<p>Adesivo perfurado para visão unilateral. Bloqueia o sol e mantém a privacidade mantendo a visão interna.</p>`
-                },
-                { 
-                    id: 6, 
-                    nome: 'Banner Lona Brilho 440g com Tubete e Corda', 
-                    categoria: 'Banner', 
-                    precoVenda: 27.44, 
-                    ref: 'sign22', 
-                    producao: '12 horas',
-                    imagem: '20250911_1_20190316_imprimir_lona_personalizada_440g_sem_acabamento_01.jpg',
-                    descricao: `<p>Lona reforçada de 440g com bastão de madeira, ponteiras plásticas e corda pronta para pendurar.</p>`
-                },
-                { 
-                    id: 7, 
-                    nome: 'Lona Backlight para Painel Iluminado', 
-                    categoria: 'Banner', 
-                    precoVenda: 58.00, 
-                    ref: 'sign28', 
-                    producao: '24 horas',
-                    imagem: '20250911_2_20190316_imprimir_lona_personalizada_backlight_sem_acabamento_03.jpg',
-                    descricao: `<p>Lona especial translúcida projetada para caixas de luz (totens e painéis iluminados).</p>`
-                },
-                { 
-                    id: 8, 
-                    nome: 'Camisa Polo Algodão 30.1 Penteado', 
-                    categoria: 'Camisa', 
-                    precoVenda: 45.00, 
-                    ref: 'cpolo01', 
-                    producao: '48 horas',
-                    imagem: '20250911_1_20190318_imprimir_banner_em_tecido_01.jpg',
-                    descricao: `<p>Camisa polo corporativa em algodão 30.1 de primeira linha, bordada ou estampa digital.</p>`
-                },
-                { 
-                    id: 9, 
-                    nome: 'Mochila Pirulito Promocional (Duas Placas 35x35cm)', 
-                    categoria: 'Mochila', 
-                    precoVenda: 89.00, 
-                    ref: 'mopi02', 
-                    producao: '48 horas',
-                    imagem: '20250911_2_20190315_imprimir_banner_personalizado_05.jpg',
-                    descricao: `<p>Mochila ergonômica leve para divulgação ambulante de eventos e campanhas promocionais.</p>`
-                },
-                { 
-                    id: 10, 
-                    nome: 'DTF Têxtil Transfer Digital | A3 (40x56cm)', 
-                    categoria: 'DTF', 
-                    precoVenda: 35.00, 
-                    ref: 'dtf01', 
-                    producao: '12 horas',
-                    imagem: '20250911_1_20221207_1_PLANNERCUTE-4X4.png',
-                    descricao: `<p>Estampa em filme DTF Têxtil pronta para ser prensada em tecidos de algodão, poliéster e jeans.</p>`
-                },
-                { 
-                    id: 11, 
-                    nome: 'Saco Kraft Delivery Personalizado 24x34x10cm', 
-                    categoria: 'Embalagem', 
-                    precoVenda: 85.00, 
-                    ref: 'emb056', 
-                    producao: '48 horas',
-                    imagem: '20250911_2_20190724_2_embalagem_saco_de_papel_personalizada_para_revendedor_grafico_03.jpg',
-                    descricao: `<p>Sacos kraft ecologicamente corretos para delivery de refeições e lojas.</p>`
-                },
-                { 
-                    id: 12, 
-                    nome: 'Box para Yakissoba e Culinária Oriental 500ml', 
-                    categoria: 'Embalagem', 
-                    precoVenda: 92.00, 
-                    ref: 'ykp005', 
-                    producao: '48 horas',
-                    imagem: '20250911_2_20190725_2_embalagem_rolinho_primavera_para_revendedor_grafico_06.jpg',
-                    descricao: `<p>Caixas térmicas estanhadas à prova de vazamentos para comida asiática.</p>`
-                },
-                { 
-                    id: 13, 
-                    nome: 'Bloco Autocopiativo 2 Vias (50x2)', 
-                    categoria: 'Bloco', 
-                    precoVenda: 35.00, 
-                    ref: 'blc010', 
-                    producao: '48 horas',
-                    imagem: '20250911_1_20221206_1_agenda-floral-miolo-4x4.png',
-                    descricao: `<p>Blocos de pedidos e notas autocopiativas em papel autocopia sem necessidade de carbono.</p>`
-                },
-                { 
-                    id: 14, 
-                    nome: 'Planner Comercial Financeiro Rosa', 
-                    categoria: 'Agenda', 
-                    precoVenda: 50.00, 
-                    ref: 'pln003', 
-                    producao: '48 horas',
-                    imagem: '20250911_2_20221207_2_PLANNERCOMERCIALFINANCEIROROSA-4X4.png',
-                    descricao: `<p>Planner capa dura de gestão e fluxo de caixa financeiro anual.</p>`
-                },
-                { 
-                    id: 15, 
-                    nome: 'Cartões Raspadinha Promocional 4x4', 
-                    categoria: 'Raspadinha', 
-                    precoVenda: 65.00, 
-                    ref: 'rasp002', 
-                    producao: '48 horas',
-                    imagem: '20250911_1_20250815_1_Thumb-Raspadinha-Coracao_4x4Thumb02.png',
-                    descricao: `<p>Raspadinha com tinta cinza especial para sorteios e cupons interativos.</p>`
-                }
+                { id: 1, nome: 'Cartão de Visita 250g | 4/0 | Verniz UV Frente', categoria: 'Cartão', precoVenda: 21.56, ref: 'crt001', producao: '24 horas', imagem: '20250916_0_cartao4,0.jpg', descricao: '<p>Cartão de visita clássico em papel Couché 250g com verniz brilho na frente.</p>' },
+                { id: 2, nome: 'Troféu de Acrílico Personalizado 15x21cm', categoria: 'Acrílico', precoVenda: 68.00, ref: 'TROF004', producao: '48 horas', imagem: '20250911_0_20241111_0_troféu-15x21cm-impressão-total.png', descricao: '<p>Troféu em acrílico cristal com impressão colorida UV direta e base reforçada.</p>' },
+                { id: 3, nome: 'Placa de Acrílico A4 (Espelhado / Prata / Dourado)', categoria: 'Acrílico', precoVenda: 85.00, ref: 'PACR001', producao: '48 horas', imagem: '20250911_0_20241126_0_PACR001.png', descricao: '<p>Placa decorativa/corporativa em acrílico com corte laser de precisão.</p>' },
+                { id: 4, nome: 'Adesivo Vinil Brilho m² (Impressão Solvente)', categoria: 'Adesivo', precoVenda: 29.40, ref: 'sign01', producao: '24 horas', imagem: '20250911_0_20190313_imprimir_adesivo_personalizado.jpg', descricao: '<p>Adesivo vinil brilho resistente à água e ao sol para fachadas e rótulos.</p>' },
+                { id: 5, nome: 'Adesivo Microperfurado para Vitrines e Veículos', categoria: 'Adesivo', precoVenda: 48.00, ref: 'sign013', producao: '24 horas', imagem: '20250922_0_adesivo8mm.png', descricao: '<p>Vinil microperfurado para aplicação em vidros com transmissão de luz.</p>' },
+                { id: 6, nome: 'Adesivo de Parede Decorativo M²', categoria: 'Adesivo', precoVenda: 39.90, ref: 'adv009', producao: '24 horas', imagem: '20250911_0_20190313_adesivo_de_parede_personalizado_05.jpg', descricao: '<p>Adesivo decorativo fosco lavável para ambientes internos e arquitetura.</p>' },
+                { id: 7, nome: 'Placa PVC Expandido Adesivada 2mm / 3mm', categoria: 'Acrílico', precoVenda: 55.00, ref: 'plc001', producao: '24 horas', imagem: '20250911_0_20190314_imprimir_placa_de_pvc_personalizada_adesivada_01.jpg', descricao: '<p>Sinalização interna e externa em chapa de PVC rígido de alta qualidade.</p>' },
+                { id: 8, nome: 'Banner Lona Brilho 440g com Tubete e Corda', categoria: 'Banner', precoVenda: 27.44, ref: 'sign22', producao: '12 horas', imagem: '20250911_0_20190315_imprimir_banner_personalizado_02.jpg', descricao: '<p>Banner impresso em lona 440g montado com bastões e cordão para pendurar.</p>' },
+                { id: 9, nome: 'Lona Backlight para Painéis Iluminados', categoria: 'Banner', precoVenda: 58.00, ref: 'sign28', producao: '24 horas', imagem: '20250911_0_20190629_0_20190316_imprimir_lona_personalizada_backlight_sem_acabamento_01.jpg', descricao: '<p>Lona translúcida especial para backlight e caixas de luz publicitárias.</p>' },
+                { id: 10, nome: 'Wind Banner Completo Modelo Faca / Pena / Vela', categoria: 'Wind', precoVenda: 107.80, ref: 'wind001', producao: '24 horas', imagem: '20250911_0_20220928_0_windbanner-mini-modelo-faca-1.png', descricao: '<p>Wind Banner promocional com haste de alumínio/fibra e base reforçada.</p>' },
+                { id: 11, nome: 'Camisa Algodão Premium 30.1 Penteado', categoria: 'Camisa', precoVenda: 45.00, ref: 'cms001', producao: '48 horas', imagem: '20250911_0_20230705_0_CAMISETA.png', descricao: '<p>Camiseta macia 100% algodão 30.1 penteado para uniformes e eventos.</p>' },
+                { id: 12, nome: 'Camisa Polo para Revenda / Corporativa', categoria: 'Camisa', precoVenda: 55.00, ref: 'cms008', producao: '48 horas', imagem: '20260202_0_20260120_0_camisa_polo_para_revenda_branca.png', descricao: '<p>Camisa gola polo piquet bordada ou estampa digital para empresas.</p>' },
+                { id: 13, nome: 'Moletom Canguru com Capuz Personalizado', categoria: 'Camisa', precoVenda: 110.00, ref: 'mlt001', producao: '48 horas', imagem: '20250911_0_20220903_0_MOLETOMCANGURUPRETO.png', descricao: '<p>Moletom flanelado quentinho com bolso frontal e estampa digital.</p>' },
+                { id: 14, nome: 'Avental Profissional com Bolsos (Oxford)', categoria: 'Camisa', precoVenda: 32.00, ref: 'avt001', producao: '24 horas', imagem: '20250911_0_20241021_0_AVENTALcombolso.png', descricao: '<p>Avental para chefs, garçons, churrasqueiros e eventos comerciais.</p>' },
+                { id: 15, nome: 'DTF Transfer Têxtil Por Metro (60cm)', categoria: 'DTF', precoVenda: 75.00, ref: 'dtf009', producao: '12 horas', imagem: '20260119_0_20260118_0_dtf_por_metro_para_revenda.png', descricao: '<p>Impressão DTF por metro contínuo pronta para termo-transferência.</p>' },
+                { id: 16, name: 'Saco Kraft Delivery Personalizado P/M/G', categoria: 'Embalagem', precoVenda: 85.00, ref: 'emb056', producao: '48 horas', imagem: '20250911_0_20200518_0_saco_personalizado_kraft_1cor.jpg', descricao: '<p>Embalagens e sacos de papel kraft para lanchonetes e delivery.</p>' },
+                { id: 17, nome: 'Box para Yakissoba Oriental (500ml / 850ml)', categoria: 'Embalagem', precoVenda: 92.00, ref: 'ykp005', producao: '48 horas', imagem: '20250911_0_20230120_0_BoxYakissobaOrigami500mlPACOTE.png', descricao: '<p>Caixas térmicas estanhadas à prova de vazamentos para culinária asiática.</p>' },
+                { id: 18, nome: 'Mochila Pirulito Promocional (Vários Tamanhos)', categoria: 'Mochila', precoVenda: 89.00, ref: 'mopi02', producao: '48 horas', imagem: '20260203_0_20251219_0_Mochila-Pirulito-Nauta-35x35.png', descricao: '<p>Mochila ergonômica leve para propaganda de rua com 2 placas rídicas.</p>' },
+                { id: 19, nome: 'Taça de Gin Personalizada (Sólida, Degradê ou Neon)', categoria: 'Copo', precoVenda: 14.50, ref: 'gin001', producao: '24 horas', imagem: '20250911_0_20220813_0_TaçaGinAmareloSólido.png', descricao: '<p>Taças acrílicas para festas, casamentos e eventos corporativos.</p>' },
+                { id: 20, nome: 'Copo Long Drink 350ml / Caldereta', categoria: 'Copo', precoVenda: 4.80, ref: 'ldr001', producao: '24 horas', imagem: '20250911_0_20220813_0_LongDrinkAmareloSólido.png', descricao: '<p>Copos acrílicos resistentes com personalização colorida ilimitada.</p>' },
+                { id: 21, nome: 'Balde de Gelo Alumínio 6L / 9L Personalizado', categoria: 'Copo', precoVenda: 45.00, ref: 'bdg001', producao: '24 horas', imagem: '20250911_0_20220813_0_AMARELOPERSO6L.png', descricao: '<p>Balde de alumínio pintura eletrostática e adesivo vinil impermeável.</p>' },
+                { id: 22, nome: 'Copo de Alumínio 300ml / 500ml / 800ml', categoria: 'Copo', precoVenda: 12.00, ref: 'cpa001', producao: '24 horas', imagem: '20250911_0_20220815_0_COPODEALUMINIO300MLBRANCA.png', descricao: '<p>Copos ecológicos de alumínio reutilizáveis para chopp e bebidas.</p>' },
+                { id: 23, nome: 'Agenda Capa Dura Floral 2026 / Escolar', categoria: 'Agenda', precoVenda: 48.00, ref: 'agd002', producao: '48 horas', imagem: '20250911_0_20240926_0_Agenda1DPP-Colorida.png', descricao: '<p>Agenda diária 1DPP/2DPP com miolo offset e encadernação wire-o.</p>' },
+                { id: 24, nome: 'Planner Comercial Financeiro / Semanal', categoria: 'Agenda', precoVenda: 52.00, ref: 'pln003', producao: '48 horas', imagem: '20250911_0_20221207_0_PLANNERCUTE-4X4.png', descricao: '<p>Planner de gestão pessoal e empresarial para controle financeiro.</p>' },
+                { id: 25, nome: 'Cartão Raspadinha Promocional', categoria: 'Raspadinha', precoVenda: 65.00, ref: 'rasp002', producao: '48 horas', imagem: '20250911_0_20250814_0_Thumb-Raspadinha-Circulo-4x4_Thumb01.png', descricao: '<p>Raspadinha com camada removível para sorteios e sorte no comércio.</p>' },
+                { id: 26, nome: 'Puff Baú Estampado Sublimado', categoria: 'Casa', precoVenda: 120.00, ref: 'puf001', producao: '72 horas', imagem: '20250911_0_20210401_0_PUFFBAÚ2.png', descricao: '<p>Puff baú dobrável reforçado com assento estofado e estampa digital.</p>' },
+                { id: 27, nome: 'Santinhos e Pragões Eleitorais (Milhar)', categoria: 'Eleitoral', precoVenda: 75.00, ref: 'snt001', producao: '24 horas', imagem: '20250911_0_20240520_0_SANTINHO.png', descricao: '<p>Santinhos promocionais em papel couchê em grande volume de impressão.</p>' }
             ];
             renderizarCatalogo();
         }
@@ -1223,7 +1100,7 @@
                 container.innerHTML = `
                     <div class="col-span-full bg-white border border-slate-200 p-8 rounded-xl text-center space-y-2 shadow-sm">
                         <i class="fa-solid fa-store text-3xl text-slate-300 block"></i>
-                        <h4 class="text-sm font-bold text-slate-800">Nenhum produto localizado.</h4>
+                        <h4 class="text-sm font-bold text-slate-800">Nenhum produto localizado para este filtro.</h4>
                     </div>
                 `;
                 return;
@@ -1249,7 +1126,7 @@
                         <div class="text-center"><strong class="text-purple-950 font-black text-lg">R$ ${preco.toFixed(2)}</strong></div>
                         <div class="grid grid-cols-2 gap-2">
                             <button onclick="abrirModalDetalhes(${item.id})" class="bg-purple-100 text-purple-900 hover:bg-purple-200 font-bold text-[11px] py-2.5 rounded-xl transition-all">
-                                VER DETALHES
+                                DETALHES
                             </button>
                             <button onclick="adicionarAoCarrinho(${item.id}, '${escapeAttr(item.nome)}', ${preco}, '${escapeAttr(item.ref || 'crt003')}', '${escapeAttr(item.producao || '24h')}')" class="btn-comprar text-white font-black text-[11px] py-2.5 rounded-xl shadow uppercase flex items-center justify-center gap-1">
                                 COMPRAR <i class="fa-solid fa-cart-shopping"></i>
@@ -1261,25 +1138,11 @@
             });
         }
 
-        // ========================================================
-        // CARROSSEL DE BANNERS RESPONSIVO E AUTOMÁTICO
-        // ========================================================
+        // CARROSSEL DE BANNERS AUTOMÁTICO
         const MEUS_BANNERS = [
-            {
-                imagem: '20260203_2_20260123_cinza.jpeg',
-                categoriaAoClicar: 'banner',
-                alt: 'PHSUBLIME Comunicação Visual Cinza'
-            },
-            {
-                imagem: '20260123_2_IMAGENSPARAOSITEPHSUBLIME.jpg',
-                categoriaAoClicar: 'cartao',
-                alt: 'Impressão Gráfica de Alta Qualidade'
-            },
-            {
-                imagem: '20260123_2_IMAGENSPARAOSITEPHSUBLIMEE.jpg',
-                categoriaAoClicar: 'adesivo',
-                alt: 'Adesivos e Banners Promocionais'
-            }
+            { imagem: '20260123_0_IMAGENSPARAOSITEPHSUBLIME.jpg', categoriaAoClicar: 'banner', alt: 'PHSUBLIME Banner Promocional' },
+            { imagem: '20260123_0_IMAGENSPARAOSITEPHSUBLIMEE.jpg', categoriaAoClicar: 'cartao', alt: 'Cartões e Gráfica' },
+            { imagem: '20260203_1_20260123_marinho.jpeg', categoriaAoClicar: 'adesivo', alt: 'Comunicação Visual' }
         ];
 
         let bannerAtualIndex = 0;
