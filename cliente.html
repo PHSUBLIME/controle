@@ -90,7 +90,7 @@
                     </button>
 
                     <!-- MENU DROPDOWN FLUTUANTE PROTEGIDO -->
-                    <div id="user-menu-dropdown" class="hidden absolute right-0 top-full mt-2 w-64 bg-white text-slate-800 rounded-xl shadow-2xl border border-slate-200 z-[100] overflow-hidden text-xs">
+                    <div id="user-menu-dropdown" class="hidden absolute right-0 top-full mt-2 w-64 max-w-[85vw] bg-white text-slate-800 rounded-xl shadow-2xl border border-slate-200 z-[100] overflow-hidden text-xs">
                         <div id="user-menu-dropdown-items">
                             <!-- Conteúdo renderizado via JS sem expor dados -->
                         </div>
@@ -150,23 +150,28 @@
             
             <!-- BANNERS PROMOCIONAIS -->
             <div class="space-y-4">
-                <div class="relative overflow-hidden bg-gradient-to-r from-purple-900 via-indigo-900 to-purple-950 text-white rounded-2xl shadow-xl p-8 border border-purple-700/60 flex flex-col lg:flex-row items-center justify-between gap-6">
-                    <div class="space-y-3 max-w-3xl">
-                        <h2 class="text-2xl sm:text-4xl font-black font-heading leading-tight text-white">
-                            IMPRESSÃO GRÁFICA DE ALTA QUALIDADE E COMUNICAÇÃO VISUAL!
-                        </h2>
-                        <p class="text-sm text-purple-200 leading-relaxed">
-                            Entregamos em todo Rio de Janeiro por meios próprios e Brasil por Mercado Livre, Shopee e Jadlog.
-                        </p>
-                        <div class="pt-2">
-                            <button onclick="filtrarCategoria('banner')" class="bg-amber-400 hover:bg-amber-300 text-purple-950 font-black px-6 py-3 rounded-xl shadow-lg text-xs uppercase tracking-wider transition-all">
-                                CLIQUE AQUI E CONFIRA NOSSAS OFERTAS
-                            </button>
-                        </div>
-                    </div>
-                </div>
+                <!-- BANNER PROMOCIONAL (CARROSSEL DINÂMICO) -->
+<div class="relative w-full overflow-hidden rounded-2xl shadow-xl bg-purple-950 group">
+    <!-- CONTAINER ONDE A IMAGEM VAI APARECER -->
+    <div id="banner-slider-container" class="flex transition-transform duration-500 ease-in-out w-full">
+        <!-- Imagens renderizadas via JavaScript -->
+    </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <!-- BOTÃO ANTERIOR -->
+    <button onclick="mudarBanner(-1)" class="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-amber-400 hover:text-purple-950 text-white w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center transition-all z-10 opacity-80 group-hover:opacity-100">
+        <i class="fa-solid fa-chevron-left text-xs sm:text-sm"></i>
+    </button>
+    
+    <!-- BOTÃO PRÓXIMO -->
+    <button onclick="mudarBanner(1)" class="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-amber-400 hover:text-purple-950 text-white w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center transition-all z-10 opacity-80 group-hover:opacity-100">
+        <i class="fa-solid fa-chevron-right text-xs sm:text-sm"></i>
+    </button>
+
+   <!-- BOLINHAS INDICADORAS -->
+    <div id="banner-dots" class="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-2 z-10"></div>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div class="bg-gradient-to-r from-blue-900 to-indigo-900 text-white p-4 rounded-xl border border-blue-700 shadow-md flex items-center justify-between">
                         <div>
                             <strong class="font-black text-sm block uppercase text-amber-300">INDIQUE E GANHE!</strong>
@@ -1290,35 +1295,37 @@
         }
 
         async function inicializarPortal() {
-            const linkWhats = `https://api.whatsapp.com/send?phone=${WHATSAPP_ATENDIMENTO}&text=${encodeURIComponent("Olá, equipe PHSUBLIME! Gostaria de tirar uma dúvida.")}`;
-            if(document.getElementById('link-whats-nav')) document.getElementById('link-whats-nav').href = linkWhats;
-            if(document.getElementById('link-whats-rodape')) document.getElementById('link-whats-rodape').href = linkWhats;
+    renderizarBanners(); // <-- ADICIONE ESTA LINHA AQUI
 
-            const params = new URLSearchParams(window.location.search);
-            const paramPedido = params.get('pedido');
-            const paramWhats = params.get('whats') || params.get('whatsapp') || params.get('tel');
-            const paramCpf = params.get('cpf') || params.get('cnpj');
+    const linkWhats = `https://api.whatsapp.com/send?phone=${WHATSAPP_ATENDIMENTO}&text=${encodeURIComponent("Olá, equipe PHSUBLIME! Gostaria de tirar uma dúvida.")}`;
+    if(document.getElementById('link-whats-nav')) document.getElementById('link-whats-nav').href = linkWhats;
+    if(document.getElementById('link-whats-rodape')) document.getElementById('link-whats-rodape').href = linkWhats;
 
-            let termoParaBuscar = paramPedido || paramWhats || paramCpf;
+    const params = new URLSearchParams(window.location.search);
+    const paramPedido = params.get('pedido');
+    const paramWhats = params.get('whats') || params.get('whatsapp') || params.get('tel');
+    const paramCpf = params.get('cpf') || params.get('cnpj');
 
-            if (!termoParaBuscar) {
-                termoParaBuscar = localStorage.getItem('phsublime_cliente_termo');
-            }
+    let termoParaBuscar = paramPedido || paramWhats || paramCpf;
 
-            const dadosSalvos = localStorage.getItem('phsublime_cliente_dados');
-            if (dadosSalvos) {
-                try { clienteIdentificado = JSON.parse(dadosSalvos); } catch(e){}
-            }
+    if (!termoParaBuscar) {
+        termoParaBuscar = localStorage.getItem('phsublime_cliente_termo');
+    }
 
-            if (termoParaBuscar) {
-                await buscarPedidosECliente(termoParaBuscar);
-            } else {
-                atualizarHeaderELista();
-            }
+    const dadosSalvos = localStorage.getItem('phsublime_cliente_dados');
+    if (dadosSalvos) {
+        try { clienteIdentificado = JSON.parse(dadosSalvos); } catch(e){}
+    }
 
-            atualizarBadgeCarrinho();
-            carregarEstoquePublico();
-        }
+    if (termoParaBuscar) {
+        await buscarPedidosECliente(termoParaBuscar);
+    } else {
+        atualizarHeaderELista();
+    }
+
+    atualizarBadgeCarrinho();
+    carregarEstoquePublico();
+}
 
         async function confirmarIdentificacao(e) {
             e.preventDefault();
@@ -1708,7 +1715,91 @@
                 container.appendChild(card);
             });
         }
+// ========================================================
+// BANNERS DA LOJA (Altere as URLs das imagens abaixo)
+// ========================================================
+const MEUS_BANNERS = [
+    {
+        imagem: 'https://images.unsplash.com/photo-1562577309-4932fdd64cd1?auto=format&fit=crop&w=1200&q=80',
+        categoriaAoClicar: 'banner',
+        alt: 'Banner Impressão Gráfica'
+    },
+    {
+        imagem: 'https://images.unsplash.com/photo-1626785774573-4b799315345d?auto=format&fit=crop&w=1200&q=80',
+        categoriaAoClicar: 'cartao',
+        alt: 'Cartões e Personalizados'
+    }
+];
 
+let bannerAtualIndex = 0;
+let timerAutoSlide = null;
+
+function renderizarBanners() {
+    const container = document.getElementById('banner-slider-container');
+    const dotsContainer = document.getElementById('banner-dots');
+    
+    if (!container || !dotsContainer) return;
+
+    container.innerHTML = '';
+    dotsContainer.innerHTML = '';
+
+    MEUS_BANNERS.forEach((b, idx) => {
+        const slide = document.createElement('div');
+        slide.className = 'min-w-full cursor-pointer relative';
+        slide.onclick = () => filtrarCategoria(b.categoriaAoClicar || '');
+
+        slide.innerHTML = `
+            <img src="${b.imagem}" alt="${escapeAttr(b.alt)}" class="w-full h-auto max-h-[220px] sm:max-h-[380px] object-cover rounded-2xl transition-all duration-300">
+        `;
+        container.appendChild(slide);
+
+        const dot = document.createElement('button');
+        dot.className = `w-2.5 h-2.5 rounded-full transition-all ${idx === 0 ? 'bg-amber-400 w-6' : 'bg-white/60 hover:bg-white'}`;
+        dot.onclick = (e) => {
+            e.stopPropagation();
+            irParaBanner(idx);
+        };
+        dotsContainer.appendChild(dot);
+    });
+
+    iniciarAutoSlide();
+}
+
+function mudarBanner(direcao) {
+    bannerAtualIndex += direcao;
+    if (bannerAtualIndex >= MEUS_BANNERS.length) bannerAtualIndex = 0;
+    if (bannerAtualIndex < 0) bannerAtualIndex = MEUS_BANNERS.length - 1;
+    atualizarPosicaoBanner();
+}
+
+function irParaBanner(index) {
+    bannerAtualIndex = index;
+    atualizarPosicaoBanner();
+}
+
+function atualizarPosicaoBanner() {
+    const container = document.getElementById('banner-slider-container');
+    const dots = document.getElementById('banner-dots')?.children;
+    
+    if (container) {
+        container.style.transform = `translateX(-${bannerAtualIndex * 100}%)`;
+    }
+
+    if (dots) {
+        Array.from(dots).forEach((dot, idx) => {
+            dot.className = idx === bannerAtualIndex 
+                ? 'w-6 h-2.5 bg-amber-400 rounded-full transition-all' 
+                : 'w-2.5 h-2.5 bg-white/60 hover:bg-white rounded-full transition-all';
+        });
+    }
+
+    iniciarAutoSlide();
+}
+
+function iniciarAutoSlide() {
+    if (timerAutoSlide) clearInterval(timerAutoSlide);
+    timerAutoSlide = setInterval(() => mudarBanner(1), 5000);
+}
         window.onload = inicializarPortal;
     </script>
 </body>
