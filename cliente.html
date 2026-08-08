@@ -44,6 +44,15 @@
 
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Estilização para o conteúdo HTML injetado da descrição */
+        .conteudo-html-descricao h2 { font-size: 1.1rem; font-weight: 800; color: #3b0764; margin-top: 1rem; margin-bottom: 0.5rem; }
+        .conteudo-html-descricao h3 { font-size: 0.95rem; font-weight: 700; color: #581c87; margin-top: 0.75rem; margin-bottom: 0.25rem; }
+        .conteudo-html-descricao p { font-size: 0.8rem; color: #475569; line-height: 1.5; margin-bottom: 0.5rem; }
+        .conteudo-html-descricao ul { list-style-type: disc; padding-left: 1.25rem; margin-bottom: 0.75rem; font-size: 0.8rem; color: #475569; }
+        .conteudo-html-descricao table { width: 100%; border-collapse: collapse; margin: 0.75rem 0; font-size: 0.75rem; }
+        .conteudo-html-descricao th, .conteudo-html-descricao td { border: 1px solid #e2e8f0; padding: 6px 10px; text-align: left; }
+        .conteudo-html-descricao th { background-color: #f3e8ff; color: #3b0764; font-weight: 800; }
     </style>
 </head>
 <body class="bg-slate-50 min-h-screen flex flex-col justify-between selection:bg-purple-200 selection:text-purple-900">
@@ -64,7 +73,6 @@
                             GRÁFICA
                         </span>
                     </div>
-                    <!-- NOVO NOME SOLICITADO -->
                     <span class="text-xs text-purple-200 font-medium block">SUA GRÁFICA ONLINE DIGITAL</span>
                 </div>
             </a>
@@ -156,9 +164,7 @@
             <div class="space-y-4">
                 <!-- CARROSSEL DINÂMICO E DISCRETO -->
                 <div class="max-w-4xl mx-auto relative w-full overflow-hidden rounded-xl shadow-md bg-purple-950 group">
-                    <div id="banner-slider-container" class="flex transition-transform duration-500 ease-in-out w-full">
-                        <!-- Imagens via JS -->
-                    </div>
+                    <div id="banner-slider-container" class="flex transition-transform duration-500 ease-in-out w-full"></div>
 
                     <button onclick="mudarBanner(-1)" class="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-amber-400 hover:text-purple-950 text-white w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center transition-all z-10 opacity-80 group-hover:opacity-100">
                         <i class="fa-solid fa-chevron-left text-xs sm:text-sm"></i>
@@ -199,10 +205,10 @@
                 </div>
             </div>
 
-            <!-- LAYOUT PRINCIPAL EM 2 COLUNAS (SIDEBAR PC + GRID PRODUTOS) -->
+            <!-- LAYOUT PRINCIPAL EM 2 COLUNAS -->
             <div class="flex flex-col lg:flex-row gap-6 pt-2">
                 
-                <!-- SIDEBAR ESQUERDA (APENAS PC) -->
+                <!-- SIDEBAR ESQUERDA (VISÍVEL APENAS EM PC) -->
                 <aside class="hidden lg:block w-full lg:w-64 shrink-0 space-y-4">
                     <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
                         <div class="bg-purple-950 text-white font-black text-xs px-4 py-3 uppercase tracking-wider flex items-center justify-between border-b border-purple-900">
@@ -381,6 +387,42 @@
         </div>
     </footer>
 
+    <!-- MODAL DE DETALHES DO PRODUTO (NOVO - COM DESCRIÇÃO COMPLETA) -->
+    <div id="modal-detalhes-produto" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-[998] hidden flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white rounded-2xl max-w-2xl w-full p-6 space-y-5 shadow-2xl relative border border-purple-200 my-8">
+            <button onclick="fecharModalDetalhes()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-700 text-xl font-bold"><i class="fa-solid fa-xmark"></i></button>
+
+            <div class="flex flex-col sm:flex-row gap-5 items-start border-b border-slate-100 pb-4">
+                <div class="w-full sm:w-48 h-44 bg-slate-100 border border-slate-200 rounded-xl flex items-center justify-center shrink-0">
+                    <i class="fa-solid fa-box-open text-5xl text-purple-900/40"></i>
+                </div>
+                <div class="space-y-2">
+                    <span id="txt-modal-categoria" class="bg-purple-100 text-purple-950 font-black text-[10px] px-2.5 py-1 rounded uppercase tracking-wider inline-block">PRODUTO</span>
+                    <h3 id="txt-modal-titulo" class="text-lg font-black text-purple-950 font-heading leading-snug">Nome do Produto</h3>
+                    <div class="flex items-center gap-3">
+                        <strong id="txt-modal-preco" class="text-emerald-600 font-black text-xl">R$ 0,00</strong>
+                        <span id="txt-modal-ref" class="text-xs text-slate-500 font-semibold bg-slate-100 px-2 py-0.5 rounded">Ref: ---</span>
+                    </div>
+                    <p id="txt-modal-producao" class="text-xs text-purple-900 font-bold"><i class="fa-regular fa-clock mr-1"></i> Produção: 24 horas</p>
+                </div>
+            </div>
+
+            <!-- CONTAINER DA DESCRIÇÃO FORMATADA EM HTML -->
+            <div id="txt-modal-descricao-html" class="conteudo-html-descricao max-h-72 overflow-y-auto pr-2 border-b border-slate-100 pb-4">
+                <!-- Injetado dinamicamente via JS -->
+            </div>
+
+            <div class="flex justify-end gap-3 pt-2">
+                <button onclick="fecharModalDetalhes()" class="px-5 py-2.5 bg-slate-200 text-slate-800 font-bold rounded-xl text-xs hover:bg-slate-300 transition-all">
+                    Fechar
+                </button>
+                <button id="btn-modal-adicionar-carrinho" onclick="" class="btn-comprar px-6 py-2.5 text-white font-black rounded-xl text-xs shadow-md transition-all flex items-center gap-2 uppercase">
+                    COMPRAR AGORA <i class="fa-solid fa-cart-shopping"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- MENU GAVETA DE CATEGORIAS (MOBILE - 3 BARRINHAS) -->
     <div id="drawer-categorias" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-[999] hidden flex justify-start">
         <div class="bg-white w-80 max-w-[80vw] h-full shadow-2xl flex flex-col justify-between overflow-y-auto">
@@ -460,7 +502,7 @@
         </div>
     </div>
 
-    <!-- TOAST -->
+    <!-- TOAST DE NOTIFICAÇÃO -->
     <div id="toast" class="fixed bottom-5 right-5 bg-slate-900 text-white border border-amber-400 px-5 py-3.5 rounded-xl shadow-2xl transform translate-y-20 opacity-0 transition-all duration-300 flex items-center gap-3 z-[1001]">
         <i id="toast-icon" class="fa-solid fa-circle-check text-amber-400 text-lg"></i>
         <span id="toast-message" class="font-medium text-sm">Ação realizada!</span>
@@ -503,14 +545,16 @@
             const icon = document.getElementById('toast-icon');
             const msgEl = document.getElementById('toast-message');
 
-            msgEl.innerText = msg;
-            toast.classList.remove('translate-y-20', 'opacity-0');
-            setTimeout(() => toast.classList.add('translate-y-20', 'opacity-0'), 3500);
+            if (msgEl) msgEl.innerText = msg;
+            if (toast) {
+                toast.classList.remove('translate-y-20', 'opacity-0');
+                setTimeout(() => toast.classList.add('translate-y-20', 'opacity-0'), 3500);
+            }
         }
 
         function copiarChavePix() {
             navigator.clipboard.writeText(CHAVE_PIX_OFICIAL).then(() => {
-                mostrarToast("Chave Pix CNPJ copiada!");
+                mostrarToast("Chave Pix CNPJ copiada com sucesso!");
             });
         }
 
@@ -563,12 +607,42 @@
                 carrinho.push({ id: id || Date.now(), nome, ref, specs: `Produção: ${producao}`, preco: parseFloat(preco), qtd: 1 });
             }
             salvarCarrinho();
-            document.getElementById('txt-nome-item-adicionado').innerText = `${nome} - R$ ${parseFloat(preco).toFixed(2)}`;
+            
+            const txtMsg = document.getElementById('txt-nome-item-adicionado');
+            if (txtMsg) txtMsg.innerText = `${nome} - R$ ${parseFloat(preco).toFixed(2)}`;
             document.getElementById('modal-pos-adicao')?.classList.remove('hidden');
         }
 
         function fecharModalPosAdicao() { document.getElementById('modal-pos-adicao')?.classList.add('hidden'); }
         function irParaCarrinhoApartirDoModal() { fecharModalPosAdicao(); alternarAba('carrinho'); }
+
+        // MODAL DE DETALHES DO PRODUTO (ABRIR E FECHAR)
+        function abrirModalDetalhes(id) {
+            const item = catalogoEstoque.find(p => p.id === id);
+            if (!item) return;
+
+            document.getElementById('txt-modal-titulo').innerText = item.nome;
+            document.getElementById('txt-modal-categoria').innerText = item.categoria || 'PRODUTO';
+            document.getElementById('txt-modal-preco').innerText = `R$ ${parseFloat(item.precoVenda).toFixed(2)}`;
+            document.getElementById('txt-modal-ref').innerText = `Ref: ${item.ref || 'crt003'}`;
+            document.getElementById('txt-modal-producao').innerHTML = `<i class="fa-regular fa-clock mr-1"></i> Produção: ${item.producao || '24 horas'}`;
+            
+            // Injeta a descrição HTML formatada
+            document.getElementById('txt-modal-descricao-html').innerHTML = item.descricao || '<p>Descrição em atualização. Entre em contato para tirarmos todas as suas dúvidas sobre este material!</p>';
+
+            // Configura o botão de comprar dentro do modal
+            const btnComprarModal = document.getElementById('btn-modal-adicionar-carrinho');
+            btnComprarModal.onclick = () => {
+                adicionarAoCarrinho(item.id, item.nome, item.precoVenda, item.ref, item.producao);
+                fecharModalDetalhes();
+            };
+
+            document.getElementById('modal-detalhes-produto')?.classList.remove('hidden');
+        }
+
+        function fecharModalDetalhes() {
+            document.getElementById('modal-detalhes-produto')?.classList.add('hidden');
+        }
 
         function renderizarPaginaCarrinho() {
             const boxVazio = document.getElementById('carrinho-vazio-msg');
@@ -627,20 +701,136 @@
         }
 
         async function carregarEstoquePublico() {
-            // PRODUTOS ADICIONADOS DIRETO DA SUA LISTA
+            // BASE DE DADOS COMPLETA DE PRODUTOS COM SUAS DESCRIÇÕES FORMATADAS EM HTML
             catalogoEstoque = [
-                { id: 1, nome: 'Cartão de Visita 250g | 4/4 | Verniz UV', categoria: 'Cartão', precoVenda: 21.56, ref: 'crt003', producao: '24 horas' },
-                { id: 2, nome: 'Adesivo Vinil Brilho m² com Corte Contorno', categoria: 'Adesivo', precoVenda: 69.90, ref: 'adv001', producao: '24 horas' },
-                { id: 3, nome: 'Banner Lona Brilho 440g com Tubete e Cordinha', categoria: 'Banner', precoVenda: 27.44, ref: 'sign22', producao: '12 horas' },
-                { id: 4, nome: 'DTF Têxtil Transfer Digital | 40x56cm (A3)', categoria: 'DTF', precoVenda: 35.00, ref: 'dtf001', producao: '12 horas' },
-                { id: 5, nome: 'Camisa Com Manga Sublimada Total Adulto', categoria: 'Camisa', precoVenda: 24.50, ref: 'cam002', producao: '72 horas' },
-                { id: 6, nome: 'Folheto 80g | 10x14cm | 4/0 (1000 unidades)', categoria: 'Folheto', precoVenda: 72.52, ref: 'flt001', producao: '24 horas' },
-                { id: 7, nome: 'Wind Banner Completo Modelo Faca | 260x70cm', categoria: 'Wind', precoVenda: 107.80, ref: 'sub007', producao: '12 horas' },
-                { id: 8, nome: 'Caneca de Cerâmica Branca 325ml Personalizada', categoria: 'Caneca', precoVenda: 28.00, ref: 'cnc001', producao: '24 horas' },
-                { id: 9, nome: 'Envelope 11x23cm Offset 90g Personalizado', categoria: 'Envelope', precoVenda: 45.00, ref: 'env001', producao: '48 horas' },
-                { id: 10, nome: 'Saco Kraft Delivery G (24x34x10cm) Personalizado', categoria: 'Embalagem', precoVenda: 85.00, ref: 'emb001', producao: '48 horas' },
-                { id: 11, nome: 'Copo Long Drink 350ml Personalizado', categoria: 'Brindes', precoVenda: 3.50, ref: 'cop001', producao: '48 horas' },
-                { id: 12, nome: 'Taça de Gin 650ml Degradê Personalizada', categoria: 'Brindes', precoVenda: 8.90, ref: 'tac001', producao: '48 horas' }
+                { 
+                    id: 1, 
+                    nome: 'Cartão de Visita 250g | 4/0 | Verniz UV Brilho', 
+                    categoria: 'Cartão', 
+                    precoVenda: 21.56, 
+                    ref: 'crt003', 
+                    producao: '24 horas',
+                    descricao: `<p>Cartão de visita em papel Couché 250g, impressão colorida na frente com acabamento em Verniz UV brilho. Design sofisticado, durável e ideal para destacar sua marca com profissionalismo.</p>`
+                },
+                { 
+                    id: 2, 
+                    nome: 'Abadá Personalizado (Sublimação Total em Helanca)', 
+                    categoria: 'Camisa', 
+                    precoVenda: 24.50, 
+                    ref: 'abd001', 
+                    producao: '48 horas',
+                    descricao: `<h2>🟣 DESCRIÇÃO DO PRODUTO – ABADÁ PERSONALIZADO | PHSUBLIME</h2>
+                    <h3>🎉 SOBRE O PRODUTO</h3>
+                    <p>Produzimos abadás com <strong>impressão total em tecido helanca</strong>, um material leve, confortável e ideal para eventos, festas e ações promocionais.</p>
+                    <p>Utilizamos um avançado sistema de sublimação por calandragem, que permite excelente definição de cores e alta durabilidade.</p>
+                    <h2>📏 TABELA DE MEDIDAS</h2>
+                    <table>
+                        <thead><tr><th>Tamanho</th><th>Largura (Peito)</th><th>Altura</th></tr></thead>
+                        <tbody>
+                            <tr><td>PP</td><td>46 cm</td><td>64 cm</td></tr>
+                            <tr><td>P</td><td>48 cm</td><td>66 cm</td></tr>
+                            <tr><td>M</td><td>50 cm</td><td>68 cm</td></tr>
+                            <tr><td>G</td><td>52 cm</td><td>70 cm</td></tr>
+                            <tr><td>GG</td><td>54 cm</td><td>72 cm</td></tr>
+                        </tbody>
+                    </table>`
+                },
+                { 
+                    id: 3, 
+                    nome: 'Adesivo Vinil Brilho 0,10 m²', 
+                    categoria: 'Adesivo', 
+                    precoVenda: 29.40, 
+                    ref: 'adv001', 
+                    producao: '24 horas',
+                    descricao: `<p><strong>Adesivo Brilho Vinil 0,10 M²</strong><br>Adesivo em vinil brilho, impressão colorida frente (4x0), durável e com cores vivas. Ideal para comunicação visual, decoração e personalização de superfícies.</p>
+                    <p>Comercializado por metro quadrado (m²). Largura máxima de mídia 1,49m.</p>`
+                },
+                { 
+                    id: 4, 
+                    nome: 'Adesivo Vinil Fosco 0,10 m²', 
+                    categoria: 'Adesivo', 
+                    precoVenda: 29.40, 
+                    ref: 'adv002', 
+                    producao: '24 horas',
+                    descricao: `<h2>🖨️ SOBRE O PRODUTO – ADESIVO VINIL FOSCO</h2>
+                    <p>Impressão digital em alta resolução utilizando tinta solvente, garantindo excelente durabilidade e acabamento fosco elegante que reduz o reflexo da luz direta.</p>`
+                },
+                { 
+                    id: 5, 
+                    nome: 'Banner Lona Fosca 240g | 40x60 cm (c/ Tubete)', 
+                    categoria: 'Banner', 
+                    precoVenda: 27.44, 
+                    ref: 'sign22', 
+                    producao: '12 horas',
+                    descricao: `<h3>SOBRE O PRODUTO</h3>
+                    <p>O Banner em Lona Fosca 240g da PHSUBLIME é ideal para quem busca uma solução prática e econômica. Acompanha acabamento completo com tubete de PVC, ponteiras plásticas e corda para pendurar.</p>`
+                },
+                { 
+                    id: 6, 
+                    nome: 'Mochila Pirulito Promocional (c/ Duas Placas PS 1mm)', 
+                    categoria: 'Mochila', 
+                    precoVenda: 85.00, 
+                    ref: 'mch001', 
+                    producao: '48 horas',
+                    descricao: `<h2>Sobre a Mochila Pirulito</h2>
+                    <p>Suporte móvel de comunicação visual para ações de marketing em ambientes externos e internos. Acompanha mochila em TNT/nylon, tubete de 1,50m e 2 placas rígidas de PS 1mm com impressão 4/0.</p>`
+                },
+                { 
+                    id: 7, 
+                    nome: 'DTF Têxtil Transfer Digital | 40x56cm (A3)', 
+                    categoria: 'DTF', 
+                    precoVenda: 35.00, 
+                    ref: 'dtf001', 
+                    producao: '12 horas',
+                    descricao: `<p>Impressão DTF Têxtil de alta qualidade pronta para prensagem em algodão, poliéster, jeans e tecidos diversos.</p>`
+                },
+                { 
+                    id: 8, 
+                    nome: 'Folheto 80g | 10x14cm | 4/0 (1000un)', 
+                    categoria: 'Folheto', 
+                    precoVenda: 72.52, 
+                    ref: 'flt001', 
+                    producao: '24 horas',
+                    descricao: `<p>O Folheto Couchê 80g é uma opção prática e econômica para ações de divulgação em grande volume. Impressão colorida e alta definição.</p>`
+                },
+                { 
+                    id: 9, 
+                    nome: 'Wind Banner Completo Modelo Faca | 260x70cm', 
+                    categoria: 'Wind', 
+                    precoVenda: 107.80, 
+                    ref: 'sub007', 
+                    producao: '12 horas',
+                    descricao: `<p>Wind Banner completo em tecido Oxford com impressão sublimática de alta resolução. Acompanha haste flexível e base de sustentação.</p>`
+                },
+                { 
+                    id: 10, 
+                    nome: 'Caneca de Cerâmica Branca 325ml Personalizada', 
+                    categoria: 'Caneca', 
+                    precoVenda: 28.00, 
+                    ref: 'cnc001', 
+                    producao: '24 horas',
+                    descricao: `<h2>Caneca Personalizada PHSUBLIME</h2>
+                    <p>Produzida em cerâmica de alta qualidade com personalização sublimática total. Resistente ao uso diário e micro-ondas.</p>`
+                },
+                { 
+                    id: 11, 
+                    nome: 'Envelope 11x23cm Offset 90g Personalizado', 
+                    categoria: 'Envelope', 
+                    precoVenda: 45.00, 
+                    ref: 'env001', 
+                    producao: '48 horas',
+                    descricao: `<p>Envelope para correspondência corporativa em papel Offset 90g com impressão personalizada da sua marca.</p>`
+                },
+                { 
+                    id: 12, 
+                    nome: 'Criação de Arte Personalizada', 
+                    categoria: 'Arte', 
+                    precoVenda: 30.00, 
+                    ref: 'art001', 
+                    producao: '48 horas',
+                    descricao: `<h2>🎨 Criação de Arte Personalizada – PHSublime</h2>
+                    <p>Desenvolvemos artes exclusivas para cartões, banners, adesivos, camisas, folders e redes sociais. Arquivo entregue em alta resolução.</p>`
+                }
             ];
             renderizarCatalogo();
         }
@@ -668,16 +858,21 @@
                 card.className = "bg-white border border-slate-200 rounded-xl p-5 space-y-4 shadow-sm hover:shadow-md transition-all flex flex-col justify-between";
                 card.innerHTML = `
                     <div class="space-y-3">
-                        <div class="w-full h-44 bg-slate-100 rounded-xl border border-slate-200 flex flex-col items-center justify-center text-slate-400 p-3">
-                            <i class="fa-solid fa-box-open text-4xl text-slate-300"></i>
+                        <div class="w-full h-44 bg-slate-100 rounded-xl border border-slate-200 flex flex-col items-center justify-center text-slate-400 p-3 cursor-pointer" onclick="abrirModalDetalhes(${item.id})">
+                            <i class="fa-solid fa-box-open text-4xl text-purple-900/30"></i>
                         </div>
-                        <h4 class="text-sm font-black text-purple-950 font-heading leading-snug line-clamp-2">${escapeAttr(item.nome)}</h4>
+                        <h4 class="text-sm font-black text-purple-950 font-heading leading-snug line-clamp-2 cursor-pointer hover:text-purple-700" onclick="abrirModalDetalhes(${item.id})">${escapeAttr(item.nome)}</h4>
                     </div>
-                    <div class="pt-3 border-t border-slate-100 space-y-2.5">
+                    <div class="pt-3 border-t border-slate-100 space-y-2">
                         <div class="text-center"><strong class="text-purple-950 font-black text-lg">R$ ${preco.toFixed(2)}</strong></div>
-                        <button onclick="adicionarAoCarrinho(${item.id}, '${escapeAttr(item.nome)}', ${preco})" class="w-full btn-comprar text-white font-black text-xs py-3 rounded-xl shadow uppercase">
-                            COMPRAR <i class="fa-solid fa-cart-shopping"></i>
-                        </button>
+                        <div class="grid grid-cols-2 gap-2">
+                            <button onclick="abrirModalDetalhes(${item.id})" class="bg-purple-100 text-purple-900 hover:bg-purple-200 font-bold text-[11px] py-2.5 rounded-xl transition-all">
+                                VER DETALHES
+                            </button>
+                            <button onclick="adicionarAoCarrinho(${item.id}, '${escapeAttr(item.nome)}', ${preco}, '${escapeAttr(item.ref || 'crt003')}', '${escapeAttr(item.producao || '24h')}')" class="btn-comprar text-white font-black text-[11px] py-2.5 rounded-xl shadow uppercase flex items-center justify-center gap-1">
+                                COMPRAR <i class="fa-solid fa-cart-shopping"></i>
+                            </button>
+                        </div>
                     </div>
                 `;
                 container.appendChild(card);
