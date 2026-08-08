@@ -232,6 +232,8 @@
                         </div>
                         <ul class="divide-y divide-slate-100 text-xs font-semibold text-slate-700">
                             <li><a href="javascript:void(0)" onclick="filtrarCategoria('')" class="px-4 py-2.5 hover:bg-purple-50 hover:text-purple-900 flex items-center justify-between"><span>Ver Todo o Catálogo</span> <i class="fa-solid fa-border-all text-[10px] text-slate-400"></i></a></li>
+                            <li><a href="javascript:void(0)" onclick="filtrarCategoria('agenda')" class="px-4 py-2.5 hover:bg-purple-50 hover:text-purple-900 flex items-center justify-between"><span>Agendas & Planners</span> <i class="fa-solid fa-chevron-right text-[10px] text-slate-400"></i></a></li>
+                            <li><a href="javascript:void(0)" onclick="filtrarCategoria('raspadinha')" class="px-4 py-2.5 hover:bg-purple-50 hover:text-purple-900 flex items-center justify-between"><span>Raspadinhas</span> <i class="fa-solid fa-chevron-right text-[10px] text-slate-400"></i></a></li>
                             <li><a href="javascript:void(0)" onclick="filtrarCategoria('caneca')" class="px-4 py-2.5 hover:bg-purple-50 hover:text-purple-900 flex items-center justify-between"><span>Canecas & Brindes</span> <i class="fa-solid fa-chevron-right text-[10px] text-slate-400"></i></a></li>
                             <li><a href="javascript:void(0)" onclick="filtrarCategoria('envelope')" class="px-4 py-2.5 hover:bg-purple-50 hover:text-purple-900 flex items-center justify-between"><span>Envelopes & Pastas</span> <i class="fa-solid fa-chevron-right text-[10px] text-slate-400"></i></a></li>
                             <li><a href="javascript:void(0)" onclick="filtrarCategoria('embalagem')" class="px-4 py-2.5 hover:bg-purple-50 hover:text-purple-900 flex items-center justify-between"><span>Embalagens & Sacos Kraft</span> <i class="fa-solid fa-chevron-right text-[10px] text-slate-400"></i></a></li>
@@ -415,8 +417,8 @@
             <button onclick="fecharModalDetalhes()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-700 text-xl font-bold"><i class="fa-solid fa-xmark"></i></button>
 
             <div class="flex flex-col sm:flex-row gap-5 items-start border-b border-slate-100 pb-4">
-                <div class="w-full sm:w-48 h-44 bg-slate-100 border border-slate-200 rounded-xl flex items-center justify-center shrink-0">
-                    <i class="fa-solid fa-box-open text-5xl text-purple-900/40"></i>
+                <div class="w-full sm:w-48 h-44 bg-slate-100 border border-slate-200 rounded-xl flex items-center justify-center shrink-0 overflow-hidden" id="box-imagem-modal">
+                    <!-- Imagem via JS -->
                 </div>
                 <div class="space-y-2">
                     <span id="txt-modal-categoria" class="bg-purple-100 text-purple-950 font-black text-[10px] px-2.5 py-1 rounded uppercase tracking-wider inline-block">PRODUTO</span>
@@ -474,6 +476,8 @@
                         <strong class="text-[11px] text-purple-950 font-black uppercase tracking-wider block px-3 py-1.5 bg-purple-50 rounded">TODOS OS PRODUTOS 📦</strong>
                         <ul class="divide-y divide-slate-100 text-slate-700 mt-1">
                             <li><a href="javascript:void(0)" onclick="filtrarCategoria(''); toggleMenuCategorias();" class="px-3 py-2.5 hover:bg-purple-50 block font-bold text-purple-900">Ver Todo o Catálogo</a></li>
+                            <li><a href="javascript:void(0)" onclick="filtrarCategoria('agenda'); toggleMenuCategorias();" class="px-3 py-2.5 hover:bg-purple-50 block">Agendas & Planners</a></li>
+                            <li><a href="javascript:void(0)" onclick="filtrarCategoria('raspadinha'); toggleMenuCategorias();" class="px-3 py-2.5 hover:bg-purple-50 block">Raspadinhas</a></li>
                             <li><a href="javascript:void(0)" onclick="filtrarCategoria('caneca'); toggleMenuCategorias();" class="px-3 py-2.5 hover:bg-purple-50 block">Canecas & Brindes</a></li>
                             <li><a href="javascript:void(0)" onclick="filtrarCategoria('envelope'); toggleMenuCategorias();" class="px-3 py-2.5 hover:bg-purple-50 block">Envelopes & Pastas</a></li>
                             <li><a href="javascript:void(0)" onclick="filtrarCategoria('embalagem'); toggleMenuCategorias();" class="px-3 py-2.5 hover:bg-purple-50 block">Embalagens & Sacos Kraft</a></li>
@@ -920,6 +924,15 @@
             document.getElementById('txt-modal-ref').innerText = `Ref: ${item.ref || 'crt003'}`;
             document.getElementById('txt-modal-producao').innerHTML = `<i class="fa-regular fa-clock mr-1"></i> Produção: ${item.producao || '24 horas'}`;
             
+            const boxImg = document.getElementById('box-imagem-modal');
+            if (boxImg) {
+                if (item.imagem) {
+                    boxImg.innerHTML = `<img src="${escapeAttr(item.imagem)}" alt="${escapeAttr(item.nome)}" class="w-full h-full object-cover rounded-xl" onerror="this.outerHTML='<i class=\'fa-solid fa-box-open text-5xl text-purple-900/40\'></i>'">`;
+                } else {
+                    boxImg.innerHTML = `<i class="fa-solid fa-box-open text-5xl text-purple-900/40"></i>`;
+                }
+            }
+
             document.getElementById('txt-modal-descricao-html').innerHTML = item.descricao || '<p>Descrição em atualização. Entre em contato para tirarmos todas as suas dúvidas sobre este material!</p>';
 
             const btnComprarModal = document.getElementById('btn-modal-adicionar-carrinho');
@@ -1034,124 +1047,153 @@
             catalogoEstoque = [
                 { 
                     id: 1, 
-                    nome: 'Cartão de Visita 250g | 4/0 | Verniz UV Brilho', 
+                    nome: 'Cartão de Visita HotStamp Premium', 
                     categoria: 'Cartão', 
-                    precoVenda: 21.56, 
-                    ref: 'crt003', 
-                    producao: '24 horas',
-                    descricao: `<p>Cartão de visita em papel Couché 250g, impressão colorida na frente com acabamento em Verniz UV brilho. Design sofisticado, durável e ideal para destacar sua marca com profissionalismo.</p>`
+                    precoVenda: 45.00, 
+                    ref: 'crt001', 
+                    producao: '48 horas',
+                    imagem: '20250911_1_20250721_1_GRAFICONAUTA---Mockup-Cartao-HotStamp-Graficonauta-4-0MOD-1-GRAFICONAUTA-copiar.png',
+                    descricao: `<p>Cartão de visita com acabamento nobre em Hot Stamp metálico. Excelente para causar um impacto visual único e elegante.</p>`
                 },
                 { 
                     id: 2, 
-                    nome: 'Abadá Personalizado (Sublimação Total em Helanca)', 
-                    categoria: 'Camisa', 
-                    precoVenda: 24.50, 
-                    ref: 'abd001', 
+                    nome: 'Cartão de Visita Duplo Corte Especial', 
+                    categoria: 'Cartão', 
+                    precoVenda: 38.00, 
+                    ref: 'crt002', 
                     producao: '48 horas',
-                    descricao: `<h2>🟣 DESCRIÇÃO DO PRODUTO – ABADÁ PERSONALIZADO | PHSUBLIME</h2>
-                    <h3>🎉 SOBRE O PRODUTO</h3>
-                    <p>Produzimos abadás com <strong>impressão total em tecido helanca</strong>, um material leve, confortável e ideal para eventos, festas e ações promocionais.</p>
-                    <h2>📏 TABELA DE MEDIDAS</h2>
-                    <table>
-                        <thead><tr><th>Tamanho</th><th>Largura (Peito)</th><th>Altura</th></tr></thead>
-                        <tbody>
-                            <tr><td>PP</td><td>46 cm</td><td>64 cm</td></tr>
-                            <tr><td>P</td><td>48 cm</td><td>66 cm</td></tr>
-                            <tr><td>M</td><td>50 cm</td><td>68 cm</td></tr>
-                            <tr><td>G</td><td>52 cm</td><td>70 cm</td></tr>
-                            <tr><td>GG</td><td>54 cm</td><td>72 cm</td></tr>
-                        </tbody>
-                    </table>`
+                    imagem: '20250911_1_20250721_1_GRAFICONAUTA---Mockup-Cartao-Duplo-4-0_MODELO-02.png',
+                    descricao: `<p>Cartão duplo dobrável com vinco, ideal para mini-fidelidade, tabelas de preço ou apresentações detalhadas.</p>`
                 },
                 { 
                     id: 3, 
-                    nome: 'Adesivo Vinil Brilho 0,10 m²', 
+                    nome: 'Cartão de Visita em PVC Transparente', 
+                    categoria: 'Cartão', 
+                    precoVenda: 89.00, 
+                    ref: 'crt004', 
+                    producao: '72 horas',
+                    imagem: '20250911_1_20190527_imprimir-cartao-de-visita-personalizado-em-pvc-transparente-01.jpg',
+                    descricao: `<p>Impresso em PVC transparente de altíssima durabilidade. Impermeável e resistente a rasgos e desgastes.</p>`
+                },
+                { 
+                    id: 4, 
+                    nome: 'Adesivo Vinil Personalizado m²', 
                     categoria: 'Adesivo', 
                     precoVenda: 29.40, 
                     ref: 'adv001', 
                     producao: '24 horas',
-                    descricao: `<p>Adesivo em vinil brilho com impressão digital em alta resolução, resistente à água e sol. Excelente para rotulagem e adesivação em geral.</p>`
-                },
-                { 
-                    id: 4, 
-                    nome: 'Adesivo Vinil Fosco 0,10 m²', 
-                    categoria: 'Adesivo', 
-                    precoVenda: 29.40, 
-                    ref: 'adv002', 
-                    producao: '24 horas',
-                    descricao: `<p>Impressão digital em vinil fosco, sem reflexos de luz. Perfeito para decoração interna e vitrines.</p>`
+                    imagem: '20250911_0_20190313_imprimir_adesivo_personalizado.jpg',
+                    descricao: `<p>Adesivo em vinil brilho com impressão digital em alta resolução, resistente à água e sol.</p>`
                 },
                 { 
                     id: 5, 
-                    nome: 'Banner Lona Fosca 240g | 40x60 cm (c/ Tubete)', 
+                    nome: 'Adesivo Vinil Transparente m²', 
+                    categoria: 'Adesivo', 
+                    precoVenda: 34.00, 
+                    ref: 'adv002', 
+                    producao: '24 horas',
+                    imagem: '20250911_1_20190314_imprimir_adesivo_personalizado_transparente_01.jpg',
+                    descricao: `<p>Adesivo vinil transparente ideal para embalagens, frascos de vidro e superfícies espelhadas.</p>`
+                },
+                { 
+                    id: 6, 
+                    nome: 'Adesivo Microperfurado para Vidros m²', 
+                    categoria: 'Adesivo', 
+                    precoVenda: 48.00, 
+                    ref: 'adv003', 
+                    producao: '24 horas',
+                    imagem: '20250922_1_desivomicroperfurado.png',
+                    descricao: `<p>Adesivo para vidros de veículos e vitrines comerciais. Permite visibilidade de dentro para fora.</p>`
+                },
+                { 
+                    id: 7, 
+                    nome: 'Banner e Lona Personalizada 440g', 
                     categoria: 'Banner', 
                     precoVenda: 27.44, 
                     ref: 'sign22', 
                     producao: '12 horas',
-                    descricao: `<p>Banner promocional em lona 240g fosca com acabamento completo em tubete de PVC e cordinha pronta para pendurar.</p>`
-                },
-                { 
-                    id: 6, 
-                    nome: 'Mochila Pirulito Promocional (c/ Duas Placas PS 1mm)', 
-                    categoria: 'Mochila', 
-                    precoVenda: 85.00, 
-                    ref: 'mch001', 
-                    producao: '48 horas',
-                    descricao: `<p>Suporte móvel de comunicação visual para ações externas. Acompanha mochila, tubete de 1,50m e 2 placas rígidas de PS 1mm.</p>`
-                },
-                { 
-                    id: 7, 
-                    nome: 'DTF Têxtil Transfer Digital | 40x56cm (A3)', 
-                    categoria: 'DTF', 
-                    precoVenda: 35.00, 
-                    ref: 'dtf001', 
-                    producao: '12 horas',
-                    descricao: `<p>Impressão DTF Têxtil de alta definição pronta para aplicação térmica em tecidos claros e escuros.</p>`
+                    imagem: '20250911_1_20190316_imprimir_lona_personalizada_440g_sem_acabamento_01.jpg',
+                    descricao: `<p>Lona de alta resistência 440g com acabamento em bastão, ponteira plástica e corda pronta para instalação.</p>`
                 },
                 { 
                     id: 8, 
-                    nome: 'Folheto 80g | 10x14cm | 4/0 (1000un)', 
-                    categoria: 'Folheto', 
-                    precoVenda: 72.52, 
-                    ref: 'flt001', 
+                    nome: 'Banner em Tecido Sublimado', 
+                    categoria: 'Banner', 
+                    precoVenda: 42.00, 
+                    ref: 'sign30', 
                     producao: '24 horas',
-                    descricao: `<p>Folhetos promocionais em papel Couché 80g com impressão colorida frente para grande volume de divulgação.</p>`
+                    imagem: '20250911_1_20190318_imprimir_banner_em_tecido_01.jpg',
+                    descricao: `<p>Impressão sublimática em tecido. Não amassa, lavável e com cores vivas e sem brilho reflexivo.</p>`
                 },
                 { 
                     id: 9, 
-                    nome: 'Wind Banner Completo Modelo Faca | 260x70cm', 
-                    categoria: 'Wind', 
-                    precoVenda: 107.80, 
-                    ref: 'sub007', 
-                    producao: '12 horas',
-                    descricao: `<p>Wind Banner com haste flexível e base. Tecido Oxford lavável e com estampa sublimática em alta definição.</p>`
+                    nome: 'Faixa Promocional em Lona com Ilhós', 
+                    categoria: 'Banner', 
+                    precoVenda: 35.00, 
+                    ref: 'sign15', 
+                    producao: '24 horas',
+                    imagem: '20250911_1_20190318_imprimir_faixa_personalizada_01.jpg',
+                    descricao: `<p>Faixa de lona para divulgação de eventos, feiras e promoções com acabamento reforçado em ilhós.</p>`
                 },
                 { 
                     id: 10, 
-                    nome: 'Caneca de Cerâmica Branca 325ml Personalizada', 
-                    categoria: 'Caneca', 
-                    precoVenda: 28.00, 
-                    ref: 'cnc001', 
-                    producao: '24 horas',
-                    descricao: `<p>Caneca de cerâmica resinada de alta qualidade com estampagem sublimática colorida e sem limites de cores.</p>`
+                    nome: 'Saco de Papel Kraft Delivery Personalizado', 
+                    categoria: 'Embalagem', 
+                    precoVenda: 85.00, 
+                    ref: 'emb001', 
+                    producao: '48 horas',
+                    imagem: '20250911_1_20190724_1_embalagem_saco_de_papel_personalizada_para_revendedor_grafico_01.jpg',
+                    descricao: `<p>Embalagem kraft para lanchonetes e delivery de comida. Impressão personalizada com a identidade do seu estabelecimento.</p>`
                 },
                 { 
                     id: 11, 
-                    nome: 'Envelope 11x23cm Offset 90g Personalizado', 
-                    categoria: 'Envelope', 
-                    precoVenda: 45.00, 
-                    ref: 'env001', 
+                    nome: 'Embalagem para Temaki e Sushibar', 
+                    categoria: 'Embalagem', 
+                    precoVenda: 92.00, 
+                    ref: 'emb002', 
                     producao: '48 horas',
-                    descricao: `<p>Envelope corporativo para documentos e cartas impresso em papel offset de alta gramatura.</p>`
+                    imagem: '20250911_1_20190725_1_émbalagem_temaki_balcao_para_revenda_01.jpg',
+                    descricao: `<p>Caixa dobrável para Temaki e comida japonesa, pronta para balcão e entregas.</p>`
                 },
                 { 
                     id: 12, 
-                    nome: 'Criação de Arte Personalizada', 
-                    categoria: 'Arte', 
-                    precoVenda: 30.00, 
-                    ref: 'art001', 
+                    nome: 'Guardanapo Sachê Personalizado', 
+                    categoria: 'Embalagem', 
+                    precoVenda: 49.00, 
+                    ref: 'emb003', 
                     producao: '48 horas',
-                    descricao: `<p>Serviço de design gráfico profissional para desenvolvimento de layout exclusivo de seus materiais impressos.</p>`
+                    imagem: '20250911_1_20190724_3_guardanapo_sache_personalizado_para_revendedor_grafico_05.jpg',
+                    descricao: `<p>Sachê com guardanapos folha dupla embalados individualmente com estampa da sua marca.</p>`
+                },
+                { 
+                    id: 13, 
+                    nome: 'Agenda Capa Dura Floral 2026', 
+                    categoria: 'Agenda', 
+                    precoVenda: 45.00, 
+                    ref: 'agd001', 
+                    producao: '48 horas',
+                    imagem: '20250911_1_20221206_1_agenda-floral-miolo-4x4.png',
+                    descricao: `<p>Agenda diária personalizada com acabamento em capa dura e miolo decorado em alta definição.</p>`
+                },
+                { 
+                    id: 14, 
+                    nome: 'Planner Semanal e Financeiro Cute', 
+                    categoria: 'Agenda', 
+                    precoVenda: 48.00, 
+                    ref: 'pln001', 
+                    producao: '48 horas',
+                    imagem: '20250911_1_20221207_1_PLANNERCUTE-4X4.png',
+                    descricao: `<p>Planner completo para organização de tarefas, metas e controle financeiro diário/semanal.</p>`
+                },
+                { 
+                    id: 15, 
+                    nome: 'Cartões Raspadinha Promocional', 
+                    categoria: 'Raspadinha', 
+                    precoVenda: 65.00, 
+                    ref: 'rsp001', 
+                    producao: '48 horas',
+                    imagem: '20250911_1_20250815_1_Thumb-Raspadinha-Coracao_4x4Thumb02.png',
+                    descricao: `<p>Raspadinha com camada de tinta removível para sorteios, cupons de desconto e campanhas de fidelidade.</p>`
                 }
             ];
             renderizarCatalogo();
@@ -1189,10 +1231,15 @@
                 const preco = parseFloat(item.precoVenda || 0);
                 const card = document.createElement('div');
                 card.className = "bg-white border border-slate-200 rounded-xl p-5 space-y-4 shadow-sm hover:shadow-md transition-all flex flex-col justify-between";
+                
+                const htmlImagem = item.imagem 
+                    ? `<img src="${escapeAttr(item.imagem)}" alt="${escapeAttr(item.nome)}" class="w-full h-full object-cover rounded-xl" onerror="this.outerHTML='<i class=\'fa-solid fa-box-open text-4xl text-purple-900/30\'></i>'">`
+                    : `<i class="fa-solid fa-box-open text-4xl text-purple-900/30"></i>`;
+
                 card.innerHTML = `
                     <div class="space-y-3">
-                        <div class="w-full h-44 bg-slate-100 rounded-xl border border-slate-200 flex flex-col items-center justify-center text-slate-400 p-3 cursor-pointer" onclick="abrirModalDetalhes(${item.id})">
-                            <i class="fa-solid fa-box-open text-4xl text-purple-900/30"></i>
+                        <div class="w-full h-44 bg-slate-100 rounded-xl border border-slate-200 flex flex-col items-center justify-center text-slate-400 p-1 cursor-pointer overflow-hidden" onclick="abrirModalDetalhes(${item.id})">
+                            ${htmlImagem}
                         </div>
                         <h4 class="text-sm font-black text-purple-950 font-heading leading-snug line-clamp-2 cursor-pointer hover:text-purple-700" onclick="abrirModalDetalhes(${item.id})">${escapeAttr(item.nome)}</h4>
                     </div>
@@ -1217,14 +1264,19 @@
         // ========================================================
         const MEUS_BANNERS = [
             {
-                imagem: 'https://images.unsplash.com/photo-1562577309-4932fdd64cd1?auto=format&fit=crop&w=1200&q=80',
+                imagem: '20260123_1_IMAGENSPARAOSITEPHSUBLIME.jpg',
                 categoriaAoClicar: 'banner',
-                alt: 'Banner Impressão Gráfica'
+                alt: 'PHSUBLIME Banners e Lonas Promocionais'
             },
             {
-                imagem: 'https://images.unsplash.com/photo-1626785774573-4b799315345d?auto=format&fit=crop&w=1200&q=80',
+                imagem: '20260123_1_IMAGENSPARAOSITEPHSUBLIMEE.jpg',
                 categoriaAoClicar: 'cartao',
-                alt: 'Cartões e Personalizados'
+                alt: 'Cartões de Visita e Impressão Gráfica'
+            },
+            {
+                imagem: '20260203_1_20260123_marinho.jpeg',
+                categoriaAoClicar: 'adesivo',
+                alt: 'Comunicação Visual e Personalizados'
             }
         ];
 
@@ -1246,7 +1298,7 @@
                 slide.onclick = () => filtrarCategoria(b.categoriaAoClicar || '');
 
                 slide.innerHTML = `
-                    <img src="${b.imagem}" alt="${escapeAttr(b.alt)}" class="w-full h-auto max-h-[130px] sm:max-h-[200px] object-cover rounded-xl transition-all duration-300">
+                    <img src="${b.imagem}" alt="${escapeAttr(b.alt)}" class="w-full h-auto max-h-[130px] sm:max-h-[200px] object-cover rounded-xl transition-all duration-300" onerror="this.src='https://images.unsplash.com/photo-1562577309-4932fdd64cd1?auto=format&fit=crop&w=1200&q=80'">
                 `;
                 container.appendChild(slide);
 
