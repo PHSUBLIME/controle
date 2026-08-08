@@ -52,21 +52,29 @@
     <header class="bg-purple-950 text-white shadow-xl sticky top-0 z-50 border-b-4 border-amber-400">
         <div class="max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-col md:flex-row items-center justify-between gap-4">
             
-            <!-- LOGO PHSUBLIME -->
-            <a href="javascript:void(0)" onclick="alternarAba('catalogo')" class="flex items-center gap-3 group">
-                <div class="w-12 h-12 shrink-0 flex items-center justify-center bg-white rounded-xl p-1 shadow-md group-hover:scale-105 transition-all">
-                    <img src="FIVICOM.png" alt="PHSUBLIME" class="w-full h-full object-contain" onerror="this.outerHTML='<i class=\'fa-solid fa-crown text-purple-900 text-2xl\'></i>'">
-                </div>
-                <div>
-                    <div class="flex items-center gap-2">
-                        <h1 class="text-2xl font-black tracking-wider text-amber-400 font-heading">PHSUBLIME</h1>
-                        <span class="text-[10px] bg-amber-400 text-purple-950 font-black px-2 py-0.5 rounded uppercase tracking-wider">
-                            GRÁFICA
-                        </span>
+            <div class="flex items-center justify-between w-full md:w-auto">
+                <!-- BOTÃO DE 3 BARRINHAS (CATEGORIAS) MOBILE -->
+                <button onclick="toggleMenuCategorias()" class="lg:hidden flex items-center gap-1.5 bg-purple-900 hover:bg-purple-800 border border-purple-700 px-3 py-2 rounded-xl text-amber-400 font-bold text-xs transition-all">
+                    <i class="fa-solid fa-bars text-base"></i>
+                    <span>MENU</span>
+                </button>
+
+                <!-- LOGO PHSUBLIME -->
+                <a href="javascript:void(0)" onclick="alternarAba('catalogo')" class="flex items-center gap-3 group">
+                    <div class="w-10 h-10 sm:w-12 sm:h-12 shrink-0 flex items-center justify-center bg-white rounded-xl p-1 shadow-md group-hover:scale-105 transition-all">
+                        <img src="FIVICOM.png" alt="PHSUBLIME" class="w-full h-full object-contain" onerror="this.outerHTML='<i class=\'fa-solid fa-crown text-purple-900 text-xl sm:text-2xl\'></i>'">
                     </div>
-                    <span class="text-xs text-purple-200 font-medium block">A Gráfica das Galáxias & Personalizados</span>
-                </div>
-            </a>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <h1 class="text-xl sm:text-2xl font-black tracking-wider text-amber-400 font-heading">PHSUBLIME</h1>
+                            <span class="text-[10px] bg-amber-400 text-purple-950 font-black px-2 py-0.5 rounded uppercase tracking-wider">
+                                GRÁFICA
+                            </span>
+                        </div>
+                        <span class="text-xs text-purple-200 font-medium block">A Gráfica das Galáxias</span>
+                    </div>
+                </a>
+            </div>
 
             <!-- BARRA DE PESQUISA CENTRAL -->
             <div class="w-full md:w-1/3 relative">
@@ -78,7 +86,7 @@
                 </div>
             </div>
 
-            <!-- ÁREA DE USUÁRIO, MEUS PEDIDOS E CARRINHO -->
+            <!-- ÁREA DE USUÁRIO E CARRINHO -->
             <div class="flex items-center gap-4 shrink-0">
                 
                 <!-- DROPDOWN DE USUÁRIO -->
@@ -116,42 +124,30 @@
 
         </div>
 
-        <!-- MENU DE NAVEGAÇÃO HORIZONTAL DE CATEGORIAS -->
-       <nav class="bg-purple-900 border-t border-purple-800/60 text-xs font-bold text-slate-100">
-    <div class="max-w-[1536px] mx-auto px-2 sm:px-4 flex flex-col lg:flex-row items-center justify-between">
-        
-        <!-- GRADE DE BOTÕES (4 COLUNAS COMPACTAS NO CELULAR) -->
-        <div class="grid grid-cols-4 lg:flex items-center w-full lg:w-auto text-[10px] sm:text-xs">
-            <button onclick="alternarAba('catalogo')" id="tab-nav-catalogo" class="px-1.5 sm:px-4 py-2.5 hover:bg-purple-800 text-amber-400 border-b-2 border-amber-400 transition-all flex flex-col sm:flex-row items-center justify-center gap-1 text-center">
-                <i class="fa-solid fa-store text-sm sm:text-xs"></i> 
-                <span class="truncate">CATÁLOGO</span>
-            </button>
-            
-            <button onclick="alternarAba('carrinho')" id="tab-nav-carrinho" class="px-1.5 sm:px-4 py-2.5 hover:bg-purple-800 hover:text-amber-400 transition-all flex flex-col sm:flex-row items-center justify-center gap-1 text-center">
-                <i class="fa-solid fa-cart-shopping text-sm sm:text-xs"></i> 
-                <span class="truncate">CARRINHO</span>
-            </button>
-            
-            <button onclick="alternarAba('pedidos')" id="tab-nav-pedidos" class="px-1.5 sm:px-4 py-2.5 hover:bg-purple-800 hover:text-amber-400 transition-all flex flex-col sm:flex-row items-center justify-center gap-1 text-center">
-                <i class="fa-solid fa-truck-ramp-box text-sm sm:text-xs"></i> 
-                <span class="truncate">RASTREAR</span>
-            </button>
-            
-            <button onclick="alternarAba('recompra')" id="tab-nav-recompra" class="px-1.5 sm:px-4 py-2.5 hover:bg-purple-800 hover:text-amber-400 transition-all flex flex-col sm:flex-row items-center justify-center gap-1 text-center">
-                <i class="fa-solid fa-rotate-right text-sm sm:text-xs"></i> 
-                <span class="truncate">RECOMPRA</span>
-            </button>
-        </div>
+        <!-- MENU DE NAVEGAÇÃO COMPACTO (3 BOTÕES: CATÁLOGO, RASTREAR, MINHAS COMPRAS) -->
+        <nav class="bg-purple-900 border-t border-purple-800/60 text-xs font-bold text-slate-100">
+            <div class="max-w-[1536px] mx-auto px-2 sm:px-4 flex items-center justify-between">
+                <div class="grid grid-cols-3 lg:flex items-center w-full lg:w-auto text-[10px] sm:text-xs">
+                    <button onclick="alternarAba('catalogo')" id="tab-nav-catalogo" class="px-2 sm:px-4 py-2.5 hover:bg-purple-800 text-amber-400 border-b-2 border-amber-400 transition-all flex items-center justify-center gap-1.5 text-center">
+                        <i class="fa-solid fa-store"></i> <span class="truncate">CATÁLOGO</span>
+                    </button>
+                    
+                    <button onclick="alternarAba('pedidos')" id="tab-nav-pedidos" class="px-2 sm:px-4 py-2.5 hover:bg-purple-800 hover:text-amber-400 transition-all flex items-center justify-center gap-1.5 text-center">
+                        <i class="fa-solid fa-truck-ramp-box"></i> <span class="truncate">RASTREAR</span>
+                    </button>
+                    
+                    <button onclick="alternarAba('recompra')" id="tab-nav-recompra" class="px-2 sm:px-4 py-2.5 hover:bg-purple-800 hover:text-amber-400 transition-all flex items-center justify-center gap-1.5 text-center">
+                        <i class="fa-solid fa-rotate-right"></i> <span class="truncate">MINHAS COMPRAS</span>
+                    </button>
+                </div>
 
-        <!-- LINK DO WHATSAPP -->
-        <div class="hidden lg:flex items-center gap-2 text-[11px] text-amber-300 font-semibold px-2">
-            <a id="link-whats-nav" href="#" target="_blank" class="hover:underline flex items-center gap-1 text-emerald-400">
-                <i class="fa-brands fa-whatsapp text-sm"></i> WhatsApp: (21) 98614-7221
-            </a>
-        </div>
-
-    </div>
-</nav>
+                <div class="hidden lg:flex items-center gap-2 text-[11px] text-amber-300 font-semibold px-2">
+                    <a id="link-whats-nav" href="#" target="_blank" class="hover:underline flex items-center gap-1 text-emerald-400">
+                        <i class="fa-brands fa-whatsapp text-sm"></i> WhatsApp: (21) 98614-7221
+                    </a>
+                </div>
+            </div>
+        </nav>
     </header>
 
     <!-- CONTEÚDO PRINCIPAL -->
@@ -162,62 +158,59 @@
             
             <!-- BANNERS PROMOCIONAIS -->
             <div class="space-y-4">
-                <!-- BANNER PROMOCIONAL (CARROSSEL DINÂMICO) -->
-<div class="max-w-4xl mx-auto relative w-full overflow-hidden rounded-xl shadow-md bg-purple-950 group">
-    <!-- CONTAINER ONDE A IMAGEM VAI APARECER -->
-    <div id="banner-slider-container" class="flex transition-transform duration-500 ease-in-out w-full">
-        <!-- Imagens renderizadas via JavaScript -->
-    </div>
+                <!-- BANNER PROMOCIONAL (CARROSSEL DINÂMICO E DISCRETO) -->
+                <div class="max-w-4xl mx-auto relative w-full overflow-hidden rounded-xl shadow-md bg-purple-950 group">
+                    <div id="banner-slider-container" class="flex transition-transform duration-500 ease-in-out w-full">
+                        <!-- Imagens renderizadas via JS -->
+                    </div>
 
-    <!-- BOTÃO ANTERIOR -->
-    <button onclick="mudarBanner(-1)" class="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-amber-400 hover:text-purple-950 text-white w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center transition-all z-10 opacity-80 group-hover:opacity-100">
-        <i class="fa-solid fa-chevron-left text-xs sm:text-sm"></i>
-    </button>
-    
-    <!-- BOTÃO PRÓXIMO -->
-    <button onclick="mudarBanner(1)" class="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-amber-400 hover:text-purple-950 text-white w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center transition-all z-10 opacity-80 group-hover:opacity-100">
-        <i class="fa-solid fa-chevron-right text-xs sm:text-sm"></i>
-    </button>
+                    <button onclick="mudarBanner(-1)" class="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-amber-400 hover:text-purple-950 text-white w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center transition-all z-10 opacity-80 group-hover:opacity-100">
+                        <i class="fa-solid fa-chevron-left text-xs sm:text-sm"></i>
+                    </button>
+                    
+                    <button onclick="mudarBanner(1)" class="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-amber-400 hover:text-purple-950 text-white w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center transition-all z-10 opacity-80 group-hover:opacity-100">
+                        <i class="fa-solid fa-chevron-right text-xs sm:text-sm"></i>
+                    </button>
 
-   <!-- BOLINHAS INDICADORAS -->
-    <div id="banner-dots" class="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-2 z-10"></div>
-</div>
+                    <div id="banner-dots" class="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-2 z-10"></div>
+                </div>
 
-<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-    <!-- CARD 1: INDIQUE E GANHE (Visível no Celular e no PC) -->
-    <div class="bg-gradient-to-r from-blue-900 to-indigo-900 text-white p-4 rounded-xl border border-blue-700 shadow-md flex items-center justify-between">
-        <div>
-            <strong class="font-black text-sm block uppercase text-amber-300">INDIQUE E GANHE!</strong>
-            <span class="text-xs text-blue-100">Bônus exclusivos para indicações.</span>
-        </div>
-        <i class="fa-solid fa-gift text-2xl text-amber-400"></i>
-    </div>
+                <!-- CARDS PROMOCIONAIS -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <!-- CARD 1: Visível no Celular e PC -->
+                    <div class="bg-gradient-to-r from-blue-900 to-indigo-900 text-white p-4 rounded-xl border border-blue-700 shadow-md flex items-center justify-between">
+                        <div>
+                            <strong class="font-black text-sm block uppercase text-amber-300">INDIQUE E GANHE!</strong>
+                            <span class="text-xs text-blue-100">Bônus exclusivos para indicações.</span>
+                        </div>
+                        <i class="fa-solid fa-gift text-2xl text-amber-400"></i>
+                    </div>
 
-    <!-- CARD 2: CRÉDITO COM DESCONTO (Escondido no Celular, visível no PC) -->
-    <div class="bg-gradient-to-r from-purple-900 to-purple-800 text-white p-4 rounded-xl border border-purple-700 shadow-md hidden md:flex items-center justify-between">
-        <div>
-            <strong class="font-black text-sm block uppercase text-amber-300">CRÉDITO COM DESCONTO</strong>
-            <span class="text-xs text-purple-100">Descontos extras recarregando saldo.</span>
-        </div>
-        <i class="fa-solid fa-coins text-2xl text-amber-400"></i>
-    </div>
+                    <!-- CARD 2: Oculto no Celular, Visível no PC -->
+                    <div class="bg-gradient-to-r from-purple-900 to-purple-800 text-white p-4 rounded-xl border border-purple-700 shadow-md hidden md:flex items-center justify-between">
+                        <div>
+                            <strong class="font-black text-sm block uppercase text-amber-300">CRÉDITO COM DESCONTO</strong>
+                            <span class="text-xs text-purple-100">Descontos extras recarregando saldo.</span>
+                        </div>
+                        <i class="fa-solid fa-coins text-2xl text-amber-400"></i>
+                    </div>
 
-    <!-- CARD 3: DTF TRANSFER DIGITAL (Escondido no Celular, visível no PC) -->
-    <div class="bg-gradient-to-r from-slate-900 to-purple-950 text-white p-4 rounded-xl border border-slate-700 shadow-md hidden md:flex items-center justify-between">
-        <div>
-            <strong class="font-black text-sm block uppercase text-amber-300">DTF TRANSFER DIGITAL</strong>
-            <span class="text-xs text-slate-300">Pronto para aplicação em tecidos.</span>
-        </div>
-        <i class="fa-solid fa-shirt text-2xl text-amber-400"></i>
-    </div>
-</div>
+                    <!-- CARD 3: Oculto no Celular, Visível no PC -->
+                    <div class="bg-gradient-to-r from-slate-900 to-purple-950 text-white p-4 rounded-xl border border-slate-700 shadow-md hidden md:flex items-center justify-between">
+                        <div>
+                            <strong class="font-black text-sm block uppercase text-amber-300">DTF TRANSFER DIGITAL</strong>
+                            <span class="text-xs text-slate-300">Pronto para aplicação em tecidos.</span>
+                        </div>
+                        <i class="fa-solid fa-shirt text-2xl text-amber-400"></i>
+                    </div>
+                </div>
             </div>
 
             <!-- LAYOUT PRINCIPAL EM 2 COLUNAS (SIDEBAR + GRID DE PRODUTOS) -->
             <div class="flex flex-col lg:flex-row gap-6 pt-2">
                 
-                <!-- SIDEBAR ESQUERDA (CATEGORIAS) -->
-                <aside class="w-full lg:w-64 shrink-0 space-y-4">
+                <!-- SIDEBAR ESQUERDA (VISÍVEL APENAS EM PC) -->
+                <aside class="hidden lg:block w-full lg:w-64 shrink-0 space-y-4">
                     <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
                         <div class="bg-purple-950 text-white font-black text-xs px-4 py-3 uppercase tracking-wider flex items-center justify-between border-b border-purple-900">
                             <span>MAIS VENDIDOS</span>
@@ -552,6 +545,47 @@
 
     <!-- MODAIS DA APLICAÇÃO -->
 
+    <!-- MENU GAVETA DE CATEGORIAS (MOBILE - 3 BARRINHAS) -->
+    <div id="drawer-categorias" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-[999] hidden flex justify-start">
+        <div class="bg-white w-80 max-w-[80vw] h-full shadow-2xl flex flex-col justify-between overflow-y-auto">
+            <div>
+                <div class="bg-purple-950 text-white p-4 flex items-center justify-between border-b-2 border-amber-400">
+                    <span class="font-black text-xs uppercase tracking-wider flex items-center gap-2">
+                        <i class="fa-solid fa-bars text-amber-400"></i> CATEGORIAS
+                    </span>
+                    <button onclick="toggleMenuCategorias()" class="text-slate-300 hover:text-white text-lg">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+
+                <div class="p-4 space-y-4 text-xs font-semibold">
+                    <div>
+                        <strong class="text-[11px] text-purple-950 font-black uppercase tracking-wider block px-3 py-1.5 bg-purple-50 rounded">MAIS VENDIDOS 🔥</strong>
+                        <ul class="divide-y divide-slate-100 text-slate-700 mt-1">
+                            <li><a href="javascript:void(0)" onclick="filtrarCategoria('adesivo'); toggleMenuCategorias();" class="px-3 py-2.5 hover:bg-purple-50 block">Adesivo</a></li>
+                            <li><a href="javascript:void(0)" onclick="filtrarCategoria('banner'); toggleMenuCategorias();" class="px-3 py-2.5 hover:bg-purple-50 block">Banner, Faixa, Lona e Painel</a></li>
+                            <li><a href="javascript:void(0)" onclick="filtrarCategoria('camisa'); toggleMenuCategorias();" class="px-3 py-2.5 hover:bg-purple-50 block">Camisa, Camiseta e Blusa</a></li>
+                            <li><a href="javascript:void(0)" onclick="filtrarCategoria('cartao'); toggleMenuCategorias();" class="px-3 py-2.5 hover:bg-purple-50 block">Cartão de Visita</a></li>
+                            <li><a href="javascript:void(0)" onclick="filtrarCategoria('dtf'); toggleMenuCategorias();" class="px-3 py-2.5 hover:bg-purple-50 block">DTF Transfer Digital</a></li>
+                            <li><a href="javascript:void(0)" onclick="filtrarCategoria('folheto'); toggleMenuCategorias();" class="px-3 py-2.5 hover:bg-purple-50 block">Folheto, Folder e Flyer</a></li>
+                            <li><a href="javascript:void(0)" onclick="filtrarCategoria('wind'); toggleMenuCategorias();" class="px-3 py-2.5 hover:bg-purple-50 block">Wind Banner</a></li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <strong class="text-[11px] text-purple-950 font-black uppercase tracking-wider block px-3 py-1.5 bg-purple-50 rounded">TODOS OS PRODUTOS 📦</strong>
+                        <ul class="divide-y divide-slate-100 text-slate-700 mt-1">
+                            <li><a href="javascript:void(0)" onclick="filtrarCategoria(''); toggleMenuCategorias();" class="px-3 py-2.5 hover:bg-purple-50 block font-bold text-purple-900">Ver Todo o Catálogo</a></li>
+                            <li><a href="javascript:void(0)" onclick="filtrarCategoria('abada'); toggleMenuCategorias();" class="px-3 py-2.5 hover:bg-purple-50 block">Abadá</a></li>
+                            <li><a href="javascript:void(0)" onclick="filtrarCategoria('acrilico'); toggleMenuCategorias();" class="px-3 py-2.5 hover:bg-purple-50 block">Acrílico</a></li>
+                            <li><a href="javascript:void(0)" onclick="filtrarCategoria('caneca'); toggleMenuCategorias();" class="px-3 py-2.5 hover:bg-purple-50 block">Canecas & Brindes</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- MODAL COMPLETO DE CADASTRO DE CLIENTE / MEUS DADOS -->
     <div id="modal-cadastro-cliente" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-[999] hidden flex items-center justify-center p-4 overflow-y-auto">
         <div class="bg-white rounded-2xl max-w-2xl w-full p-6 sm:p-8 space-y-6 shadow-2xl relative border border-purple-200 my-8">
@@ -773,6 +807,11 @@
 
         let carrinho = JSON.parse(localStorage.getItem('phsublime_carrinho_v2') || '[]');
 
+        function toggleMenuCategorias() {
+            const drawer = document.getElementById('drawer-categorias');
+            if (drawer) drawer.classList.toggle('hidden');
+        }
+
         function escapeAttr(str) {
             if (str === null || str === undefined) return '';
             return String(str).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -819,7 +858,6 @@
         function abrirModalCadastro() {
             toggleUserDropdown();
 
-            // Proteção: Se o cliente já está cadastrado/logado, não exibir formulário preenchido com dados expostos
             if (clienteIdentificado && (clienteIdentificado.cpf || clienteIdentificado.whatsapp)) {
                 mostrarToast("Seu cadastro já foi concluído e está protegido com segurança no sistema!", "info");
                 return;
@@ -885,7 +923,6 @@
                 const cpfLimpo = limparNumeros(cpf);
                 const whatsLimpo = limparNumeros(whatsapp);
 
-                // 1. Verificar se já existe no Supabase por CPF ou WhatsApp
                 const { data: existentes } = await supabaseClient.from('clientes').select('*');
                 let existente = null;
 
@@ -900,7 +937,6 @@
                 let clienteSalvo = null;
 
                 if (existente && existente.id) {
-                    // Tentar UPDATE no registro existente
                     let resUp = await supabaseClient.from('clientes').update(dadosCompletos).eq('id', existente.id).select();
                     
                     if (resUp.error) {
@@ -914,7 +950,6 @@
                         clienteSalvo = { id: existente.id, ...dadosCompletos };
                     }
                 } else {
-                    // Tentar INSERT novo cliente
                     const idNovo = Math.floor(100000000 + Math.random() * 900000000);
                     const objetoInsert = { id: idNovo, ...dadosCompletos };
 
@@ -1286,16 +1321,15 @@
             document.getElementById('secao-pedidos').classList.add('hidden');
             document.getElementById('secao-recompra').classList.add('hidden');
 
-            document.getElementById('tab-nav-catalogo').className = "px-4 py-3 hover:bg-purple-800 hover:text-amber-400 transition-all flex items-center gap-1.5";
-            document.getElementById('tab-nav-carrinho').className = "px-4 py-3 hover:bg-purple-800 hover:text-amber-400 transition-all flex items-center gap-1.5";
-            document.getElementById('tab-nav-pedidos').className = "px-4 py-3 hover:bg-purple-800 hover:text-amber-400 transition-all flex items-center gap-1.5";
-            document.getElementById('tab-nav-recompra').className = "px-4 py-3 hover:bg-purple-800 hover:text-amber-400 transition-all flex items-center gap-1.5";
+            document.getElementById('tab-nav-catalogo').className = "px-2 sm:px-4 py-2.5 hover:bg-purple-800 hover:text-amber-400 transition-all flex items-center justify-center gap-1.5 text-center";
+            document.getElementById('tab-nav-pedidos').className = "px-2 sm:px-4 py-2.5 hover:bg-purple-800 hover:text-amber-400 transition-all flex items-center justify-center gap-1.5 text-center";
+            document.getElementById('tab-nav-recompra').className = "px-2 sm:px-4 py-2.5 hover:bg-purple-800 hover:text-amber-400 transition-all flex items-center justify-center gap-1.5 text-center";
 
             const secAlvo = document.getElementById(`secao-${aba}`);
             const tabAlvo = document.getElementById(`tab-nav-${aba}`);
 
             if (secAlvo) secAlvo.classList.remove('hidden');
-            if (tabAlvo) tabAlvo.className = "px-4 py-3 hover:bg-purple-800 text-amber-400 border-b-2 border-amber-400 transition-all flex items-center gap-1.5";
+            if (tabAlvo) tabAlvo.className = "px-2 sm:px-4 py-2.5 hover:bg-purple-800 text-amber-400 border-b-2 border-amber-400 transition-all flex items-center justify-center gap-1.5 text-center";
 
             if (aba === 'carrinho') renderizarPaginaCarrinho();
             if (aba === 'catalogo') renderizarCatalogo();
@@ -1310,37 +1344,37 @@
         }
 
         async function inicializarPortal() {
-    renderizarBanners(); // <-- ADICIONE ESTA LINHA AQUI
+            renderizarBanners();
 
-    const linkWhats = `https://api.whatsapp.com/send?phone=${WHATSAPP_ATENDIMENTO}&text=${encodeURIComponent("Olá, equipe PHSUBLIME! Gostaria de tirar uma dúvida.")}`;
-    if(document.getElementById('link-whats-nav')) document.getElementById('link-whats-nav').href = linkWhats;
-    if(document.getElementById('link-whats-rodape')) document.getElementById('link-whats-rodape').href = linkWhats;
+            const linkWhats = `https://api.whatsapp.com/send?phone=${WHATSAPP_ATENDIMENTO}&text=${encodeURIComponent("Olá, equipe PHSUBLIME! Gostaria de tirar uma dúvida.")}`;
+            if(document.getElementById('link-whats-nav')) document.getElementById('link-whats-nav').href = linkWhats;
+            if(document.getElementById('link-whats-rodape')) document.getElementById('link-whats-rodape').href = linkWhats;
 
-    const params = new URLSearchParams(window.location.search);
-    const paramPedido = params.get('pedido');
-    const paramWhats = params.get('whats') || params.get('whatsapp') || params.get('tel');
-    const paramCpf = params.get('cpf') || params.get('cnpj');
+            const params = new URLSearchParams(window.location.search);
+            const paramPedido = params.get('pedido');
+            const paramWhats = params.get('whats') || params.get('whatsapp') || params.get('tel');
+            const paramCpf = params.get('cpf') || params.get('cnpj');
 
-    let termoParaBuscar = paramPedido || paramWhats || paramCpf;
+            let termoParaBuscar = paramPedido || paramWhats || paramCpf;
 
-    if (!termoParaBuscar) {
-        termoParaBuscar = localStorage.getItem('phsublime_cliente_termo');
-    }
+            if (!termoParaBuscar) {
+                termoParaBuscar = localStorage.getItem('phsublime_cliente_termo');
+            }
 
-    const dadosSalvos = localStorage.getItem('phsublime_cliente_dados');
-    if (dadosSalvos) {
-        try { clienteIdentificado = JSON.parse(dadosSalvos); } catch(e){}
-    }
+            const dadosSalvos = localStorage.getItem('phsublime_cliente_dados');
+            if (dadosSalvos) {
+                try { clienteIdentificado = JSON.parse(dadosSalvos); } catch(e){}
+            }
 
-    if (termoParaBuscar) {
-        await buscarPedidosECliente(termoParaBuscar);
-    } else {
-        atualizarHeaderELista();
-    }
+            if (termoParaBuscar) {
+                await buscarPedidosECliente(termoParaBuscar);
+            } else {
+                atualizarHeaderELista();
+            }
 
-    atualizarBadgeCarrinho();
-    carregarEstoquePublico();
-}
+            atualizarBadgeCarrinho();
+            carregarEstoquePublico();
+        }
 
         async function confirmarIdentificacao(e) {
             e.preventDefault();
@@ -1730,91 +1764,93 @@
                 container.appendChild(card);
             });
         }
-// ========================================================
-// BANNERS DA LOJA (Altere as URLs das imagens abaixo)
-// ========================================================
-const MEUS_BANNERS = [
-    {
-        imagem: 'https://images.unsplash.com/photo-1562577309-4932fdd64cd1?auto=format&fit=crop&w=1200&q=80',
-        categoriaAoClicar: 'banner',
-        alt: 'Banner Impressão Gráfica'
-    },
-    {
-        imagem: 'https://images.unsplash.com/photo-1626785774573-4b799315345d?auto=format&fit=crop&w=1200&q=80',
-        categoriaAoClicar: 'cartao',
-        alt: 'Cartões e Personalizados'
-    }
-];
 
-let bannerAtualIndex = 0;
-let timerAutoSlide = null;
+        // ========================================================
+        // BANNERS DA LOJA (Altere as URLs das imagens abaixo)
+        // ========================================================
+        const MEUS_BANNERS = [
+            {
+                imagem: 'https://images.unsplash.com/photo-1562577309-4932fdd64cd1?auto=format&fit=crop&w=1200&q=80',
+                categoriaAoClicar: 'banner',
+                alt: 'Banner Impressão Gráfica'
+            },
+            {
+                imagem: 'https://images.unsplash.com/photo-1626785774573-4b799315345d?auto=format&fit=crop&w=1200&q=80',
+                categoriaAoClicar: 'cartao',
+                alt: 'Cartões e Personalizados'
+            }
+        ];
 
-function renderizarBanners() {
-    const container = document.getElementById('banner-slider-container');
-    const dotsContainer = document.getElementById('banner-dots');
-    
-    if (!container || !dotsContainer) return;
+        let bannerAtualIndex = 0;
+        let timerAutoSlide = null;
 
-    container.innerHTML = '';
-    dotsContainer.innerHTML = '';
+        function renderizarBanners() {
+            const container = document.getElementById('banner-slider-container');
+            const dotsContainer = document.getElementById('banner-dots');
+            
+            if (!container || !dotsContainer) return;
 
-    MEUS_BANNERS.forEach((b, idx) => {
-        const slide = document.createElement('div');
-        slide.className = 'min-w-full cursor-pointer relative';
-        slide.onclick = () => filtrarCategoria(b.categoriaAoClicar || '');
+            container.innerHTML = '';
+            dotsContainer.innerHTML = '';
 
-        slide.innerHTML = `
-    <img src="${b.imagem}" alt="${escapeAttr(b.alt)}" class="w-full h-auto max-h-[130px] sm:max-h-[200px] object-cover rounded-xl transition-all duration-300">
-`;
-        container.appendChild(slide);
+            MEUS_BANNERS.forEach((b, idx) => {
+                const slide = document.createElement('div');
+                slide.className = 'min-w-full cursor-pointer relative';
+                slide.onclick = () => filtrarCategoria(b.categoriaAoClicar || '');
 
-        const dot = document.createElement('button');
-        dot.className = `w-2.5 h-2.5 rounded-full transition-all ${idx === 0 ? 'bg-amber-400 w-6' : 'bg-white/60 hover:bg-white'}`;
-        dot.onclick = (e) => {
-            e.stopPropagation();
-            irParaBanner(idx);
-        };
-        dotsContainer.appendChild(dot);
-    });
+                slide.innerHTML = `
+                    <img src="${b.imagem}" alt="${escapeAttr(b.alt)}" class="w-full h-auto max-h-[130px] sm:max-h-[200px] object-cover rounded-xl transition-all duration-300">
+                `;
+                container.appendChild(slide);
 
-    iniciarAutoSlide();
-}
+                const dot = document.createElement('button');
+                dot.className = `w-2.5 h-2.5 rounded-full transition-all ${idx === 0 ? 'bg-amber-400 w-6' : 'bg-white/60 hover:bg-white'}`;
+                dot.onclick = (e) => {
+                    e.stopPropagation();
+                    irParaBanner(idx);
+                };
+                dotsContainer.appendChild(dot);
+            });
 
-function mudarBanner(direcao) {
-    bannerAtualIndex += direcao;
-    if (bannerAtualIndex >= MEUS_BANNERS.length) bannerAtualIndex = 0;
-    if (bannerAtualIndex < 0) bannerAtualIndex = MEUS_BANNERS.length - 1;
-    atualizarPosicaoBanner();
-}
+            iniciarAutoSlide();
+        }
 
-function irParaBanner(index) {
-    bannerAtualIndex = index;
-    atualizarPosicaoBanner();
-}
+        function mudarBanner(direcao) {
+            bannerAtualIndex += direcao;
+            if (bannerAtualIndex >= MEUS_BANNERS.length) bannerAtualIndex = 0;
+            if (bannerAtualIndex < 0) bannerAtualIndex = MEUS_BANNERS.length - 1;
+            atualizarPosicaoBanner();
+        }
 
-function atualizarPosicaoBanner() {
-    const container = document.getElementById('banner-slider-container');
-    const dots = document.getElementById('banner-dots')?.children;
-    
-    if (container) {
-        container.style.transform = `translateX(-${bannerAtualIndex * 100}%)`;
-    }
+        function irParaBanner(index) {
+            bannerAtualIndex = index;
+            atualizarPosicaoBanner();
+        }
 
-    if (dots) {
-        Array.from(dots).forEach((dot, idx) => {
-            dot.className = idx === bannerAtualIndex 
-                ? 'w-6 h-2.5 bg-amber-400 rounded-full transition-all' 
-                : 'w-2.5 h-2.5 bg-white/60 hover:bg-white rounded-full transition-all';
-        });
-    }
+        function atualizarPosicaoBanner() {
+            const container = document.getElementById('banner-slider-container');
+            const dots = document.getElementById('banner-dots')?.children;
+            
+            if (container) {
+                container.style.transform = `translateX(-${bannerAtualIndex * 100}%)`;
+            }
 
-    iniciarAutoSlide();
-}
+            if (dots) {
+                Array.from(dots).forEach((dot, idx) => {
+                    dot.className = idx === bannerAtualIndex 
+                        ? 'w-6 h-2.5 bg-amber-400 rounded-full transition-all' 
+                        : 'w-2.5 h-2.5 bg-white/60 hover:bg-white rounded-full transition-all';
+                });
+            }
 
-function iniciarAutoSlide() {
-    if (timerAutoSlide) clearInterval(timerAutoSlide);
-    timerAutoSlide = setInterval(() => mudarBanner(1), 5000);
-}
+            iniciarAutoSlide();
+        }
+
+        function iniciarAutoSlide() {
+            if (timerAutoSlide) clearInterval(timerAutoSlide);
+            timerAutoSlide = setInterval(() => mudarBanner(1), 5000);
+        }
+
         window.onload = inicializarPortal;
     </script>
 </body>
